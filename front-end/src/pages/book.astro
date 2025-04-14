@@ -1,0 +1,13 @@
+---
+import Icon from "../components/Icon.astro";
+import BookLayout from "../layout/BookLayout.astro";
+import OpenBook from "../components/Book";
+
+const response = await fetch("http://localhost:4321/api/data.json");
+const data = await response.json();
+---
+
+<BookLayout title="Open Book">
+  <OpenBook client:load data={data} />
+</BookLayout>
+

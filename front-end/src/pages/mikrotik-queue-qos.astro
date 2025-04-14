@@ -1,0 +1,182 @@
+---
+import MainLayout from "../layout/MainLayout.astro";
+---
+
+<MainLayout title="Open Book">
+    <body
+        class="bg-gray-900 text-white font-sans min-h-screen flex items-center justify-center"
+    >
+        <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
+            <!-- Contenido -->
+            <!-- Header -->
+            <!-- Título -->
+            <div class="text-center mb-6">
+                <h1 class="text-2xl lg:text-4xl font-bold text-orange-500">
+                    QUEUE QOS PRIORITY YOUTUBE, TIKTOK, FACEBOOK, WHATSAPP, etc.
+                </h1>
+                <p class="text-gray-300 mt-4">
+                    configuración de enrutamiento estático en una red, donde se
+                    usan reglas de Mangle para marcar o modificar paquetes según
+                    su puerto. Esto permite dirigir o priorizar el tráfico de
+                    juegos o aplicaciones específicas, controlando cómo se
+                    manejan los datos en función de puertos particulares, sin
+                    necesidad de ajustes dinámicos en el enrutamiento.
+                </p>
+            </div>
+        </div>
+        <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
+            <!-- Contenido inicio -->
+
+            <div class="container mx-auto p-6 bg-gray-800 rounded-lg shadow-lg">
+                <!-- Título -->
+
+                <div
+                    class="container mx-auto p-6 bg-gray-800 rounded-lg shadow-lg"
+                >
+                    <!-- Título -->
+                    <div class="text-center mb-6"></div>
+
+                    <!-- Diagrama -->
+                    <div class="flex justify-center mb-8">
+                        <img
+                            src="/public/images/mikrotik-queue-qos.png"
+                            alt="Routing Diagram"
+                            class="rounded-lg"
+                        />
+                    </div>
+
+
+                    <!-- Formulario Principal -->
+                    <form class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <!-- Columna Izquierda -->
+                        <div>
+                            <label
+                                class="block font-semibold text-orange-400 mb-2"
+                                >Routing Opciones</label
+                            >
+
+                            <select
+                                id="routeros"
+                                class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+                            >
+                                <option value="v6.xx">YouTube</option>
+                                <option value="v7.xx">Tiktok</option>
+                                <option value="v7.xx">Video</option>
+                                <option value="v7.xx">Iflix</option>
+                                <option value="v7.xx">Netflix</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label
+                                class="block font-semibold text-orange-400 mb-2"
+                                >Versión de Router Mikrotik</label
+                            >
+                            <select
+                                id="routeros"
+                                class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+                            >
+                                <option value="v6.xx">Queue Simple</option>
+                                <option value="v7.xx">Queue Tree</option>
+                            </select>
+                        </div>
+                        <!-- Columna Derecha -->
+                    </form>
+
+
+      <!-- Gestión de Dominios -->
+
+      <div
+      class="text-gray-950 shadow-2xl rounded-lg p-6 w-full ring-2 ring-blue-500 mt-8"
+    >
+      <!-- Gráfico (Placeholder para el esquema) -->
+
+      <!-- Tabla del formulario -->
+      <div class="overflow-x-auto rounded-t-lg">
+        <table
+          class="table-auto w-full border-spacing-2 border-slate-600"
+        >
+          <thead>
+            <tr class="bg-gray-700 text-gray-200">
+          
+              <th class="border-slate-700 p-2 border">Queue Name</th>
+              <th class="border-slate-700 p-2 border">Priority (1-8)</th>
+              <th class="border-slate-700 p-2 border">Descripción</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="text-gray-800">
+         
+              <td class="border-slate-700 p-2 border">
+                <input
+                type="text"
+                placeholder="Conn_YouTube"
+                class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+              />
+              </td>
+              <td class="border-slate-700 p-2 border">
+                <input
+                  type="text"
+                  placeholder="8"
+                  class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+                />
+              </td>
+              <td class="border-slate-700 p-2 border">
+                <input
+                  type="text"
+                  placeholder="20M"
+                  class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+             
+                   
+                   <div class="grid grid-cols-2 lg:grid-cols-2 gap-8 ">  
+                    <div class="flex flex-wrap    gap-4 mb-6 mt-7">
+                        <button
+                        class="text-white px-4 py-2 rounded-md transition ease-in-out delay-150 bg-gray-600 hover:-translate-y-1 hover:scale-110 hover:bg-slate-700 duration-300"
+                      >
+                       Generar Script
+                      </button>
+                             
+                    </div>
+                    <div class="flex flex-wrap justify-end gap-4 mb-6 mt-7">
+                  
+
+                        <button
+                        class="text-white px-4 py-2 rounded-md transition ease-in-out delay-150 bg-green-500 hover:-translate-y-1 hover:scale-110 hover:bg-teal-600 duration-300"
+                      >
+                      Copiar Script
+                      </button>
+                            
+                    </div>
+
+                </div>
+                 
+
+                    <!-- Gestión de Dominios -->
+
+                    <div class="bg-gray-700 p-4 rounded-lg flex flex-col">
+                        <label
+                            class="block text-sm font-semibold mb-2 text-gray-300"
+                            >Script Generator Result</label
+                        >
+                        <textarea
+                            class="flex-grow bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400"
+                            placeholder="Please Login and Subscribe .."
+                            readonly></textarea>
+                    </div>
+
+                    <!-- Contenido Fin -->
+                </div>
+
+                <!-- Contenido Fin Aqui para abajo es otro codigo q u se borrara -->
+            </div>
+        </div>
+    </body></MainLayout
+>

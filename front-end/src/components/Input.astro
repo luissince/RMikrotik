@@ -1,0 +1,64 @@
+---
+import { fade } from "astro:transitions";
+import Icon from "./Icon.astro";
+
+interface Variants {
+  primary: string;
+  secondary: string;
+}
+
+interface Props extends astroHTML.JSX.InputHTMLAttributes {
+  variant?: "primary" | "secondary";
+  class?: string;
+  iconName?: string;
+  iconColor?: string;
+  iconSize?: number;
+  iconRight?: boolean;
+  iconNameRight?: string;
+  iconColorRight?: string;
+  iconSizeRight?: number;
+}
+
+const {
+  variant = "primary",
+  class: className,
+  iconName = "grid",
+  iconColor = "text-[#191919]",
+  iconSize = 24,
+  iconRight = false,
+  iconNameRight = "grid",
+  iconColorRight = "text-[#191919]",
+  iconSizeRight = 24,
+  ...rest
+} = Astro.props;
+
+const variants: Variants = {
+  primary:
+    "flex items-center border-[#949494] border-[1px] border-solid rounded-[4px] group focus-within:border-[#86E64B]",
+  secondary:
+    "flex items-center border-[#949494] border-[1px] border-solid rounded-[4px] group focus-within:border-[#86E64B]",
+};
+
+const classes = `${variants[variant]} ${className}`;
+---
+
+<div class={`${classes}`}>
+  <div class="px-2 py-2 h-full">
+    <Icon name={iconName} class={iconColor} size={iconSize} />
+  </div>
+  <input
+    class="w-full h-full bg-inherit text-inherit py-2 outline-none border-none"
+    {...rest}
+  />
+  {
+    iconRight && (
+      <button class="px-2 py-2 h-full">
+        <Icon
+          name={iconNameRight}
+          class={iconColorRight}
+          size={iconSizeRight}
+        />
+      </button>
+    )
+  }
+</div>

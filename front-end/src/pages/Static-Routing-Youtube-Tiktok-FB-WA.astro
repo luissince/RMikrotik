@@ -1,0 +1,158 @@
+---
+import MainLayout from "../layout/MainLayout.astro";
+---
+
+<MainLayout title="Open Book">
+    <body
+        class="bg-gray-900 text-white font-sans min-h-screen flex items-center justify-center"
+    >
+        <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
+            <!-- Contenido -->
+            <!-- Header -->
+            <!-- Título -->
+            <div class="text-center mb-6">
+                <h1 class="text-2xl lg:text-4xl font-bold text-orange-500">
+                    MIKROTIK FAILOVER GENERATOR
+                </h1>
+                <p class="text-gray-300">
+                    Recursive Gateway, Check Gateway, Netwatch Ping
+                </p>
+            </div>
+        </div>
+        <!-- Contenido inicio -->
+
+        <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
+            <!-- Diagrama -->
+            <div class="flex justify-center mb-8 mt-8">
+                <img
+                    src="/public/images/static routing.png"
+                    alt="Routing Diagram"
+                    class="rounded-lg"
+                />
+            </div>
+
+            <div class="container mx-auto p-6 bg-gray-800 rounded-lg shadow-lg">
+                <!-- Formulario -->
+
+                <!-- Contenedor borde azul -->
+                <div
+                    class="text-gray-950 shadow-2xl rounded-lg p-6 w-full ring-2 ring-blue-500"
+                >
+                    <form class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Método de Failover -->
+                        <div>
+                            <!-- Configuración de ISP -->
+                            <div
+                                class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6"
+                            >
+                                <div>
+                                    <label for="routeros" class="block font-semibold text-gray-300 mb-2">RouterOS Version</label>
+                                    
+                                    <select
+                                        id="routeros"
+                                        class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                    >
+                                        <option value="v6.xx"
+                                            >YouTube</option
+                                        >
+                                        <option value="v7.xx"
+                                            >Facebook</option
+                                        >
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="routeros" class="block font-semibold text-gray-300 mb-2">RouterOS Version</label>
+                                    
+                                    <select
+                                        id="routeros"
+                                        class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                    >
+                                        <option value="v6.xx"
+                                            >RouterOS V6.XX</option
+                                        >
+                                        <option value="v7.xx"
+                                            >RouterOS V7.XX</option
+                                        >
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- Configuración de más ISP -->
+                        </div>
+
+                        <!-- Número de líneas ISP -->
+                        <div>
+                            <!-- Configuración de ISP -->
+                            <div
+                                class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8"
+                            >
+                                <div>
+                                    <label
+                                        for="wan1"
+                                        class="block text-sm font-semibold text-gray-300"
+                                        >ISP Gateway</label
+                                    >
+
+                                    <input
+                                        id="wan1"
+                                        type="text"
+                                        placeholder="0.0.0.0"
+                                        class="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                    />
+                                </div>
+                                <div>
+                                    <label
+                                        for="gateway1"
+                                        class="block text-sm font-semibold text-gray-300"
+                                        >Routing Mark</label
+                                    >
+                                    <input
+                                        id="gateway1"
+                                        type="text"
+                                        placeholder="Mark-ISP-1"
+                                        class="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                    />
+                                </div>
+                            </div>
+                            <!-- Configuración de más ISP -->
+                        </div>
+
+                        <!-- Repetir según líneas necesarias -->
+                    </form>
+                </div>
+                <!-- Botones -->
+                <div class="flex justify-center gap-4 mt-12">
+                    <button
+                        class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition"
+                        >Generar</button
+                    >
+                    <button
+                        class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition"
+                        >Borrar Todo</button
+                    >
+                    <button
+                        class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
+                        >Copiar Script</button
+                    >
+                </div>
+
+                <!-- Script Generator Result -->
+                <div class="mt-8 p-4 bg-gray-700 rounded">
+                    <h2 class="block text-sm font-semibold text-gray-300 mb-2">
+                        Script Generator Result
+                    </h2>
+
+                    <textarea
+                        readonly
+                        class="w-full p-2 rounded bg-gray-800 text-gray-400 focus:outline-none"
+                        rows="6"
+                    >
+                        # Script result will appear here...
+                    </textarea>
+                </div>
+            </div>
+            
+        </div>
+
+        <!-- Contenido Fin Aqui para abajo es otro codigo q u se borrara -->
+    </body>
+</MainLayout>

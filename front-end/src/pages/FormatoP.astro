@@ -1,0 +1,147 @@
+---
+import MainLayout from "../layout/MainLayout.astro";
+---
+
+<MainLayout title="Open Book">
+  <body
+    class="bg-gray-900 text-white font-sans min-h-screen flex items-center justify-center"
+  >
+    <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
+      <!-- Contenido -->
+      <!-- Header -->
+      <!-- Título -->
+      <div class="text-center mb-6">
+        <h1 class="text-2xl lg:text-4xl font-bold text-orange-500">
+          Desbloquear el modo de frecuencia inalámbrica de Mikrotik
+        </h1>
+        <p class="text-gray-300 mt-4">
+          Modo de frecuencia inalámbrica de Mikrotik
+        </p>
+      </div>
+    </div>
+    <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
+      <!-- Contenido inicio -->
+      <!-- Diagrama -->
+      <div class="flex justify-center mb-8 mt-10">
+        <img
+          src="/public/images/Cálculo_de_la_altura_de_la_antena.gif"
+          alt="Routing Diagram"
+          class="rounded-lg"
+        />
+      </div>
+      <div class="container mx-auto p-6 bg-gray-800 rounded-lg shadow-lg">
+        <!-- Título -->
+
+        <div
+          class="container mx-auto p-6 bg-gray-800 rounded-lg shadow-lg max-w-5xl"
+        >
+          <!-- Gestión de Dominios -->
+          <div>
+            <p class="text-gray-300 mt-4 text-justify">
+              Esta aplicación se puede utilizar para calcular la altura de
+              antena recomendada, teniendo en cuenta la frecuencia utilizada, la
+              distancia entre dispositivos y la altura promedio de obstáculos
+              supuesta. La altura de la antena se calcula sumando: el ancho de
+              la zona de frecuencia del 80%, la altura del obstáculo y la altura
+              de la curvatura de la tierra.
+<br>
+              <br />
+              <span class="font-bold"> Nota: </span> si hay algún problema con Mikrotik,
+              ¡no soy responsable!
+            </p>
+          </div>
+      <!-- Formulario Principal -->
+      <form class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-5">
+        <!-- Columna Izquierda -->
+        <div>
+         
+          <label class="block font-semibold text-orange-400 mb-2 text-center"
+          >Frecuencia</label
+        >
+        </div>
+        <div>
+         
+          <input
+            id="textbox2"
+            type="text"
+            placeholder="2400"
+            class=" w-full bg-gray-700 text-gray-300 rounded-lg p-2 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
+          />
+        </div>
+        <div>
+          <label class="block font-semibold text-orange-400 mb-2  text-left"
+          >MHz </label
+        >
+        </div>
+        <!-- Columna Derecha -->
+      </form>
+       <!-- Formulario Principal -->
+       <form class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-5">
+        <!-- Columna Izquierda -->
+        <div>
+         
+          <label class="block font-semibold text-orange-400 mb-2 text-center"
+          >Distancia</label
+        >
+        </div>
+        <div>
+         
+          <input
+            id="textbox2"
+            type="text"
+            placeholder="10"
+            class=" w-full bg-gray-700 text-gray-300 rounded-lg p-2 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
+          />
+        </div>
+        <div>
+          <label class="block font-semibold text-orange-400 mb-2  text-left"
+          >Km</label
+        >
+        </div>
+        <!-- Columna Derecha -->
+      </form>
+       <!-- Formulario Principal -->
+       <form class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-5">
+        <!-- Columna Izquierda -->
+        <div>
+         
+          <label class="block font-semibold text-orange-400 mb-2 text-center"
+          >IP Gateway ISP</label
+        >
+        </div>
+        <div>
+         
+          <input
+            id="textbox2"
+            type="text"
+            placeholder="10"
+            class=" w-full bg-gray-700 text-gray-300 rounded-lg p-2 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
+          />
+        </div>
+        <div>
+          <label class="block font-semibold text-orange-400 mb-2  text-left"
+          >Meter</label
+        >
+        </div>
+        <!-- Columna Derecha -->
+      </form>
+      <div class=" flex flex-wrap justify-center gap-4 mb-2 mt-12">
+     
+        <button
+          class="text-white px-4 py-2 rounded-md transition ease-in-out delay-150 bg-orange-500 hover:-translate-y-1 hover:scale-110 hover:bg-orange-600 duration-300"
+        >
+          Generar Script
+        </button>
+
+      
+      </div>
+
+
+          <!-- Contenido Fin -->
+        </div>
+
+        <!-- Contenido Fin Aqui para abajo es otro codigo q u se borrara -->
+      </div>
+    </div>
+  </body></MainLayout
+>

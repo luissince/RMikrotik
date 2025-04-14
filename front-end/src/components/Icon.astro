@@ -1,0 +1,25 @@
+---
+interface Props {
+  name: string;
+  class?: string;
+  size?: number;
+  title?: string;
+}
+
+const {
+  name,
+  class: className,
+  size = 24,
+} = Astro.props;
+
+
+const iconModule = await import(`../assets/icons/${name}.svg?raw`);
+const svgContent = iconModule.default;
+
+const modifiedSvg = svgContent
+    .replace('<svg', `<svg class="${className || ''}"`)
+    .replace(/width=".*?"/, `width="${size}"`)
+    .replace(/height=".*?"/, `height="${size}"`);
+---
+
+<Fragment set:html={modifiedSvg} />

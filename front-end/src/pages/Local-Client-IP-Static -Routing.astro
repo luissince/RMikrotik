@@ -1,0 +1,83 @@
+---
+import Formulario from "../components/localroutingpbr/routing";
+import MainLayout from "../layout/MainLayout.astro";
+---
+
+<MainLayout title="Open Book">
+  <body
+    class="bg-gray-900 text-white font-sans min-h-screen flex items-center justify-center"
+  >
+    <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
+      <!-- Contenido -->
+      <!-- Header -->
+      <!-- Título -->
+      <div class="text-center mb-6">
+        <h1 class="text-2xl lg:text-4xl font-bold text-orange-500">
+          MIKROTIK LOCAL CLIENT IP STATIC ROUTING (POLICY BASED ROUTING)
+        </h1>
+        <p class="text-gray-300 mt-4">
+          configuración de enrutamiento estático en una red, donde se usan
+          reglas de Mangle para marcar o modificar paquetes según su puerto.
+          Esto permite dirigir o priorizar el tráfico de juegos o aplicaciones
+          específicas, controlando cómo se manejan los datos en función de
+          puertos particulares, sin necesidad de ajustes dinámicos en el
+          enrutamiento.
+        </p>
+      </div>
+    </div>
+    <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
+      <!-- Contenido inicio -->
+
+      <div class="container mx-auto p-6 bg-gray-800 rounded-lg shadow-lg">
+        <!-- Título -->
+
+        <div class="container mx-auto p-6 bg-gray-800 rounded-lg shadow-lg">
+          <!-- Diagrama -->
+          <div class="flex justify-center mb-8">
+            <img
+              src="/public/images/mikrotik-local-ip-pbr.png"
+              alt="Routing Diagram"
+              class="rounded-lg"
+            />
+          </div>
+
+          <Formulario client:load />
+
+          <div class="flex flex-wrap justify-center gap-4 mb-6 mt-7">
+            <button
+              class="bg-orange-500 text-white font-semibold py-2 px-6 rounded-lg shadow hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-400"
+            >
+              Generar Script
+            </button>
+            <button
+              class="bg-gray-600 text-white font-semibold py-2 px-6 rounded-lg shadow hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
+            >
+              Borrar Todo
+            </button>
+            <button
+              class="bg-green-500 text-white font-semibold py-2 px-6 rounded-lg shadow hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400"
+            >
+              Copiar Script
+            </button>
+          </div>
+
+          <!-- Gestión de Dominios -->
+
+          <div class="bg-gray-700 p-4 rounded-lg flex flex-col">
+            <label class="block text-sm font-semibold mb-2 text-gray-300"
+              >Script Generator Result</label
+            >
+            <textarea
+              class="flex-grow bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400"
+              placeholder="Please Login and Subscribe .."
+              readonly></textarea>
+          </div>
+
+          <!-- Contenido Fin -->
+        </div>
+
+        <!-- Contenido Fin Aqui para abajo es otro codigo q u se borrara -->
+      </div>
+    </div>
+  </body></MainLayout
+>

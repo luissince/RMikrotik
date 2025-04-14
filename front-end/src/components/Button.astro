@@ -1,0 +1,56 @@
+---
+// Tipos para botón y enlace
+type HTMLTag = 'button' | 'a';
+
+// Interface para props comunes
+interface BaseProps {
+  variant: "primary" | "secondary";
+  class?: string;
+  as?: HTMLTag;
+}
+
+// Props específicas para el enlace
+interface AnchorProps extends astroHTML.JSX.AnchorHTMLAttributes {
+  href: string;
+  as: 'a';
+}
+
+// Props específicas para el botón
+interface ButtonProps extends astroHTML.JSX.ButtonHTMLAttributes {
+  as?: 'button';
+}
+
+// Combinamos todos los tipos posibles
+type Props = BaseProps & (AnchorProps | ButtonProps);
+
+interface Variants {
+  primary: string;
+  secondary: string;
+}
+
+const {
+  variant = "primary",
+  class: className,
+  as: Tag = 'button',
+  ...rest
+} = Astro.props as Props;
+
+const variants: Variants = {
+  primary: "bg-[#9cee69] text-[#191919] px-6 py-2 text-base font-semibold flex items-center justify-center border-[#9cee69] border-[1px] border-solid rounded-[4px] disabled:opacity-50",
+  secondary: "bg-transparent text-[#191919] px-6 py-2 text-base font-semibold flex items-center justify-center gap-x-2 border-[#191919] border-[1px] border-solid rounded-[4px]",
+};
+
+const classes = `${variants[variant]} ${className}`;
+---
+
+{
+  Tag === 'a' ? (
+    <a {...(rest as AnchorProps)} class={classes}>
+      <slot />
+    </a>
+  ) : (
+    <button {...(rest as ButtonProps)} class={classes}>
+      <slot />
+    </button>
+  )
+}

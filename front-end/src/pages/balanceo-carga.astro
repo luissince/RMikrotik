@@ -1,0 +1,38 @@
+---
+import Formulario from "../components/balanceo-carga/formulario";
+import MainLayout from "../layout/MainLayout.astro";
+---
+
+<MainLayout title="Open Book">
+  <body
+    class="bg-gray-900 text-white font-sans min-h-screen flex items-center justify-center"
+  >
+    <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
+      <!-- Contenido -->
+      <!-- Header -->
+      <h1 class="text-2xl font-bold text-orange-500 text-center mb-6">
+        MikroTik PCC / Generador de scripts PCC de balanceo de carga para
+        RouterOS
+      </h1>
+
+      <Formulario client:load />
+
+      <p class="text-2sm text-orange-500 mx-6">
+        MikroTik LB PCC / Load Balancing PCC Script Generator for RouterOS
+      </p>
+      <p class="text-gray-400 mx-8">
+        /ip firewall nat remove [find comment="Balanceo PCC"] <br />
+        /ip route remove [find comment="Balanceo PCC"]<br />
+        /ip firewall mangle remove [find comment="Balanceo PCC"] <br />
+        /ip firewall address-list remove [find comment="Balanceo PCC"]<br />
+        /routing table remove [find comment="Balanceo PCC"]
+      </p>
+      <div class="bg-gray-700 p-4 rounded-lg mt-6 mb-4 mx-8">
+        <p class="text-sm text-gray-300">
+          Tenemos un video tutorial de como utilizar nuestra herramienta, Ver
+          Video...
+        </p>
+      </div>
+    </div>
+  </body>
+</MainLayout>

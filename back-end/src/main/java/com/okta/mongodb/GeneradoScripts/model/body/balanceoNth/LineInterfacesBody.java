@@ -1,0 +1,20 @@
+package com.okta.mongodb.GeneradoScripts.model.body.balanceoNth;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+public class LineInterfacesBody {
+    private int id;
+    private String wan;
+    private String wanInput;
+    private String gateway;
+    private String gatewayInput;
+}

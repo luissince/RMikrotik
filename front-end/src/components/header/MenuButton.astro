@@ -1,0 +1,68 @@
+---
+import Icon from "../Icon.astro";
+---
+
+<menu-button class="-mx-3">
+  <button
+    data-menu-button
+    class="bg-[#191919] px-3 py-2 text-base font-semibold flex items-center justify-center border-[#191919] border-[1px] border-solid rounded-[4px] outline-none focus:bg-[#383838] hover:bg-[#383838]"
+  >
+    <Icon name="menu" size={30} class="text-[#ffffff]" />
+  </button>
+</menu-button>
+
+<script>
+  class MenuButton extends HTMLElement {
+    private button: HTMLButtonElement | null = null;
+    private sidebar: HTMLDivElement | null = null;
+
+    constructor() {
+      super();
+      this.init();
+    }
+
+    private init(): void {
+      this.button = this.querySelector('[data-menu-button]');
+      this.sidebar = document.querySelector('[data-sidebar]');
+      
+      if (!this.button || !this.sidebar) {
+        console.warn('MenuButton: Required elements not found');
+        return;
+      }
+
+      this.setupEventListeners();
+    }
+
+    private setupEventListeners(): void {
+      this.button?.addEventListener('click', this.toggleSidebar.bind(this));
+    }
+
+    private toggleSidebar(): void {
+      if (!this.sidebar) return;
+      
+      const isHidden = this.sidebar.classList.contains('hidden');
+      
+      if (isHidden) {
+        this.showSidebar();
+      } else {
+        this.hideSidebar();
+      }
+    }
+
+    private showSidebar(): void {
+      this.sidebar?.classList.remove('hidden');
+      this.sidebar?.classList.add('fixed');
+    }
+
+    private hideSidebar(): void {
+      this.sidebar?.classList.add('hidden');
+      this.sidebar?.classList.remove('fixed');
+    }
+
+    // Limpieza cuando el componente se destruye
+    disconnectedCallback(): void {
+      this.button?.removeEventListener('click', this.toggleSidebar.bind(this));
+    }
+  }
+  customElements.define("menu-button", MenuButton);
+</script>

@@ -1,0 +1,69 @@
+---
+import Formularioremoteippublicstatic from "../components/remote-ip-public-static/formularioremoteippublicstatic";
+import MainLayout from "../layout/MainLayout.astro";
+---
+
+<MainLayout title="Open Book">
+  <body
+    class="bg-gray-900 text-white font-sans min-h-screen flex items-center justify-center"
+  >
+    <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
+      <!-- Contenido -->
+      <!-- Header -->
+      <!-- Título -->
+      <div class="text-center mb-6">
+        <h1 class="text-2xl lg:text-4xl font-bold text-orange-500">
+          Remote Access ISP "Public IP Static"
+        </h1>
+        <p class="text-gray-300 mt-4">
+          configuración de enrutamiento estático en una red, donde se usan
+          reglas de Mangle para marcar o modificar paquetes según su puerto.
+          Esto permite dirigir o priorizar el tráfico de juegos o aplicaciones
+          específicas, controlando cómo se manejan los datos en función de
+          puertos particulares, sin necesidad de ajustes dinámicos en el
+          enrutamiento.
+        </p>
+      </div>
+    </div>
+    <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
+      <!-- Contenido inicio -->
+
+      <div class="container mx-auto p-6 bg-gray-800 rounded-lg shadow-lg">
+        <!-- Título -->
+
+        <div class="container mx-auto p-6 bg-gray-800 rounded-lg shadow-lg">
+          <!-- Título -->
+          <div class="text-center mb-6"></div>
+
+          <!-- Diagrama -->
+          <div class="flex justify-center mb-8">
+            <img
+              src="/public/images/accesoremoto.png"
+              alt="Routing Diagram"
+              class="rounded-lg"
+            />
+          </div>
+
+          <!-- Formulario Principal -->
+          <Formularioremoteippublicstatic client:load />
+
+          <!-- Gestión de Dominios -->
+
+          <div class="bg-gray-700 p-4 rounded-lg flex flex-col">
+            <label class="block text-sm font-semibold mb-2 text-gray-300"
+              >Script Generator Result</label
+            >
+            <textarea
+              class="flex-grow bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400"
+              placeholder="Please Login and Subscribe .."
+              readonly></textarea>
+          </div>
+
+          <!-- Contenido Fin -->
+        </div>
+
+        <!-- Contenido Fin Aqui para abajo es otro codigo q u se borrara -->
+      </div>
+    </div>
+  </body></MainLayout
+>

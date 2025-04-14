@@ -1,0 +1,65 @@
+---
+const { url, class: className , ...rest} = Astro.props;
+---
+
+<style>
+  .card-container {
+    transition: transform 0.3s ease; 
+  }
+  .card-container:hover {
+    transform: translate(-10px, -10px);
+  }
+</style>
+
+<div class={`${className} card-container group`} {...rest}>
+  <div class="">
+    <a href="#">
+      <div
+        class="w-full h-full border-solid border-[#191919] border-[1px] rounded-2xl p-5 flex flex-col justify-start bg-white"
+      >
+        <div class="flex flex-col gap-y-2">
+          <div class="flex flex-col gap-y-1">
+            <span class="text-[#191919] font-semibold text-3xl">
+              Vídeos en stock</span
+            >
+            <span class="inline">
+              <span class="text-[#191919] font-normal text-base"
+                >6,8&nbsp;M+</span
+              >
+            </span>
+          </div>
+
+          <div class="relative overflow-hidden rounded-lg w-full">
+            <img
+              alt=""
+              sizes="(max-width: 430px) 40.232vw, (max-width: 816px) 42.401vw, (max-width: 1252px) 27.635vw, (max-width: 1656px) 20.893vw, 373px"
+              src={url}
+              class="w-full h-full object-cover"
+            />
+
+            <!-- Video a mostrar al hacer hover -->
+            <div class="absolute top-0 left-0 bottom-0 right-0 opacity-0  group-hover:opacity-100 transition-opacity duration-300">
+              <link
+                as="video"
+                data-testid="interactionMedia-prefetch-0"
+                href="https://assets.elements.envato.com/apps/storefront/stock-video-36d81febde9441b38f5f.webm"
+                rel="prefetch"
+              />
+              <div class="w-full h-full relative transition-all">
+                <video
+                  autoplay=""
+                  muted
+                  class="w-full h-full object-cover"
+                  data-testid="interactionMedia-video"
+                  loop=""
+                  preload="auto"
+                  src="https://assets.elements.envato.com/apps/storefront/stock-video-36d81febde9441b38f5f.webm"
+                ></video>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+</div>

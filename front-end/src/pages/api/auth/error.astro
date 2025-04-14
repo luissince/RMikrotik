@@ -1,0 +1,48 @@
+---
+import "../../../styles/global.css";
+import MainLayout from "../../../layout/MainLayout.astro";
+
+// Obtener el error de la URL
+const errorMessage = Astro.url.searchParams.get("error");
+
+// Mapeo de errores a mensajes amigables
+const errorMessages = {
+  OAuthCallbackError: "Hubo un problema al intentar iniciar sesión",
+  Signin: "Intenta iniciar sesión nuevamente",
+  OAuthSignin: "Error al conectar con el proveedor",
+  OAuthCallback: "Error en la respuesta del proveedor",
+  OAuthCreateAccount: "Error al crear la cuenta",
+  EmailCreateAccount: "Error al crear la cuenta con email",
+  Configuration: "Los datos ingresados no son los correctos",
+  default: "Ocurrió un error durante la autenticación",
+};
+
+const message =
+  errorMessages[errorMessage as keyof typeof errorMessages] ||
+  errorMessages.default;
+---
+
+<MainLayout title="Open Book | Iniciar Sesión" type="sign-in" class="mx-8">
+  <div class="flex items-center justify-center">
+    <div
+      class="w-full flex flex-col items-center justify-center gap-y-5 py-10 text-center max-w-lg"
+    >
+      <h1 class="text-2xl font-semibold">Hubo un problema al iniciar sesión</h1>
+      <p>
+        {message}
+      </p>
+      <a
+        class="bg-transparent text-black px-6 py-2 text-base font-semibold flex items-center justify-center border-[#000000] border-[1px] border-solid rounded-[4px] outline-none focus:bg-white hover:bg-white focus:border-black hover:border-black focus:text-[#191919]"
+        href="/sign-in"
+      >
+        <span>Intentar nuevamente</span>
+      </a>
+      <a
+      class="bg-transparent text-black px-6 py-2 text-base font-semibold flex items-center justify-center border-[#000000] border-[1px] border-solid rounded-[4px] outline-none focus:bg-white hover:bg-white focus:border-black hover:border-black focus:text-[#191919]"
+      href="/"
+    >
+      <span>Volver al inicio</span>
+    </a>
+    </div>
+  </div>
+</MainLayout>

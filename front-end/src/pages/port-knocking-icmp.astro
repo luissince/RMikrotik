@@ -1,0 +1,289 @@
+---
+import MainLayout from "../layout/MainLayout.astro";
+---
+
+<MainLayout title="Open Book">
+  <body
+    class="bg-gray-900 text-white font-sans min-h-screen flex items-center justify-center"
+  >
+    <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
+      <!-- Contenido -->
+      <!-- Header -->
+      <!-- Título -->
+      <div class="text-center mb-6">
+        <h1 class="text-2xl lg:text-4xl font-bold text-orange-500">
+          MIKROTIK AUTO BACKUP TO E-MAIL GENERATOR
+        </h1>
+        <p class="text-gray-300 mt-4">
+          Port TCP/UDP Static Routing. ¡Fácil, rápido y efectivo! 🚀
+        </p>
+      </div>
+    </div>
+    <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
+      <!-- Contenido inicio -->
+
+      <div class="container mx-auto px-4">
+        <div
+          class="flex flex-col lg:flex-row rounded-lg shadow-lg overflow-hidden"
+        >
+          <!-- Panel de Configuración -->
+          <div class="w-full lg:w-2/4 bg-gray-800 p-6">
+            <!-- Contenedor borde azul -->
+            <div
+              class="text-gray-950 shadow-2xl rounded-lg p-6 w-full ring-2 ring-blue-500"
+            >
+              <!-- Selector de Opciones -->
+              <!-- Tabla del formulario -->
+              <div class="overflow-x-auto rounded-t-lg my-2">
+                <table
+                  class="table-auto w-full border-spacing-2 border-slate-600"
+                >
+                  <thead>
+                    <tr class="bg-blue-500 text-gray-200">
+                      <th class="border-slate-700 p-2 border"
+                        >First Icmp Packet Size range: 50-65535</th
+                      >
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="text-gray-800">
+                      <td class="border-slate-700 p-1 border">
+                        <p class="text-gray-300 pb-2">Ejemplo : 100</p>
+                        <input
+                          id="gateway"
+                          type="text"
+                          placeholder="100"
+                          class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- Tabla del formulario -->
+              <div class="overflow-x-auto rounded-t-lg my-2">
+                <table
+                  class="table-auto w-full border-spacing-2 border-slate-600"
+                >
+                  <thead>
+                    <tr class="bg-red-600 text-gray-200">
+                      <th class="border-slate-700 p-2 border"
+                        >Second Icmp Packet Size range: 50-65535
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="text-gray-800">
+                      <td class="border-slate-700 p-1 border">
+                        <p class="text-gray-300 pb-2">Ejemplo : 200</p>
+                        <input
+                          id="gateway"
+                          type="text"
+                          placeholder="200"
+                          class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- Tabla del formulario -->
+              <div class="overflow-x-auto rounded-t-lg my-2">
+                <table
+                  class="table-auto w-full border-spacing-2 border-slate-600"
+                >
+                  <thead>
+                    <tr class="bg-indigo-500 text-gray-200">
+                      <th class="border-slate-700 p-2 border"
+                        >On Login Time Duration
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="text-gray-800">
+                      <td class="border-slate-700 p-1 border">
+                        <p class="text-gray-300 pb-2">
+                          example: 00:30:00 (30 minute) <br />
+                          example: 00:00:00 (unlimited)
+                        </p>
+                        <input
+                          id="gateway"
+                          type="text"
+                          placeholder="00:00:00"
+                          class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        />
+                      </td>
+                    </tr>
+
+                  </tbody>
+                </table>
+              </div>
+              <!-- Tabla del formulario -->
+              <div class="overflow-x-auto rounded-t-lg my-2">
+                <table
+                  class="table-auto w-full border-spacing-2 border-slate-600"
+                >
+                  <thead>
+                    <tr class="bg-slate -600 text-gray-200">
+                      <th class="border-slate-700 p-2 border"
+                        >Port Service To Protected
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="text-gray-800">
+                      <td class="border-slate-700 p-1 border">
+                        <input
+                          id="gateway"
+                          type="text"
+                          placeholder="21,22,23"
+                          class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        />
+                      </td>
+                    </tr>
+                  </tbody>
+                  
+                </table>
+                
+              </div>
+              <table class="table-auto w-full border-spacing-2 border-slate-600">
+                <thead>
+               
+                </thead>
+                <tbody>
+                  <tr class="text-gray-800">
+                    <td class="border-slate-700 p-2 border pl-4">
+                      <label
+                        class="block text-sm font-semibold mb-2 text-gray-300"
+                        >8728 (api)</label
+                      >
+                    </td>
+                    <td class="border-slate-700 p-2 border pl-4">
+                      <label
+                        class="block text-sm font-semibold mb-2 text-gray-300"
+                        >8291 (winbox)</label
+                      >
+                    </td>
+               
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="text-gray-800">
+                    <td class="border-slate-700 p-2 border pl-4">
+                      <label
+                        class="block text-sm font-semibold mb-2 text-gray-300"
+                        >8729 (api-ssl)</label
+                      >
+                    </td>
+              
+                    <td class="border-slate-700 p-2 border pl-4">
+                      <label
+                        class="block text-sm font-semibold mb-2 text-gray-300"
+                      >
+                      80 (www)</label
+                      >
+                    </td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="text-gray-800">
+                    <td class="border-slate-700 p-2 border pl-4">
+                      <label
+                        class="block text-sm font-semibold mb-2 text-gray-300"
+                        >21 (ftp)</label
+                      >
+                    </td>
+                    <td class="border-slate-700 p-2 border pl-4">
+                      <label
+                        class="block text-sm font-semibold mb-2 text-gray-300"
+                        >443 (www-ssl)</label
+                      >
+                    </td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="text-gray-800">
+                    <td class="border-slate-700 p-2 border pl-4">
+                      <label
+                        class="block text-sm font-semibold mb-2 text-gray-300"
+                        >22 (ssh)</label
+                      >
+                    </td>
+                    <td class="border-slate-700 p-2 border pl-4">
+                      <label
+                        class="block text-sm font-semibold mb-2 text-gray-300"
+                        >3128 (web proxy)</label
+                      >
+                    </td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="text-gray-800">
+                    <td class="border-slate-700 p-2 border pl-4">
+                      <label
+                        class="block text-sm font-semibold mb-2 text-gray-300"
+                        >23 (telnet)</label
+                      >
+                    </td>
+                    <td class="border-slate-700 p-2 border pl-4">
+                      <label
+                        class="block text-sm font-semibold mb-2 text-gray-300"
+                        ></label
+                      >
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- Gateway del ISP -->
+
+              <!-- Gateway del ISP -->
+
+              <div class="flex flex-wrap justify-center gap-4 mb-6 mt-7">
+                <button
+                  class="text-white w-96 py-2 rounded-md transition ease-in-out delay-150 bg-green-500 hover:-translate-y-1 hover:scale-110 hover:bg-teal-600 duration-300"
+                >
+                  Generar
+                </button>
+              </div>
+            </div>
+
+            <!-- Campos de Entrada -->
+          </div>
+
+          <!-- Script Generator Section -->
+          <div
+            class="rounded-lg bg-gray-700 p-4 flex flex-col w-full mt-6 mb-6"
+          >
+            <label class="block text-sm font-semibold mb-2 text-gray-300"
+              >Copy-Paste the Script to the Terminal</label
+            >
+            <textarea
+              class="flex-grow bg-gray-800 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400"
+              placeholder="Please Login and Subscribe .."
+              readonly></textarea>
+              <p class="text-2sm text-orange-100  bg-red-500  p-4 rounded-lg mt-6 mb-4 mx-8 ">
+                Copy-Paste Firewall Script into the Terminal!  
+              </p>
+              <p class="text-gray-400 mx-8">
+                Unique Packet Size For Key Knocking: and <br>
+
+                <span class="text-base text-gray-100">  <strong> Example Manually Open Key Ping in CMD Windows </strong></span><br>
+                 First Key Knock -> <span class="text-blue-400"> <strong>ping -l (IP Adrress)</strong></span><br>
+                Second Key Knock -> <span class="text-blue-400"> <strong>ping -l (IP Adrress)</strong></span><br>
+                <span class="text-base text-gray-100">  <strong> Example Manually Open Key Ping in Terminal Linux or MacOS: </strong></span><br>
+                First Key Knock -> <span class="text-blue-400"> <strong>ping -s (IP Adrress)</strong></span><br>
+                Second Key Knock -> <span class="text-blue-400"> <strong>ping -s (IP Adrress)</strong></span><br>
+          
+              </p>
+          </div>
+        </div>
+       
+        
+      </div>
+
+      <!-- Contenido Fin -->
+    </div>
+
+    <!-- Contenido Fin Aqui para abajo es otro codigo q u se borrara -->
+  </body>
+</MainLayout>

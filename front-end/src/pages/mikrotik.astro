@@ -1,0 +1,32 @@
+---
+import MarkdownViewer from "../components/header/MarkdownViewer";
+import MainLayout from "../layout/MainLayout.astro";
+
+interface ContentDataBase {
+    id: number;
+    title: string;
+    description: string;
+}
+
+// Función para obtener datos de la API
+async function getData() {
+    try {
+        const response = await fetch("http://localhost:8080/content-data-base");
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error("Error al obtener datos:", error);
+        return [];
+    }
+}
+
+// Obtener los datos
+const initialData = (await getData()) as ContentDataBase[];
+// const htmlContent = marked.parse(datos[0].description);
+
+// console.log(datos[0].description);
+---
+
+<MainLayout title="Open Book">
+    <MarkdownViewer initialData={initialData} client:load />
+</MainLayout>

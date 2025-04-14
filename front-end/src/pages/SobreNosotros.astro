@@ -1,0 +1,233 @@
+---
+import MainLayout from "../layout/MainLayout.astro";
+---
+
+<MainLayout title="Open Book">
+  <body
+    class="bg-gray-900 text-white font-sans min-h-screen flex items-center justify-center "
+  >
+    <div class="    mx-4">
+      <!-- Contenido inicio -->
+
+      <!-- Header -->
+      <header class="bg-blue-600 text-white py-8 rounded-b-lg">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+          <h1 class="text-4xl font-extrabold">Sobre Nosotros</h1>
+          <p class="text-lg mt-2">
+            Conoce nuestra historia, misión, visión y el compromiso que tenemos
+            contigo.
+          </p>
+        </div>
+      </header>
+
+      <!-- Historia -->
+      <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4">
+          <h2 class="text-3xl font-bold  mb-8">Compañia iTec</h2>
+          <div class="space-y-6 text-lg leading-relaxed grid grid-cols-2 ga text-justify">
+            <p>
+              Iniciamos nuestra trayectoria configurando LAN centers para
+              cabinas de internet hace más de una década. Nuestra pasión por las
+              redes nos llevó a explorar soluciones más avanzadas, y durante la
+              pandemia, jugamos un papel crucial brindando soluciones WISP e ISP
+              para comunidades que necesitaban conectividad más que nunca. <br>
+            
+            
+              Al finalizar la pandemia, expandimos nuestras operaciones para
+              trabajar con empresas privadas y entidades del Estado, ofreciendo
+              soluciones de gran escala respaldadas por nuestra experiencia y
+              conocimiento en tecnologías MikroTik. <br>
+            
+           
+              Hoy somos una empresa consolidada con ingenieros de sistemas
+              certificados internacionalmente, apasionados por resolver los
+              retos tecnológicos de nuestros clientes con innovación y
+              profesionalismo.
+            </p>
+            <div class="w-32 h-2 md:w-3/6 md:h-2 mx-auto">
+              <img
+              src="/public/images/logotecnologico.jpg"
+              alt="Routing Diagram"
+              class="rounded-lg"
+            />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Misión y Visión -->
+      <section class="py-16 bg-blue-500">
+        <div class="max-w-7xl mx-auto px-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div class="rounded-lg shadow-md hover:shadow-lg transition pr-4 pt-4 pb-4 pl-4 border-spacing-40 bg-blue-600  bg-gradient-to-tr from-blue-700 to-slate-800 rounded-t-lg grid gap-4">
+      
+              <h2 class="text-3xl font-bold mb-4 text-white">Misión</h2>
+              <p class="text-lg leading-relaxed text-white text-justify">
+                Proveer soluciones tecnológicas innovadoras y personalizadas,
+                enfocadas en maximizar la eficiencia y conectividad de nuestros
+                clientes en los sectores público y privado. Nos esforzamos por
+                ser el aliado estratégico en el crecimiento digital de las
+                empresas.
+              </p>
+            </div>
+            <div class="rounded-lg shadow-md hover:shadow-lg transition pr-4 pt-4 pb-4 pl-4 border-spacing-40 bg-blue-600 bg-gradient-to-r from-blue-900 to-slate-800 rounded-t-lg grid gap-4">
+              <h2 class="text-3xl font-bold mb-4 text-white">Visión</h2>
+              <p class="text-lg leading-relaxed text-white text-justify">
+                Ser reconocidos como líderes en soluciones ISP/WISP y redes
+                avanzadas, destacándonos por nuestra excelencia técnica,
+                compromiso con la calidad y capacidad de adaptación a las
+                necesidades de un mundo en constante cambio.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Servicios -->
+      <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+          <h2 class="text-3xl font-bold mb-8">Nuestros Servicios</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Servicio 1 -->
+            <div
+              class="p-6 bg-gray-50 rounded-lg shadow-md hover:shadow-lg transition"
+            >
+              <h3 class="text-xl font-semibold mb-4">
+                Configuración Automatizada
+              </h3>
+              <p>
+                Con nuestro sistema, genera scripts personalizados para MikroTik
+                en segundos, listos para copiar y pegar, sin complicaciones.
+              </p>
+            </div>
+            <!-- Servicio 2 -->
+            <div
+              class="p-6 bg-gray-50 rounded-lg shadow-md hover:shadow-lg transition "
+            >
+              <h3 class="text-xl font-semibold mb-4">
+                Soporte Técnico Especializado
+              </h3>
+              <p>
+                Brindamos soporte a pequeñas y grandes empresas, así como
+                instituciones públicas, garantizando soluciones rápidas y
+                efectivas.
+              </p>
+            </div>
+            <!-- Servicio 3 -->
+            <div
+              class="p-6 bg-gray-50 rounded-lg shadow-md hover:shadow-lg transition"
+            >
+              <h3 class="text-xl font-semibold mb-4">Capacitación Avanzada</h3>
+              <p>
+                Ofrecemos cursos y talleres sobre configuraciones avanzadas de
+                MikroTik, diseñados por ingenieros certificados con años de
+                experiencia.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Equipo -->
+      <section class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+          <h2 class="text-3xl font-bold mb-8">Nuestro Equipo</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Miembro 1 -->
+            <div class="p-6 bg-white rounded-lg shadow-md">
+              <img
+                src="https://via.placeholder.com/150"
+                alt="Ingeniero"
+                class="mx-auto rounded-full w-32 h-32 mb-4"
+              />
+              <h3 class="text-xl font-semibold">Ing. Luis</h3>
+              <p class="text-sm text-gray-600">
+                Certificado MTCNA, MTCRE, MTCTCE
+              </p>
+              <p class="mt-4">
+                Especialista en redes avanzadas y soluciones ISP.
+              </p>
+            </div>
+            <!-- Miembro 2 -->
+            <div class="p-6 bg-white rounded-lg shadow-md">
+              <img
+                src="https://via.placeholder.com/150"
+                alt="Ingeniero"
+                class="mx-auto rounded-full w-32 h-32 mb-4"
+              />
+              <h3 class="text-xl font-semibold">Ing. Alexander </h3>
+              <p class="text-sm text-gray-600">Certificada MTCWE, MTCSE</p>
+              <p class="mt-4">
+                Experta en soluciones inalámbricas y seguridad.
+              </p>
+            </div>
+            <!-- Miembro 3 -->
+            <div class="p-6 bg-white rounded-lg shadow-md">
+              <img
+                src="https://via.placeholder.com/150"
+                alt="Ingeniero"
+                class="mx-auto rounded-full w-32 h-32 mb-4"
+              />
+              <h3 class="text-xl font-semibold">Ing. Carlos Sánchez</h3>
+              <p class="text-sm text-gray-600">Certificado MTCNA</p>
+              <p class="mt-4">
+                Especialista en soporte técnico y optimización de redes.
+              </p>
+            </div>
+                  
+          </div>
+        </div>
+      </section>
+      <h2 class="text-2xl font-semibold text-gray-800 mb-8 ">
+        Síguenos en Nuestras Redes Sociales
+      </h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-10 pr-5 pl-5 pb-20 ">
+        <!-- Facebook -->
+        <div class="flex items-center space-x-4 bg-white shadow-md hover:shadow-lg rounded-lg p-4 transition-transform transform hover:-translate-y-1">
+          <img src="https://img.icons8.com/color/48/000000/facebook-new.png" alt="Facebook" class="w-10 h-10">
+          <span class="text-gray-800 font-medium">Facebook</span>
+        </div>
+        <!-- Grupo Fb -->
+        <div class="flex items-center space-x-4 bg-white shadow-md hover:shadow-lg rounded-lg p-4 transition-transform transform hover:-translate-y-1">
+          <img src="https://img.icons8.com/color/48/000000/facebook-new.png" alt="Grupo Fb" class="w-10 h-10">
+          <span class="text-gray-800 font-medium">Grupo Fb</span>
+        </div>
+        <!-- WhatsApp -->
+        <div class="flex items-center space-x-4 bg-white shadow-md hover:shadow-lg rounded-lg p-4 transition-transform transform hover:-translate-y-1">
+          <img src="https://img.icons8.com/color/48/000000/whatsapp.png" alt="WhatsApp" class="w-10 h-10">
+          <span class="text-gray-800 font-medium">WhatsApp</span>
+        </div>
+        <!-- YouTube -->
+        <div class="flex items-center space-x-4 bg-white shadow-md hover:shadow-lg rounded-lg p-4 transition-transform transform hover:-translate-y-1">
+          <img src="https://img.icons8.com/color/48/000000/youtube-play.png" alt="YouTube" class="w-10 h-10">
+          <span class="text-gray-800 font-medium">YouTube</span>
+        </div>
+        <!-- Instagram -->
+        <div class="flex items-center space-x-4 bg-white shadow-md hover:shadow-lg rounded-lg p-4 transition-transform transform hover:-translate-y-1">
+          <img src="https://img.icons8.com/color/48/000000/instagram-new.png" alt="Instagram" class="w-10 h-10">
+          <span class="text-gray-800 font-medium">Instagram</span>
+        </div>
+        <!-- Twitter -->
+        <div class="flex items-center space-x-4 bg-white shadow-md hover:shadow-lg rounded-lg p-4 transition-transform transform hover:-translate-y-1">
+          <img src="https://img.icons8.com/color/48/000000/twitter--v1.png" alt="Twitter" class="w-10 h-10">
+          <span class="text-gray-800 font-medium">Twitter</span>
+        </div>
+        <!-- LinkedIn -->
+        <div class="flex items-center space-x-4 bg-white shadow-md hover:shadow-lg rounded-lg p-4 transition-transform transform hover:-translate-y-1">
+          <img src="https://img.icons8.com/color/48/000000/linkedin.png" alt="LinkedIn" class="w-10 h-10">
+          <span class="text-gray-800 font-medium">LinkedIn</span>
+        </div>
+         <!-- LinkedIn -->
+         <div class="flex items-center space-x-4 bg-white shadow-md hover:shadow-lg rounded-lg p-4 transition-transform transform hover:-translate-y-1">
+          <img src="https://img.icons8.com/color/48/000000/tiktok.png" alt="LinkedIn" class="w-10 h-10">
+          <span class="text-gray-800 font-medium">Tiktok</span>
+        </div>
+      </div>
+  
+      <!-- Contenido Fin -->
+    </div>
+
+    <!-- Contenido Fin Aqui para abajo es otro codigo q u se borrara -->
+  </body>
+</MainLayout>

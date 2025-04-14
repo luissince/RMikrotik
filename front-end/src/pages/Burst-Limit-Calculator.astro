@@ -1,0 +1,257 @@
+---
+import MainLayout from "../layout/MainLayout.astro";
+---
+
+<MainLayout title="Open Book">
+  <body
+    class="bg-gray-900 text-white font-sans min-h-screen flex items-center justify-center"
+  >
+    <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
+      <!-- Contenido -->
+      <!-- Header -->
+      <!-- Título -->
+      <div class="text-center mb-6">
+        <h1 class="text-2xl lg:text-4xl font-bold text-orange-500">
+          MIKROTIK BURST LIMIT CALCULATOR FOR ROUTER-OS
+        </h1>
+        <p class="text-gray-300 mt-4">
+          PRECIO DE SUSCRIPCIÓN. ¡Fácil, rápido y efectivo! 🚀
+        </p>
+      </div>
+    </div>
+    <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
+      <!-- Contenido inicio -->
+  
+    
+      
+      
+<!-- dddddd -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+  <!-- Tabla del formulario -->
+
+  <div class="text-gray-950 shadow-2xl rounded-lg p-6 w-full ring-2 ring-blue-500">
+  
+  <div class="overflow-x-auto rounded-t-lg">
+    <table class="table-auto w-full border-spacing-2 border-slate-600">
+      <thead>
+        <tr class="bg-gray-700 text-gray-200">
+          <th class="border-slate-700 p-2 border">TARGET UPLOAD</th>
+          <th class="border-slate-700 p-2 border">TARGET DOWNLOAD</th>
+          
+        </tr>
+      </thead>
+
+      
+      <tbody>
+        
+        <tr class="text-gray-800">
+          <td class="border-slate-700 p-2 border">
+            <label
+                for="wan-type"
+                class="block text-sm font-semibold text-gray-300 mt-1"
+                >Max Limit (K/M)</label>
+                <div class="rounded-t-lg"> 
+            <input
+              id="textbox2"
+              type="text"
+              placeholder="512K"
+              class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500 "
+            />
+          </div>
+          </td>
+          <td class="border-slate-700 p-2 border">
+            <label
+            for="wan-type"
+            class="block text-sm font-semibold text-gray-300 mt-1"
+            >Max Limit (K/M)</label>
+            <input
+              id="textbox2"
+              type="text"
+              placeholder="1M"
+              class="w-full p-2 rounded bg-slate-600 text-white placeholder-zinc-300 focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+          </td>   
+         </tr>
+         <tr class="text-gray-800">
+          <td class="border-slate-700 p-2 border">
+            <label
+                for="wan-type"
+                class="block text-sm font-semibold text-gray-300 mt-1"
+                >Burst Limit (K/M)</label>
+            <input
+              id="textbox2"
+              type="text"
+              placeholder="1M"
+              class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+          </td>
+          <td class="border-slate-700 p-2 border">
+            <label
+            for="wan-type"
+            class="block text-sm font-semibold text-gray-300 mt-1"
+            >Burst Limit (K/M)</label>
+            <input
+              id="textbox2"
+              type="text"
+              placeholder="2M"
+              class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+          </td>   
+         </tr>
+         <tr class="text-gray-800">
+          <td class="border-slate-700 p-2 border">
+            <label
+                for="wan-type"
+                class="block text-sm font-semibold text-gray-300 mt-1"
+                >Actual Burst Time (s)</label>
+            <input
+              id="textbox2"
+              type="text"
+              placeholder="6"
+              class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+          </td>
+          <td class="border-slate-700 p-2 border">
+            <label
+            for="wan-type"
+            class="block text-sm font-semibold text-gray-300 mt-1"
+            >Actual Burst Time (s)</label>
+            <input
+              id="textbox2"
+              type="text"
+              placeholder="6"
+              class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+            
+          </td> 
+            
+          
+         </tr>
+ 
+         
+         
+      </tbody>
+      
+    </table>
+    <div class="bg-gray-700 p-4 rounded-lg mt-6 mb-4 mx-8">
+      <p class="text-sm text-gray-300">
+        Tenemos un video tutorial de como utilizar nuestra herramienta, Ver
+        Video...
+      </p>
+    </div>
+      <!-- Diagrama -->
+      <div class="flex justify-center mb-8 mt-8">
+        <img
+          src="/public/images/NAT.png"
+          alt="Routing Diagram"
+          class="rounded-lg"
+        />
+      </div>
+  </div>
+</div>
+
+    <!--Tabla Formulario -->
+
+
+  <!-- Form Section -->
+  <div class="bg-gray-700 p-4 rounded-t-lg ">
+    <form class="space-y-4">
+      <!-- Dropdowns -->
+
+
+  <!-- Script Generator Section -->
+  
+         <!-- Burst Limit Table -->
+       
+          <h3 class="text-xl font-bold text-gray-100 mb-4">BURST LIMIT FOR QUEUE</h3>
+          <div class="overflow-x-auto rounded-t-lg">
+          <table class="table-auto w-full border-spacing-2">
+            <thead>
+              <tr class=" bg-gray-100 text-gray-200">
+                <th class="bg-gray-800 text-gray-200 p-2 border-separate">Tab</th>
+                <th class="bg-gray-800 text-gray-200 p-2 border-separate">Upload</th>
+                <th class="bg-gray-800 text-gray-200 p-2 border-separate">Download</th>
+
+       
+            </thead>
+            <tbody >
+              <tr>
+                <td class="p-2 border text-slate-300">Max Limit</td>
+                <td class="p-2 border text-green-500 font-bold">512K</td>
+                <td class="p-2 border text-green-500 font-bold">1M</td>
+              </tr>
+              <tr>
+                <td class="p-2 border text-slate-300">Burst Limit</td>
+                <td class="p-2 border text-blue-500 font-bold">1M</td>
+                <td class="p-2 border text-blue-500 font-bold">2M</td>
+              </tr>
+              <tr>
+                <td class="p-2 border text-slate-300">Burst Threshold</td>
+                <td class="p-2 border text-purple-500 font-bold">384K</td>
+                <td class="p-2 border text-purple-500 font-bold">750K</td>
+              </tr>
+              <tr>
+                <td class="p-2 border text-slate-300">Burst Time</td>
+                <td class="p-2 border text-red-500 font-bold">16</td>
+                <td class="p-2 border text-red-500 font-bold">16</td>
+              </tr>
+              <tr>
+                <td class="p-2 border text-slate-300">Limit At</td>
+                <td class="p-2 border text-orange-500 font-bold">64K</td>
+                <td class="p-2 border text-orange-500 font-bold">125K</td>
+              </tr>
+            </tbody>
+            <thead>
+              <tr class=" bg-gray-100 text-gray-200">
+                <th class="bg-gray-800 text-gray-200 p-2 border-separate">TAB ADVANCED</th>
+                <th class="bg-gray-800 text-gray-200 p-2 border-separate">UPLOAD</th>
+                <th class="bg-gray-800 text-gray-200 p-2 border-separate">DOWNLOAD</th>
+ 
+            </thead>
+            <tr>
+              <td class="p-2 border text-slate-300">Limit At</td>
+              <td class="p-2 border text-violet-400 font-bold">64K</td>
+              <td class="p-2 border text-violet-400 font-bold">64K</td>
+            </tr>
+            <tr>
+              <td class="p-2 border text-slate-300">Priority</td>
+              <td class="p-2 border text-sky-400 font-bold">8</td>
+              <td class="p-2 border text-sky-400 font-bold">8</td>
+            </tr>
+           
+          </table>
+
+          <table class="table-auto w-full border-spacing-2">
+          <thead>
+            <tr class=" bg-gray-100 text-gray-200">
+              <th class="bg-gray-800 text-gray-200 p-2 border-separate">RATE LIMIT FOR HOTSPOT OR PPPOE</th>
+               
+          </thead>
+          <thead>
+            <tr class=" bg-gray-100 text-gray-200">
+              <th class="bg-red-600 text-gray-200 p-2 border-separate">512K/1M 1M/2M 384K/750K 16/16 8 64K/125K</th>
+               
+          </thead>
+        </table>
+        </div>
+       
+    
+   
+        <div class="flex flex-wrap justify-center gap-4 mb-6 mt-7">
+     
+          <button
+            class="text-white px-4 py-2 rounded-md transition ease-in-out delay-150 bg-orange-500 hover:-translate-y-1 hover:scale-110 hover:bg-orange-600 duration-300"
+          >
+          Copiar Script Generado
+          </button>
+  
+        
+        </div>
+  
+</div>
+    <!-- Contenido Fin -->
+  </body>
+
+  <!-- Contenido Fin Aqui para abajo es otro codigo q u se borrara -->
+</MainLayout>

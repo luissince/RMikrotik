@@ -1,0 +1,210 @@
+---
+import Button from "../components/Button.astro";
+import Icon from "../components/Icon.astro";
+import Input from "../components/Input.astro";
+import MainLayout from "../layout/MainLayout.astro";
+import { getSession } from "auth-astro/server";
+
+const session = await getSession(Astro.request);
+if (session) {
+  return Astro.redirect("/");
+}
+---
+
+<MainLayout title="Open Book | Iniciar Sesión" type="sign-in" class="mx-8">
+  <div class="flex flex-col gap-y-16 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-y-6 lg:gap-x-6">
+      <div
+        class="bg-[#191919] rounded-2xl py-10 px-8 col-span-2 bg-[url('/public/images/banner.avif')] bg-cover bg-[-30px] bg-no-repeat"
+      >
+        <div class="flex flex-col justify-center h-full gap-y-4">
+          <h1 class="text-[#ffffff] text-6xl 2xl:text-7xl font-bold">
+            "<span class="text-[#9cee69] text-6xl 2xl:text-7xl font-bold"
+              >Unlimited assets</span
+            > for the creatively obsessed"
+          </h1>
+          <span class="text-[#ffffff] text-2xl font-semibold">
+            Access the broadest range of asset categories in one place
+          </span>
+        </div>
+      </div>
+
+      <div class="">
+        <div
+          class="bg-white p-8 border-[1px] border-[#cccccc] border-solid rounded-2xl"
+        >
+          <div class="flex flex-col gap-y-4">
+            <h1 class="text-[#191919] text-3xl font-bold text-center">
+              Iniciar sesión
+            </h1>
+
+            <Button id="login-google" variant="secondary">
+              <Icon name="google-color" />
+              <span>Continuar con Google</span>
+            </Button>
+
+            <Button id="login-github" variant="secondary">
+              <Icon name="github" />
+              <span>Continuar con Git Hub</span>
+            </Button>
+
+            <Button id="login-facebook" variant="secondary">
+              <Icon name="facebook-color" />
+              <span>Continuar con Facebook</span>
+            </Button>
+
+            <div class="border-t-[1px] border-solid border-[#cccccc]"></div>
+
+            <div class="flex flex-col gap-y-1">
+              <p>Nombre de usuario o correo electrónico</p>
+              <Input
+                data-email
+                iconName="email"
+                iconColor="text-[#191919]"
+                placeholder="Tu correo"
+                type="email"
+              />
+              <span class="text-red-500 text-sm hidden" data-email-error
+                >Rellene el campo email.</span
+              >
+            </div>
+
+            <div class="flex flex-col gap-y-1">
+              <p>Nombre de usuario o correo electrónico</p>
+              <Input
+                data-password
+                iconName="lock"
+                iconColor="text-[#191919]"
+                placeholder="Tu Contraseña"
+                type="password"
+              />
+              <span class="text-red-500 text-sm hidden" data-password-error
+                >Rellene el campo contraseña.</span
+              >
+            </div>
+
+            <Button id="login-email" variant="primary" class="gap-x-2">
+              <Icon name="spinner" size={23} />
+              <span>Iniciar Sesión</span>
+            </Button>
+
+            <div class="text-center">
+              <span class="text-[#707070] text-sm">¿Eres nuevo?</span>
+              <a class="font-semibold underline text-sm" href="/sign-up">
+                Crear una nuva cuenta de Envato
+              </a>
+            </div>
+
+            <div class="border-t-[1px] border-solid border-[#cccccc]"></div>
+
+            <p class="text-[#707070] text-sm">
+              Al continuar, confirmas que tienes 18 años o más y aceptas nuestra <span
+                class="underline">Política de Privacidad</span
+              > y <span class="underline">Términos de Uso</span>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const { signIn } = await import("auth-astro/client");
+
+    let isLoading = false;
+
+    const loginGoogle = document.getElementById(
+      "login-google"
+    ) as HTMLButtonElement;
+
+    const loginGithub = document.getElementById(
+      "login-github"
+    ) as HTMLButtonElement;
+
+    const loginFacebook = document.getElementById(
+      "login-facebook"
+    ) as HTMLButtonElement;
+
+    const loginEmail = document.getElementById(
+      "login-email"
+    ) as HTMLButtonElement;
+
+    const inputEmail = document.querySelector(
+      "[data-email]"
+    ) as HTMLInputElement;
+
+    const inputEmailError = document.querySelector(
+      "[data-email-error]"
+    ) as HTMLSpanElement;
+
+    const inputPassword = document.querySelector(
+      "[data-password]"
+    ) as HTMLInputElement;
+
+    const inputPasswordError = document.querySelector(
+      "[data-password-error]"
+    ) as HTMLSpanElement;
+
+    loginGoogle?.addEventListener("click", () =>
+      signIn("google", {
+        callbackUrl: "/dashboard",
+        redirect: true,
+      })
+    );
+
+    loginGithub?.addEventListener("click", () =>
+      signIn("github", {
+        callbackUrl: "/dashboard",
+        redirect: true,
+      })
+    );
+
+    loginFacebook?.addEventListener("click", () =>
+      signIn("facebook", {
+        callbackUrl: "/dashboard",
+        redirect: true,
+      })
+    );
+
+    loginEmail?.addEventListener("click", async () => {
+      isLoading = true;
+      const children = Array.from(loginEmail.children).find(
+        (item) => item.tagName.toLocaleLowerCase() === "svg"
+      );
+
+      if (inputEmail.value.trim().length === 0) {
+        inputEmailError.classList.remove("hidden");
+        inputEmailError.classList.add("block");
+        return;
+      }
+
+      if (inputPassword.value.trim().length === 0) {
+        inputPasswordError.classList.remove("hidden");
+        inputPasswordError.classList.add("block");
+        return;
+      }
+
+      children?.classList.add("animate-spin");
+
+      loginEmail.setAttribute("disabled", "true");
+
+      // try {
+      await signIn("credentials", {
+        email: inputEmail.value.trim(),
+        password: inputPassword.value.trim(),
+        callbackUrl: "/dashboard",
+        redirect: true,
+      });
+
+      isLoading = false;
+      children?.classList.remove("animate-spin");
+      loginEmail.removeAttribute("disabled");
+      // } catch (error) {
+      //   console.log(error);
+      //   isLoading = false;
+      //   children?.classList.remove("animate-spin");
+      //   loginEmail.removeAttribute("disabled");
+      // }
+    });
+  </script>
+</MainLayout>

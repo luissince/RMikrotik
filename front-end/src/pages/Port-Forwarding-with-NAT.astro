@@ -1,0 +1,73 @@
+---
+import FormularioPortForwardingWithNat from "../components/Port-Forwarding-with-NAT/formularioPortForwardingWithNat";
+import MainLayout from "../layout/MainLayout.astro";
+---
+
+<MainLayout title="Open Book">
+  <body
+    class="bg-gray-900 text-white font-sans min-h-screen flex items-center justify-center"
+  >
+    <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
+      <!-- Contenido -->
+      <!-- Header -->
+      <!-- Título -->
+      <div class="text-center mb-6">
+        <h1 class="text-2xl lg:text-4xl font-bold text-orange-500">
+          Port Forwarding with NAT
+        </h1>
+        <p class="text-gray-300 mt-4">
+          Port Forwarding en segundos. Optimiza tu red, Direccionamiento de
+          aplicaciones y paquetes. ¡Fácil, rápido y efectivo! 🚀
+        </p>
+      </div>
+    </div>
+    <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
+      <!-- Contenido inicio -->
+
+      <!-- Diagrama -->
+      <div class="flex justify-center mb-8 mt-8">
+        <img
+          src="/public/images/NAT.png"
+          alt="Routing Diagram"
+          class="rounded-lg"
+        />
+      </div>
+      <FormularioPortForwardingWithNat client:load />
+
+      <div class="flex flex-wrap justify-center gap-4 mb-6 mt-7">
+        <button
+          class="text-white px-4 py-2 rounded-md transition ease-in-out delay-150 bg-gray-600 hover:-translate-y-1 hover:scale-110 hover:bg-slate-700 duration-300"
+        >
+          Borrar Todo
+        </button>
+        <button
+          class="text-white px-4 py-2 rounded-md transition ease-in-out delay-150 bg-orange-500 hover:-translate-y-1 hover:scale-110 hover:bg-orange-600 duration-300"
+        >
+          Generar Script
+        </button>
+
+        <button
+          class="text-white px-4 py-2 rounded-md transition ease-in-out delay-150 bg-green-500 hover:-translate-y-1 hover:scale-110 hover:bg-teal-600 duration-300"
+        >
+          Copiar Todo
+        </button>
+      </div>
+
+      <!-- Gestión de Dominios -->
+
+      <div class="bg-gray-700 p-4 rounded-lg flex flex-col">
+        <label class="block text-sm font-semibold mb-2 text-gray-300"
+          >Script Generator Result</label
+        >
+        <textarea
+          class="flex-grow bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400"
+          placeholder="Please Login and Subscribe .."
+          readonly></textarea>
+      </div>
+
+      <!-- Contenido Fin -->
+    </div>
+
+    <!-- Contenido Fin Aqui para abajo es otro codigo q u se borrara -->
+  </body>
+</MainLayout>
