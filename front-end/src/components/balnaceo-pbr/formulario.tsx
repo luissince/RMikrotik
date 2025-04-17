@@ -12,7 +12,7 @@ type LineInterfacesType = {
 const FormularioBalanceoPbr = () => {
     const [linea, setLinea] = useState<number>(0);
     const [router, setRouter] = useState<string>('');
-    const [local, setLocal] = useState<string>('');
+    const [local] = useState<string>('');
     const [interfaceTarget, setInterfaceTarget] = useState<string>('');
     const [lineInterfaces, setLineInterfaces] = useState<LineInterfacesType[]>([]);
 
@@ -53,9 +53,9 @@ const FormularioBalanceoPbr = () => {
         setInterfaceTarget(event.target.value);
     }
 
-    const onChangeSelectLocal = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setLocal(event.target.value);
-    }
+    // const onChangeSelectLocal = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    //     setLocal(event.target.value);
+    // }
 
     const onChangeInputInterfaceWan = (event: React.ChangeEvent<HTMLInputElement>, id: number) => {
         const items = lineInterfaces.map((item) => {
@@ -98,7 +98,7 @@ const FormularioBalanceoPbr = () => {
         console.log(form)
 
         try {
-            const response = await fetch("http://localhost:8080/balanceo-carga", {
+            const response = await fetch(`${import.meta.env.AUTH_SECRET}/balanceo-carga`, {
                 method: "POST", // Método POST
                 headers: {
                     "Content-Type": "application/json", // Asegúrate de enviar JSON

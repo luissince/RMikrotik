@@ -66,6 +66,7 @@ const OpenBook: React.FC<OpenBookProps> = ({ data }) => {
 
     // Establecer título y autor
     setTitle(data.cover.title);
+    console.log(author)
     setAuthor(data.cover.author);
 
     // Dividir el texto en las páginas

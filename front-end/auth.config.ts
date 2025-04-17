@@ -1,7 +1,7 @@
 import Credentials from '@auth/core/providers/credentials'
 import GitHub from '@auth/core/providers/github'
 import Google from '@auth/core/providers/google'
-import { defineConfig } from 'auth-astro'
+import { defineConfig } from "auth-astro";
 
 export default defineConfig({
 	secret: import.meta.env.AUTH_SECRET,
@@ -11,13 +11,13 @@ export default defineConfig({
 			clientSecret: import.meta.env.GITHUB_CLIENT_SECRET,
 			profile(profile) {
 				return {
-					id: profile.id,
+					id: profile.id.toString(),
 					name: profile.name,
 					email: profile.email,
 					image: profile.avatar_url,
 					// Puedes agregar el providerId aquí
 					providerId: `github_${profile.id}`
-				}
+				};
 			}
 		}),
 		Google({
@@ -40,7 +40,7 @@ export default defineConfig({
 				email: {},
 				password: {}
 			},
-			authorize: async (credentials, req) => {
+			authorize: async (credentials, _) => {
 				console.log('authorize', credentials);
 				return {
 					id: "ssss",
@@ -52,12 +52,12 @@ export default defineConfig({
 		}),
 	],
 	callbacks: {
-		signIn: async ({ user, account, profile }) => {
+		signIn: async ({ user }) => {
 			console.log('----------signIn----------');
 			console.log('Datos de usuario para guardar en la base de datos', user);
 			return true;
 		},
-		jwt: async ({ token, user, account, profile }) => {
+		jwt: async ({ token, user }) => {
 			// Cuando el usuario hace login, 'user' contiene la info
 			if (user) {
 				console.log('----------jwt----------');
@@ -69,11 +69,11 @@ export default defineConfig({
 		},
 		// Este callback determina qué datos estarán disponibles en el cliente
 		session: async ({ session, user, token }) => {
-			// console.log('session auth', session, user);
+			console.log('session auth', session, user);
 			if (session.user) {
 				console.log('----------session----------');
-				session.user.providerId = token.providerId
-				session.user.id = token.userId
+				session.user.providerId = token.providerId!;
+				session.user.id = token.userId!;
 			}
 			return session;
 		},

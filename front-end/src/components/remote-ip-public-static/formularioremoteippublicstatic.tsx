@@ -1,108 +1,106 @@
-import { useState } from "react";
-import type React from "react";
 
 // Definimos los tipos para los juegos y las categorías
-interface Game {
-  id: string;
-  name: string;
-}
+// interface Game {
+//   id: string;
+//   name: string;
+// }
 
-type Category = "mobile" | "web" | "desktop";
+// type Category = "mobile" | "web" | "desktop";
 
-interface GamesData {
-  mobile: Game[];
-  web: Game[];
-  desktop: Game[];
-}
+// interface GamesData {
+//   mobile: Game[];
+//   web: Game[];
+//   desktop: Game[];
+// }
 
-// Juegos por categorías
-const gamesData: GamesData = {
-  mobile: [
-    { id: "game1", name: "Arena Of Valor (AOV) - Mobile" },
-    { id: "game2", name: "Among Us - Mobile" },
-    { id: "game3", name: "Call of Duty (COD) - Mobile" },
-    { id: "game4", name: "PUBG Mobile" },
-    { id: "game5", name: "Minecraft - Mobile" }
-  ],
-  web: [
-    { id: "game6", name: "League of Legends - Web" },
-    { id: "game7", name: "Agar.io - Web" },
-    { id: "game8", name: "Slither.io - Web" }
-  ],
-  desktop: [
-    { id: "game9", name: "Fortnite - PC" },
-    { id: "game10", name: "Minecraft - PC" },
-    { id: "game11", name: "Counter-Strike: Global Offensive (CS:GO) - PC" }
-  ]
-};
+// // Juegos por categorías
+// const gamesData: GamesData = {
+//   mobile: [
+//     { id: "game1", name: "Arena Of Valor (AOV) - Mobile" },
+//     { id: "game2", name: "Among Us - Mobile" },
+//     { id: "game3", name: "Call of Duty (COD) - Mobile" },
+//     { id: "game4", name: "PUBG Mobile" },
+//     { id: "game5", name: "Minecraft - Mobile" }
+//   ],
+//   web: [
+//     { id: "game6", name: "League of Legends - Web" },
+//     { id: "game7", name: "Agar.io - Web" },
+//     { id: "game8", name: "Slither.io - Web" }
+//   ],
+//   desktop: [
+//     { id: "game9", name: "Fortnite - PC" },
+//     { id: "game10", name: "Minecraft - PC" },
+//     { id: "game11", name: "Counter-Strike: Global Offensive (CS:GO) - PC" }
+//   ]
+// };
 
 const Formularioremoteippublicstatic = () => {
-  const [version, setVersion] = useState<string>("");
-  const [gateway, setGateway] = useState<string>("");
-  const [searchQuery, setSearchQuery] = useState<string>(""); // Estado para la búsqueda de juegos
-  const [selectedCategory, setSelectedCategory] = useState<Category>("mobile"); // Estado para la categoría seleccionada
-  const [selectedGames, setSelectedGames] = useState<Set<string>>(new Set()); // Estado para los juegos seleccionados
-  const [isGatewayValid, setIsGatewayValid] = useState<boolean>(true); // Estado para la validez del gateway
-  const [result, setResult] = useState<string>(""); // Estado para almacenar el resultado de la API
+  // const [version, setVersion] = useState<string>("");
+  // const [gateway, setGateway] = useState<string>("");
+  // const [searchQuery, setSearchQuery] = useState<string>(""); // Estado para la búsqueda de juegos
+  // const [selectedCategory, setSelectedCategory] = useState<Category>("mobile"); // Estado para la categoría seleccionada
+  // const [selectedGames, setSelectedGames] = useState<Set<string>>(new Set()); // Estado para los juegos seleccionados
+  // const [isGatewayValid, setIsGatewayValid] = useState<boolean>(true); // Estado para la validez del gateway
+  // const [result, setResult] = useState<string>(""); // Estado para almacenar el resultado de la API
 
-  // Expresión regular para validar una dirección IP
-  const isValidIP = (ip: string): boolean => {
-    const regex =
-      /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
-    return regex.test(ip);
-  };
+  // // Expresión regular para validar una dirección IP
+  // const isValidIP = (ip: string): boolean => {
+  //   const regex =
+  //     /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+  //   return regex.test(ip);
+  // };
 
-  const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedCategory(event.target.value as Category);
-    setSearchQuery(""); // Limpiar la búsqueda al cambiar de categoría
-  };
+  // const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  //   setSelectedCategory(event.target.value as Category);
+  //   setSearchQuery(""); // Limpiar la búsqueda al cambiar de categoría
+  // };
 
-  const handleGatewayChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setGateway(value);
+  // const handleGatewayChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const value = event.target.value;
+  //   setGateway(value);
 
-    // Validar si el valor ingresado es una dirección IP válida
-    if (isValidIP(value) || value === "") {
-      setIsGatewayValid(true); // Es válida
-    } else {
-      setIsGatewayValid(false); // No válida
-    }
-  };
+  //   // Validar si el valor ingresado es una dirección IP válida
+  //   if (isValidIP(value) || value === "") {
+  //     setIsGatewayValid(true); // Es válida
+  //   } else {
+  //     setIsGatewayValid(false); // No válida
+  //   }
+  // };
 
-  const handleGamesChange = (event: React.ChangeEvent<HTMLInputElement>, game: string) => {
-    const updatedSelectedGames = new Set(selectedGames);
-    if (updatedSelectedGames.has(game)) {
-      updatedSelectedGames.delete(game);
-    } else {
-      updatedSelectedGames.add(game);
-    }
-    setSelectedGames(updatedSelectedGames);
-  };
+  // const handleGamesChange = (event: React.ChangeEvent<HTMLInputElement>, game: string) => {
+  //   const updatedSelectedGames = new Set(selectedGames);
+  //   if (updatedSelectedGames.has(game)) {
+  //     updatedSelectedGames.delete(game);
+  //   } else {
+  //     updatedSelectedGames.add(game);
+  //   }
+  //   setSelectedGames(updatedSelectedGames);
+  // };
 
-  // Función para enviar los datos a la API
-  const onClickGenerate = async (form: { version: string, gateway: string, games: string[] }) => {
-    console.log("Enviando datos a la API...", form);
+  // // Función para enviar los datos a la API
+  // const onClickGenerate = async (form: { version: string, gateway: string, games: string[] }) => {
+  //   console.log("Enviando datos a la API...", form);
 
-    try {
-      const response = await fetch("http://localhost:8080/balanceo-carga", {
-        method: "POST", // Método POST
-        headers: {
-          "Content-Type": "application/json", // Asegúrate de enviar JSON
-        },
-        body: JSON.stringify(form), // Convertir datos a formato JSON
-      });
-      const data = await response.json();
-      setResult(data.message); // Suponiendo que la respuesta contiene un campo "message"
-      console.log(data);
-    } catch (error) {
-      console.error("Error al obtener datos:", error);
-    }
-  };
+  //   try {
+  //     const response = await fetch(`${import.meta.env.AUTH_SECRET}/balanceo-carga`, {
+  //       method: "POST", // Método POST
+  //       headers: {
+  //         "Content-Type": "application/json", // Asegúrate de enviar JSON
+  //       },
+  //       body: JSON.stringify(form), // Convertir datos a formato JSON
+  //     });
+  //     const data = await response.json();
+  //     setResult(data.message); // Suponiendo que la respuesta contiene un campo "message"
+  //     console.log(data);
+  //   } catch (error) {
+  //     console.error("Error al obtener datos:", error);
+  //   }
+  // };
 
-  // Filtrar los juegos en función de la búsqueda
-  const filteredGames = gamesData[selectedCategory].filter((game) =>
-    game.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // // Filtrar los juegos en función de la búsqueda
+  // const filteredGames = gamesData[selectedCategory].filter((game) =>
+  //   game.name.toLowerCase().includes(searchQuery.toLowerCase())
+  // );
 
   return (
     <form onSubmit={(e) => { e.preventDefault(); }}>

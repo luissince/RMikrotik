@@ -111,8 +111,6 @@ if (session) {
   <script>
     const { signIn } = await import("auth-astro/client");
 
-    let isLoading = false;
-
     const loginGoogle = document.getElementById(
       "login-google"
     ) as HTMLButtonElement;
@@ -167,7 +165,6 @@ if (session) {
     );
 
     loginEmail?.addEventListener("click", async () => {
-      isLoading = true;
       const children = Array.from(loginEmail.children).find(
         (item) => item.tagName.toLocaleLowerCase() === "svg"
       );
@@ -196,7 +193,6 @@ if (session) {
         redirect: true,
       });
 
-      isLoading = false;
       children?.classList.remove("animate-spin");
       loginEmail.removeAttribute("disabled");
       // } catch (error) {

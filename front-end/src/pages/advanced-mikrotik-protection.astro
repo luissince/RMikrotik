@@ -4,12 +4,12 @@ import MainLayout from "../layout/MainLayout.astro";
 import {listaalgo} from "../utils/lista"
 import {listar2} from "../utils/lista"
 import {listar3} from "../utils/lista"
-const ejemplo1 = `
-# API-SSL Port Enable
-/ip service set api-ssl port=8729 address=0.0.0.0/0 disabled=no
-# API-SSL Port Disable
-/ip service set api-ssl port=8729 address=0.0.0.0/0 disabled=yes
-`;
+// const ejemplo1 = `
+// # API-SSL Port Enable
+// /ip service set api-ssl port=8729 address=0.0.0.0/0 disabled=no
+// # API-SSL Port Disable
+// /ip service set api-ssl port=8729 address=0.0.0.0/0 disabled=yes
+// `;
 ---
 
 <MainLayout title="Open Book">
@@ -57,7 +57,7 @@ const ejemplo1 = `
                         </thead>
                         <tbody>
                             {
-                                listaalgo.map((item, index) => {
+                                listaalgo.map((item, _) => {
                                     return (
                                         <tr class="text-gray-800">
                                             <td class="p-2 border border-slate-700 ">
@@ -95,7 +95,7 @@ const ejemplo1 = `
                         </thead>
                         <tbody>
                             {
-                                listar2.map((item, index) => {
+                                listar2.map((item, _) => {
                                     return (
                                         <tr class="text-gray-800">
                                             <td class="p-2 border border-slate-700 ">
@@ -133,7 +133,7 @@ const ejemplo1 = `
                         </thead>
                         <tbody>
                             {
-                                listar3.map((item, index) => {
+                                listar3.map((item, _) => {
                                     return (
                                         <tr class="text-gray-800">
                                             <td class="p-2 border border-slate-700 ">

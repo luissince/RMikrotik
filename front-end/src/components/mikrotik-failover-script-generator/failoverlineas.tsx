@@ -61,7 +61,7 @@ const Formulario = () => {
                 </select>
 
                 {
-                    lineInterfaces.map((line, index) => {
+                    lineInterfaces.map((_, index) => {
                         const position = ++index;
                         return (
                             <div key={index} className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">

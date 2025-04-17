@@ -43,7 +43,7 @@ const FormularioStaticRoutingGamesManglePort = () => {
   const [selectedCategory, setSelectedCategory] = useState<Category>("mobile"); // Estado para la categoría seleccionada
   const [selectedGames, setSelectedGames] = useState<Set<string>>(new Set()); // Estado para los juegos seleccionados
   const [isGatewayValid, setIsGatewayValid] = useState<boolean>(true); // Estado para la validez del gateway
-  const [result, setResult] = useState<string>(""); // Estado para almacenar el resultado de la API
+  const [_, setResult] = useState<string>(""); // Estado para almacenar el resultado de la API
 
   // Expresión regular para validar una dirección IP
   const isValidIP = (ip: string): boolean => {
@@ -69,7 +69,7 @@ const FormularioStaticRoutingGamesManglePort = () => {
     }
   };
 
-  const handleGamesChange = (event: React.ChangeEvent<HTMLInputElement>, game: string) => {
+  const handleGamesChange = (_: React.ChangeEvent<HTMLInputElement>, game: string) => {
     const updatedSelectedGames = new Set(selectedGames);
     if (updatedSelectedGames.has(game)) {
       updatedSelectedGames.delete(game);
@@ -84,7 +84,7 @@ const FormularioStaticRoutingGamesManglePort = () => {
     console.log("Enviando datos a la API...", form);
 
     try {
-      const response = await fetch("http://localhost:8080/balanceo-carga", {
+      const response = await fetch(`${import.meta.env.AUTH_SECRET}/balanceo-carga`, {
         method: "POST", // Método POST
         headers: {
           "Content-Type": "application/json", // Asegúrate de enviar JSON

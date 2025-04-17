@@ -23,8 +23,10 @@ const { title, type, class: className } = Astro.props;
   <body>
     <Header type={type} />
 
-    <main class={`2xl:container ${className}`}>
-      <slot />
+    <main class="bg-slate-800">
+      <div class={`2xl:container mx-auto ${className}`}>
+        <slot />
+      </div>
     </main>
 
     <Footer />

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import { useState } from 'react'
 import downChevron from "../assets/icons/down-chevron.svg";
 import check from "../assets/icons/check.svg";
 

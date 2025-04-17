@@ -1,12 +1,13 @@
 ---
-import { Image } from "astro:assets";
-import logo from "../../assets/icons/logo.svg";
-import Icon from "../Icon.astro";
-import MenuButton from "./MenuButton.astro";
-import { getSession } from "auth-astro/server";
-import Button from "../Button.astro";
-import NavigationMenu from "./SubMenu";
-const session = await getSession(Astro.request);
+import { Image } from "astro:assets"
+import Icon from "../Icon.astro"
+import MenuButton from "./MenuButton.astro"
+import { getSession } from "auth-astro/server"
+import Button from "../Button.astro"
+import NavigationMenu from "./SubMenu"
+import { images } from "../../assets"
+
+const session = await getSession(Astro.request)
 
 const navLinks = [
   {
@@ -25,21 +26,16 @@ const navLinks = [
   {
     name: "Update",
     href: "/update",
-  
   },
   {
     name: "Documentos",
     href: "/documentos",
-   
   },
- 
   {
     name: "Contactenos",
     href: "/Contactenos",
-  
   },
-];
-
+]
 
 const socialLinks = [
   { name: "facebook", href: "#" },
@@ -47,71 +43,73 @@ const socialLinks = [
   { name: "twitch", href: "#" },
   { name: "twitter", href: "#" },
   { name: "youtube", href: "#" },
-];
+]
 
-const props = Astro.props;
-console.log("type", props.type);
+const props = Astro.props
 ---
 
-<header class="bg-[#181918]">
-  <div class="2xl:container mx-auto px-8">
-    <div class="flex flex-row justify-between py-5 gap-x-5 gap-y-5">
+<header class="bg-[#181918] sticky top-0 z-50 shadow-lg">
+  <div class="2xl:container mx-auto px-4 md:px-8">
+    <div class="flex flex-row justify-between py-3 md:py-4 gap-x-5 gap-y-5">
       <div class="flex justify-start items-center gap-x-5 w-full lg:w-auto">
-        <a href="/">
-          <Image src={logo} alt="logo" width={150} height={150} />
+        <a href="/" class="flex items-center">
+          <Image src={images.Mikrotik} alt="logo" width={200} height={200} class="h-10 w-auto" />
         </a>
 
         {
           (props.type !== "sign-in" && props.type !== "sign-up") && (
-            <div class="w-full flex items-center bg-[#383838] border-[#383838] border-[2px] border-solid rounded-full group focus-within:border-[#ffffff] text-white">
-              <div class="p-2 h-full px-5 py-2">
-                <Icon name="search" size={20} />
+            <div class="hidden md:flex items-center bg-[#2a2a2a] border-[#383838] border-[2px] border-solid rounded-full group focus-within:border-[#ffffff] text-white transition-all duration-300">
+              <div class="p-2 h-full px-4 py-2">
+                <Icon name="search" size={18} />
               </div>
               <input
                 type="text"
-                class="w-full h-full px-3 py-2 bg-inherit font-normal text-sm text-inherit outline-none border-none rounded-full"
-                placeholder="Buscar"
+                class="w-full h-full px-2 py-2 bg-inherit font-normal text-sm text-inherit outline-none border-none rounded-full"
+                placeholder="Buscar scripts, herramientas..."
               />
-              <button class="px-5 py-2 h-full rounded-r-full outline-none focus:bg-[#181918]">
-                <Icon name="sound" size={20} />
+              <button class="px-4 py-2 h-full rounded-r-full outline-none focus:bg-[#383838] hover:bg-[#383838] transition-colors duration-300">
+                <Icon name="send" size={18} />
               </button>
             </div>
           )
         }
       </div>
 
-      <div class="xl:flex hidden flex-row justify-end gap-x-5">
+      <div class="xl:flex hidden flex-row justify-end gap-x-5 items-center">
         {
         (props.type !== "sign-in" && props.type !== "sign-up") && 
           (
-            <a
-              class="text-[#cccccc] py-2 text-sm font-normal flex items-center justify-center outline-none focus:text-[#ffffff] hover:text-[#ffffff]"
-              href="#"
-            >
-              <span>Licencia</span>
-            </a>
+            <>
+              <a
+                class="text-[#cccccc] py-2 text-sm font-normal flex items-center justify-center outline-none focus:text-[#ffffff] hover:text-[#ffffff] transition-colors duration-300"
+                href="#"
+              >
+                <span>Licencia</span>
+              </a>
 
-            <a
-              class="text-[#cccccc] py-2 text-sm font-normal flex items-center justify-center outline-none focus:text-[#ffffff] hover:text-[#ffffff]"
-              href="precios"
-            >
-              <span>Precios</span>
-            </a>
+              <a
+                class="text-[#cccccc] py-2 text-sm font-normal flex items-center justify-center outline-none focus:text-[#ffffff] hover:text-[#ffffff] transition-colors duration-300"
+                href="precios"
+              >
+                <span>Precios</span>
+              </a>
 
-          <Button 
-            variant="primary"  
-            as="a"
-            href="https://github.com/login"
-          >
-                <span>Únete y suscríbete ahora</span>
-            </Button>
+              <Button 
+                variant="primary"  
+                as="a"
+                href="https://github.com/login"
+                class="bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 transition-all duration-300"
+              >
+                <span class="text-[#ffffff]">Únete y suscríbete ahora</span>
+              </Button>
+            </>
           )
         }
 
         {
           !session ? (
             <a
-              class="text-[#cccccc] py-2 text-sm font-normal flex items-center justify-center outline-none focus:text-[#ffffff] hover:text-[#ffffff]"
+              class="text-[#cccccc] py-2 text-sm font-normal flex items-center justify-center outline-none focus:text-[#ffffff] hover:text-[#ffffff] transition-colors duration-300"
               href="/sign-in"
             >
               <span>Iniciar Sesión</span>
@@ -119,7 +117,7 @@ console.log("type", props.type);
           ) : (
             <button
               id="logout"
-              class="text-[#cccccc] py-2 text-sm font-normal flex items-center justify-center outline-none focus:text-[#ffffff] hover:text-[#ffffff]"
+              class="text-[#cccccc] py-2 text-sm font-normal flex items-center justify-center outline-none focus:text-[#ffffff] hover:text-[#ffffff] transition-colors duration-300"
             >
               <span>Cerrar Sesión</span>
             </button>
@@ -134,9 +132,10 @@ console.log("type", props.type);
             variant="primary"  
             as="a"
             href="https://github.com/login"
+            class="bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 transition-all duration-300"
           >
-                <span>Obtén descargas ilimitadas</span>
-            </Button>
+            <span>Obtén descargas ilimitadas</span>
+          </Button>
           )
         }
 
@@ -150,51 +149,56 @@ console.log("type", props.type);
 
     {
       (props.type !== "sign-in" && props.type !== "sign-up") && (
-        <div class="xl:flex hidden justify-start gap-5 pb-5">
-          <div class="flex flex-row items-center justify-start flex-1 gap-x-10">
-  {navLinks.map((link) => (
-    <div class="relative group">
-      <a class="text-[#cccccc] text-sm font-normal hover:text-white" href={link.href}>
-        <span>{link.name}</span>
-      </a>
-      {/* Submenú */}
-      {link.submenu && (
-        <div class="absolute left-0 top-full hidden group-hover:flex flex-col mt-2 bg-gray-800 p-2 rounded-md shadow-lg">
-          {link.submenu.map((sublink) => (
-            <a
-              class="text-[#cccccc] text-sm font-normal hover:text-white px-4 py-2 rounded-md hover:bg-gray-700"
-              href={sublink.href}
-            >
-              {sublink.name}
-            </a>
-          ))}
-        </div>
-      )}
-    </div>
-  ))}
-</div>
+        <div class="xl:flex hidden justify-between items-center pb-3">
+          <div class="flex flex-row items-center justify-start gap-x-8">
+            {navLinks.map((link, index) => (
+              <div class="relative group">
+                <a 
+                  class="text-[#cccccc] text-sm font-medium hover:text-white transition-colors duration-300 flex items-center gap-1" 
+                  href={link.href}
+                >
+                  <span>{link.name}</span>
+                  {link.submenu && (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform duration-300 group-hover:rotate-180">
+                      <path d="m6 9 6 6 6-6"/>
+                    </svg>
+                  )}
+                </a>
+                {/* Submenú */}
+                {link.submenu && (
+                  <div class="absolute left-0 top-full hidden group-hover:flex flex-col mt-2 bg-[#222222] p-2 rounded-md shadow-lg border border-[#383838] min-w-40 z-50">
+                    {link.submenu.map((sublink, index) => (
+                      <a
+                        class="text-[#cccccc] text-sm font-normal hover:text-white px-4 py-2 rounded-md hover:bg-[#383838] transition-colors duration-300"
+                        href={sublink.href}
+                      >
+                        {sublink.name}
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
 
-
-          <div class="flex flex-2 items-center gap-x-5">
-            <div class="border-l-[1px] h-full border-solid border-[#cccccc]" />
-            <a class="text-[#cccccc] text-sm font-normal hover:bg-red-700 duration-300 rounded-t-lg pl-2 pr-2" href="/book">
+          <div class="flex items-center gap-x-4">
+            <a class="text-[#cccccc] text-sm font-normal hover:bg-red-700 duration-300 rounded-lg px-3 py-1 flex items-center gap-1 transition-colors" href="/book">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path d="m10 15 5-3-5-3z"/></svg>
               <span>YouTube</span>
             </a>
-          </div>
-          <div class="flex flex-2 items-center gap-x-5">
-            <div class="border-l-[1px] h-full border-solid border-[#cccccc]" />
-            <a class="text-[#cccccc] text-sm font-normal  hover:bg-sky-500 duration-300 rounded-t-lg pl-2 pr-2" href="/book">
+            
+            <a class="text-[#cccccc] text-sm font-normal hover:bg-sky-500 duration-300 rounded-lg px-3 py-1 flex items-center gap-1 transition-colors" href="/book">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
               <span>Instagram</span>
             </a>
-          </div>
-          <div class="flex flex-2 items-center gap-x-5">
-            <div class="border-l-[1px] h-full border-solid border-[#cccccc]" />
-            <a class="text-[#cccccc] text-sm font-normal  hover:bg-blue-700 duration-300 rounded-t-lg pl-2 pr-2" href="/book">
+            
+            <a class="text-[#cccccc] text-sm font-normal hover:bg-blue-700 duration-300 rounded-lg px-3 py-1 flex items-center gap-1 transition-colors" href="/book">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
               <span>Facebook</span>
             </a>
-          </div>  <div class="flex flex-2 items-center gap-x-5">
-            <div class="border-l-[1px] h-full border-solid border-[#cccccc]" />
-            <a class="text-[#cccccc] text-sm font-normal  hover:bg-red-800 duration-300 rounded-t-lg pl-2 pr-2" href="/book">
+            
+            <a class="text-[#cccccc] text-sm font-normal hover:bg-red-800 duration-300 rounded-lg px-3 py-1 flex items-center gap-1 transition-colors" href="/book">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8v8a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5V8a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5Z"/><path d="M10 12a3 3 0 1 1 4 2.83V17h-4v-2.17A3 3 0 0 1 10 12Z"/><path d="M16 7h.01"/></svg>
               <span>Tiktok <span class="animate-color-change"> <strong> Live</strong> </span></span>
             </a>
           </div>
@@ -202,7 +206,7 @@ console.log("type", props.type);
       )
     }
   </div>
-
+\
   <!-- menu bar -->
   <div
     id="sidebar"
@@ -225,16 +229,38 @@ console.log("type", props.type);
       <div class="flex flex-col h-full gap-y-5">
         <!--  -->
         <div class="flex justify-between px-5">
-          <Image src={logo} alt="logo" width={150} height={150} />
+          <Image src={images.Mikrotik || "/placeholder.svg"} alt="logo" width={130} height={130} class="h-10 w-auto" />
           <div class="-mx-2">
             <button
               id="close-button-sidebar"
-              class="px-2 py-2 text-base font-semibold flex items-center justify-center border-[#191919] border-[1px] border-solid rounded-[4px] outline-none focus:bg-[#383838] hover:bg-[#383838]"
+              class="px-2 py-2 text-base font-semibold flex items-center justify-center border-[#191919] border-[1px] border-solid rounded-[4px] outline-none focus:bg-[#383838] hover:bg-[#383838] transition-colors duration-300"
             >
               <Icon name="close" size={26} class="text-[#ffffff]" />
             </button>
           </div>
         </div>
+        <!--  -->
+
+        <!-- Mobile search -->
+        {
+          (props.type !== "sign-in" && props.type !== "sign-up") && (
+            <div class="px-5">
+              <div class="w-full flex items-center bg-[#2a2a2a] border-[#383838] border-[2px] border-solid rounded-full group focus-within:border-[#ffffff] text-white transition-all duration-300">
+                <div class="p-2 h-full px-4 py-2">
+                  <Icon name="search" size={18} />
+                </div>
+                <input
+                  type="text"
+                  class="w-full h-full px-2 py-2 bg-inherit font-normal text-sm text-inherit outline-none border-none rounded-full"
+                  placeholder="Buscar scripts, herramientas..."
+                />
+                <button class="px-4 py-2 h-full rounded-r-full outline-none focus:bg-[#383838] hover:bg-[#383838] transition-colors duration-300">
+                  <Icon name="sound" size={18} />
+                </button>
+              </div>
+            </div>
+          )
+        }
         <!--  -->
 
         <!--  -->
@@ -245,6 +271,7 @@ console.log("type", props.type);
               variant="primary"  
               as="a"
               href="https://github.com/login"
+              class="bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 transition-all duration-300"
             >
                 <span>Obtén descargas ilimitadas</span>
             </Button>
@@ -254,14 +281,14 @@ console.log("type", props.type);
           {
             !session ? (
               <a
-                class="bg-transparent text-white px-6 py-2 text-base font-semibold flex items-center justify-center border-white border-[1px] border-solid rounded-[4px] outline-none focus:bg-white hover:bg-white focus:border-white hover:border-white focus:text-[#191919] hover:text-[#191919]"
+                class="bg-transparent text-white px-6 py-2 text-base font-semibold flex items-center justify-center border-white border-[1px] border-solid rounded-[4px] outline-none focus:bg-white hover:bg-white focus:border-white hover:border-white focus:text-[#191919] hover:text-[#191919] transition-colors duration-300"
                 href="/sign-in"
               >
                 <span>Iniciar Sesión</span>
               </a>
             ) : (
               <a
-                class="bg-transparent text-white px-6 py-2 text-base font-semibold flex items-center justify-center border-white border-[1px] border-solid rounded-[4px] outline-none focus:bg-white hover:bg-white focus:border-white hover:border-white focus:text-[#191919] hover:text-[#191919]"
+                class="bg-transparent text-white px-6 py-2 text-base font-semibold flex items-center justify-center border-white border-[1px] border-solid rounded-[4px] outline-none focus:bg-white hover:bg-white focus:border-white hover:border-white focus:text-[#191919] hover:text-[#191919] transition-colors duration-300"
                 href="#"
               >
                 <span>Cerrar Sesión</span>
@@ -284,13 +311,13 @@ console.log("type", props.type);
               class="flex flex-row flex-wrap list-none m-0 px-5 items-center gap-x-3"
             >
               {
-                socialLinks.map((link) => (
+                socialLinks.map((link, index) => (
                   <li>
-                    <a href={link.href}>
+                    <a href={link.href} class="transition-colors duration-300">
                       <Icon
                         name={link.name}
-                        size={36}
-                        class="text-white hover:bg-[#383838] px-2 rounded-md"
+                        size={32}
+                        class="text-white hover:bg-[#383838] p-1.5 rounded-md"
                       />
                     </a>
                   </li>
@@ -323,7 +350,7 @@ console.log("type", props.type);
     sidebar.classList.remove("fixed");
   });
 
-  const { signOut } = await import("auth-astro/client");
+  import { signOut } from "auth-astro/client";
   const logout = document.querySelector("#logout");
   if (logout) {
     logout.addEventListener("click", () => signOut({
@@ -332,14 +359,14 @@ console.log("type", props.type);
     }));
   }
 </script>
-<!--Cambia de color -->
+
 <style>
   @keyframes color-change {
     0%, 100% {
       color: #f11e1e; /* Rojo */
     }
     50% {
-      color: #ffffff; /* Azul */
+      color: #ffffff; /* Blanco */
     }
   }
 

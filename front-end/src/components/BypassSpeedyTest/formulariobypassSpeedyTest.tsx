@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 type LineInterfacesType = {
     id: number;
@@ -9,14 +9,14 @@ type LineInterfacesType = {
 }
 
 const FormulariobypassSpeedyTest = () => {
-    const [linea, setLinea] = useState<number>(0);
-    const [router, setRouter] = useState<string>('');
-    const [local, setLocal] = useState<string>('');
-    const [interfaceTarget, setInterfaceTarget] = useState<string>('');
+    const [_, setLinea] = useState<number>(0);
+    // const [router, setRouter] = useState<string>('');
+    // const [local, setLocal] = useState<string>('');
+    // const [interfaceTarget, setInterfaceTarget] = useState<string>('');
     const [lineInterfaces, setLineInterfaces] = useState<LineInterfacesType[]>([]);
 
 
-    const [result, setResult] = useState<string>('');
+    // const [result, setResult] = useState<string>('');
 
     useEffect(() => {
         generateLines(2);
@@ -35,81 +35,82 @@ const FormulariobypassSpeedyTest = () => {
             }
             return line;
         });
+        console.log(lineInterfaces)
         setLineInterfaces(list);
     }
 
-    const onChangeSelectLine = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        generateLines(Number(event.target.value) ?? 0);
-        setLinea(Number(event.target.value));
-    }
+    // const onChangeSelectLine = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    //     generateLines(Number(event.target.value) ?? 0);
+    //     setLinea(Number(event.target.value));
+    // }
 
-    const onChangeSelectRouter = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setRouter(event.target.value);
-    }
+    // const onChangeSelectRouter = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    //     setRouter(event.target.value);
+    // }
 
-    const onChangeInputInterfaceTarget = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setInterfaceTarget(event.target.value);
-    }
+    // const onChangeInputInterfaceTarget = (event: React.ChangeEvent<HTMLInputElement>) => {
+    //     setInterfaceTarget(event.target.value);
+    // }
 
-    const onChangeSelectLocal = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setLocal(event.target.value);
-    }
+    // const onChangeSelectLocal = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    //     setLocal(event.target.value);
+    // }
 
-    const onChangeInputInterfaceWan = (event: React.ChangeEvent<HTMLInputElement>, id: number) => {
-        const items = lineInterfaces.map((item) => {
-            if (item.id === id) {
-                return {
-                    ...item,
-                    wanInput: event.target.value
-                }
-            }
+    // const onChangeInputInterfaceWan = (event: React.ChangeEvent<HTMLInputElement>, id: number) => {
+    //     const items = lineInterfaces.map((item) => {
+    //         if (item.id === id) {
+    //             return {
+    //                 ...item,
+    //                 wanInput: event.target.value
+    //             }
+    //         }
 
-            return item;
-        });
-        setLineInterfaces(items);
-    }
+    //         return item;
+    //     });
+    //     setLineInterfaces(items);
+    // }
 
-    const onChangeInputInterfaceGay = (event: React.ChangeEvent<HTMLInputElement>, id: number) => {
-        const items = lineInterfaces.map((item) => {
-            if (item.id === id) {
-                return {
-                    ...item,
-                    gatewayInput: event.target.value
-                }
-            }
+    // const onChangeInputInterfaceGay = (event: React.ChangeEvent<HTMLInputElement>, id: number) => {
+    //     const items = lineInterfaces.map((item) => {
+    //         if (item.id === id) {
+    //             return {
+    //                 ...item,
+    //                 gatewayInput: event.target.value
+    //             }
+    //         }
 
-            return item;
-        });
-        setLineInterfaces(items);
-    }
+    //         return item;
+    //     });
+    //     setLineInterfaces(items);
+    // }
 
-    const onClickGenerate = async () => {
-        const form = {
-            linea,
-            router,
-            local,
-            interfaceTarget,
-            interfaces: lineInterfaces
-        }
+    // const onClickGenerate = async () => {
+    //     const form = {
+    //         linea,
+    //         router,
+    //         local,
+    //         interfaceTarget,
+    //         interfaces: lineInterfaces
+    //     }
 
-        console.log(form)
+    //     console.log(form)
 
-        try {
-            const response = await fetch("http://localhost:8080/balanceo-nth", {
-                method: "POST", // Método POST
-                headers: {
-                    "Content-Type": "application/json", // Asegúrate de enviar JSON
-                },
-                body: JSON.stringify(form), // Convertir datos a formato JSON
-            });
-            const data = await response.json();
-            setResult(data.message);
-            console.log(data)
-        } catch (error) {
-            console.error("Error al obtener datos:", error);
-        }
+    //     try {
+    //         const response = await fetch(`${import.meta.env.AUTH_SECRET}/balanceo-nth`, {
+    //             method: "POST", // Método POST
+    //             headers: {
+    //                 "Content-Type": "application/json", // Asegúrate de enviar JSON
+    //             },
+    //             body: JSON.stringify(form), // Convertir datos a formato JSON
+    //         });
+    //         const data = await response.json();
+    //         setResult(data.message);
+    //         console.log(data)
+    //     } catch (error) {
+    //         console.error("Error al obtener datos:", error);
+    //     }
 
-    }
+    // }
 
     return (
         <div>

@@ -95,7 +95,7 @@ const Formulario = () => {
         console.log(form)
 
         try {
-            const response = await fetch("http://localhost:8080/balanceo-nth", {
+            const response = await fetch(`${import.meta.env.AUTH_SECRET}}/balanceo-nth`, {
                 method: "POST", // Método POST
                 headers: {
                     "Content-Type": "application/json", // Asegúrate de enviar JSON
