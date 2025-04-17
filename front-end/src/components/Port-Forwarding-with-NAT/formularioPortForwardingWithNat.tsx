@@ -96,7 +96,7 @@ const FormularioPortForwardingWithNat = () => {
   //   console.log(form)
 
   //   try {
-  //     const response = await fetch(`${import.meta.env.AUTH_SECRET}/Port-Forwarding-with-NAT`, {
+  //     const response = await fetch(`${import.meta.env.BASE_URL_API}/Port-Forwarding-with-NAT`, {
   //       method: "POST", // Método POST
   //       headers: {
   //         "Content-Type": "application/json", // Asegúrate de enviar JSON

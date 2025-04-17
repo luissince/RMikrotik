@@ -44,5 +44,6 @@ RUN npm install --production
 EXPOSE 4321
 
 # Comando de inicio (depende del adapter que uses)
-CMD ["node", "./dist/server/entry.mjs"]  # Para @astrojs/node
+# CMD ["node", "./dist/server/entry.mjs"]  # Para @astrojs/node
+CMD node ./dist/server/entry.mjs
 # CMD ["npm", "run", "preview"]  # Alternativa para SSG
