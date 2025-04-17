@@ -11,7 +11,7 @@ interface ContentDataBase {
 // Función para obtener datos de la API
 async function getData() {
     try {
-        const response = await fetch(`${import.meta.env.BASE_URL_API}/content-data-base`);
+        const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/content-data-base`);
         const data = await response.json();
         return data;
     } catch (error) {

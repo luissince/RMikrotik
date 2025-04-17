@@ -95,7 +95,7 @@ const Formulario = () => {
         console.log(form)
 
         try {
-            const response = await fetch(`${import.meta.env.BASE_URL_API}/balanceo-ecmp`, {
+            const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/balanceo-ecmp`, {
                 method: "POST", // Método POST
                 headers: {
                     "Content-Type": "application/json", // Asegúrate de enviar JSON

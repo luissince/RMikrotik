@@ -98,7 +98,7 @@ const FormularioBalanceoPbr = () => {
         console.log(form)
 
         try {
-            const response = await fetch(`${import.meta.env.BASE_URL_API}/balanceo-carga`, {
+            const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/balanceo-carga`, {
                 method: "POST", // Método POST
                 headers: {
                     "Content-Type": "application/json", // Asegúrate de enviar JSON
