@@ -14,7 +14,7 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**") // Permite todas las rutas
-                        .allowedOrigins("http://localhost:4321/") // Dominios permitidos
+                        .allowedOriginPatterns("http://localhost:4321", "https://rmikrotik.xanderls.dev") // Dominios permitidos
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Métodos permitidos
                         .allowedHeaders("*") // Headers permitidos
                         .allowCredentials(true); // Permitir cookies
