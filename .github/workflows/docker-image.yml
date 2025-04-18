@@ -28,7 +28,20 @@ jobs:
       - name: Checkout código
         uses: actions/checkout@v3
 
+      - name: Verificar cambios en front-end
+        id: check-frontend
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            frontend: 
+              - 'front-end/**'
+
+      - name: Salir si no hay cambios en front-end
+        if: steps.check-frontend.outputs.frontend == 'false'
+        run: exit 0
+
       - name: Crear archivo .env
+        if: steps.check-frontend.outputs.frontend == 'true'
         run: |
           cat > front-end/.env <<EOL
           HOST="${{env.HOST}}"
@@ -45,9 +58,11 @@ jobs:
           EOL
 
       - name: Verificar archivo .env
+        if: steps.check-frontend.outputs.frontend == 'true'
         run: cat front-end/.env
 
       - name: Creando y ejecutando contenedor Astro JS
+        if: steps.check-frontend.outputs.frontend == 'true'
         run: docker compose -f front-end/docker-compose.yml up --build -d
 
   build-and-deploy-spring-boot:
@@ -72,26 +87,41 @@ jobs:
       - name: Checkout código
         uses: actions/checkout@v3
 
+      - name: Verificar cambios en back-end
+        id: check-backend
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            backend: 
+              - 'back-end/**'
+
+      - name: Salir si no hay cambios en back-end
+        if: steps.check-backend.outputs.backend == 'false'
+        run: exit 0
+
       - name: Crear archivo application.properties
+        if: steps.check-backend.outputs.backend == 'true'
         run: |
           cat > back-end/src/main/resources/application.properties <<EOL
-          spring.application.name="${{env.SPRING_APPLICATION_NAME}}"
-          spring.mvc.throw-exception-if-no-handler-found="${{env.SPRING_MVC_THROW_EXCEPTION_IF_NO_HANDLER_FOUND}}"
-          spring.web.resources.add-mappings="${{env.SPRING_WEB_RESOURCES_ADD_MAPPINGS}}"
+          spring.application.name=${{env.SPRING_APPLICATION_NAME}}
+          spring.mvc.throw-exception-if-no-handler-found=${{env.SPRING_MVC_THROW_EXCEPTION_IF_NO_HANDLER_FOUND}}
+          spring.web.resources.add-mappings=${{env.SPRING_WEB_RESOURCES_ADD_MAPPINGS}}
 
-          spring.datasource.url="${{env.SPRING_DATASOURCE_URL}}"
-          spring.datasource.username="${{env.SPRING_DATASOURCE_USERNAME}}"
-          spring.datasource.password="${{env.SPRING_DATASOURCE_PASSWORD}}"
-          spring.datasource.driver-class-name="${{env.SPRING_DATASOURCE_DRIVER_CLASS_NAME}}"
+          spring.datasource.url=${{env.SPRING_DATASOURCE_URL}}
+          spring.datasource.username=${{env.SPRING_DATASOURCE_USERNAME}}
+          spring.datasource.password=${{env.SPRING_DATASOURCE_PASSWORD}}
+          spring.datasource.driver-class-name=${{env.SPRING_DATASOURCE_DRIVER_CLASS_NAME}}
 
-          spring.jpa.database-platform="${{env.SPRING_JPA_DATABASE_PLATFORM}}"
-          spring.jpa.hibernate.ddl-auto="${{env.SPRING_JPA_HIBERNATE_DDL_AUTO}}"
-          spring.jpa.show-sql="${{env.SPRING_JPA_SHOW_SQL}}"
-          spring.jpa.properties.hibernate.format_sql="${{env.SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL}}"
+          spring.jpa.database-platform=${{env.SPRING_JPA_DATABASE_PLATFORM}}
+          spring.jpa.hibernate.ddl-auto=${{env.SPRING_JPA_HIBERNATE_DDL_AUTO}}
+          spring.jpa.show-sql=${{env.SPRING_JPA_SHOW_SQL}}
+          spring.jpa.properties.hibernate.format_sql=${{env.SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL}}
           EOL
 
       - name: Verificar archivo .env
+        if: steps.check-backend.outputs.backend == 'true'
         run: cat back-end/src/main/resources/application.properties
 
       - name: Creando y ejecutando contenedor SprintBoot
+        if: steps.check-backend.outputs.backend == 'true'
         run: docker compose -f back-end/docker-compose.yml up --build -d
