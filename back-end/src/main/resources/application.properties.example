@@ -1,16 +1,47 @@
-spring.application.name=GeneradoScripts
+# Nombre de la aplicación
+spring.application.name=services-rmikrotik
+
+# Lanza una excepción si no se encuentra una ruta
 spring.mvc.throw-exception-if-no-handler-found=true
+
+# Evita que Spring sirva archivos estáticos automáticamente
 spring.web.resources.add-mappings=false
+
+# (Opcional) Excluir configuración automática de base de datos
 # spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 
+# ----------------------------------------
 # Configuración de la base de datos
+# ----------------------------------------
+
+# Dirección de la base de datos (MySQL local en este caso)
 spring.datasource.url=jdbc:mysql://localhost:3306/mikrotik_scripts
+
+# Usuario de la base de datos
 spring.datasource.username=root
+
+# Contraseña de la base de datos
 spring.datasource.password=
+
+# Clase del driver para conectarse a MySQL
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 
-# Configuración adicional
+# ----------------------------------------
+# Configuración de JPA / Hibernate
+# ----------------------------------------
+
+# Dialecto SQL que usará Hibernate (MySQL 8)
 spring.jpa.database-platform=org.hibernate.dialect.MySQL8Dialect
+
+# Manejo automático del esquema de base de datos:
+# Opciones: none | validate | update | create | create-drop
+# update: actualiza la estructura de la base sin borrar datos
+# create: crea de cero (borra todo)
+# none: no hace nada
 spring.jpa.hibernate.ddl-auto=update
+
+# Mostrar en consola las consultas SQL ejecutadas
 spring.jpa.show-sql=true
+
+# Formatear las consultas SQL para que se vean ordenadas
 spring.jpa.properties.hibernate.format_sql=true
