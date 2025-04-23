@@ -1,9 +1,7 @@
-"use client";
-
 import React, { useEffect } from "react";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import { z } from "zod";
 
 const lineInterfaceSchema = z.object({
   id: z.number(),
@@ -26,13 +24,7 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-type LineInterfacesType = {
-  id: number;
-  wan: string;
-  wanInput: string;
-  gateway: string;
-  gatewayInput: string;
-};
+type LineInterfacesType = z.infer<typeof lineInterfaceSchema>;
 
 const Formulario = () => {
   const {
