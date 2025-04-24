@@ -1,4 +1,4 @@
-package com.okta.mongodb.GeneradoScripts.model.body.balanceoCarga;
+package com.okta.mongodb.GeneradoScripts.model.body.pcc;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,10 +11,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class LineInterfacesBody {
+public class PccInterfaces {
     private int id;
-    private String wan;
-    private String wanInput;
-    private String gateway;
-    private String gatewayInput;
+    private String wanIsp;
+    private String gatewayIsp;
 }
