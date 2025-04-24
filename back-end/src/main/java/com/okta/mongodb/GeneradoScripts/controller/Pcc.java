@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,125 +24,123 @@ public class Pcc {
     public ResponseEntity<?> create(@RequestBody PccBody pccBody) {
         logger.info("Body recibido: {}", pccBody); // Usa SLF4J (mejor para producción)
 
-        String structure = """
-                    ###############################################################
-                    # Load Balancing Per Connection Clasifier (LB PCC) Script Generator
-                    # Date/Time: 23/4/2025, 11:36:47 a.m.
-                    # Created by: buananet.com - fb.me/buananet.pbun
-                    # Load Balancing Method -> PCC (PER CONNECTION CLASIFIER)
-                    ###############################################################
-                """;
+        StringBuilder structure = new StringBuilder();
+        structure.append("<div>");
+        structure.append("###############################################################<br>");
+        structure.append("# <span style='color:blue;'>Load Balancing Per Connection Classifier (LB PCC) Script Generator</span><br>");
+        structure.append("# <span style='color:green;'>Date/Time:</span> <span style='color:red;'>23/4/2025, 11:36:47 a.m.</span><br>");
+        structure.append("# <span style='color:green;'>Created by:</span> <span style='color:red;'>buananet.com - fb.me/buananet.pbun</span><br>");
+        structure.append("# <span style='color:green;'>Load Balancing Method -> PCC (PER CONNECTION CLASSIFIER)</span><br>");
+        structure.append("###############################################################<br><br>");
 
-        structure += """
-                /ip firewall address-list
-                add address=192.168.0.0/16 list=LOCAL-IP comment="LB PCC by buananet.com"
-                add address=172.16.0.0/12 list=LOCAL-IP comment="LB PCC by buananet.com"
-                add address=10.0.0.0/8 list=LOCAL-IP comment="LB PCC by buananet.com"
-                                """;
+        structure.append("/ip firewall address-list<br>");
+        structure.append("add address=<span style='color:red;'>192.168.0.0/16</span> list=LOCAL-IP comment=\"LB PCC by buananet.com\"<br>");
+        structure.append("add address=<span style='color:red;'>172.16.0.0/12</span> list=LOCAL-IP comment=\"LB PCC by buananet.com\"<br>");
+        structure.append("add address=<span style='color:red;'>10.0.0.0/8</span> list=LOCAL-IP comment=\"LB PCC by buananet.com\"<br><br>");
 
-        structure += """
-                /ip firewall nat
-                    """;
+        structure.append("/ip firewall nat<br>");
         for (PccInterfaces pccInterfaces : pccBody.getInterfaces()) {
-            structure += "add chain=srcnat out-interface=" + pccInterfaces.getWanIsp()
-                    + " action=masquerade comment=\"LB PCC by buananet.com\"\n";
+            structure.append("add chain=srcnat out-interface=<span style='color:red;'>").append(pccInterfaces.getWanIsp())
+                    .append("</span> action=masquerade comment=\"LB PCC by buananet.com\"<br>");
         }
 
         if (pccBody.getIdRouterVersion().equalsIgnoreCase("ros7")) {
-            structure += """
-                    /routing table
-                        """;
+            structure.append("/routing table<br>");
             for (PccInterfaces pccInterfaces : pccBody.getInterfaces()) {
-                structure += "add name=\"to-" + pccInterfaces.getWanIsp() + "\" fib comment=\"LB PCC by buananet.com\"";
+                structure.append("add name=\"to-<span style='color:red;'>").append(pccInterfaces.getWanIsp()).append("</span>\" fib comment=\"LB PCC by buananet.com\"<br>");
             }
         }
 
-        structure += """
-                /ip route
-                   """;
+        structure.append("/ip route<br>");
         for (PccInterfaces pccInterfaces : pccBody.getInterfaces()) {
-            structure += "add check-gateway=ping distance=1 gateway=" + pccInterfaces.getGatewayIsp() + " routing-mark="
-                    + pccInterfaces.getWanIsp() + " comment=\"LB PCC by buananet.com\"";
+            structure.append("add check-gateway=ping distance=1 gateway=<span style='color:red;'>").append(pccInterfaces.getGatewayIsp())
+                    .append("</span> routing-mark=<span style='color:red;'>").append(pccInterfaces.getWanIsp())
+                    .append("</span> comment=\"LB PCC by buananet.com\"<br>");
         }
 
         for (PccInterfaces pccInterfaces : pccBody.getInterfaces()) {
-            structure += "add check-gateway=ping distance=" + pccInterfaces.getId() + " gateway="
-                    + pccInterfaces.getGatewayIsp() + " comment=\"LB PCC by buananet.com";
+            structure.append("add check-gateway=ping distance=<span style='color:red;'>").append(pccInterfaces.getId())
+                    .append("</span> gateway=<span style='color:red;'>").append(pccInterfaces.getGatewayIsp())
+                    .append("</span> comment=\"LB PCC by buananet.com\"<br>");
         }
 
-        structure += """
-                /ip firewall mangle
-                add action=accept chain=prerouting dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment="LB PCC by buananet.com"
-                add action=accept chain=postrouting dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment="LB PCC by buananet.com"
-                add action=accept chain=forward dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment="LB PCC by buananet.com"
-                add action=accept chain=input dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment="LB PCC by buananet.com"
-                add action=accept chain=output dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment="LB PCC by buananet.com"
-                   """;
+        structure.append("/ip firewall mangle<br>");
+        structure.append("add action=accept chain=prerouting dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment=\"LB PCC by buananet.com\"<br>");
+        structure.append("add action=accept chain=postrouting dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment=\"LB PCC by buananet.com\"<br>");
+        structure.append("add action=accept chain=forward dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment=\"LB PCC by buananet.com\"<br>");
+        structure.append("add action=accept chain=input dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment=\"LB PCC by buananet.com\"<br>");
+        structure.append("add action=accept chain=output dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment=\"LB PCC by buananet.com\"<br>");
 
         for (PccInterfaces pccInterfaces : pccBody.getInterfaces()) {
-            structure += "add action=mark-connection chain=input in-interface=" + pccInterfaces.getWanIsp()
-                    + " new-connection-mark=\"cm-" + pccInterfaces.getWanIsp()
-                    + "\" passthrough=yes comment=\"LB PCC by buananet.com\"\n";
+            structure.append("add action=mark-connection chain=input in-interface=<span style='color:red;'>").append(pccInterfaces.getWanIsp())
+                    .append("</span> new-connection-mark=\"cm-<span style='color:red;'>").append(pccInterfaces.getWanIsp())
+                    .append("</span>\" passthrough=yes comment=\"LB PCC by buananet.com\"<br>");
         }
 
         for (PccInterfaces pccInterfaces : pccBody.getInterfaces()) {
-            structure += "add action=mark-routing chain=output connection-mark=\"cm-" + pccInterfaces.getWanIsp()
-                    + "\" new-routing-mark=\"to-" + pccInterfaces.getWanIsp()
-                    + "\" passthrough=yes comment=\"LB PCC by buananet.com\"\n";
+            structure.append("add action=mark-routing chain=output connection-mark=\"cm-<span style='color:red;'>").append(pccInterfaces.getWanIsp())
+                    .append("</span>\" new-routing-mark=\"to-<span style='color:red;'>").append(pccInterfaces.getWanIsp())
+                    .append("</span>\" passthrough=yes comment=\"LB PCC by buananet.com\"<br>");
         }
 
         int totalInterfaces = pccBody.getInterfaces().length;
 
         if (pccBody.getIdLocalTarget().equalsIgnoreCase("local-list1")) {
             for (PccInterfaces pccInterfaces : pccBody.getInterfaces()) {
-                structure += "add action=mark-connection chain=prerouting dst-address-type=!local new-connection-mark=\"cm-"
-                        + pccInterfaces.getWanIsp()
-                        + "\" passthrough=yes per-connection-classifier=both-addresses-and-ports:"+totalInterfaces+"/"+(pccInterfaces.getId()-1)+" dst-address-list=!LOCAL-IP src-address-list=LOCAL-IP comment=\"LB PCC by buananet.com\"\n";
+                structure.append("add action=mark-connection chain=prerouting dst-address-type=!local new-connection-mark=\"cm-<span style='color:red;'>")
+                        .append(pccInterfaces.getWanIsp()).append("</span>\" passthrough=yes per-connection-classifier=both-addresses-and-ports:")
+                        .append(totalInterfaces).append("/").append(pccInterfaces.getId() - 1)
+                        .append(" dst-address-list=!LOCAL-IP src-address-list=LOCAL-IP comment=\"LB PCC by buananet.com\"<br>");
             }
 
             for (PccInterfaces pccInterfaces : pccBody.getInterfaces()) {
-                structure += "add action=mark-routing chain=prerouting connection-mark=\"cm-"
-                        + pccInterfaces.getWanIsp()
-                        + "\" new-routing-mark=\"to-" + pccInterfaces.getWanIsp()
-                        + "\" passthrough=yes dst-address-list=!LOCAL-IP src-address-list=LOCAL-IP comment=\"LB PCC by buananet.com\"\n";
+                structure.append("add action=mark-routing chain=prerouting connection-mark=\"cm-<span style='color:red;'>")
+                        .append(pccInterfaces.getWanIsp()).append("</span>\" new-routing-mark=\"to-<span style='color:red;'>")
+                        .append(pccInterfaces.getWanIsp()).append("</span>\" passthrough=yes dst-address-list=!LOCAL-IP src-address-list=LOCAL-IP comment=\"LB PCC by buananet.com\"<br>");
             }
         }
 
         if (pccBody.getIdLocalTarget().equalsIgnoreCase("local-list2")) {
             for (PccInterfaces pccInterfaces : pccBody.getInterfaces()) {
-                structure += "add action=mark-connection chain=prerouting dst-address-type=!local new-connection-mark=\"cm-"
-                        + pccInterfaces.getWanIsp()
-                        + "\" passthrough=yes per-connection-classifier=both-addresses-and-ports:"+totalInterfaces+"/"+(pccInterfaces.getId()-1)+" in-interface="
-                        + pccBody.getInterfaceTarget() + " comment=\"LB PCC by buananet.com\"\n";
+                structure.append("add action=mark-connection chain=prerouting dst-address-type=!local new-connection-mark=\"cm-<span style='color:red;'>")
+                        .append(pccInterfaces.getWanIsp()).append("</span>\" passthrough=yes per-connection-classifier=both-addresses-and-ports:")
+                        .append(totalInterfaces).append("/").append(pccInterfaces.getId() - 1)
+                        .append(" in-interface=<span style='color:red;'>").append(pccBody.getInterfaceTarget())
+                        .append("</span> comment=\"LB PCC by buananet.com\"<br>");
             }
 
             for (PccInterfaces pccInterfaces : pccBody.getInterfaces()) {
-                structure += "add action=mark-routing chain=prerouting connection-mark=\"cm-"
-                        + pccInterfaces.getWanIsp() + "\" new-routing-mark=\"to-" + pccInterfaces.getWanIsp()
-                        + "\" passthrough=yes in-interface=" + pccBody.getInterfaceTarget()
-                        + " comment=\"LB PCC by buananet.com\"\n";
+                structure.append("add action=mark-routing chain=prerouting connection-mark=\"cm-<span style='color:red;'>")
+                        .append(pccInterfaces.getWanIsp()).append("</span>\" new-routing-mark=\"to-<span style='color:red;'>")
+                        .append(pccInterfaces.getWanIsp()).append("</span>\" passthrough=yes in-interface=<span style='color:red;'>")
+                        .append(pccBody.getInterfaceTarget()).append("</span> comment=\"LB PCC by buananet.com\"<br>");
             }
         }
 
         if (pccBody.getIdLocalTarget().equalsIgnoreCase("local-list3")) {
             for (PccInterfaces pccInterfaces : pccBody.getInterfaces()) {
-                structure += "add action=mark-connection chain=prerouting dst-address-type=!local new-connection-mark=\"cm-"
-                        + pccInterfaces.getWanIsp()
-                        + "\" passthrough=yes per-connection-classifier=both-addresses-and-ports:"+totalInterfaces+"/"+(pccInterfaces.getId()-1)+" in-interface-list="
-                        + pccBody.getInterfaceTarget() + " comment=\"LB PCC by buananet.com\"\n";
+                structure.append("add action=mark-connection chain=prerouting dst-address-type=!local new-connection-mark=\"cm-<span style='color:red;'>")
+                        .append(pccInterfaces.getWanIsp()).append("</span>\" passthrough=yes per-connection-classifier=both-addresses-and-ports:")
+                        .append(totalInterfaces).append("/").append(pccInterfaces.getId() - 1)
+                        .append(" in-interface-list=<span style='color:red;'>").append(pccBody.getInterfaceTarget())
+                        .append("</span> comment=\"LB PCC by buananet.com\"<br>");
             }
 
             for (PccInterfaces pccInterfaces : pccBody.getInterfaces()) {
-                structure += "add action=mark-routing chain=prerouting connection-mark=\"cm-"
-                        + pccInterfaces.getWanIsp() + " new-routing-mark=\"to-" + pccInterfaces.getWanIsp()
-                        + "\" passthrough=yes in-interface-list=" + pccBody.getInterfaceTarget()
-                        + " comment=\"LB PCC by buananet.com\"\n";
+                structure.append("add action=mark-routing chain=prerouting connection-mark=\"cm-<span style='color:red;'>")
+                        .append(pccInterfaces.getWanIsp()).append("</span>\" new-routing-mark=\"to-<span style='color:red;'>")
+                        .append(pccInterfaces.getWanIsp()).append("</span>\" passthrough=yes in-interface-list=<span style='color:red;'>")
+                        .append(pccBody.getInterfaceTarget()).append("</span> comment=\"LB PCC by buananet.com\"<br>");
             }
         }
 
-        Map<String, String> response = new HashMap<>();
-        response.put("message", structure);
-        return ResponseEntity.ok(response);
-    }
+        structure.append("</div>");
 
+        Map<String, String> response = new HashMap<>();
+        response.put("message", structure.toString());
+        // return ResponseEntity.ok().header("Content-Type", "text/html").body(response);
+        return ResponseEntity.ok()
+        .contentType(MediaType.TEXT_HTML)
+        .body(structure.toString());
+    }
 }
