@@ -75,21 +75,32 @@ const Formulario = () => {
   }, []);
 
   const onSubmit = async (data: FormValues) => {
-    console.log("Form data:", data);
+    const payload = {
+      idLineWan: String(data.linea),
+      idRouterVersion: data.router,
+      idLocalTarget: data.local,
+      interfaceTarget: data.interfaceTarget || "",
+      interfaces: data.lineInterfaces.map((line) => ({
+        id: line.id,
+        wanIsp: line.wanInput,
+        gatewayIsp: line.gatewayInput,
+      })),
+    };
 
     try {
       const response = await fetch(
-        `${import.meta.env.PUBLIC_BASE_URL_API}/balanceo-carga`,
+        `${import.meta.env.PUBLIC_BASE_URL_API}/pcc`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(data),
+          body: JSON.stringify(payload),
         }
       );
-      const responseData = await response.json();
-      setResult(responseData.message);
+      const responseData = await response.text();
+      setResult(responseData);
+      console.log(responseData);
     } catch (error) {
       console.error("Error submitting form:", error);
       setResult("Error generating script. Please try again.");
@@ -322,13 +333,10 @@ const Formulario = () => {
         <label className="block text-sm font-semibold mb-2 text-gray-300">
           Script Generator Result
         </label>
-
-        <textarea
-          className="flex-grow bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400"
-          placeholder="Please Login and Subscribe .."
-          value={result}
-          readOnly
-        ></textarea>
+        <div
+          className="flex-grow bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400 overflow-x-scroll"
+          dangerouslySetInnerHTML={{ __html: result }}
+        ></div>
 
         <div className="flex mt-4 space-x-4">
           <button
