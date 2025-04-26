@@ -136,9 +136,14 @@ const MikrotikForm = () => {
   const handleCopyScript = () => {
     if (scriptResult) {
       navigator.clipboard
-        .writeText(scriptResult.text)
-        .then(() => alert("Script copiado al portapapeles!"))
-        .catch((err) => console.error("Error al copiar: ", err));
+        .writeText(scriptResult.text) // Solo copiamos el texto plano
+        .then(() => {
+          alert("¡Script copiado al portapapeles como texto!");
+        })
+        .catch((err) => {
+          console.error("Error al copiar: ", err);
+          alert("Hubo un error al copiar el contenido.");
+        });
     }
   };
 
@@ -468,7 +473,6 @@ const MikrotikForm = () => {
           Script Generator Result
         </label>
         <div className="flex-grow bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400 min-h-80 overflow-x-scroll">
-          <pre className="whitespace-pre-wrap">{scriptResult.text}</pre>
           <div dangerouslySetInnerHTML={{ __html: scriptResult.html }} />
         </div>
       </div>
