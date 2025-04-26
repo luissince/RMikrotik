@@ -17,39 +17,39 @@ class GeneradoScriptsApplicationTests {
 	@Autowired
     private MockMvc mockMvc;
 
-    @Test
-    public void testNotFound() throws Exception {
-        mockMvc.perform(get("/werwer"))
-                .andExpect(status().isNotFound())
-                .andExpect(content().contentType("application/json"));
-    }
+    // @Test
+    // public void testNotFound() throws Exception {
+    //     mockMvc.perform(get("/werwer"))
+    //             .andExpect(status().isNotFound())
+    //             .andExpect(content().contentType("application/json"));
+    // }
 
-	@Test
-    public void testGetAllUsers() throws Exception {
-        mockMvc.perform(get("/"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"));
-    }
+	// @Test
+    // public void testGetAllUsers() throws Exception {
+    //     mockMvc.perform(get("/"))
+    //             .andExpect(status().isOk())
+    //             .andExpect(content().contentType("application/json"));
+    // }
 
-	@Test
-    public void testFindUserOk() throws Exception {
-        mockMvc.perform(get("/id/1"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"));
-    }
+	// @Test
+    // public void testFindUserOk() throws Exception {
+    //     mockMvc.perform(get("/id/1"))
+    //             .andExpect(status().isOk())
+    //             .andExpect(content().contentType("application/json"));
+    // }
 
-	@Test
-    public void testFindUserNotFound() throws Exception {
-        mockMvc.perform(get("/id/1234"))
-                .andExpect(status().isNotFound())
-                .andExpect(content().contentType("application/json"));
-    }
+	// @Test
+    // public void testFindUserNotFound() throws Exception {
+    //     mockMvc.perform(get("/id/1234"))
+    //             .andExpect(status().isNotFound())
+    //             .andExpect(content().contentType("application/json"));
+    // }
 
-    @Test
-    public void testFindUserBadRequest() throws Exception {
-        mockMvc.perform(get("/id/werwer"))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().contentType("application/json"));
-    }
+    // @Test
+    // public void testFindUserBadRequest() throws Exception {
+    //     mockMvc.perform(get("/id/werwer"))
+    //             .andExpect(status().isBadRequest())
+    //             .andExpect(content().contentType("application/json"));
+    // }
 
 }

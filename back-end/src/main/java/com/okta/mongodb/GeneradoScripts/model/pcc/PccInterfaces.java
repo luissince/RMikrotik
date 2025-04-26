@@ -1,4 +1,4 @@
-package com.okta.mongodb.GeneradoScripts.model.body.pcc;
+package com.okta.mongodb.GeneradoScripts.model.pcc;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
