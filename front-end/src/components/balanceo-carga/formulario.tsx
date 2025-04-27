@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -26,6 +26,11 @@ type FormValues = z.infer<typeof formSchema>;
 
 type LineInterfacesType = z.infer<typeof lineInterfaceSchema>;
 
+type ScriptResult = {
+  html: string;
+  text: string;
+};
+
 const Formulario = () => {
   const {
     control,
@@ -51,7 +56,7 @@ const Formulario = () => {
   });
 
   const localValue = watch("local");
-  const [result, setResult] = React.useState<string>("");
+  const [scriptResult, setScriptResult] = useState<ScriptResult | null>(null);
 
   const generateLines = (numbers: number) => {
     const list: LineInterfacesType[] = Array.from({ length: numbers }).map(
@@ -98,12 +103,13 @@ const Formulario = () => {
           body: JSON.stringify(payload),
         }
       );
-      const responseData = await response.text();
-      setResult(responseData);
-      console.log(responseData);
+      const responseData: ScriptResult = await response.json();
+      setScriptResult({
+        html: responseData.html,
+        text: responseData.text,
+      });
     } catch (error) {
       console.error("Error submitting form:", error);
-      setResult("Error generating script. Please try again.");
     }
   };
 
@@ -119,11 +125,12 @@ const Formulario = () => {
         gatewayInput: "",
       })),
     });
-    setResult("");
+    setScriptResult(null);
   };
 
   const handleCopyScript = () => {
-    if (result) {
+    if (scriptResult) {
+      const result = scriptResult.text;
       navigator.clipboard
         .writeText(result)
         .then(() => alert("Script copied to clipboard!"))
@@ -335,7 +342,7 @@ const Formulario = () => {
         </label>
         <div
           className="flex-grow bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400 overflow-x-scroll"
-          dangerouslySetInnerHTML={{ __html: result }}
+          dangerouslySetInnerHTML={{ __html: scriptResult?.html || "" }}
         ></div>
 
         <div className="flex mt-4 space-x-4">
@@ -360,7 +367,7 @@ const Formulario = () => {
             type="button"
             className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition disabled:bg-green-300 disabled:cursor-not-allowed"
             onClick={handleCopyScript}
-            disabled={!result}
+            disabled={!scriptResult?.html}
           >
             Copiar Script
           </button>
