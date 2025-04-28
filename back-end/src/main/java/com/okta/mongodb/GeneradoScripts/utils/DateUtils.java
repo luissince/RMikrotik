@@ -1,4 +1,4 @@
-package com.okta.mongodb.utils;
+package com.okta.mongodb.GeneradoScripts.utils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

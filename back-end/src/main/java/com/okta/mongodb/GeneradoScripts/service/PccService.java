@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.okta.mongodb.GeneradoScripts.model.pcc.PccBody;
 import com.okta.mongodb.GeneradoScripts.model.pcc.PccInterfaces;
-import com.okta.mongodb.utils.DateUtils;
+import com.okta.mongodb.GeneradoScripts.utils.DateUtils;
 
 @Service
 public class PccService {

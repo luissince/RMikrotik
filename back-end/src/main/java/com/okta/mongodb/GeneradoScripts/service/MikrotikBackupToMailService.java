@@ -8,10 +8,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.okta.mongodb.GeneradoScripts.constants.MikrotikBackupTomail;
 import com.okta.mongodb.GeneradoScripts.model.mikrotikBackupToMail.MikrotikBackupToMailBackupEntry;
 import com.okta.mongodb.GeneradoScripts.model.mikrotikBackupToMail.MikrotikBackupToMailBody;
-import com.okta.mongodb.constants.MikrotikBackupTomail;
-import com.okta.mongodb.utils.DateUtils;
+import com.okta.mongodb.GeneradoScripts.utils.DateUtils;
 
 @Service
 public class MikrotikBackupToMailService {

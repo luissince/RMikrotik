@@ -1,4 +1,4 @@
-package com.okta.mongodb.constants;
+package com.okta.mongodb.GeneradoScripts.constants;
 
 import java.util.ArrayList;
 import java.util.List;
