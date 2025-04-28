@@ -61,7 +61,7 @@ const Formulario = () => {
       metodoConmutacion: "Failover - Check Gateway",
       numeroLineas: "2",
       lineInterfaces: Array.from({ length: 2 }, (_, i) => ({
-        wanInput: "",
+        wanInput: `ISP - ${i + 1}`,
         gatewayInput: "",
         distanciaInput: (i + 1).toString(),
         dnsInput: "",
@@ -79,18 +79,35 @@ const Formulario = () => {
   const onChangeSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newNumLines = Number(event.target.value) || 2;
     setNumLineas(newNumLines);
-
-    // Actualiza el array de interfaces según el nuevo número
-    const newInterfaces = Array.from({ length: newNumLines }, (_, i) => ({
-      wanInput: "",
-      gatewayInput: "",
-      distanciaInput: (i + 1).toString(),
-      dnsInput: "",
-    }));
-
-    replace(newInterfaces);
+  
     setValue("numeroLineas", event.target.value);
+  
+    let currentValues = fields.map((field, i) => ({
+      wanInput: field.wanInput || `ISP - ${i + 1}`,
+      gatewayInput: field.gatewayInput || "",
+      distanciaInput: field.distanciaInput || (i + 1).toString(),
+      dnsInput: field.dnsInput || "",
+    }));
+  
+    // Si el nuevo número de líneas es mayor, agregamos inputs
+    if (newNumLines > currentValues.length) {
+      const additional = Array.from({ length: newNumLines - currentValues.length }, (_, i) => ({
+        wanInput: `ISP - ${currentValues.length + i + 1}`,
+        gatewayInput: "",
+        distanciaInput: (currentValues.length + i + 1).toString(),
+        dnsInput: "",
+      }));
+      currentValues = [...currentValues, ...additional];
+    }
+  
+    // Si el nuevo número de líneas es menor, recortamos
+    if (newNumLines < currentValues.length) {
+      currentValues = currentValues.slice(0, newNumLines);
+    }
+  
+    replace(currentValues);
   };
+  
 
   const handleCopyToClipboard = () => {
     if (scriptResult) {
@@ -181,7 +198,7 @@ const Formulario = () => {
                     htmlFor={`wanInput-${index}`}
                     className="block text-sm font-semibold text-gray-300"
                   >
-                    WAN ISP-{position}
+                    Identity ISP-{position}
                   </label>
                   <Controller
                     name={`lineInterfaces.${index}.wanInput`}
@@ -191,7 +208,7 @@ const Formulario = () => {
                         {...field}
                         id={`wanInput-${index}`}
                         type="text"
-                        placeholder={`Ej: ether${position}`}
+                        placeholder={`Ej: ISP - ${position}`}
                         className="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-300"
                       />
                     )}
@@ -297,7 +314,7 @@ const Formulario = () => {
                     htmlFor={`dnsInput-${index}`}
                     className="block text-sm font-semibold text-gray-300"
                   >
-                    DNS Publico
+                    IP Public Check
                   </label>
                   <Controller
                     name={`lineInterfaces.${index}.dnsInput`}
