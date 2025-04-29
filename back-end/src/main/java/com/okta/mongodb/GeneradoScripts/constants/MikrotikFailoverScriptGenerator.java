@@ -6,7 +6,7 @@ import java.util.List;
 import com.okta.mongodb.GeneradoScripts.model.mikrotikFailoverScriptGenerator.MikrotikFailoverScriptGeneratorFailOverMethod;
 import com.okta.mongodb.GeneradoScripts.model.mikrotikFailoverScriptGenerator.MikrotikFailoverScriptGeneratorLine;
 
-public class MikrotikFailoverScriptGenerator {
+public final class MikrotikFailoverScriptGenerator {
 
      public static final List<MikrotikFailoverScriptGeneratorFailOverMethod> FAIL_OVER_METHODS = new ArrayList<MikrotikFailoverScriptGeneratorFailOverMethod>() {
         {

@@ -1,6 +1,6 @@
 package com.okta.mongodb.GeneradoScripts.constants;
 
-public class StaticRoutingGames {
+public final class StaticRoutingGames {
 
     // ros6
     public static final String ROS6 = "ros6";
