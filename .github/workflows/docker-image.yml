@@ -71,6 +71,7 @@ jobs:
     environment: back-end
 
     env:
+      SERVER_PORT: ${{ secrets.SERVER_PORT }}
       SPRING_APPLICATION_NAME: ${{ secrets.SPRING_APPLICATION_NAME }}
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: ${{ secrets.SPRING_DATASOURCE_DRIVER_CLASS_NAME }}
       SPRING_DATASOURCE_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }}
@@ -104,6 +105,7 @@ jobs:
         if: steps.check-backend.outputs.backend == 'true'
         run: |
           cat > back-end/src/main/resources/application.properties <<EOL
+          server.port=${{env.SERVER_PORT}}
           spring.application.name=${{env.SPRING_APPLICATION_NAME}}
           spring.server.type=${{env.SPRING_SERVER_TYPE}}
           spring.mvc.throw-exception-if-no-handler-found=${{env.SPRING_MVC_THROW_EXCEPTION_IF_NO_HANDLER_FOUND}}
