@@ -10,6 +10,14 @@ services:
       - "8081:8080"
     networks:
       - ubuntu_default
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"   # Máximo 50% de un núcleo
+          memory: "512m" # Máximo 512MB de RAM
+        reservations:
+          cpus: "0.25"   # Reserva 25% de un núcleo
+          memory: "256m" # Reserva 256MB de RAM
 
 # Definición de redes
 networks:
