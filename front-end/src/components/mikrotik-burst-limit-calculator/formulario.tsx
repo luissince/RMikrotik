@@ -72,8 +72,8 @@ const FormularioMikrotikBurstLimitCalculator: React.FC = () => {
     };
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="text-gray-950 shadow-2xl rounded-lg p-6 w-full ring-2 ring-blue-500">
+        <div className="flex flex-col lg:flex-row gap-6 bg-gray-900 p-6 rounded-lg shadow-lg min-h-[70vh]">
+            <div className="flex flex-col gap-6 lg:w-1/2">
                 <div className="overflow-x-auto rounded-t-lg">
                     <table className="table-auto w-full border-spacing-2 border-slate-600">
                         <thead>
@@ -182,87 +182,86 @@ const FormularioMikrotikBurstLimitCalculator: React.FC = () => {
                 </div>
             </div>
 
-            <div className="bg-gray-700 p-4 rounded-t-lg">
+            <div className="flex flex-col lg:w-1/2 min-h-0">
                 <div className="space-y-4">
                     <h3 className="text-xl font-bold text-gray-100 mb-4">BURST LIMIT FOR QUEUE</h3>
                     {error && <p className="text-red-500">{error}</p>}
-                    {apiData && (
-                        <div className="overflow-x-auto rounded-t-lg">
-                            <table className="table-auto w-full border-spacing-2 mb-6">
-                                <thead>
-                                    <tr className="bg-gray-100 text-gray-200">
-                                        <th className="bg-gray-800 text-gray-200 p-2 border-separate">Tab</th>
-                                        <th className="bg-gray-800 text-gray-200 p-2 border-separate">Upload</th>
-                                        <th className="bg-gray-800 text-gray-200 p-2 border-separate">Download</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td className="p-2 border text-slate-300">Max Limit</td>
-                                        <td className="p-2 border text-green-500 font-bold">{apiData.data["upload-max-limit"]}</td>
-                                        <td className="p-2 border text-green-500 font-bold">{apiData.data["download-max-limit"]}</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="p-2 border text-slate-300">Burst Limit</td>
-                                        <td className="p-2 border text-blue-500 font-bold">{apiData.data["upload-burst-limit"]}</td>
-                                        <td className="p-2 border text-blue-500 font-bold">{apiData.data["download-burst-limit"]}</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="p-2 border text-slate-300">Burst Threshold</td>
-                                        <td className="p-2 border text-purple-500 font-bold">{apiData.data["upload-threshold"]}</td>
-                                        <td className="p-2 border text-purple-500 font-bold">{apiData.data["download-threshold"]}</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="p-2 border text-slate-300">Burst Time</td>
-                                        <td className="p-2 border text-red-500 font-bold">{apiData.data["upload-burst-time-value"]}</td>
-                                        <td className="p-2 border text-red-500 font-bold">{apiData.data["download-burst-time-value"]}</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="p-2 border text-slate-300">Limit At</td>
-                                        <td className="p-2 border text-orange-500 font-bold">{apiData.data["upload-limit-at"]}</td>
-                                        <td className="p-2 border text-orange-500 font-bold">{apiData.data["download-limit-at"]}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
 
-                            <table className="table-auto w-full border-spacing-2 mb-6">
-                                <thead>
-                                    <tr className="bg-gray-100 text-gray-200">
-                                        <th className="bg-gray-800 text-gray-200 p-2 border-separate">TAB ADVANCED</th>
-                                        <th className="bg-gray-800 text-gray-200 p-2 border-separate">UPLOAD</th>
-                                        <th className="bg-gray-800 text-gray-200 p-2 border-separate">DOWNLOAD</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td className="p-2 border text-slate-300">Limit At</td>
-                                        <td className="p-2 border text-violet-400 font-bold">{apiData.data["upload-limit-at"]}</td>
-                                        <td className="p-2 border text-violet-400 font-bold">{apiData.data["download-limit-at"]}</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="p-2 border text-slate-300">Priority</td>
-                                        <td className="p-2 border text-sky-400 font-bold">{apiData.data["upload-actual-burst-duration"]}</td>
-                                        <td className="p-2 border text-sky-400 font-bold">{apiData.data["download-actual-burst-duration"]}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                    <div className="overflow-x-auto rounded-t-lg">
+                        <table className="table-auto w-full border-spacing-2 mb-6">
+                            <thead>
+                                <tr className="bg-gray-100 text-gray-200">
+                                    <th className="bg-gray-800 text-gray-200 p-2 border-separate">Tab</th>
+                                    <th className="bg-gray-800 text-gray-200 p-2 border-separate">Upload</th>
+                                    <th className="bg-gray-800 text-gray-200 p-2 border-separate">Download</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td className="p-2 border text-slate-300">Max Limit</td>
+                                    <td className="p-2 border text-green-500 font-bold">{apiData && apiData.data["upload-max-limit"]}</td>
+                                    <td className="p-2 border text-green-500 font-bold">{apiData && apiData.data["download-max-limit"]}</td>
+                                </tr>
+                                <tr>
+                                    <td className="p-2 border text-slate-300">Burst Limit</td>
+                                    <td className="p-2 border text-blue-500 font-bold">{apiData && apiData.data["upload-burst-limit"]}</td>
+                                    <td className="p-2 border text-blue-500 font-bold">{apiData && apiData.data["download-burst-limit"]}</td>
+                                </tr>
+                                <tr>
+                                    <td className="p-2 border text-slate-300">Burst Threshold</td>
+                                    <td className="p-2 border text-purple-500 font-bold">{apiData && apiData.data["upload-threshold"]}</td>
+                                    <td className="p-2 border text-purple-500 font-bold">{apiData && apiData.data["download-threshold"]}</td>
+                                </tr>
+                                <tr>
+                                    <td className="p-2 border text-slate-300">Burst Time</td>
+                                    <td className="p-2 border text-red-500 font-bold">{apiData && apiData.data["upload-burst-time-value"]}</td>
+                                    <td className="p-2 border text-red-500 font-bold">{apiData && apiData.data["download-burst-time-value"]}</td>
+                                </tr>
+                                <tr>
+                                    <td className="p-2 border text-slate-300">Limit At</td>
+                                    <td className="p-2 border text-orange-500 font-bold">{apiData && apiData.data["upload-limit-at"]}</td>
+                                    <td className="p-2 border text-orange-500 font-bold">{apiData && apiData.data["download-limit-at"]}</td>
+                                </tr>
+                            </tbody>
+                        </table>
 
-                            <table className="table-auto w-full border-spacing-2">
-                                <thead>
-                                    <tr className="bg-gray-100 text-gray-200">
-                                        <th className="bg-gray-800 text-gray-200 p-2 border-separate">RATE LIMIT FOR HOTSPOT OR PPPOE</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr className="bg-gray-100 text-gray-200">
-                                        <td className="bg-red-600 text-gray-200 p-2 border-separate">
-                                            {apiData["reate-limit"]}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    )}
+                        <table className="table-auto w-full border-spacing-2 mb-6">
+                            <thead>
+                                <tr className="bg-gray-100 text-gray-200">
+                                    <th className="bg-gray-800 text-gray-200 p-2 border-separate">TAB ADVANCED</th>
+                                    <th className="bg-gray-800 text-gray-200 p-2 border-separate">UPLOAD</th>
+                                    <th className="bg-gray-800 text-gray-200 p-2 border-separate">DOWNLOAD</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td className="p-2 border text-slate-300">Limit At</td>
+                                    <td className="p-2 border text-violet-400 font-bold">{apiData && apiData.data["upload-limit-at"]}</td>
+                                    <td className="p-2 border text-violet-400 font-bold">{apiData && apiData.data["download-limit-at"]}</td>
+                                </tr>
+                                <tr>
+                                    <td className="p-2 border text-slate-300">Priority</td>
+                                    <td className="p-2 border text-sky-400 font-bold">{apiData && apiData.data["upload-actual-burst-duration"]}</td>
+                                    <td className="p-2 border text-sky-400 font-bold">{apiData && apiData.data["download-actual-burst-duration"]}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table className="table-auto w-full border-spacing-2">
+                            <thead>
+                                <tr className="bg-gray-100 text-gray-200">
+                                    <th className="bg-gray-800 text-gray-200 p-2 border-separate">RATE LIMIT FOR HOTSPOT OR PPPOE</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr className="bg-gray-100 text-gray-200">
+                                    <td className="bg-red-600 text-gray-200 p-2 border-separate text-center">
+                                        {apiData && apiData["reate-limit"] || "0K/0M 0M/0M 0K/0K 0/0 0 0K/0K"}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
                     <div className="flex flex-wrap justify-center gap-4 mb-6 mt-7">
                         <button

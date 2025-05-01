@@ -1,16 +1,12 @@
 ---
-import Formulario from "../components/mikrotik-failover-script-generator/failoverlineas";
+import FormularioMikrotikFailoverScriptGenerator from "../components/mikrotik-failover-script-generator/formulario";
 import MainLayout from "../layout/MainLayout.astro";
 ---
 
 <MainLayout title="Open Book">
-  <body
-    class="bg-gray-900 text-white font-sans min-h-screen flex items-center justify-center"
-  >
-    <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
-      <!-- Contenido -->
+  <div class="flex flex-col py-10 space-y-5">
+    <div class="bg-gray-800 rounded-lg">
       <!-- Header -->
-      <!-- Título -->
       <div class="text-center mb-6">
         <h1 class="text-2xl lg:text-4xl font-bold text-orange-500">
           MIKROTIK FAILOVER GENERATOR
@@ -20,14 +16,14 @@ import MainLayout from "../layout/MainLayout.astro";
         </p>
       </div>
     </div>
+
     <!-- Contenido inicio -->
-    <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
-      <div class="container mx-auto p-6 bg-gray-800 rounded-lg shadow-lg">
-        <!-- Formulario -->
-        <Formulario client:load />
+    <div class="bg-gray-800 rounded-lg mx-4">
+      <!-- Contenido Principal -->
+      <div class="container mx-auto">
+        <!-- Formulario Principal -->
+        <FormularioMikrotikFailoverScriptGenerator client:load />
       </div>
     </div>
-
-    <!-- Contenido Fin Aqui para abajo es otro codigo q u se borrara -->
-  </body>
+  </div>
 </MainLayout>

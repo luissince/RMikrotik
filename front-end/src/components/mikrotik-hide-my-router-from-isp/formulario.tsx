@@ -148,11 +148,13 @@ const MikrotikForm = () => {
   };
 
   return (
-    <div className="container mx-auto p-6 bg-gray-800 rounded-lg shadow-lg">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        {/* Contenedor borde azul */}
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex flex-col lg:flex-row gap-6 bg-gray-900 p-6 rounded-lg shadow-lg min-h-[70vh]"
+    >
+      {/* Panel izquierdo - Controles */}
+      <div className="flex flex-col gap-6 lg:w-1/2">
         <div className="text-gray-950 shadow-2xl rounded-lg p-6 w-full ring-2 ring-blue-500">
-          {/* Tabla del formulario */}
           <div className="overflow-x-auto rounded-t-lg">
             <table className="table-auto w-full border-spacing-2 border-slate-600">
               <thead>
@@ -245,9 +247,8 @@ const MikrotikForm = () => {
           <h3 className="font-semibold text-gray-300 mb-2 mt-4">
             More Hidden Protections from Internet (WAN) Scanning
           </h3>
-          <div className="flex gap-4">
-            <div className="w-full md:w-1/2 p-4 bg-gray-700 rounded mt-4 text-gray-200">
-              {/* Contenido de la columna izquierda */}
+          <div className="flex flex-col gap-4">
+            <div className="w-full p-4 bg-gray-700 rounded mt-4 text-gray-200">
               <div className="space-y-2">
                 <div>
                   <Controller
@@ -351,12 +352,6 @@ const MikrotikForm = () => {
                   />
                   <label htmlFor="blockOpenDNS">Block Open DNS</label>
                 </div>
-              </div>
-            </div>
-
-            <div className="w-full md:w-1/2 bg-gray-700 p-4 rounded mt-4 text-gray-200">
-              {/* Contenido de la columna derecha */}
-              <div className="space-y-2">
                 <div>
                   <Controller
                     name="protections.blockOpenPROXY"
@@ -446,37 +441,39 @@ const MikrotikForm = () => {
             </div>
           </div>
         </div>
+      </div>
 
-        <div className="flex flex-wrap gap-4 mb-6 mt-7">
+      {/* Panel derecho - Resultado */}
+      <div className="flex flex-col lg:w-1/2 min-h-0">
+        <div className="flex-grow bg-gray-700 p-4 rounded-lg flex flex-col min-h-0">
+          <label className="block text-sm font-semibold mb-2 text-gray-300">
+            Script Generator Result
+          </label>
+          <div className="flex-grow overflow-y-auto bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400">
+            {scriptResult && (
+              <div dangerouslySetInnerHTML={{ __html: scriptResult.html }} />
+            )}
+          </div>
+        </div>
+        <div className="flex mt-4 space-x-4">
           <button
             type="submit"
-            className="text-white px-4 py-2 rounded-md transition ease-in-out delay-150 bg-orange-500 hover:-translate-y-1 hover:scale-110 hover:bg-orange-600 duration-300"
+            className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition"
             disabled={isSubmitting}
           >
             {isSubmitting ? "Generando..." : "Generar Script"}
           </button>
-
           <button
             type="button"
-            className="text-white px-4 py-2 rounded-md transition ease-in-out delay-150 bg-green-500 hover:-translate-y-1 hover:scale-110 hover:bg-teal-600 duration-300"
+            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
             onClick={handleCopyScript}
-            disabled={!scriptResult}
+            disabled={!scriptResult.html}
           >
-            Copiar Todo
+            Copiar Script
           </button>
         </div>
-      </form>
-
-      {/* Gestión de Resultados */}
-      <div className="bg-gray-700 p-4 rounded-lg flex flex-col">
-        <label className="block text-sm font-semibold mb-2 text-gray-300">
-          Script Generator Result
-        </label>
-        <div className="flex-grow bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400 min-h-80 overflow-x-scroll">
-          <div dangerouslySetInnerHTML={{ __html: scriptResult.html }} />
-        </div>
       </div>
-    </div>
+    </form>
   );
 };
 

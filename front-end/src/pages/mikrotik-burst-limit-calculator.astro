@@ -4,23 +4,25 @@ import MainLayout from "../layout/MainLayout.astro";
 ---
 
 <MainLayout title="Open Book">
-    <body
-        class="bg-gray-900 text-white font-sans min-h-screen flex items-center justify-center"
-    >
-        <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
+    <div class="flex flex-col py-10 space-y-5">
+        <div class="bg-gray-800 rounded-lg">
             <!-- Header -->
             <div class="text-center mb-6">
                 <h1 class="text-2xl lg:text-4xl font-bold text-orange-500">
                     MIKROTIK BURST LIMIT CALCULATOR FOR ROUTER-OS
                 </h1>
-                <p class="text-gray-300 mt-4">
+                <p class="text-gray-300">
                     PRECIO DE SUSCRIPCIÓN. ¡Fácil, rápido y efectivo! 🚀
                 </p>
             </div>
         </div>
-        <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
-            <!-- Form Section -->
-            <FormularioMikrotikBurstLimitCalculator client:load />
+
+        <div class="bg-gray-800 rounded-lg mx-4">
+            <!-- Contenido Principal -->
+            <div class="container mx-auto">
+                <!-- Formulario Principal -->
+                <FormularioMikrotikBurstLimitCalculator client:load />
+            </div>
         </div>
     </body>
 </MainLayout>
