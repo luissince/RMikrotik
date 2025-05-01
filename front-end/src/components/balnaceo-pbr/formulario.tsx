@@ -71,20 +71,6 @@ const FormularioBalanceoPbr = () => {
     }
   };
 
-  const onChangeInputInterfaceTarget = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setInterfaceTarget(event.target.value);
-    if (errors.interfaceTarget) {
-      const { interfaceTarget, ...rest } = errors;
-      setErrors(rest);
-    }
-  };
-
-  const onChangeSelectLocal = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setLocal(event.target.value);
-  };
-
   const onChangeGroupName1 = (event: React.ChangeEvent<HTMLInputElement>) => {
     setGroupName1(event.target.value);
   };
@@ -344,7 +330,7 @@ const FormularioBalanceoPbr = () => {
             </div>
           </div>
 
-          {lineInterfaces.map((lineInter, index) => (
+          {lineInterfaces.map((lineInter) => (
             <div
               key={lineInter.id}
               className="grid grid-cols-1 sm:grid-cols-2 gap-4"

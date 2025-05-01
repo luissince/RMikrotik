@@ -46,7 +46,6 @@ type ScriptResult = {
 
 const FormularioMikrotikFailoverScriptGenerator = () => {
   // Estado para controlar el número de líneas
-  const [numLineas, setNumLineas] = useState<number>(2);
   const [scriptResult, setScriptResult] = useState<ScriptResult | null>(null);
 
   // Configuración de React Hook Form con validación Zod
@@ -78,7 +77,6 @@ const FormularioMikrotikFailoverScriptGenerator = () => {
   // Actualiza el número de líneas cuando cambia la selección
   const onChangeSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newNumLines = Number(event.target.value) || 2;
-    setNumLineas(newNumLines);
 
     setValue("numeroLineas", event.target.value);
 

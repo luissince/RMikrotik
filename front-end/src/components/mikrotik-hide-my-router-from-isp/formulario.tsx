@@ -47,7 +47,6 @@ const MikrotikForm = () => {
     handleSubmit,
     setValue,
     formState: { errors },
-    reset,
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
