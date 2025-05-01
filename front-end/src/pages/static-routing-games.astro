@@ -1,119 +1,28 @@
 ---
+import FormularioStaticRoutingGames from "../components/static-routing-games/formulario";
 import MainLayout from "../layout/MainLayout.astro";
 ---
 
 <MainLayout title="Open Book">
-    <body
-        class="bg-gray-900 text-white font-sans min-h-screen flex items-center justify-center"
-    >
+    <body class="bg-gray-900 text-white font-sans min-h-screen flex items-center justify-center">
         <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
-            <!-- Contenido -->
             <!-- Header -->
-                 <!-- Título -->
-                 <div class="text-center mb-6">
-                    <h1
-                        class="text-2xl lg:text-4xl font-bold text-orange-500"
-                    >
+            <div class="text-center mb-6">
+                <h1 class="text-2xl lg:text-4xl font-bold text-orange-500">
                     Games Static Routing Using Filter Raw
-                    </h1>
-                    <p class="text-gray-300">
-                        Static Routes and Firewall Mangle Rules for Games
-                    </p>
-                </div>
-        </div>
-                <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
-             
-<!-- Contenido inicio -->
-
-
-
-  <div class="container mx-auto p-6 bg-gray-800 rounded-lg shadow-lg ">
-    <!-- Título -->
-  
-
-    <!-- Formulario Principal -->
-    <form class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <!-- Columna Izquierda -->
-      <div class="space-y-6">
-        <!-- Selección de RouterOS -->
-        <div>
-          <label for="routeros" class="block font-semibold text-gray-300 mb-2">RouterOS Version</label>
-          <select id="routeros" class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500">
-            <option value="v6.xx">RouterOS v6.xx</option>
-            <option value="v7.xx">RouterOS v7.xx</option>
-          </select>
-        </div>
-
-        <!-- Gateway del ISP -->
-        <div>
-          <label for="gateway" class="block font-semibold text-gray-300 mb-2 mt-4">Gateway to WAN or ISP Game</label>
-          <input id="gateway" type="text" placeholder="e.g.: 192.168.2.1 or pppoe-out" class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500" />
-        </div>
-
-        <!-- Selección de Juegos -->
-        <div>
-          <label for="games" class="block font-semibold text-gray-300 mb-2 mt-4">Seleccione los Juegos</label>
-          <input id="games" type="text" placeholder="Find Games..." class="w-full p-2 mb-4 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500" />
-          <div class="h-48 overflow-y-scroll bg-gray-700 p-4 rounded">
-            <h3 class="font-semibold text-gray-300 mb-2">Mobile Games</h3>
-            <div class="space-y-2">
-              <div><input type="checkbox" id="game1" class="mr-2"><label for="game1">Arena Of Valor (AOV) - Mobile</label></div>
-              <div><input type="checkbox" id="game2" class="mr-2"><label for="game2">Among Us - Mobile</label></div>
-              <div><input type="checkbox" id="game3" class="mr-2"><label for="game3">Call of Duty (COD) - Mobile</label></div>
-
-             
-              <!-- Añadir más juegos aquí -->
+                </h1>
+                <p class="text-gray-300">
+                    Static Routes and Firewall Mangle Rules for Games
+                </p>
             </div>
-
-
-
-            
-          </div>
         </div>
-      </div>
 
-      <!-- Columna Derecha -->
-      <div class="bg-gray-700 p-4 rounded-lg flex flex-col">
-        <label class="block text-sm font-semibold mb-2 text-gray-300"
-          >Script Generator Result</label
-        >
-        <textarea
-          class="flex-grow bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400"
-          placeholder="Please Login and Subscribe .."
-          readonly></textarea>
-        <div class="flex mt-4 space-x-4">
-          <button
-            class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition"
-            >Generar</button
-          >
-          <button
-            class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition"
-            >Borrar Todo</button
-          >
-          <button
-            class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
-            >Copiar Script</button
-          >
-        </div>
-      </div>
-      </div>
-    </form>
-  </div>
-
- 
-
-
- <!-- Contenido Fin -->
-
-
-
-
-
+        <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
+            <!-- Contenido Principal -->
+            <div class="container mx-auto p-6 bg-gray-800 rounded-lg shadow-lg">
+                <!-- Formulario Principal -->
+                <FormularioStaticRoutingGames client:load />
             </div>
-
-            <!-- Contenido Fin Aqui para abajo es otro codigo q u se borrara -->
-       
- 
-
+        </div>
     </body>
 </MainLayout>

@@ -1,0 +1,26 @@
+---
+import FormularioMikrotikBurstLimitCalculator from "../components/mikrotik-burst-limit-calculator/formulario";
+import MainLayout from "../layout/MainLayout.astro";
+---
+
+<MainLayout title="Open Book">
+    <body
+        class="bg-gray-900 text-white font-sans min-h-screen flex items-center justify-center"
+    >
+        <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
+            <!-- Header -->
+            <div class="text-center mb-6">
+                <h1 class="text-2xl lg:text-4xl font-bold text-orange-500">
+                    MIKROTIK BURST LIMIT CALCULATOR FOR ROUTER-OS
+                </h1>
+                <p class="text-gray-300 mt-4">
+                    PRECIO DE SUSCRIPCIÓN. ¡Fácil, rápido y efectivo! 🚀
+                </p>
+            </div>
+        </div>
+        <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
+            <!-- Form Section -->
+            <FormularioMikrotikBurstLimitCalculator client:load />
+        </div>
+    </body>
+</MainLayout>
