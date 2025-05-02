@@ -3,6 +3,369 @@ import { images } from "../assets";
 import Button from "../components/Button.astro";
 import Icon from "../components/Icon.astro";
 import MainLayout from "../layout/MainLayout.astro";
+
+type Tool = {
+  name: string;
+  href: string;
+};
+
+type ToolsSection = {
+  title: string;
+  color: string;
+  tools: Tool[];
+};
+
+const toolsSections: ToolsSection[] = [
+  {
+    title: "MOST POPULAR TOOLS",
+    color: "text-blue-100",
+    tools: [
+      { name: "Load Balancing Pcc", href: "/pcc" },
+      { name: "Auto Backup en E-Mail", href: "/mikrotik-backup-to-mail" },
+      {
+        name: "Burst Limite Calculadora",
+        href: "mikrotik-burst-limit-calculator",
+      },
+      {
+        name: "Failover Recursive Gateway",
+        href: "mikrotik-failover-script-generator",
+      },
+      {
+        name: "MikroTik Ninja: Hide Routerboard Scanning",
+        href: "/mikrotik-hide-my-router-from-isp",
+      },
+      {
+        name: "Games Static Routing Using Filter Raw",
+        href: "static-routing-games",
+      },
+    ],
+  },
+  {
+    title: "Route // Mangle // NAT // VPN",
+    color: "text-rose-600",
+    tools: [
+      { name: "Load Balancing PCC", href: "balanceo-carga" },
+      { name: "Port Forwarding with NAT", href: "balanceo-pbr" },
+      { name: "Load Balancing NTH", href: "Balanceo_NTH" },
+      { name: "Port TCP/UDP Static Routing", href: "Balanceo-ECMP" },
+      {
+        name: "Load Balancing ECMP",
+        href: "mikrotik-failover-script-generator",
+      },
+      {
+        name: "All Traffic to VPN Tunnel",
+        href: "static-routing-games",
+      },
+      {
+        name: "Failover Recursive Gateway",
+        href: "static-routing-games-mangle-port",
+      },
+      { name: "Remote Access ISP \"Public IP Static\"", href: "policy-based-routing-website" },
+      {
+        name: "Games Static Routing Using Filter Raw",
+        href: "Local-Client-IP-Static -Routing",
+      },
+      { name: "VPN Routing Port Games", href: "Port-Forwarding-with-NAT" },
+      {
+        name: "Games Static Routing Using Mangle Port",
+        href: "mikrotik-port-static-routing",
+      },
+      {
+        name: "VPN Routing IP Address Games",
+        href: "vpn-game-generatorr",
+      },
+      {
+        name: "Website Static Routing",
+        href: "remote-ip-public-static",
+      },
+      { name: "VPN Remote SSTP - L2TP - PPTP - OVPN", href: "vpn-game-generator2" },
+      {
+        name: "Local Client IP Static Routing",
+        href: "VPN-remote-sstp-l2tp-pptp-ovpn",
+      },
+      {
+        name: "Static Routing Youtube, Tiktok, FB, WA, etc.",
+        href: "Static-Routing-Youtube-Tiktok-FB-WA",
+      },
+    ],
+  },
+  {
+    title: "SIMPLE QUEUE // QUEUE TREE // QUEUE TYPE",
+    color: "text-amber-500",
+    tools: [
+      {
+        name: "Burst Limit Calculator",
+        href: "mikrotik-burst-limit-calculator",
+      },
+      {
+        name: "Queue Tree + Bandwidth Shared Up-To",
+        href: "mikrotik-pcq-burst-rate-queue-size-generator",
+      },
+      { name: "PCQ Burst Rate + Queue Size Calculator", href: "simple-queue-generator" },
+      {
+        name: "PCQ for Queue Tree and Queue Simple",
+        href: "simple-queue-generator-shared",
+      },
+      {
+        name: "Simple Queue + Tocken Bucket",
+        href: "queue-tree-generator-shared",
+      },
+      {
+        name: "QoS Priority Youtube, Tiktok, WA, FB, etc.",
+        href: "queue-tree-generator-shared",
+      },
+      { name: "Simple Queue + Bandwidth Shared Up-To", href: "BypassSpeedyTest" },
+    ],
+  },
+  {
+    title: "HOTSPOT // PPPOE // PPP",
+    color: "text-lime-500",
+    tools: [
+      {
+        name: "Free Hotspot Wi-Fi QR Code Template",
+        href: "mikrotik-qr-code-generator",
+      },
+      {
+        name: "Hotspot Username Password Generator",
+        href: "mikrotik-block-sharing-hotspot",
+      },
+      { name: "Block Sharing Hotspot with \"Change TTL\"", href: "#" },
+      {
+        name: "Bandwidth Share Up-To for Hotspot",
+        href: "mikrotik-username-password-ppp-generator",
+      },
+      {
+        name: "Easy Hotspot Configuration Wizard",
+        href: "mikrotik-username-password-hotspot-generator",
+      },
+      {
+        name: "Notify Expired Hotspot + PPPoE + Static IP",
+        href: "mikrotik-share-user-multi-login",
+      },
+      {
+        name: "PPP Secrets Username Password Generator",
+        href: "mikrotik-expired-isolate-pppoe-hotspot",
+      },
+    ],
+  },
+  {
+    title: "DNS // NETWATCH // INTERFACE // MAC // DHCP",
+    color: "text-indigo-500",
+    tools: [
+      {
+        name: "DNS over HTTPS (DoH) Servers",
+        href: "mikrotik-dns-over-https-doh",
+      },
+      {
+        name: "Bonding Interface / Link Aggregation",
+        href: "mikrotik-netwatch-monitoring",
+      },
+      {
+        name: "Netwatch to Telegram, WA, Email, SMS",
+        href: "mikrotik-change-mac-address",
+      },
+      {
+        name: "Discover Unknown DHCP Rogue Server",
+        href: "mikrotik-bonding-interface",
+      },
+      {
+        name: "Change or Random Mac Address Interface",
+        href: "mikrotik-dhcp-rogue",
+      },
+    ],
+  },
+  {
+    title: "PROTECTION // BLOCKED // BACKUP",
+    color: "text-cyan-400",
+    tools: [
+      {
+        name: "MikroTik Ninja: Hide Routerboard from ISP",
+        href: "mikrotik-hide-my-router-from-isp",
+      },
+      {
+        name: "Port Knocking with ICMP + Packet Size",
+        href: "advanced-mikrotik-protection",
+      },
+      {
+        name: "Advanced MikroTik Router-OS Protection",
+        href: "mikrotik-backup-to-mail",
+      },
+      {
+        name: "Block Websites Generator",
+        href: "mikrotik-access-block",
+      },
+      {
+        name: "MikroTik Auto Backup to E-Mail",
+        href: "port-knocking-icmp",
+      },
+      {
+        name: "Mangle Chain Obfuscator / Encryption",
+        href: "mikrotik-block-website-generator",
+      },
+      {
+        name: "Block For Youtube, Tiktok, WA, FB, etc.",
+        href: "mikrotik-block-website-generator",
+      },
+    ],
+  },
+  {
+    title: "ROUTER-OS OTHER TOOLS",
+    color: "text-purple-400",
+    tools: [
+      { name: "Load Balancing PCC Calculation", href: "pcc-calculation" },
+      {
+        name: "Wifi.id WMS and Seamless Auto Login",
+        href: "mirkotik-latinoamerica-timezone",
+      },
+      {
+        name: "Indonesia Time Zone NTP/SNTP Client",
+        href: "wifid-wms-seamless",
+      },
+    ],
+  },
+  {
+    title: "MIKROTIK TOOLS OFFICIAL FOR WINDOWS",
+    color: "text-green-600",
+    tools: [
+      { name: "Winbox-64 (64bit)", href: "https://mikrotik.com/download" },
+      { name: "Winbox-32 (32bit)", href: "https://mikrotik.com/download" },
+      {
+        name: "Winbox 4 Version Windows",
+        href: "https://download.mikrotik.com/routeros/winbox/4.0beta3/WinBox_Windows.zip",
+      },
+      {
+        name: "Winbox 4 Version Linux",
+        href: "https://download.mikrotik.com/routeros/winbox/4.0beta3/WinBox_Linux.zip",
+      },
+      {
+        name: "Winbox 4 Version MacOS",
+        href: "https://download.mikrotik.com/routeros/winbox/4.0beta3/WinBox.dmg",
+      },
+      { name: "The Dude", href: "https://mikrotik.com/download" },
+      { name: "Netinstall", href: "https://mikrotik.com/download" },
+      {
+        name: "Bandwidth Test",
+        href: "https://download.mikrotik.com/routeros/7.12.1/btest.exe",
+      },
+      {
+        name: "MT Syslog Daemon",
+        href: "https://i.mt.lv/files/exe/MT_Syslog.exe",
+      },
+      {
+        name: "MT Traffic Counter",
+        href: "https://mikrotik.com/download/TrafficCounter.zip",
+      },
+      {
+        name: "Supout.rif viewer (need login)",
+        href: "https://mikrotik.com/client/supout",
+      },
+      {
+        name: "Branding maker (need login)",
+        href: "https://mikrotik.com/client/branding",
+      },
+      {
+        name: "MikroTik Logo, Walpaper, T-Shirt",
+        href: "https://merch.mikrotik.com/",
+      },
+    ],
+  },
+  {
+    title: "MIKROTIK MOBILE TOOLS ANDROID IPHONE",
+    color: "text-cyan-400",
+    tools: [
+      {
+        name: "MikroTik Winbox iPhone",
+        href: "https://apps.apple.com/id/app/mikrotik/id1323064830?l=id",
+      },
+      {
+        name: "MikroTik HOME",
+        href: "https://play.google.com/store/apps/details?id=com.mikrotik.android.tikapp&hl=in",
+      },
+      {
+        name: "MikroTik Beacon Manager",
+        href: "https://play.google.com/store/apps/details?id=com.mikrotik.android.bt5",
+      },
+    ],
+  },
+  {
+    title: "MIKROTIK ROUTEROS SOFTWARE DOWNLOAD",
+    color: "text-fuchsia-600",
+    tools: [
+      {
+        name: "Mikrotik RouterOS Download Official",
+        href: "https://mikrotik.com/download",
+      },
+      {
+        name: "Routeros.co.id (Indonesia Server)",
+        href: "https://mikrotik.com/download",
+      },
+    ],
+  },
+  {
+    title: "MIKROTIK WIRELESS TOOLS",
+    color: "text-lime-500",
+    tools: [
+      {
+        name: "Unlock Wireless Frequency Mode",
+        href: "unlock-mikrotik-wireless-frequency-mode",
+      },
+      {
+        name: "MikroTik Link Planner",
+        href: "unlock-mikrotik-wireless-frequency-mode",
+      },
+      {
+        name: "Wireless MiniPCI A/B/G",
+        href: "unlock-mikrotik-wireless-frequency-mode",
+      },
+      { name: "Antenna Height Calculation", href: "test_tower" },
+      { name: "Wireless link calculator (need login)", href: "#" },
+      { name: "Lockpack creator (need login)", href: "#" },
+    ],
+  },
+  {
+    title: "MIKROTIK TOOLS CALCULATOR AND MONITOR",
+    color: "text-blue-400",
+    tools: [
+      { name: "Traffic Monitor with Cacti linux", href: "#" },
+      { name: "RouterBoard Comparison Table", href: "#" },
+      { name: "MikroTik Product Comparison", href: "#" },
+      { name: "RAM Proxy MikroTik Calculator", href: "#" },
+      { name: "Neighbour Viewer dan Mac Telnet", href: "#" },
+      { name: "Trafr Sniffer linux", href: "#" },
+      { name: "ATTIX5 Traffic Monitor", href: "#" },
+      { name: "Supout.rif Reader (Unofficial)", href: "#" },
+      { name: "PDF RouterOS Console Cheat Sheet", href: "#" },
+    ],
+  },
+  {
+    title: "MIKROTIK SKIN AND BRANDING",
+    color: "text-orange-400",
+    tools: [
+      { name: "Webfig Mikrotik Skin", href: "#" },
+      { name: "Branding Maker Mikrotik", href: "#" },
+    ],
+  },
+  {
+    title: "MIKROTIK RADIUS BILLING HOTSPOT OR PPPOE",
+    color: "text-green-500",
+    tools: [
+      { name: "Mikhmon Billing Hotspot", href: "#" },
+      { name: "FREERADIUS", href: "#" },
+      { name: "DMA Radius Manager", href: "#" },
+      { name: "Daloradius", href: "#" },
+    ],
+  },
+  {
+    title: "OTHER MIKROTIK BATCH TOOLS",
+    color: "text-sky-600",
+    tools: [
+      { name: "Batch: DNS Ping Test", href: "#" },
+      { name: "Batch: Winbox Port Scanner", href: "#" },
+      { name: "Batch: RouterOS Auto Backup", href: "#" },
+      { name: "Batch: Restore Winbox Session", href: "#" },
+    ],
+  },
+];
 ---
 
 <MainLayout title="Open Book" class="px-6">
@@ -22,9 +385,8 @@ import MainLayout from "../layout/MainLayout.astro";
             <span class="text-[#ffffff] text-2xl font-semibold">
               Creado para el sistema operativo Router<span
                 class="animate-ping absolute text-4xl font-semibold"
+                >MikroTik</span
               >
-                MikroTik
-              </span>
             </span>
           </div>
         </div>
@@ -46,31 +408,31 @@ import MainLayout from "../layout/MainLayout.astro";
                     >
                   </div>
                 </div>
-                <span class="text-[#707070] text-base font-normal">
-                  Cancela la suscripción en cualquier momento.
-                </span>
+                <span class="text-[#707070] text-base font-normal"
+                  >Cancela la suscripción en cualquier momento.</span
+                >
               </div>
 
               <div class="flex flex-col gap-y-2">
                 <div class="flex flex-1 flex-row flex-nowrap gap-4">
                   <Icon name="download" size={22} />
-                  <span class="text-[#191919] text-base font-normal">
-                    Descargas ilimitadas
-                  </span>
+                  <span class="text-[#191919] text-base font-normal"
+                    >Descargas ilimitadas</span
+                  >
                 </div>
 
                 <div class="flex flex-1 flex-row flex-nowrap gap-4">
                   <Icon name="premium" size={22} />
-                  <span class="text-[#191919] text-base font-normal">
-                    20+ millones de recursos premium
-                  </span>
+                  <span class="text-[#191919] text-base font-normal"
+                    >20+ millones de recursos premium</span
+                  >
                 </div>
 
                 <div class="flex flex-1 flex-row flex-nowrap gap-4">
                   <Icon name="check-badge" size={22} />
-                  <span class="text-[#191919] text-base font-normal">
-                    Licencia comercial de por vida
-                  </span>
+                  <span class="text-[#191919] text-base font-normal"
+                    >Licencia comercial de por vida</span
+                  >
                 </div>
               </div>
 
@@ -87,10 +449,8 @@ import MainLayout from "../layout/MainLayout.astro";
         </div>
       </div>
     </div>
-    <!-- Generator Tools Section -->
 
     <div class="mt-4">
-      <!-- Header Section -->
       <h1 class="text-2xl font-bold text-red-500 mb-4">
         Encuentra Script para Mikrotik RouterOS
       </h1>
@@ -103,1129 +463,51 @@ import MainLayout from "../layout/MainLayout.astro";
       </ul>
       <div class="border-t-2 border-gray-700 my-4 mt-10"></div>
 
-      <!-- Generator Tools Section -->
-      <h2 class="text-2xl font-bold text-blue-100 mb-4">
-        Herramientas Generadoras de Router Mikrotik
-      </h2>
-
-      <div
-        class="text-gray-950 shadow-2xl rounded-lg p-6 w-full ring-2 ring-blue-500"
-      >
-        <div class="bg-slate-800 p-4 shadow-md rounded-lg">
-          <span
-            class="animate-bounce rounded-t-lg text-lg font-semibold flex items-center p-2 box-decoration-slice bg-gradient-to-r from-indigo-600 to-pink-500 text-white px-2 ..."
-          >
-            Herramientas más Populares
-          </span>
-          <ul class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-            <li>
-              <button
-                class="text-white px-4 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-blue-500 duration-300"
-              >
-                <a href="/pcc">Load Balancing Pcc</a>
-              </button>
-
-              <span class="text-gray-400 animate-pulse absolute">🔒</span>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-blue-500 duration-300"
-              >
-                <a href="/mikrotik-backup-to-mail">Auto Backup en E-Mail </a>
-              </button>
-
-              <span class="text-gray-400 animate-pulse absolute">🔒</span>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-blue-500 duration-300"
-              >
-                <a href="mikrotik-burst-limit-calculator">
-                  Burst Limite Calculadora</a
-                >
-              </button>
-              <span class="text-gray-400 animate-pulse absolute">🔒</span>
-            </li>
-
-            <li>
-              <button
-                class="text-white px-4 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-blue-500 duration-300"
-              >
-                <a href="mikrotik-failover-script-generator"
-                  >Failover Recursive Gateway
-                </a>
-              </button>
-
-              <span class="text-gray-400 animate-pulse absolute">🔒</span>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-blue-500 duration-300"
-              >
-                <a href="/mikrotik-hide-my-router-from-isp">
-                  MikroTik Ninja: Hide Routerboard Scanning
-                </a>
-              </button>
-
-              <span class="text-gray-400 animate-pulse absolute">🔒</span>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-blue-500 duration-300"
-              >
-                <a href="static-routing-games"
-                  >Games Static Routing Using Filter Raw
-                </a>
-              </button>
-
-              <span class="text-gray-400 animate-pulse absolute">🔒</span>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- seccion 2 -->
-
-      <!-- seccion termina -->
-
-      <!-- Route / Mangle / NAT / VPN Section -->
-      <h3 class="text-xl font-semibold text-rose-600 mt-8 p-4">
-        Route // Mangle // NAT // VPN
-      </h3>
-
-      <div
-        class="text-gray-950 shadow-2xl rounded-lg p-6 w-full ring-2 ring-red-500"
-      >
-        <div class="bg-slate-800 p-4 shadow-md rounded-lg">
-          <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-rose-700 duration-300"
-              >
-                <a href="balanceo-carga">Balanceo de Carga PCC </a>
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-rose-700 duration-300"
-              >
-                <a href="balanceo-pbr">Balanceo PBR </a>
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-rose-700 duration-300"
-              >
-                <a href="Balanceo_NTH">Load Balancing NTH</a>
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-rose-700 duration-300"
-              >
-                <a href="Balanceo-ECMP">Load Balancing ECMP</a>
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-rose-700 duration-300"
-              >
-                <a href="mikrotik-failover-script-generator"
-                  >Failover Recursive Gateway</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-rose-700 duration-300"
-              >
-                <a href="static-routing-games"
-                  >Games Static Routing Using Filter Raw</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-rose-700 duration-300"
-              >
-                <a href="static-routing-games-mangle-port"
-                  >Games Static Routing Using Mangle Port</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-rose-700 duration-300"
-              >
-                <a href="policy-based-routing-website">Website Static Routing</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-rose-700 duration-300"
-              >
-                <a href="Local-Client-IP-Static -Routing"
-                  >Local Client IP Static Routing</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-rose-700 duration-300"
-              >
-                <a href="Port-Forwarding-with-NAT">Port Forwarding with NAT</a>
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-rose-700 duration-300"
-              >
-                <a href="mikrotik-port-static-routing"
-                  >Port TCP/UDP Static Routing</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-rose-700 duration-300"
-              >
-                <a href="vpn-tunnel-all-traffic-script-generator"
-                  >All Traffic to VPN Tunnel</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-rose-700 duration-300"
-              >
-                <a href="remote-ip-public-static"
-                  >Remote Access ISP "Public IP Static</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-rose-700 duration-300"
-              >
-                <a href="vpn-game-generator2">VPN Routing Port Games</a>
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-rose-700 duration-300"
-              >
-                <a href="vpn-game-generator">VPN Routing IP Address Games</a>
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-rose-700 duration-300"
-              >
-                <a href="VPN-remote-sstp-l2tp-pptp-ovpn"
-                  >VPN Remote SSTP - L2TP - PPTP - OVPN</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-rose-700 duration-300"
-              >
-                <a href="Static-Routing-Youtube-Tiktok-FB-WA"
-                  >Static Routing Youtube, Tiktok, FB, WA, etc</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <!-- Route / Mangle / NAT / VPN Section -->
-      <h3 class="text-xl font-semibold text-amber-500 p-4 mt-2">
-        SIMPLE QUEUE // QUEUE TREE // QUEUE TYPE
-      </h3>
-      <div
-        class="text-gray-950 shadow-2xl rounded-lg p-6 w-full ring-2 ring-amber-600"
-      >
-        <div class="p-4 shadow-md rounded-lg bg-gray-800">
-          <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-amber-600 duration-300"
-              >
-                <a href="mikrotik-burst-limit-calculator"
-                  >Burst Limit Calculator</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-amber-600 duration-300"
-              >
-                <a href="mikrotik-pcq-burst-rate-queue-size-generator"
-                  >PCQ Burst Rate + Queue Size Calculator</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-amber-600 duration-300"
-              >
-                <a href="simple-queue-generator">Simple Queue + Tocken Bucket</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-amber-600 duration-300"
-              >
-                <a href="simple-queue-generator-shared"
-                  >Simple Queue + Bandwidth Shared Up-To</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-amber-600 duration-300"
-              >
-                <a href="queue-tree-generator-shared"
-                  >Queue Tree + Bandwidth Shared Up-To</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-amber-600 duration-300"
-              >
-                <a href="queue-tree-generator-shared"
-                  >Administrar con VLAN IPOE</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-amber-600 duration-300"
-              >
-                <a href="BypassSpeedyTest">Bypass Speedy Test </a>
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-amber-600 duration-300"
-              >
-                <a href="mikrotik-pcq-generator"
-                  >PCQ for Queue Tree and Queue Simple</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-amber-600 duration-300"
-              >
-                <a href="mikrotik-queue-qos"
-                  >QoS Priority Youtube, Tiktok, WA, FB, etc</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <!-- INICIA -->
-
-      <!-- Route / Mangle / NAT / VPN Section -->
-      <h3 class="text-xl font-semibold text-lime-500 p-4 mt-2">
-        HOTSPOT // PPPOE // PPP
-      </h3>
-      <div
-        class="text-gray-950 shadow-2xl rounded-lg p-6 w-full ring-2 ring-lime-600"
-      >
-        <div class="bg-gray-800 p-4 shadow-md rounded-lg">
-          <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-lime-600 duration-300"
-              >
-                <a href="mikrotik-qr-code-generator"
-                  >Free Hotspot Wi-Fi QR Code Template</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-lime-600 duration-300"
-              >
-                <a href="mikrotik-block-sharing-hotspot"
-                  >Block Sharing Hotspot with "Change TTL"</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-lime-600 duration-300"
-              >
-                <a href="#">Easy Hotspot Configuration Wizard</a>
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-lime-600 duration-300"
-              >
-                <a href="mikrotik-username-password-ppp-generator"
-                  >PPP Secrets Username Password Generator</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-lime-600 duration-300"
-              >
-                <a href="mikrotik-username-password-hotspot-generator"
-                  >Hotspot Username Password Generator</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-lime-600 duration-300"
-              >
-                <a href="mikrotik-share-user-multi-login"
-                  >Bandwidth Share Up-To for Hotspot</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-lime-600 duration-300"
-              >
-                <a href="mikrotik-expired-isolate-pppoe-hotspot"
-                  >Notify Expired Hotspot + PPPoE + Static IP</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <!-- TERMINE -->
-      <!-- INICIA -->
-
-      <!-- Route / Mangle / NAT / VPN Section -->
-      <h3 class="text-xl font-semibold text-indigo-500 p-4 mt-2">
-        DNS // NETWATCH // INTERFACE // MAC // DHCP
-      </h3>
-
-      <div
-        class="text-gray-950 shadow-2xl rounded-lg p-6 w-full ring-2 ring-indigo-500"
-      >
-        <div class="bg-gray-800 p-4 shadow-md rounded-lg">
-          <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-600 duration-300"
-              >
-                <a href="mikrotik-dns-over-https-doh"
-                  >DNS over HTTPS (DoH) Servers</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-600 duration-300"
-              >
-                <a href="mikrotik-netwatch-monitoring"
-                  >Netwatch to Telegram, WA, Email, SMS</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-600 duration-300"
-              >
-                <a href="mikrotik-change-mac-address"
-                  >Change or Random Mac Address Interface</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-600 duration-300"
-              >
-                <a href="mikrotik-bonding-interface"
-                  >Bonding Interface / Link Aggregation</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-600 duration-300"
-              >
-                <a href="mikrotik-dhcp-rogue"
-                  >Discover Unknown DHCP Rogue Server</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <!-- TERMINE -->
-      <!-- INICIA -->
-
-      <!-- Route / Mangle / NAT / VPN Section -->
-      <h3 class="text-xl font-semibold text-cyan-400 p-4 mt-8">
-        PROTECTION // BLOCKED // BACKUP
-      </h3>
-      <div
-        class="text-gray-950 shadow-2xl rounded-lg p-6 w-full ring-2 ring-cyan-400"
-      >
-        <div class="bg-gray-800 p-4 shadow-md rounded-lg">
-          <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-cyan-600 duration-300"
-              >
-                <a href="mikrotik-hide-my-router-from-isp"
-                  >MikroTik Ninja: Hide Routerboard from ISP</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-cyan-600 duration-300"
-              >
-                <a href="advanced-mikrotik-protection"
-                  >Advanced MikroTik Router-OS Protection</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-cyan-600 duration-300"
-              >
-                <a href="mikrotik-backup-to-mail"
-                  >MikroTik Auto Backup to E-Mail</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-cyan-600 duration-300"
-              >
-                <a href="mikrotik-access-block"
-                  >Block For Youtube, Tiktok, WA, FB, etc</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-cyan-600 duration-300"
-              >
-                <a href="port-knocking-icmp"
-                  >Port Knocking with ICMP + Packet Size</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-cyan-600 duration-300"
-              >
-                <a href="mikrotik-block-website-generator"
-                  >Block Websites Generator</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-cyan-600 duration-300"
-              >
-                <a href="mikrotik-block-website-generator"
-                  >Bloqueo de Clientes Morosos</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-cyan-600 duration-300"
-              >
-                <a href="mikrotik-mangle-script-obfuscator"
-                  >Mangle Chain Obfuscator / Encryption</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <!-- TERMINE -->
-      <!-- INICIA -->
-
-      <!-- Route / Mangle / NAT / VPN Section -->
-      <h3 class="text-xl font-semibold text-purple-400 p-4 mt-8">
-        ROUTER-OS OTHER TOOLS
-      </h3>
-      <div
-        class="text-gray-950 shadow-2xl rounded-lg p-6 w-full ring-2 ring-purple-400"
-      >
-        <div class="bg-gray-800 p-4 shadow-md rounded-lg">
-          <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-purple-500 duration-300"
-              >
-                <a href="pcc-calculation">Load Balancing PCC Calculation</a>
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-purple-500 duration-300"
-              >
-                <a href="mirkotik-latinoamerica-timezone"
-                  >Latinoamerica Time Zone NTP/SNTP Client</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-purple-500 duration-300"
-              >
-                <a href="wifid-wms-seamless"
-                  >Wifi.id WMS and Seamless Auto Login</a
-                >
-                <span class="animate-pulse absolute"> 🔒</span>
-              </button>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <!-- TERMINE -->
-      <!-- INICIA -->
-
-      <!-- Route / Mangle / NAT / VPN Section -->
-      <h3 class="text-xl font-semibold text-green-600 p-4 mt-8">
-        MIKROTIK TOOLS OFFICIAL FOR WINDOWS
-      </h3>
-      <div
-        class="text-gray-950 shadow-2xl rounded-lg p-6 w-full ring-2 ring-green-400"
-      >
-        <div class="bg-gray-800 p-4 shadow-md rounded-lg">
-          <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-green-600 duration-300"
-              >
-                <a href="https://mikrotik.com/download">Winbox-64 (64bit)</a>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-green-600 duration-300"
-              >
-                <a href="https://mikrotik.com/download">Winbox-32 (32bit)</a>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-green-600 duration-300"
-              >
-                <a
-                  href="https://download.mikrotik.com/routeros/winbox/4.0beta3/WinBox_Windows.zip"
-                  >Winbox 4 Version Windows</a
-                >
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-green-600 duration-300"
-              >
-                <a
-                  href="https://download.mikrotik.com/routeros/winbox/4.0beta3/WinBox_Linux.zip"
-                  >Winbox 4 Version Linux</a
-                >
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-green-600 duration-300"
-              >
-                <a
-                  href="https://download.mikrotik.com/routeros/winbox/4.0beta3/WinBox.dmg"
-                  >Winbox 4 Version MacOS</a
-                >
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-green-600 duration-300"
-              >
-                <a href="https://mikrotik.com/download">The Dude</a>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-green-600 duration-300"
-              >
-                <a href="https://mikrotik.com/download">Netinstall</a>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-green-600 duration-300"
-              >
-                <a
-                  href="https://download.mikrotik.com/routeros/7.12.1/btest.exe"
-                  >Bandwidth Test</a
-                >
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-green-600 duration-300"
-              >
-                <a href="https://i.mt.lv/files/exe/MT_Syslog.exe"
-                  >MT Syslog Daemon</a
-                >
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-green-600 duration-300"
-              >
-                <a href="https://mikrotik.com/download/TrafficCounter.zip"
-                  >MT Traffic Counter</a
-                >
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-green-600 duration-300"
-              >
-                <a href="https://mikrotik.com/client/supout"
-                  >Supout.rif viewer (need login)</a
-                >
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-green-600 duration-300"
-              >
-                <a href="https://mikrotik.com/client/branding"
-                  >Branding maker (need login)</a
-                >
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-green-600 duration-300"
-              >
-                <a href="https://merch.mikrotik.com/"
-                  >MikroTik Logo, Walpaper, T-Shirt</a
-                >
-              </button>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <!-- TERMINE -->
-      <!-- INICIA -->
-
-      <!-- Route / Mangle / NAT / VPN Section -->
-      <h3 class="text-xl font-semibold text-cyan-400 p-4 mt-8">
-        MIKROTIK MOBILE TOOLS ANDROID IPHONE
-      </h3>
-      <div
-        class="text-gray-950 shadow-2xl rounded-lg p-6 w-full ring-2 ring-cyan-400"
-      >
-        <div class="bg-gray-800 p-4 shadow-md rounded-lg">
-          <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-cyan-500 duration-300"
-              >
-                <a
-                  href="https://apps.apple.com/id/app/mikrotik/id1323064830?l=id"
-                  >MikroTik Winbox iPhone</a
-                >
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-cyan-500 duration-300"
-              >
-                <a
-                  href="https://play.google.com/store/apps/details?id=com.mikrotik.android.tikapp&hl=in"
-                  >MikroTik HOME</a
-                >
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-cyan-500 duration-300"
-              >
-                <a
-                  href="https://play.google.com/store/apps/details?id=com.mikrotik.android.bt5"
-                  >MikroTik Beacon Manager</a
-                >
-              </button>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <!-- TERMINE -->
-      <!-- INICIA -->
-
-      <!-- Route / Mangle / NAT / VPN Section -->
-      <h3 class="text-xl font-semibold text-fuchsia-600 p-4 mt-8">
-        MIKROTIK ROUTEROS SOFTWARE DOWNLOAD
-      </h3>
-      <div
-        class="text-gray-950 shadow-2xl rounded-lg p-6 w-full ring-2 ring-fuchsia-600"
-      >
-        <div class="bg-gray-800 p-4 shadow-md rounded-lg">
-          <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-fuchsia-600 duration-300"
-              >
-                <a href="https://mikrotik.com/download"
-                  >Mikrotik RouterOS Download Official</a
-                >
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-fuchsia-600 duration-300"
-              >
-                <a href="https://mikrotik.com/download"
-                  >Routeros.co.id (Indonesia Server)</a
-                >
-              </button>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <!-- TERMINE -->
-      <!-- INICIA -->
-
-      <!-- Route / Mangle / NAT / VPN Section -->
-      <h3 class="text-xl font-semibold text-lime-400 p-4 mt-8">
-        MIKROTIK WIRELESS TOOLS
-      </h3>
-      <div
-        class="text-gray-950 shadow-2xl rounded-lg p-6 w-full ring-2 ring-lime-400"
-      >
-        <div class="bg-gray-800 p-4 shadow-md rounded-lg">
-          <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-lime-600 duration-300"
-              >
-                <a href="unlock-mikrotik-wireless-frequency-mode"
-                  >Unlock Wireless Frequency Mode</a
-                >
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-lime-600 duration-300"
-              >
-                <a href="unlock-mikrotik-wireless-frequency-mode"
-                  >MikroTik Link Planner</a
-                >
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-lime-600 duration-300"
-              >
-                <a href="unlock-mikrotik-wireless-frequency-mode"
-                  >Wireless MiniPCI A/B/G</a
-                >
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-lime-600 duration-300"
-              >
-                <a href="test_tower">Antenna Height Calculation</a>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-lime-600 duration-300"
-              >
-                <a href="#">Wireless link calculator (need login)</a>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-lime-600 duration-300"
-              >
-                <a href="#">Lockpack creator (need login)</a>
-              </button>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <!-- TERMINE -->
-      <!-- INICIA -->
-
-      <!-- Route / Mangle / NAT / VPN Section -->
-      <h3 class="text-xl font-semibold text-blue-400 p-4 mt-8">
-        MIKROTIK TOOLS CALCULATOR AND MONITOR
-      </h3>
-      <div
-        class="text-gray-950 shadow-2xl rounded-lg p-6 w-full ring-2 ring-blue-600"
-      >
-        <div class="bg-gray-800 p-4 shadow-md rounded-lg">
-          <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-blue-600 duration-300"
-              >
-                <a href="#">Traffic Monitor with Cacti linux</a>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-blue-600 duration-300"
-              >
-                <a href="#">RouterBoard Comparison Table</a>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-blue-600 duration-300"
-              >
-                <a href="#">MikroTik Product Comparison</a>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-blue-600 duration-300"
-              >
-                <a href="#">RAM Proxy MikroTik Calculator</a>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-blue-600 duration-300"
-              >
-                <a href="#">Neighbour Viewer dan Mac Telnet</a>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-blue-600 duration-300"
-              >
-                <a href="#">Trafr Sniffer linux</a>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-blue-600 duration-300"
-              >
-                <a href="#">ATTIX5 Traffic Monitor</a>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-blue-600 duration-300"
-              >
-                <a href="#">Supout.rif Reader (Unofficial)</a>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-blue-600 duration-300"
-              >
-                <a href="#">PDF RouterOS Console Cheat Sheet</a>
-              </button>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <!-- TERMINE -->
-      <!-- INICIA -->
-
-      <!-- Route / Mangle / NAT / VPN Section -->
-      <h3 class="text-xl font-semibold text-orange-400 p-4 mt-8">
-        MIKROTIK SKIN AND BRANDING
-      </h3>
-      <div
-        class="text-gray-950 shadow-2xl rounded-lg p-6 w-full ring-2 ring-orange-400"
-      >
-        <div class="bg-gray-800 p-4 shadow-md rounded-lg">
-          <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-orange-500 duration-300"
-              >
-                <a href="#">Webfig Mikrotik Skin</a>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-orange-500 duration-300"
-              >
-                <a href="#">Branding Maker Mikrotik</a>
-              </button>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <!-- TERMINE -->
-      <!-- INICIA -->
-
-      <!-- Route / Mangle / NAT / VPN Section -->
-      <h3 class="text-xl font-semibold text-green-500 p-4 mt-8">
-        MIKROTIK RADIUS BILLING HOTSPOT OR PPPOE
-      </h3>
-      <div
-        class="text-gray-950 shadow-2xl rounded-lg p-6 w-full ring-2 ring-green-500"
-      >
-        <div class="bg-gray-800 p-4 shadow-md rounded-lg">
-          <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-green-500 duration-300"
-              >
-                <a href="#">Mikhmon Billing Hotspot</a>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-green-500 duration-300"
-              >
-                <a href="#">FREERADIUS</a>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-green-500 duration-300"
-              >
-                <a href="#">DMA Radius Manager</a>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-green-500 duration-300"
-              >
-                <a href="#">Daloradius</a>
-              </button>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <!-- TERMINE -->
-      <!-- INICIA -->
-
-      <!-- Route / Mangle / NAT / VPN Section -->
-      <h3 class="text-xl font-semibold text-sky-600 p-4 mt-8">
-        OTHER MIKROTIK BATCH TOOLS
-      </h3>
-      <div
-        class="text-gray-950 shadow-2xl rounded-lg p-6 w-full ring-2 ring-sky-600"
-      >
-        <div class="bg-gray-800 p-4 shadow-md rounded-lg">
-          <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-sky-500 duration-300"
-              >
-                <a href="#">Batch: DNS Ping Test</a>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-sky-500 duration-300"
-              >
-                <a href="#">Batch: Winbox Port Scanner</a>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-sky-500 duration-300"
-              >
-                <a href="#">Batch: RouterOS Auto Backup</a>
-              </button>
-            </li>
-            <li>
-              <button
-                class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-sky-500 duration-300"
-              >
-                <a href="#">Batch: Restore Winbox Session</a>
-              </button>
-            </li>
-          </ul>
-        </div>
-      </div>
+      {
+        toolsSections.map((section: ToolsSection, index: number) => (
+          <div>
+            <h2 class={`${section.color} mb-4 text-2xl font-bold`}>
+              {section.title}
+            </h2>
+            <div class="text-gray-950 shadow-2xl rounded-lg p-6 w-full ring-2 ring-blue-500">
+              <div class="bg-slate-800 p-4 shadow-md rounded-lg">
+                <ul class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                  {section.tools.map((tool: Tool) => (
+                    <li>
+                      <button class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-blue-500 duration-300">
+                        <a href={tool.href}>{tool.name}</a>
+                      </button>
+                      <span class="text-gray-400 animate-pulse absolute">🔒</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        ))
+      }
     </div>
-    <!-- Generator Tools Section -->
 
-    <!-- Generator Tools Section -->
-  </div>
-
-  <!-- Generator Tools Section -->
-  <div class="pt-20 pb-32">
-    <div class="flex items-center flex-col gap-y-10">
-      <p class="text-gray-300 font-semibold text-xl animate-pulse">
-        Tu Aliado en Redes, Herramienta de Alto Rendimiento
-      </p>
-      <div
-        class="flex flex-row flex-wrap list-none m-0 p-0 items-center justify-items-center gap-x-7"
-      >
-        <div class="w-32 h-2 md:w-3/6 md:h-2 mx-auto">
-          <img src={images.Mikrotik} alt="Routing Diagram" class="rounded-lg" />
+    <div class="pt-20 pb-32">
+      <div class="flex items-center flex-col gap-y-10">
+        <p class="text-gray-300 font-semibold text-xl animate-pulse">
+          Tu Aliado en Redes, Herramienta de Alto Rendimiento
+        </p>
+        <div
+          class="flex flex-row flex-wrap list-none m-0 p-0 items-center justify-items-center gap-x-7"
+        >
+          <div class="w-32 h-2 md:w-3/6 md:h-2 mx-auto">
+            <img
+              src={images.Mikrotik}
+              alt="Routing Diagram"
+              class="rounded-lg"
+            />
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!--Cambia de color -->
   <style>
     @keyframes color-change {
       0%,
@@ -1236,7 +518,6 @@ import MainLayout from "../layout/MainLayout.astro";
         color: #3b82f6; /* Azul */
       }
     }
-
     .animate-color-change {
       animation: color-change 3s infinite;
     }
