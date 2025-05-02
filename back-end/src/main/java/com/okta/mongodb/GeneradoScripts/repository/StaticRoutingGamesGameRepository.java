@@ -6,7 +6,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import com.okta.mongodb.GeneradoScripts.model.staticRoutingGames.StaticRoutingGamesGame;
 
 @RepositoryRestResource(exported = false)
-public interface StaticRoutingGamesGameRepository extends JpaRepository<StaticRoutingGamesGame, Long>{
+public interface StaticRoutingGamesGameRepository extends JpaRepository<StaticRoutingGamesGame, String> {
     
     
 }
