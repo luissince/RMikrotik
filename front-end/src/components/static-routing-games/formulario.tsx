@@ -78,8 +78,6 @@ const FormularioStaticRoutingGames: React.FC = () => {
                 body: JSON.stringify({ ...formData, games: selectedGames }),
             });
 
-            console.log(selectedGames);
-
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -98,7 +96,15 @@ const FormularioStaticRoutingGames: React.FC = () => {
     };
 
     const handleGameSelect = (game: Game) => {
-        setSelectedGames(prevSelected => [...prevSelected, game]);
+        const newSelectedGames = [...selectedGames];
+
+        if (newSelectedGames.some(selectedGame => selectedGame.id === game.id)) {
+            newSelectedGames.splice(newSelectedGames.indexOf(game), 1);
+        } else {
+            newSelectedGames.push(game);
+        }
+
+        setSelectedGames(newSelectedGames);
     };
 
     const filteredGames = categories.map(category => ({
