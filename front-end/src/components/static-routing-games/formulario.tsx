@@ -33,7 +33,7 @@ const FormularioStaticRoutingGames: React.FC = () => {
     });
     const [error, setError] = useState<string | null>(null);
     const [result, setResult] = useState<ScriptResult | null>(null);
-    const [selectedGames, setSelectedGames] = useState<string[]>([]);
+    const [selectedGames, setSelectedGames] = useState<Game[]>([]);
 
     useEffect(() => {
         const fetchGames = async () => {
@@ -75,8 +75,10 @@ const FormularioStaticRoutingGames: React.FC = () => {
                     'Content-Type': 'application/json',
                     'accept': 'application/hal+json',
                 },
-                body: JSON.stringify({ ...formData, selectedGames }),
+                body: JSON.stringify({ ...formData, games: selectedGames }),
             });
+
+            console.log(selectedGames);
 
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -95,12 +97,8 @@ const FormularioStaticRoutingGames: React.FC = () => {
         setResult(null);
     };
 
-    const handleGameSelect = (gameId: string) => {
-        setSelectedGames(prevSelected =>
-            prevSelected.includes(gameId)
-                ? prevSelected.filter(id => id !== gameId)
-                : [...prevSelected, gameId]
-        );
+    const handleGameSelect = (game: Game) => {
+        setSelectedGames(prevSelected => [...prevSelected, game]);
     };
 
     const filteredGames = categories.map(category => ({
@@ -159,8 +157,8 @@ const FormularioStaticRoutingGames: React.FC = () => {
                                                 type="checkbox"
                                                 id={game.id}
                                                 className="mr-2"
-                                                checked={selectedGames.includes(game.id)}
-                                                onChange={() => handleGameSelect(game.id)}
+                                                checked={selectedGames.some(selectedGame => selectedGame.id === game.id)}
+                                                onChange={() => handleGameSelect(game)}
                                             />
                                             <label className='text-white' htmlFor={game.id}>{game.name}</label>
                                         </div>
