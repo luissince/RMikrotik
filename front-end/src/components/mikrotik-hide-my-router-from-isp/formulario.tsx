@@ -84,7 +84,6 @@ const MikrotikForm = () => {
   };
 
   const onSubmit = async (data: FormValues) => {
-    console.log("Form submitted with data:", data);
     setIsSubmitting(true);
 
     try {
@@ -105,7 +104,6 @@ const MikrotikForm = () => {
         blockTheDude: data.protections.blockTheDude,
         blockIpCloud: data.protections.blockIPCloud,
       };
-      console.log({ payload });
 
       // Enviar datos al backend
       const response = await fetch(
