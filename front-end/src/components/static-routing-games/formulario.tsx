@@ -33,7 +33,7 @@ const FormularioStaticRoutingGames: React.FC = () => {
     });
     const [error, setError] = useState<string | null>(null);
     const [result, setResult] = useState<ScriptResult | null>(null);
-    const [selectedGames, setSelectedGames] = useState<string[]>([]);
+    const [selectedGames, setSelectedGames] = useState<Game[]>([]);
 
     useEffect(() => {
         const fetchGames = async () => {
@@ -75,7 +75,7 @@ const FormularioStaticRoutingGames: React.FC = () => {
                     'Content-Type': 'application/json',
                     'accept': 'application/hal+json',
                 },
-                body: JSON.stringify({ ...formData, selectedGames }),
+                body: JSON.stringify({ ...formData, games: selectedGames }),
             });
 
             if (!response.ok) {
@@ -95,12 +95,16 @@ const FormularioStaticRoutingGames: React.FC = () => {
         setResult(null);
     };
 
-    const handleGameSelect = (gameId: string) => {
-        setSelectedGames(prevSelected =>
-            prevSelected.includes(gameId)
-                ? prevSelected.filter(id => id !== gameId)
-                : [...prevSelected, gameId]
-        );
+    const handleGameSelect = (game: Game) => {
+        const newSelectedGames = [...selectedGames];
+
+        if (newSelectedGames.some(selectedGame => selectedGame.id === game.id)) {
+            newSelectedGames.splice(newSelectedGames.indexOf(game), 1);
+        } else {
+            newSelectedGames.push(game);
+        }
+
+        setSelectedGames(newSelectedGames);
     };
 
     const filteredGames = categories.map(category => ({
@@ -159,8 +163,8 @@ const FormularioStaticRoutingGames: React.FC = () => {
                                                 type="checkbox"
                                                 id={game.id}
                                                 className="mr-2"
-                                                checked={selectedGames.includes(game.id)}
-                                                onChange={() => handleGameSelect(game.id)}
+                                                checked={selectedGames.some(selectedGame => selectedGame.id === game.id)}
+                                                onChange={() => handleGameSelect(game)}
                                             />
                                             <label className='text-white' htmlFor={game.id}>{game.name}</label>
                                         </div>

@@ -13,8 +13,10 @@ import org.springframework.stereotype.Service;
 import com.okta.mongodb.GeneradoScripts.constants.StaticRoutingGames;
 import com.okta.mongodb.GeneradoScripts.model.staticRoutingGames.StaticRoutingGamesBody;
 import com.okta.mongodb.GeneradoScripts.model.staticRoutingGames.StaticRoutingGamesCategory;
+import com.okta.mongodb.GeneradoScripts.model.staticRoutingGames.StaticRoutingGamesDetail;
 import com.okta.mongodb.GeneradoScripts.model.staticRoutingGames.StaticRoutingGamesGame;
 import com.okta.mongodb.GeneradoScripts.repository.StaticRoutingGamesCategoryRepository;
+import com.okta.mongodb.GeneradoScripts.repository.StaticRoutingGamesDetailRepository;
 import com.okta.mongodb.GeneradoScripts.repository.StaticRoutingGamesGameRepository;
 import com.okta.mongodb.GeneradoScripts.utils.DateUtils;
 
@@ -28,6 +30,9 @@ public class StaticRoutingGamesService {
 
         @Autowired
         private StaticRoutingGamesGameRepository staticRoutingGamesGameRepository;
+
+        @Autowired
+        private StaticRoutingGamesDetailRepository staticRoutingGamesDetailRepository;
 
         public Map<String, String> create(StaticRoutingGamesBody body) {
                 logger.info("Body recibido: {}", body);
@@ -72,11 +77,19 @@ public class StaticRoutingGamesService {
                 html.append("<span>add action=mark-routing chain=prerouting connection-mark=conn-game new-routing-mark=routing-game passthrough=no src-address-list=LOCAL-IP comment=\"Routing Games by buananet.com\" place-before=*0</span> <br>");
                 html.append("<span>add action=mark-connection chain=prerouting dst-address-list=List-IP-Games new-connection-mark=conn-game passthrough=yes comment=\"Routing Games by buananet.com\" place-before=*0</span> <br>");
 
-                html.append("<span>##############################################################</span> <br>");
-                html.append("<span># If you want to add a game script only, you can ignore the script above</span> <br>");
-                html.append("<span>##############################################################</span> <br>");
+                html.append("<span style='color:green;'>##############################################################</span> <br>");
+                html.append("<span style='color:green;'># If you want to add a game script only, you can ignore the script above</span> <br>");
+                html.append("<span style='color:green;'>##############################################################</span> <br>");
 
                 html.append("<span> /ip firewall raw</span> <br>");
+                for (StaticRoutingGamesGame game : body.getGames()) {
+                        List<StaticRoutingGamesDetail> details = staticRoutingGamesDetailRepository
+                                        .findByGameId(game.getId());
+                        html.append("<span style='color:orange;'>" + game.getName() + "</span> <br>");
+                        for (StaticRoutingGamesDetail detail : details) {
+                                html.append("<span>" + detail.getValue() + "</span> <br>");
+                        }
+                }
 
                 html.append("</div>");
                 return html.toString();
@@ -113,6 +126,14 @@ public class StaticRoutingGamesService {
                 text.append("############################################################## \n");
 
                 text.append("/ip firewall raw \n");
+                for (StaticRoutingGamesGame game : body.getGames()) {
+                        List<StaticRoutingGamesDetail> details = staticRoutingGamesDetailRepository
+                                        .findByGameId(game.getId());
+                        text.append(game.getName() + "\n");
+                        for (StaticRoutingGamesDetail detail : details) {
+                                text.append(detail.getValue() + " \n");
+                        }
+                }
 
                 return text.toString();
         }
@@ -120,6 +141,8 @@ public class StaticRoutingGamesService {
         public Map<String, Object> getCategoriesWithGames() {
                 List<StaticRoutingGamesCategory> categories = staticRoutingGamesCategoryRepository.findAll();
                 List<StaticRoutingGamesGame> games = staticRoutingGamesGameRepository.findAll();
+                // List<StaticRoutingGamesDetail> details =
+                // staticRoutingGamesDetailRepository.findAll();
 
                 List<Map<String, Object>> categoryList = new ArrayList<>();
 
@@ -135,6 +158,17 @@ public class StaticRoutingGamesService {
                                         gameMap.put("id", game.getId());
                                         gameMap.put("name", game.getName());
                                         gameList.add(gameMap);
+
+                                        // // Filtrar los detalles de este juego
+                                        // List<Map<String, Object>> detailList = new ArrayList<>();
+                                        // for (StaticRoutingGamesDetail detail : details) {
+                                        // if (detail.getGame().getId().equals(game.getId())) {
+                                        // Map<String, Object> detailMap = new HashMap<>();
+                                        // detailMap.put("value", detail.getValue());
+                                        // detailList.add(detailMap);
+                                        // }
+                                        // }
+                                        // gameMap.put("details", detailList);
                                 }
                         }
 
