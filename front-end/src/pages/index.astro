@@ -20,7 +20,7 @@ const toolsSections: ToolsSection[] = [
     title: "MOST POPULAR TOOLS",
     color: "text-blue-100",
     tools: [
-      { name: "Load Balancing Pcc", href: "/pcc" },
+      { name: "Load Balancing Pcc", href: "balanceo-carga" },
       { name: "Auto Backup en E-Mail", href: "/mikrotik-backup-to-mail" },
       {
         name: "Burst Limite Calculadora",
@@ -32,7 +32,7 @@ const toolsSections: ToolsSection[] = [
       },
       {
         name: "MikroTik Ninja: Hide Routerboard Scanning",
-        href: "/mikrotik-hide-my-router-from-isp",
+        href: "mikrotik-hide-my-router-from-isp",
       },
       {
         name: "Games Static Routing Using Filter Raw",
@@ -45,43 +45,43 @@ const toolsSections: ToolsSection[] = [
     color: "text-rose-600",
     tools: [
       { name: "Load Balancing PCC", href: "balanceo-carga" },
-      { name: "Port Forwarding with NAT", href: "balanceo-pbr" },
+      { name: "Port Forwarding with NAT", href: "Port-Forwarding-with-NAT" },
       { name: "Load Balancing NTH", href: "Balanceo_NTH" },
-      { name: "Port TCP/UDP Static Routing", href: "Balanceo-ECMP" },
+      { name: "Port TCP/UDP Static Routing", href: "mikrotik-port-static-routing" },
       {
         name: "Load Balancing ECMP",
-        href: "mikrotik-failover-script-generator",
+        href: "Balanceo-ECMP",
       },
       {
         name: "All Traffic to VPN Tunnel",
-        href: "static-routing-games",
+        href: "vpn-tunnel-all-traffic-script-generator",
       },
       {
         name: "Failover Recursive Gateway",
-        href: "static-routing-games-mangle-port",
+        href: "mikrotik-failover-script-generator",
       },
-      { name: "Remote Access ISP \"Public IP Static\"", href: "policy-based-routing-website" },
+      { name: "Remote Access ISP \"Public IP Static\"", href: "remote-ip-public-static" },
       {
         name: "Games Static Routing Using Filter Raw",
-        href: "Local-Client-IP-Static -Routing",
+        href: "static-routing-games",
       },
-      { name: "VPN Routing Port Games", href: "Port-Forwarding-with-NAT" },
+      { name: "VPN Routing Port Games", href: "vpn-game-generator" },
       {
         name: "Games Static Routing Using Mangle Port",
-        href: "mikrotik-port-static-routing",
+        href: "static-routing-games-mangle-port",
       },
       {
         name: "VPN Routing IP Address Games",
-        href: "vpn-game-generatorr",
+        href: "vpn-game-generator2",
       },
       {
         name: "Website Static Routing",
-        href: "remote-ip-public-static",
+        href: "policy-based-routing-website",
       },
-      { name: "VPN Remote SSTP - L2TP - PPTP - OVPN", href: "vpn-game-generator2" },
+      { name: "VPN Remote SSTP - L2TP - PPTP - OVPN", href: "VPN-remote-sstp-l2tp-pptp-ovpn" },
       {
         name: "Local Client IP Static Routing",
-        href: "VPN-remote-sstp-l2tp-pptp-ovpn",
+        href: "Local-Client-IP-Static-Routing",
       },
       {
         name: "Static Routing Youtube, Tiktok, FB, WA, etc.",
@@ -99,22 +99,22 @@ const toolsSections: ToolsSection[] = [
       },
       {
         name: "Queue Tree + Bandwidth Shared Up-To",
-        href: "mikrotik-pcq-burst-rate-queue-size-generator",
+        href: "queue-tree-generator-shared",
       },
-      { name: "PCQ Burst Rate + Queue Size Calculator", href: "simple-queue-generator" },
+      { name: "PCQ Burst Rate + Queue Size Calculator", href: "mikrotik-pcq-burst-rate-queue-size-generator" },
       {
         name: "PCQ for Queue Tree and Queue Simple",
-        href: "simple-queue-generator-shared",
+        href: "mikrotik-pcq-generator",
       },
       {
         name: "Simple Queue + Tocken Bucket",
-        href: "queue-tree-generator-shared",
+        href: "simple-queue-generator",
       },
       {
         name: "QoS Priority Youtube, Tiktok, WA, FB, etc.",
-        href: "queue-tree-generator-shared",
+        href: "mikrotik-queue-qos",
       },
-      { name: "Simple Queue + Bandwidth Shared Up-To", href: "BypassSpeedyTest" },
+      { name: "Simple Queue + Bandwidth Shared Up-To", href: "simple-queue-generator-shared" },
     ],
   },
   {
@@ -127,24 +127,24 @@ const toolsSections: ToolsSection[] = [
       },
       {
         name: "Hotspot Username Password Generator",
-        href: "mikrotik-block-sharing-hotspot",
-      },
-      { name: "Block Sharing Hotspot with \"Change TTL\"", href: "#" },
-      {
-        name: "Bandwidth Share Up-To for Hotspot",
-        href: "mikrotik-username-password-ppp-generator",
-      },
-      {
-        name: "Easy Hotspot Configuration Wizard",
         href: "mikrotik-username-password-hotspot-generator",
       },
+      { name: "Block Sharing Hotspot with \"Change TTL\"", href: "mikrotik-block-sharing-hotspot" },
       {
-        name: "Notify Expired Hotspot + PPPoE + Static IP",
+        name: "Bandwidth Share Up-To for Hotspot",
         href: "mikrotik-share-user-multi-login",
       },
       {
-        name: "PPP Secrets Username Password Generator",
+        name: "Easy Hotspot Configuration Wizard",
+        href: "#",
+      },
+      {
+        name: "Notify Expired Hotspot + PPPoE + Static IP",
         href: "mikrotik-expired-isolate-pppoe-hotspot",
+      },
+      {
+        name: "PPP Secrets Username Password Generator",
+        href: "mikrotik-username-password-ppp-generator",
       },
     ],
   },
@@ -158,19 +158,19 @@ const toolsSections: ToolsSection[] = [
       },
       {
         name: "Bonding Interface / Link Aggregation",
-        href: "mikrotik-netwatch-monitoring",
-      },
-      {
-        name: "Netwatch to Telegram, WA, Email, SMS",
-        href: "mikrotik-change-mac-address",
-      },
-      {
-        name: "Discover Unknown DHCP Rogue Server",
         href: "mikrotik-bonding-interface",
       },
       {
-        name: "Change or Random Mac Address Interface",
+        name: "Netwatch to Telegram, WA, Email, SMS",
+        href: "mikrotik-netwatch-monitoring",
+      },
+      {
+        name: "Discover Unknown DHCP Rogue Server",
         href: "mikrotik-dhcp-rogue",
+      },
+      {
+        name: "Change or Random Mac Address Interface",
+        href: "mikrotik-change-mac-address",
       },
     ],
   },
@@ -184,27 +184,27 @@ const toolsSections: ToolsSection[] = [
       },
       {
         name: "Port Knocking with ICMP + Packet Size",
-        href: "advanced-mikrotik-protection",
-      },
-      {
-        name: "Advanced MikroTik Router-OS Protection",
-        href: "mikrotik-backup-to-mail",
-      },
-      {
-        name: "Block Websites Generator",
-        href: "mikrotik-access-block",
-      },
-      {
-        name: "MikroTik Auto Backup to E-Mail",
         href: "port-knocking-icmp",
       },
       {
-        name: "Mangle Chain Obfuscator / Encryption",
+        name: "Advanced MikroTik Router-OS Protection",
+        href: "advanced-mikrotik-protection",
+      },
+      {
+        name: "Block Websites Generator",
         href: "mikrotik-block-website-generator",
       },
       {
+        name: "MikroTik Auto Backup to E-Mail",
+        href: "mikrotik-backup-to-mail",
+      },
+      {
+        name: "Mangle Chain Obfuscator / Encryption",
+        href: "mikrotik-mangle-script-obfuscator",
+      },
+      {
         name: "Block For Youtube, Tiktok, WA, FB, etc.",
-        href: "mikrotik-block-website-generator",
+        href: "mikrotik-access-block",
       },
     ],
   },
@@ -215,11 +215,11 @@ const toolsSections: ToolsSection[] = [
       { name: "Load Balancing PCC Calculation", href: "pcc-calculation" },
       {
         name: "Wifi.id WMS and Seamless Auto Login",
-        href: "mirkotik-latinoamerica-timezone",
+        href: "wifid-wms-seamless",
       },
       {
-        name: "Indonesia Time Zone NTP/SNTP Client",
-        href: "wifid-wms-seamless",
+        name: "Latinoamerica Time Zone NTP/SNTP Client",
+        href: "mirkotik-latinoamerica-timezone",
       },
     ],
   },
@@ -296,7 +296,7 @@ const toolsSections: ToolsSection[] = [
         href: "https://mikrotik.com/download",
       },
       {
-        name: "Routeros.co.id (Indonesia Server)",
+        name: "Routeros.co.id (Latinoamerica Server)",
         href: "https://mikrotik.com/download",
       },
     ],
