@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.okta.mongodb.GeneradoScripts.constants.MikrotikPortForwardGenerator;
 import com.okta.mongodb.GeneradoScripts.model.mikrotikPortForwardGenerator.MikrotikPortForwardGeneratorBody;
 import com.okta.mongodb.GeneradoScripts.model.mikrotikPortForwardGenerator.MikrotikPortForwardGeneratorForward;
 
@@ -35,12 +34,12 @@ public class MikrotikPortForwardGeneratorService {
                 StringBuilder html = new StringBuilder();
 
                 for (MikrotikPortForwardGeneratorForward forward : body.getForwards()) {
-                        String protocol = forward.getIdProtocol() == MikrotikPortForwardGenerator.TCP ? "tcp" : "udp";
-                        html.append("<span>/ip firewall nat add action=dst-nat chain=dstnat protocol=" + protocol
-                                        + " dst-address=\"" + forward.getRemoteIp() + "\" dst-port=\""
-                                        + forward.getRemotePort() + "\" to-addresses=\"" + forward.getTargetIp()
-                                        + "\" to-ports=\"" + forward.getTargetPort() + "\" comment=\""
-                                        + forward.getDescription() + " - port forwarding by buananet.com\"</span> <br>");
+                        html.append("<span>/ip firewall nat add action=dst-nat chain=dstnat protocol=<span style='color: orange;'>"
+                                        + forward.getIdProtocol() + "</span> dst-address=<span style='color: orange;'>\"" + forward.getRemoteIp() + "\"</span> dst-port=<span style='color: orange;'>\""
+                                        + forward.getRemotePort() + "\"</span> to-addresses=<span style='color: orange;'>\"" + forward.getTargetIp()
+                                        + "\"</span> to-ports=<span style='color: orange;'>\"" + forward.getTargetPort() + "\"</span> comment=<span style='color: orange;'>\""
+                                        + forward.getDescription()
+                                        + " - port forwarding by buananet.com\"</span> </span> <br>");
                 }
 
                 html.append("</div>");
@@ -51,8 +50,7 @@ public class MikrotikPortForwardGeneratorService {
                 StringBuilder text = new StringBuilder();
 
                 for (MikrotikPortForwardGeneratorForward forward : body.getForwards()) {
-                        String protocol = forward.getIdProtocol() == MikrotikPortForwardGenerator.TCP ? "tcp" : "udp";
-                        text.append("/ip firewall nat add action=dst-nat chain=dstnat protocol=" + protocol
+                        text.append("/ip firewall nat add action=dst-nat chain=dstnat protocol=" + forward.getIdProtocol()
                                         + " dst-address=\"" + forward.getRemoteIp() + "\" dst-port=\""
                                         + forward.getRemotePort() + "\" to-addresses=\"" + forward.getTargetIp()
                                         + "\" to-ports=\"" + forward.getTargetPort() + "\" comment=\""
