@@ -17,7 +17,7 @@ import com.okta.mongodb.GeneradoScripts.utils.DateUtils;
 @Service
 public class MikrotikFailoverScriptGeneratorService {
 
-        private static final Logger logger = LoggerFactory.getLogger(PccService.class);
+        private static final Logger logger = LoggerFactory.getLogger(MikrotikFailoverScriptGeneratorService.class);
 
         public Map<String, String> create(MikrotikFailoverScriptGeneratorBody body) {
                 logger.info("Body recibido: {}", body);
