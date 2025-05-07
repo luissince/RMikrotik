@@ -5,11 +5,13 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import com.okta.mongodb.GeneradoScripts.constants.MikrotikPortStaticRouting;
 import com.okta.mongodb.GeneradoScripts.model.mikrotikPortStaticRouting.MikrotikPortStaticRoutingBody;
 import com.okta.mongodb.GeneradoScripts.model.mikrotikPortStaticRouting.MikrotikPortStaticRoutingFirewall;
 
+@Service
 public class MikrotikPortStaticRoutingService {
 
         private static final Logger logger = LoggerFactory.getLogger(MikrotikPortStaticRoutingService.class);
