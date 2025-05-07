@@ -34,13 +34,12 @@ public class MikrotikPortStaticRoutingService {
         private String generateHtmlScript(MikrotikPortStaticRoutingBody body) {
                 StringBuilder html = new StringBuilder();
 
-                // html.append("<span></span> <br>");
-
                 html.append("<span>/ip firewall address-list add address=192.168.0.0/16 list=LOCAL-IP</span> <br>");
                 html.append("<span>/ip firewall address-list add address=172.16.0.0/12 list=LOCAL-IP</span> <br>");
                 html.append("<span>/ip firewall address-list add address=10.0.0.0/8 list=LOCAL-IP</span> <br>");
 
-                if (body.getIdRouterOsVersion() == MikrotikPortStaticRouting.OS_VERSIONS.get(1).getId()) {
+                if (MikrotikPortStaticRouting.OS_VERSIONS.get(1).getId().equals(body.getIdRouterOsVersion())) {
+                        logger.info("OS Version -> RouterOS v7.xx");
                         html.append("<span>/routing table add name=\"" + body.getRoutingMarkTable()
                                         + "\" fib comment=\"" + body.getRoutingMarkTable()
                                         + " - Port Static Routing by buananet.com\"</span> <br>");
@@ -50,8 +49,9 @@ public class MikrotikPortStaticRoutingService {
                                 + "\" routing-mark=\"" + body.getRoutingMarkTable()
                                 + "\" comment=\" - Port Static Routing by buananet.com\"</span> <br>");
 
-                if (body.getIdRoutingOption() == MikrotikPortStaticRouting.OPTIONS.get(1).getId()
-                                && body.getIdRouterOsVersion() == MikrotikPortStaticRouting.OPTIONS.get(2).getId()) {
+                if (MikrotikPortStaticRouting.OPTIONS.get(1).getId().equals(body.getIdRoutingOption())
+                                || MikrotikPortStaticRouting.OPTIONS.get(2).getId()
+                                                .equals(body.getIdRoutingOption())) {
                         html.append("<span>/ip firewall mangle add action=mark-routing chain=prerouting dst-address-list=\""
                                         + body.getRoutingMarkTable() + "-list\" new-routing-mark=\""
                                         + body.getRoutingMarkTable()
@@ -61,7 +61,14 @@ public class MikrotikPortStaticRoutingService {
                 }
 
                 for (MikrotikPortStaticRoutingFirewall firewall : body.getFirewalls()) {
-                        if (body.getIdRoutingOption() == MikrotikPortStaticRouting.OPTIONS.get(1).getId()) {
+                        if (MikrotikPortStaticRouting.OPTIONS.get(0).getId().equals(body.getIdRoutingOption())) {
+                                html.append("<span>/ip firewall mangle add action=mark-routing chain=prerouting src-address-list=LOCAL-IP passthrough=no new-routing-mark=\"\" protocol="
+                                                + firewall.getIdProtocol() + " dst-port=\"" + firewall.getTargetPort()
+                                                + "\" comment=\"" + firewall.getDescription()
+                                                + " - Port Static Routing by buananet.com\"</span> <br>");
+                        }
+
+                        if (MikrotikPortStaticRouting.OPTIONS.get(1).getId().equals(body.getIdRoutingOption())) {
                                 html.append("<span>/ip firewall raw add action=add-dst-to-address-list address-list=\""
                                                 + body.getRoutingMarkTable()
                                                 + "-list\" chain=prerouting src-address-list=LOCAL-IP dst-address-list=!LOCAL-IP protocol="
@@ -71,7 +78,7 @@ public class MikrotikPortStaticRoutingService {
 
                         }
 
-                        if (body.getIdRouterOsVersion() == MikrotikPortStaticRouting.OPTIONS.get(2).getId()) {
+                        if (MikrotikPortStaticRouting.OPTIONS.get(2).getId().equals(body.getIdRoutingOption())) {
                                 html.append("<span>/ip firewall filter add action=add-dst-to-address-list address-list=\""
                                                 + body.getRoutingMarkTable()
                                                 + "-list\" chain=forward src-address-list=LOCAL-IP dst-address-list=!LOCAL-IP protocol="
@@ -88,8 +95,6 @@ public class MikrotikPortStaticRoutingService {
         private String generatePlainTextScript(MikrotikPortStaticRoutingBody body) {
                 StringBuilder text = new StringBuilder();
 
-                // text.append(" \n");
-
                 text.append("/ip firewall address-list add address=192.168.0.0/16 list=LOCAL-IP \n");
                 text.append("/ip firewall address-list add address=172.16.0.0/12 list=LOCAL-IP \n");
                 text.append("/ip firewall address-list add address=10.0.0.0/8 list=LOCAL-IP \n");
@@ -103,8 +108,9 @@ public class MikrotikPortStaticRoutingService {
                                 + "\" routing-mark=\"" + body.getRoutingMarkTable()
                                 + "\" comment=\" - Port Static Routing by buananet.com\" \n");
 
-                if (body.getIdRoutingOption() == MikrotikPortStaticRouting.OPTIONS.get(1).getId()
-                                && body.getIdRouterOsVersion() == MikrotikPortStaticRouting.OPTIONS.get(2).getId()) {
+                if (MikrotikPortStaticRouting.OPTIONS.get(1).getId().equals(body.getIdRoutingOption())
+                                || MikrotikPortStaticRouting.OPTIONS.get(2).getId()
+                                                .equals(body.getIdRoutingOption())) {
                         text.append("/ip firewall mangle add action=mark-routing chain=prerouting dst-address-list=\""
                                         + body.getRoutingMarkTable() + "-list\" new-routing-mark=\""
                                         + body.getRoutingMarkTable()
@@ -113,7 +119,14 @@ public class MikrotikPortStaticRoutingService {
                 }
 
                 for (MikrotikPortStaticRoutingFirewall firewall : body.getFirewalls()) {
-                        if (body.getIdRoutingOption() == MikrotikPortStaticRouting.OPTIONS.get(1).getId()) {
+                        if (MikrotikPortStaticRouting.OPTIONS.get(0).getId().equals(body.getIdRoutingOption())) {
+                                text.append("/ip firewall mangle add action=mark-routing chain=prerouting src-address-list=LOCAL-IP passthrough=no new-routing-mark=\"\" protocol="
+                                                + firewall.getIdProtocol() + " dst-port=\"" + firewall.getTargetPort()
+                                                + "\" comment=\"" + firewall.getDescription()
+                                                + " - Port Static Routing by buananet.com\" \n");
+                        }
+
+                        if (MikrotikPortStaticRouting.OPTIONS.get(1).getId().equals(body.getIdRoutingOption())) {
                                 text.append("/ip firewall raw add action=add-dst-to-address-list address-list=\""
                                                 + body.getRoutingMarkTable()
                                                 + "-list\" chain=prerouting src-address-list=LOCAL-IP dst-address-list=!LOCAL-IP protocol="
@@ -123,7 +136,7 @@ public class MikrotikPortStaticRoutingService {
 
                         }
 
-                        if (body.getIdRouterOsVersion() == MikrotikPortStaticRouting.OPTIONS.get(2).getId()) {
+                        if (MikrotikPortStaticRouting.OPTIONS.get(2).getId().equals(body.getIdRoutingOption())) {
                                 text.append("/ip firewall filter add action=add-dst-to-address-list address-list=\""
                                                 + body.getRoutingMarkTable()
                                                 + "-list\" chain=forward src-address-list=LOCAL-IP dst-address-list=!LOCAL-IP protocol="
