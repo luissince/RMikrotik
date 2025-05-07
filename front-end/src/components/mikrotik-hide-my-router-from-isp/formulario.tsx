@@ -147,7 +147,7 @@ const MikrotikForm = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col lg:flex-row gap-6 bg-gray-900 p-6 rounded-lg shadow-lg min-h-[70vh]"
+      className="flex flex-col lg:flex-row gap-6 bg-gray-900 p-6 rounded-lg shadow-lg h-[70vh]"
     >
       {/* Panel izquierdo - Controles */}
       <div className="flex flex-col gap-6 lg:w-1/2">

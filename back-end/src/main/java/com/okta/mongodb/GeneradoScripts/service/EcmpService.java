@@ -35,21 +35,21 @@ public class EcmpService {
                 StringBuilder html = new StringBuilder();
                 html.append("<div>");
 
-                html.append("<span>###############################################################</span> <br>");
-                html.append("<span># Load Balancing ECMP (Equal Cost Multi Path) / LB ECMP Script Generator</span> <br>");
-                html.append("<span># Date/Time: " + DateUtils.currentDate() + "</span> <br>");
-                html.append("<span># Created by: buananet.com - fb.me/buananet.pbun</span> <br>");
-                html.append("<span># Load Balancing Method: ECMP (Equal Cost Multi Path)</span> <br>");
-                html.append("<span>###############################################################</span> <br>");
+                html.append("<span class='text-orange-400'>###############################################################</span> <br>");
+                html.append("<span class='text-orange-400'># Load Balancing ECMP (Equal Cost Multi Path) / LB ECMP Script Generator</span> <br>");
+                html.append("<span class='text-orange-400'># Date/Time: " + DateUtils.currentDate() + "</span> <br>");
+                html.append("<span class='text-orange-400'># Created by: buananet.com - fb.me/buananet.pbun</span> <br>");
+                html.append("<span class='text-orange-400'># Load Balancing Method: ECMP (Equal Cost Multi Path)</span> <br>");
+                html.append("<span class='text-orange-400'>###############################################################</span> <br>");
 
                 // /ip firewall address-list
-                html.append("<span>/ip firewall address-list</span> <br>");
+                html.append("<span class='font-black'>/ip firewall address-list</span> <br>");
                 html.append("<span>add address=192.168.0.0/16 list=LOCAL-IP comment=\"LB ECMP by buananet.com\"</span> <br>");
                 html.append("<span>add address=172.16.0.0/12 list=LOCAL-IP comment=\"LB ECMP by buananet.com\"</span> <br>");
                 html.append("<span>add address=10.0.0.0/8 list=LOCAL-IP comment=\"LB ECMP by buananet.com\"</span> <br>");
 
                 // /ip firewall nat
-                html.append("<span>/ip firewall nat</span> <br>");
+                html.append("<span class='font-black'>/ip firewall nat</span> <br>");
                 for (EcmpInterfaces ecmpInterfaces : pccBody.getInterfaces()) {
                         html.append("<span>add chain=srcnat out-interface=\"" + ecmpInterfaces.getWanIsp()
                                         + "\" action=masquerade comment=\"LB ECMP by buananet.com\"</span> <br>");
@@ -58,7 +58,7 @@ public class EcmpService {
                 if (pccBody.getIdRouterOsVersion().equalsIgnoreCase("ros6")) {
 
                         // /ip route
-                        html.append("<span>/ip route</span> <br>");
+                        html.append("<span class='font-black'>/ip route</span> <br>");
                         html.append("<span>add check-gateway=ping distance=1 ");
                         String gateways = "";
                         for (EcmpInterfaces ecmpInterfaces : pccBody.getInterfaces()) {
@@ -77,14 +77,14 @@ public class EcmpService {
 
                 if (pccBody.getIdRouterOsVersion().equalsIgnoreCase("ros7")) {
                         // /routing table
-                        html.append("<span>/routing table</span> <br>");
+                        html.append("<span class='font-black'>/routing table</span> <br>");
                         for (EcmpInterfaces ecmpInterfaces : pccBody.getInterfaces()) {
                                 html.append("<span>add name=\"to-" + ecmpInterfaces.getWanIsp()
                                                 + "\" fib comment=\"LB ECMP by buananet.com\"</span> <br>");
                         }
 
                         // /ip route
-                        html.append("<span>/ip route</span> <br>");
+                        html.append("<span class='font-black'>/ip route</span> <br>");
                         for (EcmpInterfaces ecmpInterfaces : pccBody.getInterfaces()) {
                                 html.append("<span>add check-gateway=ping distance=1 gateway=\""
                                                 + ecmpInterfaces.getGatewayIsp()
@@ -99,7 +99,7 @@ public class EcmpService {
                 }
 
                 // /ip firewall mangle
-                html.append("<span>/ip firewall mangle</span> <br>");
+                html.append("<span class='font-black'>/ip firewall mangle</span> <br>");
                 html.append("<span>add action=accept chain=prerouting dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment=\"LB ECMP by buananet.com\"</span> <br>");
                 html.append("<span>add action=accept chain=postrouting dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment=\"LB ECMP by buananet.com\"</span> <br>");
                 html.append("<span>add action=accept chain=forward dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment=\"LB ECMP by buananet.com\"</span> <br>");

@@ -154,7 +154,7 @@ const FormularioMikrotikPortStaticRouting = () => {
 
     return (
         <>
-            <div className="container mx-auto p-6 bg-gray-800 rounded-lg shadow-lg">
+            <div className="container mx-auto p-6 bg-gray-800 rounded-lg shadow-lg h-[70vh]">
                 <div className="text-center mb-6"></div>
 
                 <div className="flex justify-center mb-8">
