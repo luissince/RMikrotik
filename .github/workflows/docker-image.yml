@@ -66,6 +66,19 @@ jobs:
         # if: steps.check-frontend.outputs.frontend == 'true'
         run: docker compose -f front-end/docker-compose.yml build
 
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Tag front-end image
+        run: docker tag front-end-app ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/front-end-app:latest
+
+      - name: Push front-end image to ECR
+        run: docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/front-end-app:latest
+
+      - name: Eliminar imágenes locales
+        run: docker image prune -af
+
+
   build-spring-boot:
     name: Build Back-End (Spring Boot)
     if: github.ref == 'refs/heads/master'
@@ -131,3 +144,15 @@ jobs:
       - name: Construyendo contenedor Spring Boot
         # if: steps.check-backend.outputs.backend == 'true'
         run: docker compose -f back-end/docker-compose.yml build
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Tag back-end image
+        run: docker tag back-end-app ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/back-end-app:latest
+
+      - name: Push back-end image to ECR
+        run: docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/back-end-app:latest
+
+      - name: Eliminar imágenes locales
+        run: docker image prune -af
