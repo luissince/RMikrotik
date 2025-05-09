@@ -37,12 +37,12 @@ jobs:
             frontend: 
               - 'front-end/**'
 
-      - name: Salir si no hay cambios en front-end
-        if: steps.check-frontend.outputs.frontend == 'false'
-        run: echo "Sin cambios en front-end. Saliendo."
+      # - name: Salir si no hay cambios en front-end
+      #   if: steps.check-frontend.outputs.frontend == 'false'
+      #   run: echo "Sin cambios en front-end. Saliendo."
 
       - name: Crear archivo .env
-        if: steps.check-frontend.outputs.frontend == 'true'
+        # if: steps.check-frontend.outputs.frontend == 'true'
         run: |
           cat > front-end/.env <<EOL
           HOST="${{env.HOST}}"
@@ -59,11 +59,11 @@ jobs:
           EOL
 
       - name: Verificar archivo .env
-        if: steps.check-frontend.outputs.frontend == 'true'
+        # if: steps.check-frontend.outputs.frontend == 'true'
         run: cat front-end/.env
 
       - name: Construyendo contenedor Astro JS
-        if: steps.check-frontend.outputs.frontend == 'true'
+        # if: steps.check-frontend.outputs.frontend == 'true'
         run: docker compose -f front-end/docker-compose.yml build
 
   build-spring-boot:
@@ -99,12 +99,12 @@ jobs:
             backend: 
               - 'back-end/**'
 
-      - name: Salir si no hay cambios en back-end
-        if: steps.check-backend.outputs.backend == 'false'
-        run: echo "Sin cambios en back-end. Saliendo."
+      # - name: Salir si no hay cambios en back-end
+      #   if: steps.check-backend.outputs.backend == 'false'
+      #   run: echo "Sin cambios en back-end. Saliendo."
 
       - name: Crear archivo application.properties
-        if: steps.check-backend.outputs.backend == 'true'
+        # if: steps.check-backend.outputs.backend == 'true'
         run: |
           cat > back-end/src/main/resources/application.properties <<EOL
           server.port=${{env.SERVER_PORT}}
@@ -125,9 +125,9 @@ jobs:
           EOL
 
       - name: Verificar archivo application.properties
-        if: steps.check-backend.outputs.backend == 'true'
+        # if: steps.check-backend.outputs.backend == 'true'
         run: cat back-end/src/main/resources/application.properties
 
       - name: Construyendo contenedor Spring Boot
-        if: steps.check-backend.outputs.backend == 'true'
+        # if: steps.check-backend.outputs.backend == 'true'
         run: docker compose -f back-end/docker-compose.yml build
