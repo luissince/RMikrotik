@@ -1,4 +1,4 @@
-name: Docker Image CI - RMikrotik
+name: Docker Build CI - RMikrotik
 
 on:
   push:
@@ -6,12 +6,13 @@ on:
       - master
 
 jobs:
-  build-and-deploy-astro:
+  build-astro:
+    name: Build Front-End (Astro)
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     environment: front-end
 
-    env:  
+    env:
       HOST: ${{ secrets.HOST }}
       PUBLIC_BASE_URL_API: ${{ secrets.PUBLIC_BASE_URL_API }}
 
@@ -38,7 +39,7 @@ jobs:
 
       - name: Salir si no hay cambios en front-end
         if: steps.check-frontend.outputs.frontend == 'false'
-        run: exit 0
+        run: echo "Sin cambios en front-end. Saliendo."
 
       - name: Crear archivo .env
         if: steps.check-frontend.outputs.frontend == 'true'
@@ -61,11 +62,12 @@ jobs:
         if: steps.check-frontend.outputs.frontend == 'true'
         run: cat front-end/.env
 
-      - name: Creando y ejecutando contenedor Astro JS
+      - name: Construyendo contenedor Astro JS
         if: steps.check-frontend.outputs.frontend == 'true'
-        run: docker compose -f front-end/docker-compose.yml up --build -d
+        run: docker compose -f front-end/docker-compose.yml build
 
-  build-and-deploy-spring-boot:
+  build-spring-boot:
+    name: Build Back-End (Spring Boot)
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     environment: back-end
@@ -99,7 +101,7 @@ jobs:
 
       - name: Salir si no hay cambios en back-end
         if: steps.check-backend.outputs.backend == 'false'
-        run: exit 0
+        run: echo "Sin cambios en back-end. Saliendo."
 
       - name: Crear archivo application.properties
         if: steps.check-backend.outputs.backend == 'true'
@@ -122,10 +124,10 @@ jobs:
           spring.jpa.properties.hibernate.format_sql=${{env.SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL}}
           EOL
 
-      - name: Verificar archivo .env
+      - name: Verificar archivo application.properties
         if: steps.check-backend.outputs.backend == 'true'
         run: cat back-end/src/main/resources/application.properties
 
-      - name: Creando y ejecutando contenedor SprintBoot
+      - name: Construyendo contenedor Spring Boot
         if: steps.check-backend.outputs.backend == 'true'
-        run: docker compose -f back-end/docker-compose.yml up --build -d
+        run: docker compose -f back-end/docker-compose.yml build
