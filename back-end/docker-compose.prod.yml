@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  app:
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/rmikrotik/back-end-app:latest
+    container_name: rmikrotik-back-end-dev
+    ports:
+      - "8081:8080"
+    networks:
+      - ubuntu_default
+    environment:
+      - AWS_ACCOUNT_ID=${AWS_ACCOUNT_ID}
+      - AWS_REGION=${AWS_REGION}
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"   # Máximo 50% de un núcleo
+          memory: "512m" # Máximo 512MB de RAM
+        reservations:
+          cpus: "0.25"   # Reserva 25% de un núcleo
+          memory: "256m" # Reserva 256MB de RAM
+
+# Definición de redes
+networks:
+  # Red llamada 'ubuntu_default'
+  ubuntu_default:
+    # Configuración para usar una red externa existente
+    external: true

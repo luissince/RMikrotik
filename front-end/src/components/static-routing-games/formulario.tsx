@@ -113,7 +113,7 @@ const FormularioStaticRoutingGames: React.FC = () => {
     })).filter(category => category.games.length > 0);
 
     return (
-        <form className="flex flex-col lg:flex-row gap-6 bg-gray-900 p-6 rounded-lg shadow-lg min-h-[70vh]">
+        <form className="flex flex-col lg:flex-row gap-6 bg-gray-900 p-6 rounded-lg shadow-lg h-[70vh]">
             {/* Panel izquierdo - Controles */}
             <div className="flex flex-col gap-6 lg:w-1/2">
                 <div>

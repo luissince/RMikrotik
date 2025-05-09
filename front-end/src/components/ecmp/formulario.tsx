@@ -1,0 +1,284 @@
+import { useState, useEffect } from "react";
+import { keyIPAddress } from "../../utils/keyEvent";
+
+type LineInterfacesType = {
+  id: number;
+  wan: string;
+  wanInput: string;
+  gateway: string;
+  gatewayInput: string;
+};
+
+interface ScriptResult {
+  html: string;
+  text: string;
+}
+
+const FormularioEcmp = () => {
+  // Estados para los campos del formulario
+  const [idYourLineWanIsp, setIdYourLineWanIsp] = useState<string>("2");
+  const [idRouterOsVersion, setIdRouterOsVersion] = useState<string>("ros6");
+  const [lineInterfaces, setLineInterfaces] = useState<LineInterfacesType[]>([]);
+  const [scriptResult, setScriptResult] = useState<ScriptResult | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  // Generar líneas iniciales al montar el componente
+  useEffect(() => {
+    generateLines(Number(idYourLineWanIsp));
+  }, []);
+
+  // Función para generar líneas de interfaz
+  const generateLines = (numbers: number) => {
+    const list: LineInterfacesType[] = Array.from({ length: numbers }).map((_, i) => {
+      const index = i + 1;
+      return {
+        id: index,
+        wan: `WAN ISP ${index}`,
+        wanInput: `ether${index}`,
+        gateway: `Gateway ISP-${index}`,
+        gatewayInput: `192.168.${index}.1`
+      };
+    });
+    setLineInterfaces(list);
+  };
+
+  // Función para manejar cambios en el número de líneas WAN
+  const handleLineWanChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    setIdYourLineWanIsp(value);
+    generateLines(Number(value));
+  };
+
+  // Función para manejar cambios en la versión de RouterOS
+  const handleRouterOsVersionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setIdRouterOsVersion(e.target.value);
+  };
+
+  // Función para manejar cambios en los campos de interfaz
+  const handleInterfaceChange = (id: number, field: string, value: string) => {
+    setLineInterfaces(prevLines =>
+      prevLines.map(line =>
+        line.id === id ? { ...line, [field]: value } : line
+      )
+    );
+  };
+
+  // Función para generar el script
+  const handleGenerate = async () => {
+    try {
+      // Validar que todos los campos requeridos estén completos
+      if (!idRouterOsVersion) {
+        setError("RouterOS version is required");
+        return;
+      }
+
+      if (lineInterfaces.some(line => !line.wanInput || !line.gatewayInput)) {
+        setError("All WAN interfaces and gateways must be filled");
+        return;
+      }
+
+      const payload = {
+        idYourLineWanIsp,
+        idRouterOsVersion,
+        interfaces: lineInterfaces.map(line => ({
+          id: line.id,
+          wanIsp: line.wanInput,
+          gatewayIsp: line.gatewayInput
+        }))
+      };
+
+      const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/ecmp`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'accept': 'application/hal+json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const resultData: ScriptResult = await response.json();
+      setScriptResult(resultData);
+      setError(null);
+    } catch (error) {
+      setError('Error generating script: ' + (error as Error).message);
+    }
+  };
+
+  // Función para limpiar el formulario
+  const handleClear = () => {
+    setIdYourLineWanIsp("2");
+    setIdRouterOsVersion("");
+    setLineInterfaces([]);
+    setScriptResult(null);
+    setError(null);
+    generateLines(2);
+  };
+
+  // Función para copiar el script
+  const handleCopy = () => {
+    if (scriptResult) {
+      navigator.clipboard.writeText(scriptResult.text)
+        .then(() => alert("Script copied to clipboard!"))
+        .catch((err) => console.error("Failed to copy: ", err));
+    }
+  };
+
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 bg-gray-900 p-6 rounded-lg shadow-lg h-[70vh]">
+      {/* Form Section */}
+      <div className="bg-gray-700 p-4 rounded-lg">
+        <form className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label
+                htmlFor="wan-type"
+                className="block text-sm font-semibold text-gray-300"
+              >
+                Your Line WAN ISP
+              </label>
+              <select
+                id="wan-type"
+                className="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400"
+                value={idYourLineWanIsp}
+                onChange={handleLineWanChange}
+              >
+                <option value="2">2 Lineas WAN</option>
+                <option value="3">3 Lineas WAN</option>
+                <option value="4">4 Lineas WAN</option>
+                <option value="5">5 Lineas WAN</option>
+                <option value="6">6 Lineas WAN</option>
+                <option value="7">7 Lineas WAN</option>
+                <option value="8">8 Lineas WAN</option>
+                <option value="9">9 Lineas WAN</option>
+              </select>
+            </div>
+
+            <div className="space-y-2">
+              <label
+                htmlFor="routeros-version"
+                className="block text-sm font-semibold text-gray-300"
+              >
+                RouterOS Version
+              </label>
+              <select
+                id="routeros-version"
+                className={`w-full bg-gray-800 border ${error && !idRouterOsVersion ? "border-red-500" : "border-gray-600"} rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400`}
+                value={idRouterOsVersion}
+                onChange={handleRouterOsVersionChange}
+              >
+                <option value="ros6">RouterOS v6.xx</option>
+                <option value="ros7">RouterOS v7.xx</option>
+              </select>
+              {error && !idRouterOsVersion && (
+                <p className="mt-1 text-sm text-red-500">
+                  RouterOS version is required
+                </p>
+              )}
+            </div>
+          </div>
+
+          {lineInterfaces.map((line, index) => (
+            <div key={line.id} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label
+                  htmlFor={`wan-${index}`}
+                  className="block text-sm font-semibold text-gray-300"
+                >
+                  {line.wan}
+                </label>
+                <input
+                  id={`wan-${index}`}
+                  type="text"
+                  placeholder={`Ex: ether${index + 1}`}
+                  className={`text-sky-400 font-semibold w-full bg-gray-800 border ${error && !line.wanInput ? "border-red-500" : "border-gray-600"} rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500`}
+                  value={line.wanInput}
+                  onChange={(e) => handleInterfaceChange(line.id, 'wanInput', e.target.value)}
+                />
+                {error && !line.wanInput && (
+                  <p className="mt-1 text-sm text-red-500">
+                    WAN interface is required
+                  </p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <label
+                  htmlFor={`gateway-${index}`}
+                  className="block text-sm font-semibold text-gray-300"
+                >
+                  {line.gateway}
+                </label>
+                <input
+                  id={`gateway-${index}`}
+                  type="text"
+                  placeholder={`Ex: 192.168.${index + 1}.1`}
+                  className={`w-full bg-gray-800 text-amber-600 border font-semibold ${error && !line.gatewayInput ? "border-red-500" : "border-gray-600"} rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500`}
+                  value={line.gatewayInput}
+                  onChange={(e) => handleInterfaceChange(line.id, 'gatewayInput', e.target.value)}
+                  onKeyDown={(e) => keyIPAddress(e)}
+                />
+                {error && !line.gatewayInput && (
+                  <p className="mt-1 text-sm text-red-500">
+                    Gateway is required
+                  </p>
+                )}
+              </div>
+            </div>
+          ))}
+
+          <div className="mt-4">
+            <p className="text-sm text-gray-400">
+              Cambie el nombre de su interfaz WAN con la condición de su enrutador...
+            </p>
+          </div>
+        </form>
+      </div>
+
+      {/* Result Section */}
+      <div className="flex flex-col min-h-0">
+        <div className="flex-grow bg-gray-700 p-4 rounded-lg flex flex-col min-h-0">
+          <label className="block text-sm font-semibold mb-2 text-gray-300">
+            Script Generator Result
+          </label>
+          <div className="flex-grow overflow-y-auto bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400 text-sm">
+            {scriptResult && (
+              <div dangerouslySetInnerHTML={{ __html: scriptResult.html }} />
+            )}
+          </div>
+        </div>
+
+        <div className="flex mt-4 space-x-4">
+          <button
+            type="button"
+            className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition"
+            onClick={handleGenerate}
+          >
+            Generar
+          </button>
+
+          <button
+            type="button"
+            className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition"
+            onClick={handleClear}
+          >
+            Borrar Todo
+          </button>
+
+          <button
+            type="button"
+            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
+            onClick={handleCopy}
+            disabled={!scriptResult}
+          >
+            Copiar Script
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default FormularioEcmp;

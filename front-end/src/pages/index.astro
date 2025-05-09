@@ -45,12 +45,18 @@ const toolsSections: ToolsSection[] = [
     color: "text-rose-600",
     tools: [
       { name: "Load Balancing PCC", href: "pcc" },
-      { name: "Port Forwarding with NAT", href: "mikrotik-port-forward-generator" },
+      {
+        name: "Port Forwarding with NAT",
+        href: "mikrotik-port-forward-generator",
+      },
       { name: "Load Balancing NTH", href: "Balanceo_NTH" },
-      { name: "Port TCP/UDP Static Routing", href: "mikrotik-port-static-routing" },
+      {
+        name: "Port TCP/UDP Static Routing",
+        href: "mikrotik-port-static-routing",
+      },
       {
         name: "Load Balancing ECMP",
-        href: "Balanceo-ECMP",
+        href: "ecmp",
       },
       {
         name: "All Traffic to VPN Tunnel",
@@ -60,7 +66,10 @@ const toolsSections: ToolsSection[] = [
         name: "Failover Recursive Gateway",
         href: "mikrotik-failover-script-generator",
       },
-      { name: "Remote Access ISP \"Public IP Static\"", href: "remote-ip-public-static" },
+      {
+        name: 'Remote Access ISP "Public IP Static"',
+        href: "remote-ip-public-static",
+      },
       {
         name: "Games Static Routing Using Filter Raw",
         href: "static-routing-games",
@@ -78,7 +87,10 @@ const toolsSections: ToolsSection[] = [
         name: "Website Static Routing",
         href: "policy-based-routing-website",
       },
-      { name: "VPN Remote SSTP - L2TP - PPTP - OVPN", href: "VPN-remote-sstp-l2tp-pptp-ovpn" },
+      {
+        name: "VPN Remote SSTP - L2TP - PPTP - OVPN",
+        href: "VPN-remote-sstp-l2tp-pptp-ovpn",
+      },
       {
         name: "Local Client IP Static Routing",
         href: "Local-Client-IP-Static-Routing",
@@ -101,7 +113,10 @@ const toolsSections: ToolsSection[] = [
         name: "Queue Tree + Bandwidth Shared Up-To",
         href: "queue-tree-generator-shared",
       },
-      { name: "PCQ Burst Rate + Queue Size Calculator", href: "mikrotik-pcq-burst-rate-queue-size-generator" },
+      {
+        name: "PCQ Burst Rate + Queue Size Calculator",
+        href: "mikrotik-pcq-burst-rate-queue-size-generator",
+      },
       {
         name: "PCQ for Queue Tree and Queue Simple",
         href: "mikrotik-pcq-generator",
@@ -114,7 +129,10 @@ const toolsSections: ToolsSection[] = [
         name: "QoS Priority Youtube, Tiktok, WA, FB, etc.",
         href: "mikrotik-queue-qos",
       },
-      { name: "Simple Queue + Bandwidth Shared Up-To", href: "simple-queue-generator-shared" },
+      {
+        name: "Simple Queue + Bandwidth Shared Up-To",
+        href: "simple-queue-generator-shared",
+      },
     ],
   },
   {
@@ -129,7 +147,10 @@ const toolsSections: ToolsSection[] = [
         name: "Hotspot Username Password Generator",
         href: "mikrotik-username-password-hotspot-generator",
       },
-      { name: "Block Sharing Hotspot with \"Change TTL\"", href: "mikrotik-block-sharing-hotspot" },
+      {
+        name: 'Block Sharing Hotspot with "Change TTL"',
+        href: "mikrotik-block-sharing-hotspot",
+      },
       {
         name: "Bandwidth Share Up-To for Hotspot",
         href: "mikrotik-share-user-multi-login",
@@ -477,7 +498,9 @@ const toolsSections: ToolsSection[] = [
                       <button class="text-white px-4 pr-8 rounded-md transition ease-in-out delay-150 bg-slate-800 hover:-translate-y-1 hover:scale-110 hover:bg-blue-500 duration-300">
                         <a href={tool.href}>{tool.name}</a>
                       </button>
-                      <span class="text-gray-400 animate-pulse absolute">🔒</span>
+                      <span class="text-gray-400 animate-pulse absolute">
+                        🔒
+                      </span>
                     </li>
                   ))}
                 </ul>

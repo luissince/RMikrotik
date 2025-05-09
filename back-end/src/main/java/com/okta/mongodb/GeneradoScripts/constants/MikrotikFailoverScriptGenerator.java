@@ -8,7 +8,7 @@ import com.okta.mongodb.GeneradoScripts.model.mikrotikFailoverScriptGenerator.Mi
 
 public final class MikrotikFailoverScriptGenerator {
 
-     public static final List<MikrotikFailoverScriptGeneratorFailOverMethod> FAIL_OVER_METHODS = new ArrayList<MikrotikFailoverScriptGeneratorFailOverMethod>() {
+    public static final List<MikrotikFailoverScriptGeneratorFailOverMethod> FAIL_OVER_METHODS = new ArrayList<MikrotikFailoverScriptGeneratorFailOverMethod>() {
         {
             add(new MikrotikFailoverScriptGeneratorFailOverMethod("fail-over-method1", "CHECK GATEWAY"));
             add(new MikrotikFailoverScriptGeneratorFailOverMethod("fail-over-method2", "RECURSIVE GATEWAY"));

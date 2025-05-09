@@ -1,4 +1,4 @@
-name: Docker Image CI - RMikrotik
+name: Docker Build CI - RMikrotik
 
 on:
   push:
@@ -6,12 +6,16 @@ on:
       - master
 
 jobs:
-  build-and-deploy-astro:
+  build-astro:
+    name: Build Front-End (Astro)
     if: github.ref == 'refs/heads/master'
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     environment: front-end
 
-    env:  
+    env:
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+      
       HOST: ${{ secrets.HOST }}
       PUBLIC_BASE_URL_API: ${{ secrets.PUBLIC_BASE_URL_API }}
 
@@ -36,12 +40,12 @@ jobs:
             frontend: 
               - 'front-end/**'
 
-      - name: Salir si no hay cambios en front-end
-        if: steps.check-frontend.outputs.frontend == 'false'
-        run: exit 0
+      # - name: Salir si no hay cambios en front-end
+      #   if: steps.check-frontend.outputs.frontend == 'false'
+      #   run: echo "Sin cambios en front-end. Saliendo."
 
       - name: Crear archivo .env
-        if: steps.check-frontend.outputs.frontend == 'true'
+        # if: steps.check-frontend.outputs.frontend == 'true'
         run: |
           cat > front-end/.env <<EOL
           HOST="${{env.HOST}}"
@@ -58,19 +62,73 @@ jobs:
           EOL
 
       - name: Verificar archivo .env
-        if: steps.check-frontend.outputs.frontend == 'true'
+        # if: steps.check-frontend.outputs.frontend == 'true'
         run: cat front-end/.env
 
-      - name: Creando y ejecutando contenedor Astro JS
-        if: steps.check-frontend.outputs.frontend == 'true'
-        run: docker compose -f front-end/docker-compose.yml up --build -d
+      - name: Construyendo contenedor Astro JS
+        # if: steps.check-frontend.outputs.frontend == 'true'
+        run: docker compose -f front-end/docker-compose.build.yml build
 
-  build-and-deploy-spring-boot:
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          registry-type: private
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }} 
+
+      - name: Tag front-end image
+        run: docker tag front-end-app ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/rmikrotik/front-end-app:latest
+
+      - name: Push front-end image to ECR
+        run: docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/rmikrotik/front-end-app:latest
+
+      - name: Eliminar imágenes locales
+        run: docker image prune -af
+
+  deploy-front:
+    name: Deploy Front-End (Astro) en servidor
     if: github.ref == 'refs/heads/master'
     runs-on: self-hosted
+    needs: build-astro
+
+    environment: front-end
+
+    env:
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v3
+
+      - name: Login a Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          registry-type: private
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+
+      - name: Descargar imagen desde ECR
+        run: docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/rmikrotik/front-end-app:latest
+
+      - name: Crear y ejecutar contenedor en producción
+        run: docker compose -f front-end/docker-compose.prod.yml up -d
+
+
+  build-spring-boot:
+    name: Build Back-End (Spring Boot)
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
     environment: back-end
 
     env:
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+      
       SERVER_PORT: ${{ secrets.SERVER_PORT }}
       SPRING_APPLICATION_NAME: ${{ secrets.SPRING_APPLICATION_NAME }}
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: ${{ secrets.SPRING_DATASOURCE_DRIVER_CLASS_NAME }}
@@ -97,12 +155,12 @@ jobs:
             backend: 
               - 'back-end/**'
 
-      - name: Salir si no hay cambios en back-end
-        if: steps.check-backend.outputs.backend == 'false'
-        run: exit 0
+      # - name: Salir si no hay cambios en back-end
+      #   if: steps.check-backend.outputs.backend == 'false'
+      #   run: echo "Sin cambios en back-end. Saliendo."
 
       - name: Crear archivo application.properties
-        if: steps.check-backend.outputs.backend == 'true'
+        # if: steps.check-backend.outputs.backend == 'true'
         run: |
           cat > back-end/src/main/resources/application.properties <<EOL
           server.port=${{env.SERVER_PORT}}
@@ -122,10 +180,59 @@ jobs:
           spring.jpa.properties.hibernate.format_sql=${{env.SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL}}
           EOL
 
-      - name: Verificar archivo .env
-        if: steps.check-backend.outputs.backend == 'true'
+      - name: Verificar archivo application.properties
+        # if: steps.check-backend.outputs.backend == 'true'
         run: cat back-end/src/main/resources/application.properties
 
-      - name: Creando y ejecutando contenedor SprintBoot
-        if: steps.check-backend.outputs.backend == 'true'
-        run: docker compose -f back-end/docker-compose.yml up --build -d
+      - name: Construyendo contenedor Spring Boot
+        # if: steps.check-backend.outputs.backend == 'true'
+        run: docker compose -f back-end/docker-compose.build.yml build
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          registry-type: private
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }} 
+
+      - name: Tag back-end image
+        run: docker tag back-end-app ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/rmikrotik/back-end-app:latest
+
+      - name: Push back-end image to ECR
+        run: docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/rmikrotik/back-end-app:latest
+
+      - name: Eliminar imágenes locales
+        run: docker image prune -af
+
+  deploy-spring-boot:
+    name: Deploy Back-End en servidor
+    if: github.ref == 'refs/heads/master'
+    runs-on: self-hosted
+    needs: build-spring-boot
+
+    environment: back-end
+
+    env:
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v3
+
+      - name: Login a Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          registry-type: private
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+
+      - name: Descargar imagen desde ECR
+        run: docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/rmikrotik/back-end-app:latest
+
+      - name: Crear y ejecutar contenedor en producción
+        run: docker compose -f back-end/docker-compose.prod.yml up -d

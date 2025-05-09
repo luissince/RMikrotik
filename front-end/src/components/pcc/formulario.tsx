@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { keyIPAddress } from "../../utils/keyEvent";
 
 const lineInterfaceSchema = z.object({
   id: z.number(),
@@ -11,25 +12,24 @@ const lineInterfaceSchema = z.object({
   gatewayInput: z
     .string()
     .min(1, { message: "Gateway es requerido" })
-    .regex(/^(\d{1,3}\.){3}\d{1,3}$/, { message: "Invalid IP format" }),
+    .regex(/^(\d{1,3}\.){3}\d{1,3}$/, { message: "Formato de IP inválido" }),
 });
 
 const formSchema = z.object({
   linea: z.number().min(2).max(9),
-  router: z.string().min(1, { message: "Router version es requerido" }),
+  router: z.string().min(1, { message: "Versión de RouterOS es requerida" }),
   local: z.string().min(1, { message: "Local target es requerido" }),
-  interfaceTarget: z.string().optional(),
+  interfaceTarget: z.string().optional().refine((val) => {
+    // Solo validar si el campo no está deshabilitado
+    const localValue = document.getElementById("local-target") as HTMLSelectElement;
+    return localValue?.value !== "local-ip" || !val || /^[a-zA-Z0-9\-_]+$/.test(val);
+  }, { message: "Interface target inválido" }),
   lineInterfaces: z.array(lineInterfaceSchema),
 });
 
 type FormValues = z.infer<typeof formSchema>;
-
 type LineInterfacesType = z.infer<typeof lineInterfaceSchema>;
-
-type ScriptResult = {
-  html: string;
-  text: string;
-};
+type ScriptResult = { html: string; text: string };
 
 const FormularioPcc = () => {
   const {
@@ -43,9 +43,9 @@ const FormularioPcc = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       linea: 2,
-      router: "",
-      local: "",
-      interfaceTarget: "",
+      router: "6.x",
+      local: "local-ip",
+      interfaceTarget: "ether1",
       lineInterfaces: [],
     },
   });
@@ -57,6 +57,7 @@ const FormularioPcc = () => {
 
   const localValue = watch("local");
   const [scriptResult, setScriptResult] = useState<ScriptResult | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const generateLines = (numbers: number) => {
     const list: LineInterfacesType[] = Array.from({ length: numbers }).map(
@@ -64,10 +65,10 @@ const FormularioPcc = () => {
         const index = i + 1;
         return {
           id: index,
-          wan: "wan isp" + index,
-          wanInput: "",
-          gateway: "Gateway ISP-" + index,
-          gatewayInput: "",
+          wan: `WAN ISP ${index}`,
+          wanInput: `ether${index}`,
+          gateway: `Gateway ISP-${index}`,
+          gatewayInput: `192.168.${index}.1`,
         };
       }
     );
@@ -80,49 +81,56 @@ const FormularioPcc = () => {
   }, []);
 
   const onSubmit = async (data: FormValues) => {
-    const payload = {
-      idLineWan: String(data.linea),
-      idRouterVersion: data.router,
-      idLocalTarget: data.local,
-      interfaceTarget: data.interfaceTarget || "",
-      interfaces: data.lineInterfaces.map((line) => ({
-        id: line.id,
-        wanIsp: line.wanInput,
-        gatewayIsp: line.gatewayInput,
-      })),
-    };
-
+    setIsLoading(true);
     try {
+      const payload = {
+        idLineWan: String(data.linea),
+        idRouterVersion: data.router,
+        idLocalTarget: data.local,
+        interfaceTarget: data.interfaceTarget || "",
+        interfaces: data.lineInterfaces.map((line) => ({
+          id: line.id,
+          wanIsp: line.wanInput,
+          gatewayIsp: line.gatewayInput,
+        })),
+      };
+
       const response = await fetch(
         `${import.meta.env.PUBLIC_BASE_URL_API}/pcc`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "accept": "application/hal+json",
           },
           body: JSON.stringify(payload),
         }
       );
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+
       const responseData: ScriptResult = await response.json();
-      setScriptResult({
-        html: responseData.html,
-        text: responseData.text,
-      });
+      setScriptResult(responseData);
     } catch (error) {
-      console.error("Error submitting form:", error);
+      console.error("Error al enviar datos:", error);
+      // Aquí podrías mostrar un mensaje de error al usuario
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleClearAll = () => {
     reset({
       linea: 2,
-      router: "",
-      local: "",
-      interfaceTarget: "",
+      router: "6.x",
+      local: "local-ip",
+      interfaceTarget: "ether1",
       lineInterfaces: fields.map((field) => ({
         ...field,
-        wanInput: "",
-        gatewayInput: "",
+        wanInput: `ether${field.id}`,
+        gatewayInput: `192.168.${field.id}.1`,
       })),
     });
     setScriptResult(null);
@@ -130,16 +138,15 @@ const FormularioPcc = () => {
 
   const handleCopyScript = () => {
     if (scriptResult) {
-      const result = scriptResult.text;
       navigator.clipboard
-        .writeText(result)
-        .then(() => alert("Script copied to clipboard!"))
-        .catch((err) => console.error("Failed to copy: ", err));
+        .writeText(scriptResult.text)
+        .then(() => alert("Script copiado al portapapeles!"))
+        .catch((err) => console.error("Error al copiar: ", err));
     }
   };
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6 bg-gray-900 p-6 rounded-lg shadow-lg min-h-[70vh]">
+    <div className="flex flex-col lg:flex-row gap-6 bg-gray-900 p-6 rounded-lg shadow-lg h-[70vh]">
       {/* Form Section */}
       <div className="flex flex-col gap-6 lg:w-1/2">
         <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
@@ -148,7 +155,7 @@ const FormularioPcc = () => {
               htmlFor="wan-type"
               className="block text-sm font-semibold text-gray-300"
             >
-              Your Line WAN ISP
+              Número de Líneas WAN ISP
             </label>
             <Controller
               name="linea"
@@ -164,14 +171,14 @@ const FormularioPcc = () => {
                     generateLines(value);
                   }}
                 >
-                  <option value="2">2 Lineas WAN</option>
-                  <option value="3">3 Lineas WAN</option>
-                  <option value="4">4 Lineas WAN</option>
-                  <option value="5">5 Lineas WAN</option>
-                  <option value="6">6 Lineas WAN</option>
-                  <option value="7">7 Lineas WAN</option>
-                  <option value="8">8 Lineas WAN</option>
-                  <option value="9">9 Lineas WAN</option>
+                  <option value="2">2 Líneas WAN</option>
+                  <option value="3">3 Líneas WAN</option>
+                  <option value="4">4 Líneas WAN</option>
+                  <option value="5">5 Líneas WAN</option>
+                  <option value="6">6 Líneas WAN</option>
+                  <option value="7">7 Líneas WAN</option>
+                  <option value="8">8 Líneas WAN</option>
+                  <option value="9">9 Líneas WAN</option>
                 </select>
               )}
             />
@@ -182,7 +189,7 @@ const FormularioPcc = () => {
               htmlFor="routeros-version"
               className="block text-sm font-semibold text-gray-300"
             >
-              RouterOS Version
+              Versión de RouterOS
             </label>
             <Controller
               name="router"
@@ -190,7 +197,9 @@ const FormularioPcc = () => {
               render={({ field }) => (
                 <select
                   id="routeros-version"
-                  className={`w-full bg-gray-800 border ${errors.router ? "border-red-500" : "border-gray-600"} rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400`}
+                  className={`w-full bg-gray-800 border ${
+                    errors.router ? "border-red-500" : "border-gray-600"
+                  } rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400`}
                   {...field}
                 >
                   <option value="">- Seleccionar -</option>
@@ -220,7 +229,9 @@ const FormularioPcc = () => {
                 render={({ field }) => (
                   <select
                     id="local-target"
-                    className={`w-full bg-gray-800 border ${errors.local ? "border-red-500" : "border-gray-600"} rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400`}
+                    className={`w-full bg-gray-800 border ${
+                      errors.local ? "border-red-500" : "border-gray-600"
+                    } rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400`}
                     {...field}
                   >
                     <option value="">- Seleccionar -</option>
@@ -252,13 +263,17 @@ const FormularioPcc = () => {
                     id="interface-target"
                     type="text"
                     disabled={localValue === "local-ip"}
-                    placeholder={"Indicar Puerto LAN"}
-                    className={`${localValue === "local-ip" ? "disabled:bg-slate-900" : ""} text-sky-400 font-semibold w-full bg-gray-800 border ${errors.interfaceTarget ? "border-red-500" : "border-gray-600"} rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500`}
+                    placeholder="Ej: ether1, bridge-local"
+                    className={`${
+                      localValue === "local-ip" ? "bg-gray-700" : "bg-gray-800"
+                    } w-full border ${
+                      errors.interfaceTarget ? "border-red-500" : "border-gray-600"
+                    } rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400`}
                     {...field}
                   />
                 )}
               />
-              {errors.interfaceTarget && (
+              {errors.interfaceTarget && localValue !== "local-ip" && (
                 <p className="mt-1 text-sm text-red-500">
                   {errors.interfaceTarget.message}
                 </p>
@@ -267,10 +282,7 @@ const FormularioPcc = () => {
           </div>
 
           {fields.map((field, index) => (
-            <div
-              key={field.id}
-              className="grid grid-cols-1 sm:grid-cols-2 gap-4"
-            >
+            <div key={field.id} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <label
                   htmlFor={`wan-${index}`}
@@ -285,8 +297,12 @@ const FormularioPcc = () => {
                     <input
                       id={`wan-${index}`}
                       type="text"
-                      placeholder={`Ex: ether${index + 1}`}
-                      className={`text-sky-400 font-semibold w-full bg-gray-800 border ${errors.lineInterfaces?.[index]?.wanInput ? "border-red-500" : "border-gray-600"} rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500`}
+                      placeholder={`Ej: ether${index + 1}`}
+                      className={`text-sky-400 font-semibold w-full bg-gray-800 border ${
+                        errors.lineInterfaces?.[index]?.wanInput
+                          ? "border-red-500"
+                          : "border-gray-600"
+                      } rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500`}
                       {...inputField}
                     />
                   )}
@@ -311,9 +327,14 @@ const FormularioPcc = () => {
                     <input
                       id={`gateway-${index}`}
                       type="text"
-                      placeholder={`Ex: 192.168.${index + 1}.1`}
-                      className={`w-full bg-gray-800 text-amber-600 border font-semibold ${errors.lineInterfaces?.[index]?.gatewayInput ? "border-red-500" : "border-gray-600"} rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500`}
+                      placeholder={`Ej: 192.168.${index + 1}.1`}
+                      className={`w-full bg-gray-800 text-amber-600 border font-semibold ${
+                        errors.lineInterfaces?.[index]?.gatewayInput
+                          ? "border-red-500"
+                          : "border-gray-600"
+                      } rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500`}
                       {...inputField}
+                      onKeyDown={(e) => keyIPAddress(e)}
                     />
                   )}
                 />
@@ -328,8 +349,7 @@ const FormularioPcc = () => {
 
           <div className="mt-4">
             <p className="text-sm text-gray-400">
-              Cambie el nombre de su interfaz WAN con la condición de su
-              enrutador...
+              Cambie el nombre de su interfaz WAN con la condición de su enrutador...
             </p>
           </div>
         </form>
@@ -338,10 +358,18 @@ const FormularioPcc = () => {
       {/* Result Section */}
       <div className="flex flex-col lg:w-1/2 min-h-0">
         <div className="flex-grow bg-gray-700 p-4 rounded-lg flex flex-col min-h-0">
-          <label className="block text-sm font-semibold mb-2 text-gray-300">Script Generator Result</label>
-          <div className="flex-grow overflow-y-auto bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400">
-            {scriptResult && (
+          <label className="block text-sm font-semibold mb-2 text-gray-300">
+            Resultado del Generador de Script
+          </label>
+          <div className="flex-grow overflow-y-auto bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400 text-sm">
+            {scriptResult ? (
               <div dangerouslySetInnerHTML={{ __html: scriptResult.html }} />
+            ) : (
+              <p className="text-gray-500">
+                {isLoading
+                  ? "Generando script..."
+                  : "El script generado aparecerá aquí"}
+              </p>
             )}
           </div>
         </div>
@@ -351,9 +379,9 @@ const FormularioPcc = () => {
             type="button"
             className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition disabled:bg-orange-300 disabled:cursor-not-allowed"
             onClick={handleSubmit(onSubmit)}
-            disabled={isSubmitting}
+            disabled={isSubmitting || isLoading}
           >
-            {isSubmitting ? "Generando..." : "Generar"}
+            {isSubmitting || isLoading ? "Generando..." : "Generar"}
           </button>
 
           <button
