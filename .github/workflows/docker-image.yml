@@ -13,8 +13,8 @@ jobs:
     environment: front-end
 
     env:
-      AWS_REGION: ${{ secrets.AWS_REGION }}  # 👈 Asegúrate de incluir esto
-      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}  # 👈 Este también es clave
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
       
       HOST: ${{ secrets.HOST }}
       PUBLIC_BASE_URL_API: ${{ secrets.PUBLIC_BASE_URL_API }}
@@ -70,7 +70,7 @@ jobs:
 
       - name: Construyendo contenedor Astro JS
         # if: steps.check-frontend.outputs.frontend == 'true'
-        run: docker compose -f front-end/docker-compose.yml build
+        run: docker compose -f front-end/docker-compose.build.yml build
 
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
@@ -96,7 +96,7 @@ jobs:
 
       - name: Creando y ejecutando contenedor Astro JS
         # if: steps.check-frontend.outputs.frontend == 'true'
-        run: docker compose -f front-end/docker-compose.yml up --build -d
+        run: docker compose -f front-end/docker-compose.prod.yml up -d
 
 
   build-spring-boot:
@@ -106,8 +106,8 @@ jobs:
     environment: back-end
 
     env:
-      AWS_REGION: ${{ secrets.AWS_REGION }}  # 👈 Asegúrate de incluir esto
-      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}  # 👈 Este también es clave
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
       
       SERVER_PORT: ${{ secrets.SERVER_PORT }}
       SPRING_APPLICATION_NAME: ${{ secrets.SPRING_APPLICATION_NAME }}
@@ -166,7 +166,7 @@ jobs:
 
       - name: Construyendo contenedor Spring Boot
         # if: steps.check-backend.outputs.backend == 'true'
-        run: docker compose -f back-end/docker-compose.yml build
+        run: docker compose -f back-end/docker-compose-build.yml build
 
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
@@ -186,10 +186,10 @@ jobs:
       - name: Eliminar imágenes locales
         run: docker image prune -af
 
-      # - name: Verificar archivo .env
-      ##   if: steps.check-backend.outputs.backend == 'true'
-      #   run: cat back-end/src/main/resources/application.properties
+      - name: Verificar archivo .env
+      #   if: steps.check-backend.outputs.backend == 'true'
+        run: cat back-end/src/main/resources/application.properties
 
-      # - name: Creando y ejecutando contenedor SprintBoot
-      ##   if: steps.check-backend.outputs.backend == 'true'
-      #   run: docker compose -f back-end/docker-compose.yml up --build -d
+      - name: Creando y ejecutando contenedor SprintBoot
+      #   if: steps.check-backend.outputs.backend == 'true'
+        run: docker compose -f back-end/docker-compose.prod.yml up -d

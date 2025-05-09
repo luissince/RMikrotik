@@ -8,6 +8,9 @@ services:
       - "8081:8080"
     networks:
       - ubuntu_default
+    environment:
+      - AWS_ACCOUNT_ID=${AWS_ACCOUNT_ID}
+      - AWS_REGION=${AWS_REGION}
     deploy:
       resources:
         limits:
