@@ -8,7 +8,7 @@ on:
 jobs:
   build-and-deploy-astro:
     if: github.ref == 'refs/heads/master'
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     environment: front-end
 
     env:  
@@ -67,7 +67,7 @@ jobs:
 
   build-and-deploy-spring-boot:
     if: github.ref == 'refs/heads/master'
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     environment: back-end
 
     env:
