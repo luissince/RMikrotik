@@ -1,181 +1,45 @@
 ---
+import FormularioVpnTunnelAllTrafficScriptGenerator from "../components/vpn-tunnel-all-traffic-script-generator/formulario";
 import MainLayout from "../layout/MainLayout.astro";
 ---
 
 <MainLayout title="Open Book">
-  <body
-    class="bg-gray-900 text-white font-sans min-h-screen flex items-center justify-center"
-  >
-    <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
-      <!-- Contenido -->
-      <!-- Header -->
-      <!-- Título -->
-      <div class="text-center mb-6">
-        <h1 class="text-2xl lg:text-4xl font-bold text-orange-500">
-          All Traffic to VPN Tunnel
-        </h1>
-        <p class="text-gray-300 mt-4">
-          All Traffic to VPN Tunnel. ¡Fácil, rápido y efectivo! 🚀
-        </p>
-      </div>
-    </div>
-    <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
-      <!-- Contenido inicio -->
-
-      <div class="container mx-auto p-6 bg-gray-800 rounded-lg shadow-lg">
-        <!-- Título -->
-
-        <!-- Formulario Principal -->
-        <form class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <!-- Columna 6666666666666  Izquierda -->
-
-          <div class="text-gray-950 shadow-2xl rounded-lg p-6 w-full ring-2 ring-blue-500">
-
-          
-
-          <div class="space-y-6">
-            <!-- Selección de RouterOS -->
-            <div>
-              <label
-                for="routeros"
-                class="block font-semibold text-gray-300 mb-2"
-                >Select VPN Connection</label
-              >
-              <select
-                id="routeros"
-                class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-              >
-                <option value="v6.xx"
-                  >PPTP - Point to Point Tunneling Protocolo</option
-                >
-                <option value="v7.xx">RouterOS v7.xx</option>
-              </select>
-            </div>
-
-            <!-- Formulario 1 -->
-            <div>
-              <label
-                for="gateway"
-                class="block font-semibold text-gray-300 mb-2 mt-4"
-                >Create VPN Name on Interface VPN</label
-              >
-              <input
-                id="gateway"
-                type="text"
-                placeholder="Ej: VPN - Tunnel"
-                class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-              />
-            </div>
-
-            <!-- Formulario 2 -->
-            <div>
-              <label
-                for="gateway"
-                class="block font-semibold text-gray-300 mb-2 mt-4"
-                >VPN IP Address (No uses el nombre de host)</label
-              >
-              <input
-                id="gateway"
-                type="text"
-                placeholder="Ej: 137.129.63.112"
-                class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-              />
-            </div>
-
-            <!-- Formulario 3 -->
-            <div>
-              <label
-                for="gateway"
-                class="block font-semibold text-gray-300 mb-2 mt-4"
-                >VPN Username</label
-              >
-              <input
-                id="gateway"
-                type="text"
-                placeholder="Nombre"
-                class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-              />
-            </div>
-            <!-- Formulario 3 -->
-            <div>
-              <label
-                for="gateway"
-                class="block font-semibold text-gray-300 mb-2 mt-4"
-                >VPN Contraseña</label
-              >
-              <input
-                id="gateway"
-                type="text"
-                placeholder="Contraseña"
-                class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-              />
-            </div>
-            <!-- Formulario 3 -->
-            <div>
-              <label
-                for="gateway"
-                class="block font-semibold text-gray-300 mb-2 mt-4"
-                >Puerta de enlace IP de destino su ISP</label
-              >
-              <input
-                id="gateway"
-                type="text"
-                placeholder="Contraseña"
-                class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-              />
-            </div>
-          </div>
+  <div class="flex flex-col py-10 space-y-5">
+    <div class="bg-gray-800 rounded-lg">
+        <!-- Header -->
+        <div class="text-center mb-6">
+            <h1 class="text-2xl lg:text-4xl font-bold text-orange-500">
+              All Traffic to VPN Tunnel
+            </h1>
+            <p class="text-gray-300">
+              All Traffic to VPN Tunnel. ¡Fácil, rápido y efectivo! 🚀
+            </p>
         </div>
-          <!-- Column66666666666666666666666666a Derecha -->
-          <div class="bg-gray-700 p-4 rounded-lg flex flex-col">
-            <label class="block text-sm font-semibold mb-2 text-gray-300"
-              >Script Generator Result</label
-            >
-            <textarea
-              class="flex-grow bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400"
-              placeholder="Please Login and Subscribe .."
-              readonly></textarea>
-            <div class="flex mt-4 space-x-4">
-              <button
-                class="text-white px-4 py-2 rounded-md transition ease-in-out delay-150 bg-gray-600 hover:-translate-y-1 hover:scale-110 hover:bg-slate-700 duration-300"
-              >
-                Borrar Todo
-              </button>
-              <button
-                class="text-white px-4 py-2 rounded-md transition ease-in-out delay-150 bg-orange-500 hover:-translate-y-1 hover:scale-110 hover:bg-orange-600 duration-300"
-              >
-                Generar Script
-              </button>
-
-              <button
-                class="text-white px-4 py-2 rounded-md transition ease-in-out delay-150 bg-green-500 hover:-translate-y-1 hover:scale-110 hover:bg-teal-600 duration-300"
-              >
-                Copiar Todo
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
-      <p class="text-2sm text-orange-500 mx-6">
-        Este script sirve para Eliminar todos los Scripts de este Generador.
-      </p>
-      <p class="text-gray-400 mx-8">
-        /interface pptp-client remove [find comment="VPN Tunel"] <br />
-        /interface l2tp-client remove [find comment="VPN Tunel1"]<br />
-        /ip route remove [find comment="VPN Tunel"] <br />
-        /ip firewall nat remove [find comment="VPN Tunel"]<br />
-        
-      </p>
-      <div class="bg-gray-700 p-4 rounded-lg mt-6 mb-4 mx-8">
-        <p class="text-sm text-gray-300">
-          Tenemos un video tutorial de como utilizar nuestra herramienta, Ver
-          Video...
-        </p>
-      </div>
     </div>
 
-    <!-- Contenido Fin -->
-  </body>
+    <div class="bg-gray-800 rounded-lg mx-4">
+        <!-- Contenido Principal -->
+        <div class="container mx-auto">
+            <!-- Formulario Principal -->
+            <FormularioVpnTunnelAllTrafficScriptGenerator client:load />
 
-  <!-- Contenido Fin Aqui para abajo es otro codigo q u se borrara -->
+            <p class="text-2sm text-orange-500 mt-6">
+              Este script sirve para Eliminar todos los Scripts de este Generador.
+            </p>
+            <p class="text-gray-400">
+              /interface pptp-client remove [find comment="VPN Tunel"] <br />
+              /interface l2tp-client remove [find comment="VPN Tunel1"]<br />
+              /ip route remove [find comment="VPN Tunel"] <br />
+              /ip firewall nat remove [find comment="VPN Tunel"]<br />
+              
+            </p>
+            <div class="bg-gray-700 p-4 rounded-lg mt-6">
+              <p class="text-sm text-gray-300">
+                Tenemos un video tutorial de como utilizar nuestra herramienta, Ver
+                Video...
+              </p>
+            </div>
+        </div>
+    </div>
+</div>
 </MainLayout>

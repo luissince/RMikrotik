@@ -6,7 +6,7 @@ import java.util.List;
 import com.okta.mongodb.GeneradoScripts.model.mikrotikPortStaticRouting.MikrotikPortStaticRoutingOption;
 import com.okta.mongodb.GeneradoScripts.model.mikrotikPortStaticRouting.MikrotikPortStaticRoutingOsVersion;
 
-public class MikrotikPortStaticRouting {
+public final class MikrotikPortStaticRouting {
     
     public static final List<MikrotikPortStaticRoutingOption> OPTIONS = new ArrayList<MikrotikPortStaticRoutingOption>() {
         {
