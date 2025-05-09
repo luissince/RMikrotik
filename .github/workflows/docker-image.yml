@@ -70,10 +70,10 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Tag front-end image
-        run: docker tag front-end-app ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/front-end-app:latest
+        run: docker tag front-end-app ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/rmikrotik/front-end-app:latest
 
       - name: Push front-end image to ECR
-        run: docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/front-end-app:latest
+        run: docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/rmikrotik/front-end-app:latest
 
       - name: Eliminar imágenes locales
         run: docker image prune -af
@@ -149,10 +149,10 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Tag back-end image
-        run: docker tag back-end-app ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/back-end-app:latest
+        run: docker tag back-end-app ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/rmikrotik/back-end-app:latest
 
       - name: Push back-end image to ECR
-        run: docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/back-end-app:latest
+        run: docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/rmikrotik/back-end-app:latest
 
       - name: Eliminar imágenes locales
         run: docker image prune -af
