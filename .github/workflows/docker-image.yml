@@ -48,6 +48,9 @@ jobs:
         # if: steps.check-frontend.outputs.frontend == 'true'
         run: |
           cat > front-end/.env <<EOL
+          AWS_ACCOUNT_ID=${{env.AWS_ACCOUNT_ID}}
+          AWS_REGION=${{env.AWS_REGION}}
+
           HOST="${{env.HOST}}"
           PUBLIC_BASE_URL_API="${{env.PUBLIC_BASE_URL_API}}"
 
@@ -86,6 +89,14 @@ jobs:
 
       - name: Eliminar imágenes locales
         run: docker image prune -af
+
+      - name: Verificar archivo .env
+        # if: steps.check-frontend.outputs.frontend == 'true'
+        run: cat front-end/.env
+
+      - name: Creando y ejecutando contenedor Astro JS
+        # if: steps.check-frontend.outputs.frontend == 'true'
+        run: docker compose -f front-end/docker-compose.yml up --build -d
 
 
   build-spring-boot:
@@ -174,3 +185,11 @@ jobs:
 
       - name: Eliminar imágenes locales
         run: docker image prune -af
+
+      # - name: Verificar archivo .env
+      ##   if: steps.check-backend.outputs.backend == 'true'
+      #   run: cat back-end/src/main/resources/application.properties
+
+      # - name: Creando y ejecutando contenedor SprintBoot
+      ##   if: steps.check-backend.outputs.backend == 'true'
+      #   run: docker compose -f back-end/docker-compose.yml up --build -d

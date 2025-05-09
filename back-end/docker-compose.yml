@@ -2,9 +2,7 @@ version: '3.8'
 
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/rmikrotik/back-end-app:latest
     container_name: rmikrotik-back-end-dev
     ports:
       - "8081:8080"
