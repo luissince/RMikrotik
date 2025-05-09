@@ -48,9 +48,6 @@ jobs:
         # if: steps.check-frontend.outputs.frontend == 'true'
         run: |
           cat > front-end/.env <<EOL
-          AWS_ACCOUNT_ID=${{env.AWS_ACCOUNT_ID}}
-          AWS_REGION=${{env.AWS_REGION}}
-
           HOST="${{env.HOST}}"
           PUBLIC_BASE_URL_API="${{env.PUBLIC_BASE_URL_API}}"
 
@@ -90,12 +87,35 @@ jobs:
       - name: Eliminar imágenes locales
         run: docker image prune -af
 
-      - name: Verificar archivo .env
-        # if: steps.check-frontend.outputs.frontend == 'true'
-        run: cat front-end/.env
+  deploy-front:
+    name: Deploy Front-End (Astro) en servidor
+    if: github.ref == 'refs/heads/master'
+    runs-on: self-hosted
+    needs: build-astro
 
-      - name: Creando y ejecutando contenedor Astro JS
-        # if: steps.check-frontend.outputs.frontend == 'true'
+    environment: front-end
+
+    env:
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v3
+
+      - name: Login a Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          registry-type: private
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+
+      - name: Descargar imagen desde ECR
+        run: docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/rmikrotik/front-end-app:latest
+
+      - name: Crear y ejecutar contenedor en producción
         run: docker compose -f front-end/docker-compose.prod.yml up -d
 
 
@@ -186,10 +206,33 @@ jobs:
       - name: Eliminar imágenes locales
         run: docker image prune -af
 
-      - name: Verificar archivo .env
-      #   if: steps.check-backend.outputs.backend == 'true'
-        run: cat back-end/src/main/resources/application.properties
+  deploy-spring-boot:
+    name: Deploy Back-End en servidor
+    if: github.ref == 'refs/heads/master'
+    runs-on: self-hosted
+    needs: build-spring-boot
 
-      - name: Creando y ejecutando contenedor SprintBoot
-      #   if: steps.check-backend.outputs.backend == 'true'
+    environment: back-end
+
+    env:
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v3
+
+      - name: Login a Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          registry-type: private
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+
+      - name: Descargar imagen desde ECR
+        run: docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/rmikrotik/back-end-app:latest
+
+      - name: Crear y ejecutar contenedor en producción
         run: docker compose -f back-end/docker-compose.prod.yml up -d
