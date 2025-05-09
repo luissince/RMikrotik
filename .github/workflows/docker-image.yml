@@ -166,7 +166,7 @@ jobs:
 
       - name: Construyendo contenedor Spring Boot
         # if: steps.check-backend.outputs.backend == 'true'
-        run: docker compose -f back-end/docker-compose-build.yml build
+        run: docker compose -f back-end/docker-compose.build.yml build
 
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
