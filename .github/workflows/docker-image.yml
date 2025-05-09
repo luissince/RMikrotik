@@ -12,22 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     environment: front-end
 
-    env:
-      AWS_REGION: ${{ secrets.AWS_REGION }}
-      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-      
-      HOST: ${{ secrets.HOST }}
-      PUBLIC_BASE_URL_API: ${{ secrets.PUBLIC_BASE_URL_API }}
-
-      GITHUB_CLIENT_ID: ${{ secrets._GITHUB_CLIENT_ID }}
-      GITHUB_CLIENT_SECRET: ${{ secrets._GITHUB_CLIENT_SECRET }}
-
-      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-      GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-
-      AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
-      AUTH_TRUST_HOST: ${{ secrets.AUTH_TRUST_HOST }}
-
     steps:
       - name: Checkout código
         uses: actions/checkout@v3
@@ -48,17 +32,17 @@ jobs:
         # if: steps.check-frontend.outputs.frontend == 'true'
         run: |
           cat > front-end/.env <<EOL
-          HOST="${{env.HOST}}"
-          PUBLIC_BASE_URL_API="${{env.PUBLIC_BASE_URL_API}}"
+          HOST="${{secrets.HOST}}"
+          PUBLIC_BASE_URL_API="${{secrets.PUBLIC_BASE_URL_API}}"
 
-          GITHUB_CLIENT_ID="${{env.GITHUB_CLIENT_ID}}"
-          GITHUB_CLIENT_SECRET="${{env.GITHUB_CLIENT_SECRET}}"
+          GITHUB_CLIENT_ID="${{secrets._GITHUB_CLIENT_ID}}"
+          GITHUB_CLIENT_SECRET="${{secrets._GITHUB_CLIENT_SECRET}}"
 
-          GOOGLE_CLIENT_ID="${{env.GOOGLE_CLIENT_ID}}"
-          GOOGLE_CLIENT_SECRET="${{env.GOOGLE_CLIENT_SECRET}}"
+          GOOGLE_CLIENT_ID="${{secrets.GOOGLE_CLIENT_ID}}"
+          GOOGLE_CLIENT_SECRET="${{secrets.GOOGLE_CLIENT_SECRET}}"
 
-          AUTH_SECRET="${{env.AUTH_SECRET}}"
-          AUTH_TRUST_HOST="${{env.AUTH_TRUST_HOST}}"
+          AUTH_SECRET="${{secrets.AUTH_SECRET}}"
+          AUTH_TRUST_HOST="${{secrets.AUTH_TRUST_HOST}}"
           EOL
 
       - name: Verificar archivo .env
@@ -69,14 +53,15 @@ jobs:
         # if: steps.check-frontend.outputs.frontend == 'true'
         run: docker compose -f front-end/docker-compose.build.yml build
 
-      - name: Login to Amazon ECR
-        uses: aws-actions/amazon-ecr-login@v1
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
         with:
-          registry-type: private
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }} 
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1 
 
       - name: Tag front-end image
         run: docker tag front-end-app ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/rmikrotik/front-end-app:latest
@@ -103,14 +88,15 @@ jobs:
       - name: Checkout código
         uses: actions/checkout@v3
 
-      - name: Login a Amazon ECR
-        uses: aws-actions/amazon-ecr-login@v1
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
         with:
-          registry-type: private
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
 
       - name: Descargar imagen desde ECR
         run: docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/rmikrotik/front-end-app:latest
@@ -124,24 +110,6 @@ jobs:
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     environment: back-end
-
-    env:
-      AWS_REGION: ${{ secrets.AWS_REGION }}
-      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-      
-      SERVER_PORT: ${{ secrets.SERVER_PORT }}
-      SPRING_APPLICATION_NAME: ${{ secrets.SPRING_APPLICATION_NAME }}
-      SPRING_DATASOURCE_DRIVER_CLASS_NAME: ${{ secrets.SPRING_DATASOURCE_DRIVER_CLASS_NAME }}
-      SPRING_DATASOURCE_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }}
-      SPRING_DATASOURCE_URL: ${{ secrets.SPRING_DATASOURCE_URL }}
-      SPRING_DATASOURCE_USERNAME: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
-      SPRING_JPA_DATABASE_PLATFORM: ${{ secrets.SPRING_JPA_DATABASE_PLATFORM }}
-      SPRING_JPA_HIBERNATE_DDL_AUTO: ${{ secrets.SPRING_JPA_HIBERNATE_DDL_AUTO }}
-      SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL: ${{ secrets.SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL }}
-      SPRING_JPA_SHOW_SQL: ${{ secrets.SPRING_JPA_SHOW_SQL }}
-      SPRING_MVC_THROW_EXCEPTION_IF_NO_HANDLER_FOUND: ${{ secrets.SPRING_MVC_THROW_EXCEPTION_IF_NO_HANDLER_FOUND }}
-      SPRING_SERVER_TYPE: ${{ secrets.SPRING_SERVER_TYPE }}
-      SPRING_WEB_RESOURCES_ADD_MAPPINGS: ${{ secrets.SPRING_WEB_RESOURCES_ADD_MAPPINGS }}
 
     steps:
       - name: Checkout código
@@ -163,21 +131,21 @@ jobs:
         # if: steps.check-backend.outputs.backend == 'true'
         run: |
           cat > back-end/src/main/resources/application.properties <<EOL
-          server.port=${{env.SERVER_PORT}}
-          spring.application.name=${{env.SPRING_APPLICATION_NAME}}
-          spring.server.type=${{env.SPRING_SERVER_TYPE}}
-          spring.mvc.throw-exception-if-no-handler-found=${{env.SPRING_MVC_THROW_EXCEPTION_IF_NO_HANDLER_FOUND}}
-          spring.web.resources.add-mappings=${{env.SPRING_WEB_RESOURCES_ADD_MAPPINGS}}
+          server.port=${{secrets.SERVER_PORT}}
+          spring.application.name=${{secrets.SPRING_APPLICATION_NAME}}
+          spring.server.type=${{secrets.SPRING_SERVER_TYPE}}
+          spring.mvc.throw-exception-if-no-handler-found=${{secrets.SPRING_MVC_THROW_EXCEPTION_IF_NO_HANDLER_FOUND}}
+          spring.web.resources.add-mappings=${{secrets.SPRING_WEB_RESOURCES_ADD_MAPPINGS}}
 
-          spring.datasource.url=${{env.SPRING_DATASOURCE_URL}}
-          spring.datasource.username=${{env.SPRING_DATASOURCE_USERNAME}}
-          spring.datasource.password=${{env.SPRING_DATASOURCE_PASSWORD}}
-          spring.datasource.driver-class-name=${{env.SPRING_DATASOURCE_DRIVER_CLASS_NAME}}
+          spring.datasource.url=${{secrets.SPRING_DATASOURCE_URL}}
+          spring.datasource.username=${{secrets.SPRING_DATASOURCE_USERNAME}}
+          spring.datasource.password=${{secrets.SPRING_DATASOURCE_PASSWORD}}
+          spring.datasource.driver-class-name=${{secrets.SPRING_DATASOURCE_DRIVER_CLASS_NAME}}
 
-          spring.jpa.database-platform=${{env.SPRING_JPA_DATABASE_PLATFORM}}
-          spring.jpa.hibernate.ddl-auto=${{env.SPRING_JPA_HIBERNATE_DDL_AUTO}}
-          spring.jpa.show-sql=${{env.SPRING_JPA_SHOW_SQL}}
-          spring.jpa.properties.hibernate.format_sql=${{env.SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL}}
+          spring.jpa.database-platform=${{secrets.SPRING_JPA_DATABASE_PLATFORM}}
+          spring.jpa.hibernate.ddl-auto=${{secrets.SPRING_JPA_HIBERNATE_DDL_AUTO}}
+          spring.jpa.show-sql=${{secrets.SPRING_JPA_SHOW_SQL}}
+          spring.jpa.properties.hibernate.format_sql=${{secrets.SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL}}
           EOL
 
       - name: Verificar archivo application.properties
@@ -188,14 +156,15 @@ jobs:
         # if: steps.check-backend.outputs.backend == 'true'
         run: docker compose -f back-end/docker-compose.build.yml build
 
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
-        with:
-          registry-type: private
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }} 
 
       - name: Tag back-end image
         run: docker tag back-end-app ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/rmikrotik/back-end-app:latest
@@ -222,14 +191,15 @@ jobs:
       - name: Checkout código
         uses: actions/checkout@v3
 
-      - name: Login a Amazon ECR
-        uses: aws-actions/amazon-ecr-login@v1
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
         with:
-          registry-type: private
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
 
       - name: Descargar imagen desde ECR
         run: docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/rmikrotik/back-end-app:latest

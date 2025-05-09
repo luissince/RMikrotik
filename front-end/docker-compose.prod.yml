@@ -8,9 +8,6 @@ services:
       - "4321:4321"
     networks:
       - ubuntu_default
-    environment:
-      - AWS_ACCOUNT_ID=${AWS_ACCOUNT_ID}
-      - AWS_REGION=${AWS_REGION}
     deploy:
       resources:
         limits:
