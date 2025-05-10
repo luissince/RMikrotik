@@ -224,26 +224,34 @@ jobs:
       - name: Borrar imágenes sin tag 'latest' - Frontend
         run: |
           REPO="rmikrotik/front-end-app"
-          aws ecr list-images --repository-name $REPO \
-            --query 'imageIds[?!(contains(imageTag, `latest`))]' \
-            --output json > images.json
 
-          if [ $(jq length images.json) -gt 0 ]; then
-            aws ecr batch-delete-image --repository-name $REPO --image-ids file://images.json
-          else
-            echo "No hay imágenes que borrar en $REPO"
-          fi
+           # 1. Obtener todas las imágenes (excepto latest)
+            aws ecr list-images --repository-name $REPO \
+              --query 'imageIds[?type(imageTag)==`null` || imageTag!=`latest`]' \
+              --output json > images.json
+
+            # 2. Verificar si hay imágenes para borrar
+            if [ $(jq -e 'length > 0' images.json) = "true" ]; then
+              echo "Borrando $(jq length images.json) imágenes antiguas..."
+              aws ecr batch-delete-image --repository-name $REPO --image-ids file://images.json
+            else
+              echo "No hay imágenes antiguas para borrar en $REPO"
+            fi
 
       - name: Borrar imágenes sin tag 'latest' - Backend
         run: |
           REPO="rmikrotik/back-end-app"
-          aws ecr list-images --repository-name $REPO \
-            --query 'imageIds[?!(contains(imageTag, `latest`))]' \
-            --output json > images.json
 
-          if [ $(jq length images.json) -gt 0 ]; then
-            aws ecr batch-delete-image --repository-name $REPO --image-ids file://images.json
-          else
-            echo "No hay imágenes que borrar en $REPO"
-          fi
+            # 1. Obtener todas las imágenes (excepto latest)
+            aws ecr list-images --repository-name $REPO \
+              --query 'imageIds[?type(imageTag)==`null` || imageTag!=`latest`]' \
+              --output json > images.json
+
+            # 2. Verificar si hay imágenes para borrar
+            if [ $(jq -e 'length > 0' images.json) = "true" ]; then
+              echo "Borrando $(jq length images.json) imágenes antiguas..."
+              aws ecr batch-delete-image --repository-name $REPO --image-ids file://images.json
+            else
+              echo "No hay imágenes antiguas para borrar en $REPO"
+            fi
       
