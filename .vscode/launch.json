@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-GeneradoScriptsApplication<GeneradoScripts>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.okta.mongodb.GeneradoScripts.GeneradoScriptsApplication",
+            "projectName": "GeneradoScripts",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

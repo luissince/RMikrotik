@@ -32,7 +32,7 @@ const FormularioStaticRoutingGames: React.FC = () => {
         gatewayToWanOrIspGame: ''
     });
     const [error, setError] = useState<string | null>(null);
-    const [result, setResult] = useState<ScriptResult | null>(null);
+    const [scriptResult, setScriptResult] = useState<ScriptResult | null>(null);
     const [selectedGames, setSelectedGames] = useState<Game[]>([]);
 
     useEffect(() => {
@@ -83,7 +83,7 @@ const FormularioStaticRoutingGames: React.FC = () => {
             }
 
             const resultData: ScriptResult = await response.json();
-            setResult(resultData);
+            setScriptResult(resultData);
         } catch (error) {
             setError('Error generating script: ' + (error as Error).message);
         }
@@ -92,7 +92,7 @@ const FormularioStaticRoutingGames: React.FC = () => {
     const handleClear = () => {
         setFormData({ idRouterOsVersion: 'ros6', gatewayToWanOrIspGame: '' });
         setSelectedGames([]);
-        setResult(null);
+        setScriptResult(null);
     };
 
     const handleGameSelect = (game: Game) => {
@@ -181,8 +181,8 @@ const FormularioStaticRoutingGames: React.FC = () => {
                 <div className="flex-grow bg-gray-700 p-4 rounded-lg flex flex-col min-h-0">
                     <label className="block text-sm font-semibold mb-2 text-gray-300">Script Generator Result</label>
                     <div className="flex-grow overflow-y-auto bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400">
-                        {result && (
-                            <div dangerouslySetInnerHTML={{ __html: result.html }} />
+                        {scriptResult && (
+                            <div dangerouslySetInnerHTML={{ __html: scriptResult.html }} />
                         )}
                     </div>
                 </div>
@@ -204,7 +204,7 @@ const FormularioStaticRoutingGames: React.FC = () => {
                     <button
                         type="button"
                         className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
-                        onClick={() => result && navigator.clipboard.writeText(result.text)}
+                        onClick={() => scriptResult && navigator.clipboard.writeText(scriptResult.text)}
                     >
                         Copiar Script
                     </button>
