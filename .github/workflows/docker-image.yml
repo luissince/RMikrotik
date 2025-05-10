@@ -69,9 +69,6 @@ jobs:
       - name: Push front-end image to ECR
         run: docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/rmikrotik/front-end-app:latest
 
-      - name: Eliminar imágenes locales
-        run: docker image prune -af
-
   deploy-front:
     name: Deploy Front-End (Astro) en servidor
     if: github.ref == 'refs/heads/master'
@@ -103,7 +100,9 @@ jobs:
 
       - name: Crear y ejecutar contenedor en producción
         run: docker compose -f front-end/docker-compose.prod.yml up -d
-
+      
+      - name: Eliminar imágenes locales
+        run: docker image prune -af || true
 
   build-spring-boot:
     name: Build Back-End (Spring Boot)
@@ -172,9 +171,6 @@ jobs:
       - name: Push back-end image to ECR
         run: docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/rmikrotik/back-end-app:latest
 
-      - name: Eliminar imágenes locales
-        run: docker image prune -af
-
   deploy-spring-boot:
     name: Deploy Back-End en servidor
     if: github.ref == 'refs/heads/master'
@@ -206,3 +202,48 @@ jobs:
 
       - name: Crear y ejecutar contenedor en producción
         run: docker compose -f back-end/docker-compose.prod.yml up -d
+
+      - name: Eliminar imágenes locales
+        run: docker image prune -af || true
+
+  clean-ecr-images:
+    name: Borrar imágenes antiguas de ECR
+    runs-on: ubuntu-latest
+    needs: [build-astro, build-spring-boot]
+    steps:
+      - name: Configurar credenciales AWS
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Instalar jq
+        run: sudo apt-get install -y jq
+
+      - name: Borrar imágenes sin tag 'latest' - Frontend
+        run: |
+          REPO="rmikrotik/front-end-app"
+          aws ecr list-images --repository-name $REPO \
+            --query 'imageIds[?!(contains(imageTag, `latest`))]' \
+            --output json > images.json
+
+          if [ $(jq length images.json) -gt 0 ]; then
+            aws ecr batch-delete-image --repository-name $REPO --image-ids file://images.json
+          else
+            echo "No hay imágenes que borrar en $REPO"
+          fi
+
+      - name: Borrar imágenes sin tag 'latest' - Backend
+        run: |
+          REPO="rmikrotik/back-end-app"
+          aws ecr list-images --repository-name $REPO \
+            --query 'imageIds[?!(contains(imageTag, `latest`))]' \
+            --output json > images.json
+
+          if [ $(jq length images.json) -gt 0 ]; then
+            aws ecr batch-delete-image --repository-name $REPO --image-ids file://images.json
+          else
+            echo "No hay imágenes que borrar en $REPO"
+          fi
+      
