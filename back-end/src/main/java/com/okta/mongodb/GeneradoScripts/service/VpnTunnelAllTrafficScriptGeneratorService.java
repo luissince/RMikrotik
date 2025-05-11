@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.okta.mongodb.GeneradoScripts.constants.VpnTunnelAllTrafficScriptGenerator;
-import com.okta.mongodb.GeneradoScripts.model.vpnTunnelAllTrafficScriptGeneratorController.VpnTunnelAllTrafficScriptGeneratorBody;
+import com.okta.mongodb.GeneradoScripts.model.vpnTunnelAllTrafficScriptGenerator.VpnTunnelAllTrafficScriptGeneratorBody;
 import com.okta.mongodb.GeneradoScripts.utils.DateUtils;
 
 @Service

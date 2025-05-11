@@ -1,4 +1,4 @@
-package com.okta.mongodb.GeneradoScripts.model.vpnTunnelAllTrafficScriptGeneratorController;
+package com.okta.mongodb.GeneradoScripts.model.vpnTunnelAllTrafficScriptGenerator;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
