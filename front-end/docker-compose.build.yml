@@ -6,14 +6,3 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: rmikrotik-front-end-dev
-    ports:
-      - "4321:4321"
-    networks:
-      - ubuntu_default
-
-# Definición de redes
-networks:
-  # Red llamada 'ubuntu_default'
-  ubuntu_default:
-    # Configuración para usar una red externa existente
-    external: true
