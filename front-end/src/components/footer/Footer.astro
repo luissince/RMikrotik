@@ -1,8 +1,8 @@
 ---
-import { Image } from "astro:assets"
-import Icon from "../Icon.astro"
-import Input from "../Input.astro"
-import { images } from "../../assets"
+import { Image } from "astro:assets";
+import Icon from "../Icon.astro";
+import Input from "../Input.astro";
+import { images } from "../../assets";
 ---
 
 <footer class="bg-[#181918] border-t border-[#2a2a2a]">
@@ -12,42 +12,88 @@ import { images } from "../../assets"
         <div class="max-w-[400px] w-full">
           <div class="flex flex-col w-full gap-y-8">
             <div class="flex flex-col gap-y-6">
-              <Image src={images.Mikrotik} alt="logo" width={180} height={180} class="h-12" />
+              <Image
+                src={images.Mikrotik}
+                alt="logo"
+                width={180}
+                height={180}
+                class="h-12"
+              />
               <ul
                 class="flex flex-row flex-wrap list-none m-0 p-0 items-center gap-x-5"
               >
                 <li>
-                  <a href="/" class="hover:opacity-80 transition-opacity duration-300 flex items-center justify-center bg-[#2a2a2a] p-2 rounded-full">
+                  <a
+                    href="/"
+                    class="hover:opacity-80 transition-opacity duration-300 flex items-center justify-center bg-[#2a2a2a] p-2 rounded-full"
+                  >
                     <Icon name="facebook" size={20} class="text-white" />
                   </a>
                 </li>
                 <li>
-                  <a href="/" class="hover:opacity-80 transition-opacity duration-300 flex items-center justify-center bg-[#2a2a2a] p-2 rounded-full">
+                  <a
+                    href="/"
+                    class="hover:opacity-80 transition-opacity duration-300 flex items-center justify-center bg-[#2a2a2a] p-2 rounded-full"
+                  >
                     <Icon name="instagram" size={20} class="text-white" />
                   </a>
                 </li>
                 <li>
-                  <a href="/" class="hover:opacity-80 transition-opacity duration-300 flex items-center justify-center bg-[#2a2a2a] p-2 rounded-full">
+                  <a
+                    href="/"
+                    class="hover:opacity-80 transition-opacity duration-300 flex items-center justify-center bg-[#2a2a2a] p-2 rounded-full"
+                  >
                     <Icon name="twitch" size={20} class="text-white" />
                   </a>
                 </li>
                 <li>
-                  <a href="/" class="hover:opacity-80 transition-opacity duration-300 flex items-center justify-center bg-[#2a2a2a] p-2 rounded-full">
+                  <a
+                    href="/"
+                    class="hover:opacity-80 transition-opacity duration-300 flex items-center justify-center bg-[#2a2a2a] p-2 rounded-full"
+                  >
                     <Icon name="twitter" size={20} class="text-white" />
                   </a>
                 </li>
                 <li>
-                  <a href="/" class="hover:opacity-80 transition-opacity duration-300 flex items-center justify-center bg-[#2a2a2a] p-2 rounded-full">
+                  <a
+                    href="/"
+                    class="hover:opacity-80 transition-opacity duration-300 flex items-center justify-center bg-[#2a2a2a] p-2 rounded-full"
+                  >
                     <Icon name="youtube" size={20} class="text-white" />
                   </a>
+                </li>
+                   <li>
+                  <a
+            href=""
+            class="text-gray-100 hover:text-indigo-100 hover:shadow-lg rounded-lg transition-all duration-300 transform hover:-translate-y-1 flex items-center gap-2"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              viewBox="0 0 48 48"
+              fill="currentColor"
+              class="w-8 h-8 mx-auto"
+            >
+              <path
+                d="M41,14.4v5.3c-4.3,0-8.2-1.6-11.2-4.3v14.8c0,7-5.7,12.7-12.7,12.7S4.4,37.2,4.4,30.2s5.7-12.7,12.7-12.7
+                                                        c1.2,0,2.4,0.2,3.5,0.5v6c-0.9-0.5-2-0.8-3.1-0.8c-3.6,0-6.5,2.9-6.5,6.5s2.9,6.5,6.5,6.5s6.5-2.9,6.5-6.5V4.4H29
+                                                         c0.9,4.9,5.2,8.6,10.3,8.6H41z"
+              ></path>
+            </svg>
+          </a>
                 </li>
               </ul>
             </div>
 
             <div class="flex flex-col gap-y-4">
               <div class="font-semibold">
-                <span class="text-yellow-500 font-bold animate-color-change">¡Suscríbete ahora!</span> 
-                <p class="text-sm text-gray-400 mt-1">Ingresa tu correo electrónico para recibir nuestras últimas novedades</p> 
+                <span class="text-yellow-300 font-bold animate-color-change"
+                  >¡Suscríbete ahora!</span
+                >
+                <p class="text-sm text-gray-400 mt-1">
+                  Ingresa tu correo electrónico para recibir nuestras últimas
+                  novedades
+                </p>
               </div>
 
               <div class="flex flex-col gap-y-2">
@@ -58,14 +104,19 @@ import { images } from "../../assets"
                     placeholder="Tu correo"
                     class="text-white bg-[#2a2a2a] border-[#383838] focus:border-white transition-colors duration-300"
                   />
-                  <button class="absolute right-3 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 text-white px-4 py-1 rounded-full text-sm font-medium transition-all duration-300">
+                  <button
+                    class="absolute right-3 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 text-white px-4 py-1 rounded-full text-sm font-medium transition-all duration-300"
+                  >
                     Enviar
                   </button>
                 </div>
 
                 <span class="text-[#707070] text-sm">
                   Darte de baja en cualquier momento.
-                  <a class="underline underline-offset-4 hover:text-white transition-colors duration-300" href="#">
+                  <a
+                    class="underline underline-offset-4 hover:text-white transition-colors duration-300"
+                    href="politicas-de-privacidad"
+                  >
                     Política de privacidad.
                   </a>
                 </span>
@@ -77,77 +128,281 @@ import { images } from "../../assets"
         <div class="flex-1">
           <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             <div class="flex flex-col gap-y-4">
-              <span class="text-[#cccccc] font-semibold text-lg border-b border-[#383838] pb-2 mb-2"><strong>Recursos</strong></span>
+              <span
+                class="text-[#cccccc] font-semibold text-lg border-b border-[#383838] pb-2 mb-2"
+                ><strong>Recursos</strong></span
+              >
 
               <div class="flex flex-col space-y-3">
-                <a href="https://elements.envato.com/es/about" class="text-[#cccccc] hover:text-white transition-colors duration-300 flex items-center gap-1">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                <a
+                  href="acceso-remoto-vpn"
+                  class="text-[#cccccc] hover:text-white transition-colors duration-300 flex items-center gap-1"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg
+                  >
                   Acceso Remoto VPN
                 </a>
-                <a href="cursos" class="text-[#cccccc] hover:text-white transition-colors duration-300 flex items-center gap-1">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                <a
+                  href="cursos"
+                  class="text-[#cccccc] hover:text-white transition-colors duration-300 flex items-center gap-1"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg
+                  >
                   Cursos a Impartir
                 </a>
-                <a href="update" class="text-[#cccccc] hover:text-white transition-colors duration-300 flex items-center gap-1">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                <a
+                  href="update"
+                  class="text-[#cccccc] hover:text-white transition-colors duration-300 flex items-center gap-1"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg
+                  >
                   Ultimas Actualizaciones
                 </a>
-                <a href="videoTutoriales" class="text-[#cccccc] hover:text-white transition-colors duration-300 flex items-center gap-1">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                <a
+                  href="videoTutoriales"
+                  class="text-[#cccccc] hover:text-white transition-colors duration-300 flex items-center gap-1"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg
+                  >
                   Videos Tutoriales
                 </a>
-                <a href="donacionesmikrotik" class="text-[#cccccc] hover:text-white transition-colors duration-300 flex items-center gap-1">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                <a
+                  href="donacionesmikrotik"
+                  class="text-[#cccccc] hover:text-white transition-colors duration-300 flex items-center gap-1"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg
+                  >
                   Donaciones Paypal
                 </a>
               </div>
             </div>
 
             <div class="flex flex-col gap-y-4">
-              <span class="text-[#cccccc] font-semibold text-lg border-b border-[#383838] pb-2 mb-2"><strong>Links</strong></span>
+              <span
+                class="text-[#cccccc] font-semibold text-lg border-b border-[#383838] pb-2 mb-2"
+                ><strong>Links</strong></span
+              >
 
               <div class="flex flex-col space-y-3">
-                <a href="SobreNosotros" class="text-[#cccccc] hover:text-white transition-colors duration-300 flex items-center gap-1">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                <a
+                  href="SobreNosotros"
+                  class="text-[#cccccc] hover:text-white transition-colors duration-300 flex items-center gap-1"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg
+                  >
                   Sobre Nosotros
                 </a>
-                <a href="Contactenos" class="text-[#cccccc] hover:text-white transition-colors duration-300 flex items-center gap-1">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                <a
+                  href="Contactenos"
+                  class="text-[#cccccc] hover:text-white transition-colors duration-300 flex items-center gap-1"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg
+                  >
                   Contactenos
                 </a>
-                <a href="https://elements.envato.com/es/stock-video" class="text-[#cccccc] hover:text-white transition-colors duration-300 flex items-center gap-1">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                <a
+                  href="soporte"
+                  class="text-[#cccccc] hover:text-white transition-colors duration-300 flex items-center gap-1"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg
+                  >
                   Soporte
                 </a>
-                <a href="https://elements.envato.com/es/video-templates" class="text-[#cccccc] hover:text-white transition-colors duration-300 flex items-center gap-1">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-                  Asesoria
+                <a
+                  href="https://routeros.iitec.pe/hostpot"
+                  target="_blank"
+                  class="text-[#cccccc] hover:text-white transition-colors duration-300 flex items-center gap-1"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg
+                  >
+                  plantillas hotspot
                 </a>
-                <a href="https://elements.envato.com/es/video-templates" class="text-[#cccccc] hover:text-white transition-colors duration-300 flex items-center gap-1">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                <a
+                  href="metodos-de-pago"
+                  class="text-[#cccccc] hover:text-white transition-colors duration-300 flex items-center gap-1"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg
+                  >
                   Metodos de Pago
                 </a>
               </div>
             </div>
 
             <div class="flex flex-col gap-y-4">
-              <span class="text-[#cccccc] font-semibold text-lg border-b border-[#383838] pb-2 mb-2"><strong>Contáctenos</strong></span>
+              <span
+                class="text-[#cccccc] font-semibold text-lg border-b border-[#383838] pb-2 mb-2"
+                ><strong>Contáctenos</strong></span
+              >
 
               <div class="flex flex-col space-y-3">
-                <span class="text-zinc-400 font-medium hover:text-white hover:shadow-lg rounded-lg transition-all duration-300 transform hover:-translate-y-1 flex items-center gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                <span
+                  class="text-zinc-400 font-medium hover:text-white hover:shadow-lg rounded-lg transition-all duration-300 transform hover:-translate-y-1 flex items-center gap-2"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    ><rect width="20" height="16" x="2" y="4" rx="2"
+                    ></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"
+                    ></path></svg
+                  >
                   Correo: info@iitec.pe
                 </span>
-                <span class="text-zinc-400 font-medium hover:text-white hover:shadow-lg rounded-lg transition-all duration-300 transform hover:-translate-y-1 flex items-center gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                  Tel: (+51)93032757
+                <span
+                  class="text-zinc-400 font-medium hover:text-white hover:shadow-lg rounded-lg transition-all duration-300 transform hover:-translate-y-1 flex items-center gap-2"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    ><path
+                      d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"
+                    ></path></svg
+                  >
+                 <a href="tel:+51930327563">Tel: (+51)930327563</a> 
                 </span>
-                <span class="text-green-500 font-medium hover:text-green-400 hover:shadow-lg rounded-lg transition-all duration-300 transform hover:-translate-y-1 flex items-center gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21l1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"/></svg>
-                  WhatsApp
+                <span
+                  class="text-zinc-400 font-medium hover:text-green-400 hover:shadow-lg rounded-lg transition-all duration-300 transform hover:-translate-y-1 flex items-center gap-2"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    ><path d="M3 21l1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"></path></svg
+                  >
+                  <a
+                    href="https://wa.me/51930327563"
+                    target="_blank"
+                    class="
+                     font-bold rounded-lg shadow-lg transition-all duration-300"
+                    >Contáctanos por WhatsApp</a
+                  >
                 </span>
-                <span class="text-zinc-400 font-medium hover:text-white hover:shadow-lg rounded-lg transition-all duration-300 transform hover:-translate-y-1 flex items-center gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span
+                  class="text-zinc-400 font-medium hover:text-white hover:shadow-lg rounded-lg transition-all duration-300 transform hover:-translate-y-1 flex items-center gap-2"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    ><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"
+                    ></path><circle cx="12" cy="10" r="3"></circle></svg
+                  >
                   Jr.Alejandro Deustua Nº 1698 Junin-Huancayo-Perú
                 </span>
               </div>
@@ -159,39 +414,99 @@ import { images } from "../../assets"
       <div>
         <div class="border-t border-[#383838]"></div>
 
-        <div class="flex flex-col md:flex-row items-center flex-wrap gap-y-5 gap-x-5 py-8 md:py-12">
+        <div
+          class="flex flex-col md:flex-row items-center flex-wrap gap-y-5 gap-x-5 py-8 md:py-12"
+        >
           <div class="w-full md:w-[fit-content]">
-            <a class="flex-1 hover:opacity-80 transition-opacity duration-300" href="/">
+            <a
+              class="flex-1 hover:opacity-80 transition-opacity duration-300"
+              href="/"
+            >
               <Icon name="b-corp" size={50} class="text-[#cccccc]" />
             </a>
           </div>
 
           <div class="flex flex-col gap-y-4 flex-1">
             <div class="overflow-x-auto">
-              <ul class="flex flex-row flex-wrap list-none m-0 p-0 items-center gap-y-2">
-                <li><a href="https://mikrotik.com" target="_blank" class="text-[#cccccc] hover:text-white transition-colors duration-300" rel="noreferrer">Mikrotik</a></li>
-                <li><span class="border-r border-[#383838] mx-3 h-4 inline-block"></span></li>
-                <li><a href="donaciones" class="text-[#cccccc] hover:text-white transition-colors duration-300">Donaciones</a></li>
-                <li><span class="border-r border-[#383838] mx-3 h-4 inline-block"></span></li>
-                <li><a href="#" class="text-[#cccccc] hover:text-white transition-colors duration-300">Preguntas Frecuentes</a></li>
-                <li><span class="border-r border-[#383838] mx-3 h-4 inline-block"></span></li>
-                <li><a href="#" class="text-[#cccccc] hover:text-white transition-colors duration-300">Tiktok Live</a></li>
-                <li><span class="border-r border-[#383838] mx-3 h-4 inline-block"></span></li>
-                <li><a href="#" class="text-[#cccccc] hover:text-white transition-colors duration-300">Policitas de la Empresa</a></li>
-                <li><span class="border-r border-[#383838] mx-3 h-4 inline-block"></span></li>
-                <li><a href="LibrodeReclamaciones" class="text-[#cccccc] hover:text-white transition-colors duration-300">Libro de Reclamaciones</a></li>
+              <ul
+                class="flex flex-row flex-wrap list-none m-0 p-0 items-center gap-y-2"
+              >
+                <li>
+                  <a
+                    href="https://mikrotik.com"
+                    target="_blank"
+                    class="text-[#cccccc] hover:text-white transition-colors duration-300"
+                    rel="noreferrer">Mikrotik</a>
+                </li>
+                <li>
+                  <span class="border-r border-[#383838] mx-3 h-4 inline-block"
+                  ></span>
+                </li>
+                <li>
+                  <a
+                    href="donacionesmikrotik"
+                    class="text-[#cccccc] hover:text-white transition-colors duration-300"
+                    >Donaciones</a>
+                </li>
+                <li>
+                  <span class="border-r border-[#383838] mx-3 h-4 inline-block"
+                  ></span>
+                </li>
+                <li>
+                  <a
+                    href="preguntasFrecuentes"
+                    class="text-[#cccccc] hover:text-white transition-colors duration-300"
+                    >Preguntas Frecuentes</a>
+                </li>
+                <li>
+                  <span class="border-r border-[#383838] mx-3 h-4 inline-block"
+                  ></span>
+                </li>
+                <li>
+                  <a
+                    href="tiktok-live"
+                    class="text-[#cccccc] hover:text-white transition-colors duration-300"
+                    >Tiktok Live</a>
+                </li>
+                <li>
+                  <span class="border-r border-[#383838] mx-3 h-4 inline-block"
+                  ></span>
+                </li>
+                <li>
+                  <a
+                    href="politicas-de-la-empresa"
+                    class="text-[#cccccc] hover:text-white transition-colors duration-300"
+                    >Politicas de la Empresa</a>
+                </li>
+                <li>
+                  <span class="border-r border-[#383838] mx-3 h-4 inline-block"
+                  ></span>
+                </li>
+                <li>
+                  <a
+                    href="LibrodeReclamaciones"
+                    class="text-[#cccccc] hover:text-white transition-colors duration-300"
+                    >Libro de Reclamaciones</a>
+                </li>
               </ul>
             </div>
             <div>
-              <span class="text-[#707070] text-sm">© 2025 Compañía Inversionista en Ingeniería y Tecnología Ruc: 20609403561 "Empresa Jurídica Constituida de acuerdo a ley del estado Peruano</span>
+              <span class="text-[#707070] text-sm"
+                >© 2025 Compañía Inversionista en Ingeniería y Tecnología Ruc:
+                20609403561 "Empresa Jurídica Constituida de acuerdo a ley del
+                estado Peruano</span
+              >
             </div>
           </div>
 
           <div class="w-full md:w-auto">
-            <button class="w-[fit-content] text-[#cccccc] hover:text-white font-medium py-2 px-3 rounded-lg border border-[#383838] hover:bg-[#2a2a2a] transition-all duration-300">
+            <button
+              class="w-[fit-content] text-[#cccccc] hover:text-white font-medium py-2 px-3 rounded-lg border border-[#383838] hover:bg-[#2a2a2a] transition-all duration-300"
+            >
               <div class="flex flex-row flex-wrap items-center gap-x-2">
                 <Icon name="world" size={20} class="text-[#cccccc]" />
                 <span>Español</span>
+
                 <Icon name="down-chevron" size={18} class="text-[#cccccc]" />
               </div>
             </button>
