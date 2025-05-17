@@ -1,6 +1,5 @@
 package com.okta.mongodb.GeneradoScripts.service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,13 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.okta.mongodb.GeneradoScripts.constants.StaticRoutingGames;
+import com.okta.mongodb.GeneradoScripts.model.games.GamesDetail;
+import com.okta.mongodb.GeneradoScripts.model.games.GamesGame;
 import com.okta.mongodb.GeneradoScripts.model.staticRoutingGames.StaticRoutingGamesBody;
-import com.okta.mongodb.GeneradoScripts.model.staticRoutingGames.StaticRoutingGamesCategory;
-import com.okta.mongodb.GeneradoScripts.model.staticRoutingGames.StaticRoutingGamesDetail;
-import com.okta.mongodb.GeneradoScripts.model.staticRoutingGames.StaticRoutingGamesGame;
-import com.okta.mongodb.GeneradoScripts.repository.StaticRoutingGamesCategoryRepository;
-import com.okta.mongodb.GeneradoScripts.repository.StaticRoutingGamesDetailRepository;
-import com.okta.mongodb.GeneradoScripts.repository.StaticRoutingGamesGameRepository;
+import com.okta.mongodb.GeneradoScripts.repository.GamesDetailRepository;
 import com.okta.mongodb.GeneradoScripts.utils.DateUtils;
 
 @Service
@@ -26,13 +22,7 @@ public class StaticRoutingGamesService {
         private static final Logger logger = LoggerFactory.getLogger(StaticRoutingGamesService.class);
 
         @Autowired
-        private StaticRoutingGamesCategoryRepository staticRoutingGamesCategoryRepository;
-
-        @Autowired
-        private StaticRoutingGamesGameRepository staticRoutingGamesGameRepository;
-
-        @Autowired
-        private StaticRoutingGamesDetailRepository staticRoutingGamesDetailRepository;
+        private GamesDetailRepository staticRoutingGamesDetailRepository;
 
         public Map<String, String> create(StaticRoutingGamesBody body) {
                 logger.info("Body recibido: {}", body);
@@ -82,11 +72,11 @@ public class StaticRoutingGamesService {
                 html.append("<span style='color:green;'>##############################################################</span> <br>");
 
                 html.append("<span> /ip firewall raw</span> <br>");
-                for (StaticRoutingGamesGame game : body.getGames()) {
-                        List<StaticRoutingGamesDetail> details = staticRoutingGamesDetailRepository
+                for (GamesGame game : body.getGames()) {
+                        List<GamesDetail> details = staticRoutingGamesDetailRepository
                                         .findByGameId(game.getId());
                         html.append("<span style='color:orange;'>" + game.getName() + "</span> <br>");
-                        for (StaticRoutingGamesDetail detail : details) {
+                        for (GamesDetail detail : details) {
                                 html.append("<span>" + detail.getValue() + "</span> <br>");
                         }
                 }
@@ -126,60 +116,16 @@ public class StaticRoutingGamesService {
                 text.append("############################################################## \n");
 
                 text.append("/ip firewall raw \n");
-                for (StaticRoutingGamesGame game : body.getGames()) {
-                        List<StaticRoutingGamesDetail> details = staticRoutingGamesDetailRepository
+                for (GamesGame game : body.getGames()) {
+                        List<GamesDetail> details = staticRoutingGamesDetailRepository
                                         .findByGameId(game.getId());
                         text.append(game.getName() + "\n");
-                        for (StaticRoutingGamesDetail detail : details) {
+                        for (GamesDetail detail : details) {
                                 text.append(detail.getValue() + " \n");
                         }
                 }
 
                 return text.toString();
-        }
-
-        public Map<String, Object> getCategoriesWithGames() {
-                List<StaticRoutingGamesCategory> categories = staticRoutingGamesCategoryRepository.findAll();
-                List<StaticRoutingGamesGame> games = staticRoutingGamesGameRepository.findAll();
-                // List<StaticRoutingGamesDetail> details =
-                // staticRoutingGamesDetailRepository.findAll();
-
-                List<Map<String, Object>> categoryList = new ArrayList<>();
-
-                for (StaticRoutingGamesCategory category : categories) {
-                        Map<String, Object> categoryMap = new HashMap<>();
-                        categoryMap.put("name", category.getName());
-
-                        // Filtrar los juegos que pertenecen a esta categoría
-                        List<Map<String, Object>> gameList = new ArrayList<>();
-                        for (StaticRoutingGamesGame game : games) {
-                                if (game.getCategory().getId().equals(category.getId())) {
-                                        Map<String, Object> gameMap = new HashMap<>();
-                                        gameMap.put("id", game.getId());
-                                        gameMap.put("name", game.getName());
-                                        gameList.add(gameMap);
-
-                                        // // Filtrar los detalles de este juego
-                                        // List<Map<String, Object>> detailList = new ArrayList<>();
-                                        // for (StaticRoutingGamesDetail detail : details) {
-                                        // if (detail.getGame().getId().equals(game.getId())) {
-                                        // Map<String, Object> detailMap = new HashMap<>();
-                                        // detailMap.put("value", detail.getValue());
-                                        // detailList.add(detailMap);
-                                        // }
-                                        // }
-                                        // gameMap.put("details", detailList);
-                                }
-                        }
-
-                        categoryMap.put("games", gameList);
-                        categoryList.add(categoryMap);
-                }
-
-                Map<String, Object> response = new HashMap<>();
-                response.put("categories", categoryList);
-
-                return response;
         }
 
 }

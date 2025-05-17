@@ -1,4 +1,4 @@
-package com.okta.mongodb.GeneradoScripts.model.staticRoutingGames;
+package com.okta.mongodb.GeneradoScripts.model.staticRoutingGamesManglePort;
 
 import java.util.List;
 
@@ -15,10 +15,10 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class StaticRoutingGamesBody {
-
+public class StaticRoutingGamesManglePortBody {
+    
     private String idRouterOsVersion;
     private String gatewayToWanOrIspGame;
     private List<GamesGame> games;
-    
+
 }

@@ -1,11 +1,11 @@
-package com.okta.mongodb.GeneradoScripts.model.staticRoutingGames;
+package com.okta.mongodb.GeneradoScripts.model.games;
 
 import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
 @Data
-public class StaticRoutingGamesDetail {
+public class GamesDetail {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,5 +16,5 @@ public class StaticRoutingGamesDetail {
 
     @ManyToOne
     @JoinColumn(name = "game_id")
-    private StaticRoutingGamesGame game;
+    private GamesGame game;
 }

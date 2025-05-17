@@ -5,11 +5,11 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-import com.okta.mongodb.GeneradoScripts.model.staticRoutingGames.StaticRoutingGamesDetail;
+import com.okta.mongodb.GeneradoScripts.model.games.GamesDetail;
 
 @RepositoryRestResource(exported = false)
-public interface StaticRoutingGamesDetailRepository extends JpaRepository<StaticRoutingGamesDetail, Long> {
+public interface GamesDetailRepository extends JpaRepository<GamesDetail, Long> {
 
-    List<StaticRoutingGamesDetail> findByGameId(String gameId);    
+    List<GamesDetail> findByGameId(String gameId);    
     
 }

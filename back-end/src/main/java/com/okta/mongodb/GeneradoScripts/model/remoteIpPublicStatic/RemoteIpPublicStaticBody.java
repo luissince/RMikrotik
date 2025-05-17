@@ -1,4 +1,4 @@
-package com.okta.mongodb.GeneradoScripts.model.vpnTunnelAllTrafficScriptGeneratorController;
+package com.okta.mongodb.GeneradoScripts.model.remoteIpPublicStatic;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,9 +11,10 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class VpnTunnelAllTrafficScriptGeneratorVpn {
+public class RemoteIpPublicStaticBody {
     
-    private String id;
-    private String name;
+    private String interfaceIsp;
+    private String ipGatewayIsp;
+    private String idRosVersion;
 
 }

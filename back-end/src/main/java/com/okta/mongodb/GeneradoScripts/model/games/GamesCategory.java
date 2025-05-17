@@ -1,4 +1,4 @@
-package com.okta.mongodb.GeneradoScripts.model.staticRoutingGames;
+package com.okta.mongodb.GeneradoScripts.model.games;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import lombok.Data;
 
 @Entity
 @Data
-public class StaticRoutingGamesCategory {
+public class GamesCategory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +20,7 @@ public class StaticRoutingGamesCategory {
 
     private String name; 
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<StaticRoutingGamesGame> games;
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    private List<GamesGame> games;
     
 }

@@ -1,53 +1,67 @@
-# Puerto de la aplicación
+# ----------------------------------------
+# Config general
+# ----------------------------------------
+
+# Application port
 server.port=8080
 
-# Nombre de la aplicación
+# Application name
 spring.application.name=services-rmikrotik
 
-# Tipo de servidor (development | production)
+# Server type (development | production)
 spring.server.type=development  
 
-# Lanza una excepción si no se encuentra una ruta
+# Throw exception if no handler is found
 spring.mvc.throw-exception-if-no-handler-found=true
 
-# Evita que Spring sirva archivos estáticos automáticamente
+# Disable static resources mappings
 spring.web.resources.add-mappings=false
 
-# (Opcional) Excluir configuración automática de base de datos
+# (Opcional) Exclude automatic database configuration
 # spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 
 # ----------------------------------------
-# Configuración de la base de datos
+# Config database
 # ----------------------------------------
 
-# Dirección de la base de datos (MySQL local en este caso)
+# Database URL (MySQL)
 spring.datasource.url=jdbc:mysql://localhost:3306/mikrotik_scripts
 
-# Usuario de la base de datos
+# Database username
 spring.datasource.username=root
 
-# Contraseña de la base de datos
+# Database password
 spring.datasource.password=
 
-# Clase del driver para conectarse a MySQL
+# JDBC driver class for MySQL
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 
 # ----------------------------------------
-# Configuración de JPA / Hibernate
+# JPA / Hibernate Configuration
 # ----------------------------------------
 
-# Dialecto SQL que usará Hibernate (MySQL 8)
+# SQL dialect for Hibernate (MySQL 8)
 spring.jpa.database-platform=org.hibernate.dialect.MySQL8Dialect
 
-# Manejo automático del esquema de base de datos:
-# Opciones: none | validate | update | create | create-drop
-# update: actualiza la estructura de la base sin borrar datos
-# create: crea de cero (borra todo)
-# none: no hace nada
+# Schema handling
+# Options: none | validate | update | create | create-drop
+# update: updates schema without deleting data
+# create: creates schema from scratch (deletes existing data)
+# none: does nathing
 spring.jpa.hibernate.ddl-auto=update
 
-# Mostrar en consola las consultas SQL ejecutadas
+# Show SQL queries in console
 spring.jpa.show-sql=true
 
-# Formatear las consultas SQL para que se vean ordenadas
+# Format SQL queries in console
 spring.jpa.properties.hibernate.format_sql=true
+
+# ----------------------------------------
+# Application Restart Configuration
+# ----------------------------------------
+
+# (Optional) Enable automatic restart
+spring.devtools.restart.enabled=true
+
+# (Optional) Enable LiveReload support
+spring.devtools.livereload.enabled=true

@@ -1,16 +1,12 @@
 ---
-import FormularioStaticRoutingGamesManglePort from "../components/static-routing-games-mangle-port/formularioStaticRoutingGamesMagle";
+import FormularioStaticRoutingGamesManglePort from "../components/static-routing-games-mangle-port/formulario";
 import MainLayout from "../layout/MainLayout.astro";
 ---
 
 <MainLayout title="Open Book">
-  <body
-    class="bg-gray-900 text-white font-sans min-h-screen flex items-center justify-center"
-  >
-    <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
-      <!-- Contenido -->
+  <div class="flex flex-col py-10 space-y-5">
+    <div class="bg-gray-800 rounded-lg">
       <!-- Header -->
-      <!-- Título -->
       <div class="text-center mb-6">
         <h1 class="text-2xl lg:text-4xl font-bold text-orange-500">
           Games Static Routing Using Filter Mangle
@@ -20,16 +16,13 @@ import MainLayout from "../layout/MainLayout.astro";
         </p>
       </div>
     </div>
-    <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
-      <!-- Contenido inicio -->
 
-      <div class="container mx-auto p-6 bg-gray-800 rounded-lg shadow-lg">
+    <div class="bg-gray-800 rounded-lg mx-4">
+      <!-- Contenido Principal -->
+      <div class="container mx-auto">
+        <!-- Formulario Principal -->
         <FormularioStaticRoutingGamesManglePort client:load />
       </div>
     </div>
-
-    <!-- Contenido Fin -->
-  </body>
-
-  <!-- Contenido Fin Aqui para abajo es otro codigo q u se borrara -->
+  </div>
 </MainLayout>

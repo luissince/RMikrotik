@@ -1,11 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from "react";
 
 interface Game {
-    name: string;
     id: string;
+    name: string;
+    category: {
+        id: number;
+        name: string;
+    };
 }
 
 interface Category {
+    id: number;
     name: string;
     games: Game[];
 }
@@ -15,8 +20,13 @@ interface ApiResponse {
 }
 
 interface FormData {
-    idRouterOsVersion: string;
-    gatewayToWanOrIspGame: string;
+    idVpnConnection: string;
+    vpnNameOnInterface: string;
+    vpnIpAddress: string;
+    vpnUsername: string;
+    vpnPassword: string;
+    ipGatewayIspGame: boolean;
+    ipGatewayIspGameValue: string;
 }
 
 interface ScriptResult {
@@ -24,12 +34,17 @@ interface ScriptResult {
     text: string;
 }
 
-const FormularioStaticRoutingGames: React.FC = () => {
+const FormularioVpnGameGenerator2 = () => {
     const [categories, setCategories] = useState<Category[]>([]);
     const [filter, setFilter] = useState<string>('');
     const [formData, setFormData] = useState<FormData>({
-        idRouterOsVersion: 'ros6',
-        gatewayToWanOrIspGame: ''
+        idVpnConnection: 'pptp',
+        vpnNameOnInterface: '',
+        vpnIpAddress: '',
+        vpnUsername: '',
+        vpnPassword: '',
+        ipGatewayIspGame: false,
+        ipGatewayIspGameValue: '',
     });
     const [error, setError] = useState<string | null>(null);
     const [scriptResult, setScriptResult] = useState<ScriptResult | null>(null);
@@ -41,7 +56,7 @@ const FormularioStaticRoutingGames: React.FC = () => {
                 const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/games`, {
                     method: 'GET',
                     headers: {
-                        'accept': 'application/hal+json',
+                        'accept': 'application/json',
                     },
                 });
 
@@ -60,20 +75,30 @@ const FormularioStaticRoutingGames: React.FC = () => {
     }, []);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { id, value } = e.target;
-        setFormData(prevData => ({
-            ...prevData,
-            [id]: value,
-        }));
+        const { id, value, type } = e.target;
+
+        if (type === 'checkbox') {
+            const { checked } = e.target;
+            setFormData(prevData => ({
+                ...prevData,
+                [id]: checked,
+                ipGatewayIspGameValue: checked ? prevData.ipGatewayIspGameValue : '',
+            }));
+        } else {
+            setFormData(prevData => ({
+                ...prevData,
+                [id]: value,
+            }));
+        }
     };
 
     const handleGenerate = async () => {
         try {
-            const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/static-routing-games`, {
+            const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/vpn-game-generator-2`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'accept': 'application/hal+json',
+                    'accept': 'application/json',
                 },
                 body: JSON.stringify({ ...formData, games: selectedGames }),
             });
@@ -90,7 +115,15 @@ const FormularioStaticRoutingGames: React.FC = () => {
     };
 
     const handleClear = () => {
-        setFormData({ idRouterOsVersion: 'ros6', gatewayToWanOrIspGame: '' });
+        setFormData({
+            idVpnConnection: 'pptp',
+            vpnNameOnInterface: '',
+            vpnIpAddress: '',
+            vpnUsername: '',
+            vpnPassword: '',
+            ipGatewayIspGame: false,
+            ipGatewayIspGameValue: '',
+        });
         setSelectedGames([]);
         setScriptResult(null);
     };
@@ -113,40 +146,99 @@ const FormularioStaticRoutingGames: React.FC = () => {
     })).filter(category => category.games.length > 0);
 
     return (
-        <form className="flex flex-col lg:flex-row gap-6 bg-gray-900 p-6 rounded-lg shadow-lg h-[70vh]">
-            {/* Panel izquierdo - Controles */}
+        <form className="flex flex-col lg:flex-row gap-6 bg-gray-900 p-6 rounded-lg shadow-lg">
+            {/* Columna Izquierda */}
             <div className="flex flex-col gap-6 lg:w-1/2">
                 <div>
-                    <label htmlFor="routeros" className="block font-semibold text-gray-300 mb-2">RouterOS Version</label>
+                    <label htmlFor="idVpnConnection" className="block font-semibold text-gray-300 mb-2">VPN Conexión</label>
                     <select
-                        id="idRouterOsVersion"
+                        id="idVpnConnection"
                         className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-                        value={formData.idRouterOsVersion}
+                        value={formData.idVpnConnection}
                         onChange={handleChange}
                     >
-                        <option value="ros6">RouterOS v6.xx</option>
-                        <option value="ros7">RouterOS v7.xx</option>
+                        <option value="pptp">PPTP - Point to Point Tunneling Protocol</option>
+                        <option value="sstp">SSTP - Secure Socket Tunneling Protocol</option>
+                        <option value="l2tp">PPTP - Point to Point Tunneling Protocol</option>
+                        <option value="ovpn">PPTP - Point to Point Tunneling Protocol</option>
                     </select>
                 </div>
 
                 <div>
-                    <label htmlFor="gateway" className="block font-semibold text-gray-300 mb-2">Gateway to WAN or ISP Game</label>
+                    <label htmlFor="vpnNameOnInterface" className="block font-semibold text-gray-300 mb-2">VPN Nombre o Interface</label>
                     <input
-                        id="gatewayToWanOrIspGame"
+                        id="vpnNameOnInterface"
                         type="text"
-                        placeholder="e.g.: 192.168.2.1 or pppoe-out"
+                        placeholder="VPN-Juegos"
                         className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-                        value={formData.gatewayToWanOrIspGame}
+                        value={formData.vpnNameOnInterface}
                         onChange={handleChange}
                     />
                 </div>
 
-                <div className="flex flex-col flex-grow min-h-0">
-                    <label htmlFor="games" className="block font-semibold text-gray-300 mb-2">Seleccione los Juegos</label>
+                <div>
+                    <label htmlFor="vpnIpAddress" className="block font-semibold text-gray-300 mb-2">VPN IP Address</label>
+                    <input
+                        id="vpnIpAddress"
+                        type="text"
+                        placeholder="Ej.: 180.128.63.89"
+                        className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        value={formData.vpnIpAddress}
+                        onChange={handleChange}
+                    />
+                </div>
+
+                <div>
+                    <label htmlFor="vpnUsername" className="block font-semibold text-gray-300 mb-2">VPN Usuario</label>
+                    <input
+                        id="vpnUsername"
+                        type="text"
+                        placeholder="usuarioVPN"
+                        className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        value={formData.vpnUsername}
+                        onChange={handleChange}
+                    />
+                </div>
+
+                <div>
+                    <label htmlFor="vpnPassword" className="block font-semibold text-gray-300 mb-2">VPN Contraseña</label>
+                    <input
+                        id="vpnPassword"
+                        type="password"
+                        placeholder="VPNContraseña or pppoe-out"
+                        className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        value={formData.vpnPassword}
+                        onChange={handleChange}
+                    />
+                </div>
+
+                <div>
+                    <input
+                        type="checkbox"
+                        id="ipGatewayIspGame"
+                        className="mr-2"
+                        checked={formData.ipGatewayIspGame}
+                        onChange={handleChange}
+                    />
+                    <label htmlFor="ipGatewayIspGame" className="text-white">IP Gateway ISP Juegos (Opcional)</label>
+                    <input
+                        id="ipGatewayIspGameValue"
+                        type="text"
+                        placeholder="Ej. 192.168.10.1"
+                        className={`w-full p-2 rounded ${formData.ipGatewayIspGame ? "bg-gray-700" : "bg-gray-800"} text-white focus:outline-none focus:ring-2 focus:ring-orange-500`}
+                        value={formData.ipGatewayIspGameValue}
+                        onChange={handleChange}
+                        disabled={!formData.ipGatewayIspGame}
+                    />
+                </div>
+
+                {/* Selección de Juegos */}
+                <div>
+                    <label htmlFor="games" className="block font-semibold text-gray-300 mb-2">Select Mangle Games</label>
                     <input
                         id="games"
                         type="text"
-                        placeholder="Find Games..."
+                        placeholder="Find Game..."
                         className="w-full p-2 mb-4 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                         value={filter}
                         onChange={(e) => setFilter(e.target.value)}
@@ -155,10 +247,10 @@ const FormularioStaticRoutingGames: React.FC = () => {
                     <div className="flex-grow overflow-y-auto bg-gray-700 p-4 rounded max-h-[50vh]">
                         {filteredGames.map(category => (
                             <div key={category.name} className="mb-4">
-                                <h3 className="font-semibold text-gray-300 mb-2">{category.name}</h3>
+                                <h3 className="font-semibold text-orange-500 mb-2">{category.name}</h3>
                                 <div className="space-y-2">
                                     {category.games.map(game => (
-                                        <div key={game.id} className="flex items-center">
+                                        <div key={game.id}>
                                             <input
                                                 type="checkbox"
                                                 id={game.id}
@@ -176,7 +268,7 @@ const FormularioStaticRoutingGames: React.FC = () => {
                 </div>
             </div>
 
-            {/* Panel derecho - Resultado */}
+            {/* Columna Derecha */}
             <div className="flex flex-col lg:w-1/2 min-h-0">
                 <div className="flex-grow bg-gray-700 p-4 rounded-lg flex flex-col min-h-0">
                     <label className="block text-sm font-semibold mb-2 text-gray-300">Script Generator Result</label>
@@ -192,21 +284,21 @@ const FormularioStaticRoutingGames: React.FC = () => {
                         className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition"
                         onClick={handleGenerate}
                     >
-                        Generar
+                        Generate
                     </button>
                     <button
                         type="button"
                         className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition"
                         onClick={handleClear}
                     >
-                        Borrar Todo
+                        Clear All
                     </button>
                     <button
                         type="button"
                         className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
                         onClick={() => scriptResult && navigator.clipboard.writeText(scriptResult.text)}
                     >
-                        Copiar Script
+                        Copy Script
                     </button>
                 </div>
             </div>
@@ -214,4 +306,4 @@ const FormularioStaticRoutingGames: React.FC = () => {
     );
 };
 
-export default FormularioStaticRoutingGames;
+export default FormularioVpnGameGenerator2;

@@ -6,14 +6,3 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: rmikrotik-back-end-dev
-    ports:
-      - "8081:8080"
-    networks:
-      - ubuntu_default
-
-# Definición de redes
-networks:
-  # Red llamada 'ubuntu_default'
-  ubuntu_default:
-    # Configuración para usar una red externa existente
-    external: true
