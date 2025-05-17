@@ -1,0 +1,467 @@
+---
+import MainLayout from "../layout/MainLayout.astro";
+---
+
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+/>
+
+<MainLayout title="Open Book">
+    <body>
+        <div class="bg-gray-800 shadow-lg p-6">
+            <!-- Contenido -->
+            <!-- Header -->
+            <!-- Título -->
+
+            <div class="text-center mb-2">
+                <h1 class="text-2xl lg:text-4xl font-bold text-blue-400">
+                    <span class="text-white"> <strong>MI CUENTA</strong></span>
+                </h1>
+                <p class="text-gray-500 mt-2 font-bold">
+                    Alexander <p class="text-sm text-green-600 font-bold">
+                        | Menbresia de la cuenta Activa |
+                    </p>
+                </p>
+            </div>
+        </div>
+
+        <!-- Contenido inicio -->
+        <div class="hidden md:block">
+            <main class="flex-grow flex items-center justify-center py-6 px-6">
+                <div class="rounded-xl shadow-lg max-w-4xl w-full">
+                    <!-- Encabezado de usuario -->
+                    <div class="bg-slate-700 rounded-2xl shadow p-6 mb-8">
+                        <table class="w-full table-auto text-sm">
+                            <thead>
+                                <tr class="text-left">
+                                    <th class="text-white px-4 py-2"
+                                        >3mikrotik@gmail.com</th
+                                    >
+                                    <th class="px-4 py-2"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-t">
+                                    <td class="px-4 py-2 text-white font-bold">
+                                        Autorización de correo electrónico</td
+                                    >
+                                    <td>
+                                        <p
+                                            class="text-sm text-green-600 font-bold"
+                                        >
+                                            ✔ ACTIVADO
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr class="border-t">
+                                    <td class="px-4 py-2 font-bold text-white"
+                                        >Identificador de correo electrónico</td
+                                    >
+                                    <td class="px-4 py-2 text-white"
+                                        >3mikrotik@gmail.com</td
+                                    >
+                                </tr>
+                                <tr class="border-t">
+                                    <td class="px-4 py-2 font-bold text-white"
+                                        >Nombre</td
+                                    >
+                                    <td class="px-4 py-2 text-white"
+                                        >Alexander</td
+                                    >
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Botones de acción -->
+                        <div class="mt-4 flex flex-wrap gap-3">
+                            <a
+                                href="#"
+                                class="bg-indigo-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg m-2 inline-flex items-center"
+                            >
+                                <i class="fas fa-home mr-2"></i>
+                                Inicio
+                            </a>
+
+                            <!-- Botón que abre el modal -->
+                            <button
+                                onclick="document.getElementById('modal').classList.remove('hidden')"
+                                class="bg-teal-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg m-2"
+                                ><i class="fas fa-lock"></i>
+                                Cambiar contraseña
+                            </button>
+
+                            <!-- Modal -->
+                            <div
+                                id="modal"
+                                class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden"
+                            >
+                                <div
+                                    class="relative bg-white rounded-xl p-6 w-full max-w-md shadow-lg"
+                                >
+                                    <!-- Botón X en la esquina superior derecha -->
+                                    <button
+                                        onclick="document.getElementById('modal').classList.add('hidden')"
+                                        class="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-xl font-bold"
+                                        aria-label="Cerrar"
+                                    >
+                                        &times;
+                                    </button>
+
+                                    <h2
+                                        class="text-xl font-bold text-orange-600 mb-4"
+                                    >
+                                        CAMBIAR CONTRASEÑA
+                                    </h2>
+
+                                    <label
+                                        class="block font-semibold text-sm mb-1"
+                                    >
+                                        Nueva contraseña <span
+                                            class="text-orange-600">*</span
+                                        >
+                                    </label>
+                                    <input
+                                        type="password"
+                                        placeholder="Nueva contraseña"
+                                        class="w-full mb-4 px-4 py-2 border rounded-lg"
+                                    />
+
+                                    <label
+                                        class="block font-semibold text-sm mb-1"
+                                    >
+                                        Confirmar nueva contraseña <span
+                                            class="text-orange-600">*</span
+                                        >
+                                    </label>
+                                    <input
+                                        type="password"
+                                        placeholder="Confirmar nueva contraseña"
+                                        class="w-full mb-4 px-4 py-2 border rounded-lg"
+                                    />
+
+                                    <div class="flex justify-end gap-2">
+                                        <button
+                                            onclick="guardarContrasena()"
+                                            class="bg-blue-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg"
+                                        >
+                                            Guardar
+                                        </button>
+                                        <button
+                                            onclick="document.getElementById('modal').classList.add('hidden')"
+                                            class="bg-red-600 hover:bg-orange-600 text-white px-4 py-2 rounded-lg"
+                                        >
+                                            Cancelar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button
+                                class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg ml-auto m-2"
+                            >
+                                <i class="fas fa-right-from-bracket"></i> Cerrar
+                                sesión</button
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Estatus de Membresía -->
+                    <div class="bg-white rounded-2xl shadow p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-semibold">
+                                Estado de Membresía
+                            </h3>
+                            <a
+                                href="#"
+                                class="text-sm text-blue-600 hover:underline"
+                            >
+                                <i class="fas fa-rotate"></i> Actualizar estado</a
+                            >
+                        </div>
+
+                        <table class="w-full table-auto text-sm">
+                            <tbody>
+                                <tr class="border-t">
+                                    <td class="px-4 py-2 font-medium">Estado</td
+                                    >
+                                    <td
+                                        class="px-4 py-2 text-red-600 font-semibold"
+                                        >✘ EXPIRAR</td
+                                    >
+                                </tr>
+                                <tr class="border-t">
+                                    <td class="px-4 py-2 font-medium"
+                                        >Paquete</td
+                                    >
+                                    <td class="px-4 py-2">30 DÍAS</td>
+                                </tr>
+                                <tr class="border-t">
+                                    <td class="px-4 py-2 font-medium"
+                                        >Fecha de Pago</td
+                                    >
+                                    <td class="px-4 py-2">15-04-2025 11:29</td>
+                                </tr>
+                                <tr class="border-t">
+                                    <td class="px-4 py-2 font-medium"
+                                        >Fecha de Caducidad</td
+                                    >
+                                    <td class="px-4 py-2">15-05-2025 11:29</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="mt-6 flex flex-wrap gap-3">
+                            <button
+                                class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg m-2"
+                                ><i class="fas fa-credit-card"></i> Comprar Menbresía
+                            </button>
+                            <input
+                                type="text"
+                                placeholder="Ingrese código de cupón"
+                                class="border border-gray-300 rounded-lg px-4 py-2 m-2 max-w-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <footer class="text-xs text-center text-gray-500 mt-8">
+                        <p>Contamos con todos los canales a tu disposición</p>
+                        <p class="mt-1">
+                            Estamos disponibles por WhatsApp y te respondemos al
+                            instante. <a
+                                href="https://wa.me/51930327563"
+                                target="_blank"
+                                class="text-orange-500 hover:underline"
+                                >WhatsApp</a
+                            >
+                        </p>
+                    </footer>
+                </div>
+            </main>
+
+            <!-- Fin de Iconos de Redes sociales -->
+        </div>
+
+        <!-- Contenido Celular -->
+        <div class="block md:hidden">
+            <!-- Sección de contacto -->
+            <main class="flex-grow flex items-center justify-center py-6 px-6">
+                <div class="rounded-xl shadow-lg max-w-4xl w-full">
+                    <!-- Encabezado de usuario -->
+                    <div class="bg-slate-700 rounded-2xl shadow p-6 mb-8">
+                        <table class="w-full table-auto text-sm">
+                            <thead>
+                                <tr class="text-left">
+                                    <th class="text-white px-4 py-2"
+                                        >3mikrotik@gmail.com</th
+                                    >
+                                    <th class="px-4 py-2"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-t">
+                                    <td class="px-4 py-2 text-white font-bold">
+                                        Autorización de correo electrónico</td
+                                    >
+                                    <td>
+                                        <p
+                                            class="text-sm text-green-600 font-bold"
+                                        >
+                                            ✔ ACTIVADO
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr class="border-t">
+                                    <td class="px-4 py-2 font-bold text-white"
+                                        >Identificador de correo electrónico</td
+                                    >
+                                    <td class="px-4 py-2 text-white"
+                                        >3mikrotik@gmail.com</td
+                                    >
+                                </tr>
+                                <tr class="border-t">
+                                    <td class="px-4 py-2 font-bold text-white"
+                                        >Nombre</td
+                                    >
+                                    <td class="px-4 py-2 text-white"
+                                        >Alexander</td
+                                    >
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Botones de acción -->
+                        <div class="mt-4 flex flex-wrap gap-3">
+                            <a
+                                href="#"
+                                class="bg-indigo-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg m-2 inline-flex items-center"
+                            >
+                                <i class="fas fa-home mr-2"></i>
+                                Inicio
+                            </a>
+
+                            <!-- Botón que abre el modal -->
+                            <button
+                                onclick="document.getElementById('modal').classList.remove('hidden')"
+                                class="bg-teal-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg m-2"
+                                ><i class="fas fa-lock"></i>
+                                Cambiar contraseña
+                            </button>
+
+                            <!-- Modal -->
+                            <div
+                                id="modal"
+                                class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden"
+                            >
+                                <div
+                                    class="relative bg-white rounded-xl p-6 w-full max-w-md shadow-lg"
+                                >
+                                    <!-- Botón X en la esquina superior derecha -->
+                                    <button
+                                        onclick="document.getElementById('modal').classList.add('hidden')"
+                                        class="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-xl font-bold"
+                                        aria-label="Cerrar"
+                                    >
+                                        &times;
+                                    </button>
+
+                                    <h2
+                                        class="text-xl font-bold text-orange-600 mb-4"
+                                    >
+                                        CAMBIAR CONTRASEÑA
+                                    </h2>
+
+                                    <label
+                                        class="block font-semibold text-sm mb-1"
+                                    >
+                                        Nueva contraseña <span
+                                            class="text-orange-600">*</span
+                                        >
+                                    </label>
+                                    <input
+                                        type="password"
+                                        placeholder="Nueva contraseña"
+                                        class="w-full mb-4 px-4 py-2 border rounded-lg"
+                                    />
+
+                                    <label
+                                        class="block font-semibold text-sm mb-1"
+                                    >
+                                        Confirmar nueva contraseña <span
+                                            class="text-orange-600">*</span
+                                        >
+                                    </label>
+                                    <input
+                                        type="password"
+                                        placeholder="Confirmar nueva contraseña"
+                                        class="w-full mb-4 px-4 py-2 border rounded-lg"
+                                    />
+
+                                    <div class="flex justify-end gap-2">
+                                        <button
+                                            onclick="guardarContrasena()"
+                                            class="bg-blue-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg"
+                                        >
+                                            Guardar
+                                        </button>
+                                        <button
+                                            onclick="document.getElementById('modal').classList.add('hidden')"
+                                            class="bg-red-600 hover:bg-orange-600 text-white px-4 py-2 rounded-lg"
+                                        >
+                                            Cancelar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button
+                                class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg ml-auto m-2"
+                            >
+                                <i class="fas fa-right-from-bracket"></i> Cerrar
+                                sesión</button
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Estatus de Membresía -->
+                    <div class="bg-white rounded-2xl shadow p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-semibold">
+                                Estado de Membresía
+                            </h3>
+                            <a
+                                href="#"
+                                class="text-sm text-blue-600 hover:underline"
+                            >
+                                <i class="fas fa-rotate"></i> Actualizar estado</a
+                            >
+                        </div>
+
+                        <table class="w-full table-auto text-sm">
+                            <tbody>
+                                <tr class="border-t">
+                                    <td class="px-4 py-2 font-medium">Estado</td
+                                    >
+                                    <td
+                                        class="px-4 py-2 text-red-600 font-semibold"
+                                        >✘ EXPIRAR</td
+                                    >
+                                </tr>
+                                <tr class="border-t">
+                                    <td class="px-4 py-2 font-medium"
+                                        >Paquete</td
+                                    >
+                                    <td class="px-4 py-2">30 DÍAS</td>
+                                </tr>
+                                <tr class="border-t">
+                                    <td class="px-4 py-2 font-medium"
+                                        >Fecha de Pago</td
+                                    >
+                                    <td class="px-4 py-2">15-04-2025 11:29</td>
+                                </tr>
+                                <tr class="border-t">
+                                    <td class="px-4 py-2 font-medium"
+                                        >Fecha de Caducidad</td
+                                    >
+                                    <td class="px-4 py-2">15-05-2025 11:29</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="mt-6 flex flex-wrap gap-3">
+                            <button
+                                class="bg-green-600 hover:bg-green-700 text-white w-full px-4 py-2 rounded-lg m-2"
+                                ><i class="fas fa-credit-card"></i> Comprar Menbresía
+                            </button>
+                            <input
+                                type="text"
+                                placeholder="Ingrese código de cupón"
+                                class="w-full border border-gray-300 rounded-lg px-4 py-2 m-2 max-w-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <footer class="text-xs text-center text-gray-500 mt-8">
+                        <p>Contamos con todos los canales a tu disposición</p>
+                        <p class="mt-1">
+                            Estamos disponibles por WhatsApp y te respondemos al
+                            instante. <a
+                                href="https://wa.me/51930327563"
+                                target="_blank"
+                                class="text-orange-500 hover:underline"
+                                >WhatsApp</a
+                            >
+                        </p>
+                    </footer>
+                </div>
+            </main>
+        </div>
+    </body>
+</MainLayout>
+
+<!-- Contenido Fin -->
+
+<!-- Contenido Fin Aqui para abajo es otro codigo q u se borrara -->
+<!-- Script -->
