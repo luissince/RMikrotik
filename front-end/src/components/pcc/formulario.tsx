@@ -146,14 +146,14 @@ const FormularioPcc = () => {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6 bg-gray-900 p-6 rounded-lg shadow-lg h-[70vh]">
+    <div className="flex flex-col lg:flex-row gap-6 bg-gray-900 p-6 rounded-lg shadow-lg">
       {/* Form Section */}
       <div className="flex flex-col gap-6 lg:w-1/2">
         <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-          <div className="space-y-2">
+          <div className="space-y-0">
             <label
               htmlFor="wan-type"
-              className="block text-sm font-semibold text-gray-300"
+              className="block font-semibold text-gray-200   bg-slate-700 rounded-t-lg  pl-2 p-1"
             >
               Número de Líneas WAN ISP
             </label>
@@ -163,7 +163,7 @@ const FormularioPcc = () => {
               render={({ field }) => (
                 <select
                   id="wan-type"
-                  className="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400"
+                  className=" w-full bg-gray-800 border border-slate-700 rounded-b-lg p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400"
                   {...field}
                   onChange={(e) => {
                     const value = Number(e.target.value);
@@ -184,10 +184,10 @@ const FormularioPcc = () => {
             />
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-0">
             <label
               htmlFor="routeros-version"
-              className="block text-sm font-semibold text-gray-300"
+              className="block font-semibold text-gray-200   bg-slate-700 rounded-t-lg  pl-2 p-1"
             >
               Versión de RouterOS
             </label>
@@ -197,9 +197,8 @@ const FormularioPcc = () => {
               render={({ field }) => (
                 <select
                   id="routeros-version"
-                  className={`w-full bg-gray-800 border ${
-                    errors.router ? "border-red-500" : "border-gray-600"
-                  } rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400`}
+                  className={` w-full bg-gray-800 border ${errors.router ? "border-slate-700" : "border-slate-700"
+                    } rounded-b-lg p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400`}
                   {...field}
                 >
                   <option value="">- Seleccionar -</option>
@@ -216,12 +215,37 @@ const FormularioPcc = () => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-2">
+            <div className="space-y-0">
               <label
                 htmlFor="local-target"
-                className="block text-sm font-semibold text-gray-300"
+                className="block font-semibold text-gray-200   bg-blue-600 rounded-t-lg  pl-2"
               >
-                Local Target
+                 {/* === Botón con tooltip de ayuda ================== */}
+                <div className="relative inline-block group ">
+                  {/* 1. Botón */}
+                  <button
+                    type="button"
+                    className="flex items-center gap-1   text-white
+               px-3 py-1.5  "
+                  >
+                    Local Target
+                    <span className="sr-only">Mostrar ayuda</span>
+                  </button>
+
+                  {/* 2. Tooltip */}
+                  <div
+                    className="absolute z-10 left-1/2 -translate-x-1/2 mt-2 w-56
+               rounded-lg bg-gray-800 text-gray-200 text-sm p-3 shadow-lg
+               opacity-0 scale-95 pointer-events-none transition 
+               duration-150 ease-out
+               group-hover:opacity-100 group-hover:scale-100 
+               group-hover:pointer-events-auto"
+                  >
+                    Ingrese el nombre del puerto LAN que conecta su Mikrotik al switch o dispositivo final.
+                    <strong className="text-red-500">Debe coincidir exactamente con el nombre configurado en su Mikrotik </strong>.
+                    <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-3 h-3 rotate-45 bg-gray-800"></div>
+                  </div>
+                </div>
               </label>
               <Controller
                 name="local"
@@ -229,9 +253,8 @@ const FormularioPcc = () => {
                 render={({ field }) => (
                   <select
                     id="local-target"
-                    className={`w-full bg-gray-800 border ${
-                      errors.local ? "border-red-500" : "border-gray-600"
-                    } rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400`}
+                    className={`w-full bg-gray-800 border ${errors.local ? "border-red-500" : "border-blue-600"
+                      } rounded-b-lg p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400`}
                     {...field}
                   >
                     <option value="">- Seleccionar -</option>
@@ -248,13 +271,43 @@ const FormularioPcc = () => {
               )}
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-0">
               <label
                 htmlFor="interface-target"
-                className="block text-sm font-semibold text-gray-300"
+                className="block font-semibold text-gray-200   bg-blue-600 rounded-t-lg  pl-2"
               >
-                Interface Target
+                 {/* === Botón con tooltip de ayuda ================== */}
+                <div className="relative inline-block group ">
+                  {/* 1. Botón */}
+                  <button
+                    type="button"
+                    className="flex items-center gap-1   text-white
+               px-3 py-1.5  "
+                  >
+                    Interface Target
+                    <span className="sr-only">Mostrar ayuda</span>
+                  </button>
+
+                  {/* 2. Tooltip */}
+                  <div
+                    className="absolute z-10 left-1/2 -translate-x-1/2 mt-2 w-56
+               rounded-lg bg-gray-800 text-gray-200 text-sm p-3 shadow-lg
+               opacity-0 scale-95 pointer-events-none transition 
+               duration-150 ease-out
+               group-hover:opacity-100 group-hover:scale-100 
+               group-hover:pointer-events-auto"
+                  >
+                    Ingrese el nombre del puerto LAN que conecta su Mikrotik al switch o dispositivo final.
+                    <strong className="text-red-500">Debe coincidir exactamente con el nombre configurado en su Mikrotik </strong>.
+                    <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-3 h-3 rotate-45 bg-gray-800"></div>
+                  </div>
+                </div>
               </label>
+
+
+
+
+
               <Controller
                 name="interfaceTarget"
                 control={control}
@@ -264,11 +317,9 @@ const FormularioPcc = () => {
                     type="text"
                     disabled={localValue === "local-ip"}
                     placeholder="Ej: ether1, bridge-local"
-                    className={`${
-                      localValue === "local-ip" ? "bg-gray-700" : "bg-gray-800"
-                    } w-full border ${
-                      errors.interfaceTarget ? "border-red-500" : "border-gray-600"
-                    } rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400`}
+                    className={`${localValue === "local-ip" ? "bg-gray-800" : "bg-gray-800"
+                      } w-full border ${errors.interfaceTarget ? "border-red-500" : "border-blue-600"
+                      } rounded-b-lg p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400`}
                     {...field}
                   />
                 )}
@@ -298,11 +349,10 @@ const FormularioPcc = () => {
                       id={`wan-${index}`}
                       type="text"
                       placeholder={`Ej: ether${index + 1}`}
-                      className={`text-sky-400 font-semibold w-full bg-gray-800 border ${
-                        errors.lineInterfaces?.[index]?.wanInput
-                          ? "border-red-500"
-                          : "border-gray-600"
-                      } rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500`}
+                      className={`text-sky-400 font-semibold w-full bg-gray-800 border ${errors.lineInterfaces?.[index]?.wanInput
+                        ? "border-red-500"
+                        : "border-gray-600"
+                        } rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500`}
                       {...inputField}
                     />
                   )}
@@ -328,11 +378,10 @@ const FormularioPcc = () => {
                       id={`gateway-${index}`}
                       type="text"
                       placeholder={`Ej: 192.168.${index + 1}.1`}
-                      className={`w-full bg-gray-800 text-amber-600 border font-semibold ${
-                        errors.lineInterfaces?.[index]?.gatewayInput
-                          ? "border-red-500"
-                          : "border-gray-600"
-                      } rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500`}
+                      className={`w-full bg-gray-800 text-amber-600 border font-semibold ${errors.lineInterfaces?.[index]?.gatewayInput
+                        ? "border-red-500"
+                        : "border-gray-600"
+                        } rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500`}
                       {...inputField}
                       onKeyDown={(e) => keyIPAddress(e)}
                     />
@@ -361,7 +410,7 @@ const FormularioPcc = () => {
           <label className="block text-sm font-semibold mb-2 text-gray-300">
             Resultado del Generador de Script
           </label>
-          <div className="flex-grow overflow-y-auto bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400 text-sm">
+          <div className="h-60 overflow-y-auto  flex-grow o bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400 text-sm">
             {scriptResult ? (
               <div dangerouslySetInnerHTML={{ __html: scriptResult.html }} />
             ) : (
@@ -375,33 +424,40 @@ const FormularioPcc = () => {
         </div>
 
         <div className="flex mt-4 space-x-4">
+   
           <button
             type="button"
-            className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition disabled:bg-orange-300 disabled:cursor-not-allowed"
+            className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-600 transition disabled:bg-orange-300 disabled:cursor-not-allowed"
             onClick={handleSubmit(onSubmit)}
             disabled={isSubmitting || isLoading}
-          >
-            {isSubmitting || isLoading ? "Generando..." : "Generar"}
+          >    <i className="fa-solid fa-wand-magic-sparkles"></i>
+      
+            {isSubmitting || isLoading ? "Generando..." : " Generar"}
           </button>
 
           <button
             type="button"
             className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition"
             onClick={handleClearAll}
-          >
-            Borrar Todo
+          > <i className="fa-solid fa-trash mr-2"></i>
+             Borrar Todo
           </button>
 
           <button
             type="button"
-            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition disabled:bg-green-300 disabled:cursor-not-allowed"
+            className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition disabled:bg-indigo-500 disabled:cursor-not-allowed"
             onClick={handleCopyScript}
             disabled={!scriptResult?.html}
-          >
+          > <i className="fa-solid fa-arrow-up-from-bracket mr-2"></i>
             Copiar Script
           </button>
         </div>
       </div>
+
+
+
+
+
     </div>
   );
 };

@@ -8,12 +8,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.okta.mongodb.GeneradoScripts.model.nth.NthBody;
+import com.okta.mongodb.GeneradoScripts.model.nth.NthInterfaces;
 import com.okta.mongodb.GeneradoScripts.utils.DateUtils;
+
 
 @Service
 public class NthService {
-
-        private static final Logger logger = LoggerFactory.getLogger(MikrotikBackupToMailService.class);
+ private static final Logger logger = LoggerFactory.getLogger(NthService.class);
 
         public Map<String, String> create(NthBody body) {
                 logger.info("Body recibido: {}", body);
@@ -30,50 +31,296 @@ public class NthService {
                 return response;
         }
 
-        private String generateHtmlScript(NthBody body) {
+        private String generateHtmlScript(NthBody NthBody) {
                 StringBuilder html = new StringBuilder();
-
-                // html.append("<span></span> <br/>");
-
                 html.append("<div>");
-                html.append("<span>###############################################################</span> <br>");
-                html.append("<span># Load Balancing NTH (\"Every\" and \"Packet\") / LB NTH Script Generator</span> <br>");
-                html.append("<span># Date/Time: 3/5/2025, 22:00:5</span> <br>");
-                html.append("<span># Created by: buananet.com - fb.me/buananet.pbun</span> <br>");
-                html.append("<span># Load Balancing Method -> NTH (\"Every\" and \"Packet\")</span> <br>");
-                html.append("<span>###############################################################</span> <br>");
+                html.append("############################################################### <br>");
+                html.append(
+                                "<span style='color:blue;'>#Load Balancing Per Connection Classifier (LB Nth) Script Generator</span> <br>");
+                html.append(
+                                "<span style='color:green;'># Date/Time:</span> <span style='color:red;'>"+DateUtils.currentDate()+"</span> <br>");
+                html.append(
+                                "<span style='color:green;'># Created by:</span> <span style='color:red;'>buananet.com - fb.me/buananet.pbun</span> <br>");
+                html.append(
+                                "<span style='color:green;'># Load Balancing Method -> Nth (PER CONNECTION CLASSIFIER)</span> <br>");
+                html.append("############################################################### <br>");
 
-                html.append("<span>/ip firewall address-list</span> <br/>");
-                html.append("<span>add address=192.168.0.0/16 list=LOCAL-IP comment=\"LB NTH by buananet.com\"</span> <br/>");
-                html.append("<span>add address=172.16.0.0/12 list=LOCAL-IP comment=\"LB NTH by buananet.com\"</span> <br/>");
-                html.append("<span>add address=10.0.0.0/8 list=LOCAL-IP comment=\"LB NTH by buananet.com\"</span> <br/>");
+                html.append("/ip firewall address-list <br>");
+                html.append(
+                                "add address=<span style='color:red;'>192.168.0.0/16</span> list=LOCAL-IP comment=\"LB Nth by buananet.com\" <br>");
+                html.append(
+                                "add address=<span style='color:red;'>172.16.0.0/12</span> list=LOCAL-IP comment=\"LB Nth by buananet.com\" <br>");
+                html.append(
+                                "add address=<span style='color:red;'>10.0.0.0/8</span> list=LOCAL-IP comment=\"LB Nth by buananet.com\" <br>");
 
+                html.append("/ip firewall nat <br>");
+                for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
+                        html.append("add chain=srcnat out-interface=<span style='color:red;'>")
+                                        .append(NthInterfaces.getWanIsp())
+                                        .append("</span> action=masquerade comment=\"LB Nth by buananet.com\" <br>");
+                }
 
+                if (NthBody.getIdRouterVersion().equalsIgnoreCase("ros7")) {
+                        html.append("/routing table <br>");
+                        for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
+                                html.append("add name=\"to-<span style='color:red;'>")
+                                                .append(NthInterfaces.getWanIsp())
+                                                .append("</span>\" fib comment=\"LB Nth by buananet.com\" <br>");
+                        }
+                }
 
-               
+                html.append("/ip route <br>");
+                for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
+                        html.append("add check-gateway=ping distance=1 gateway=<span style='color:red;'>")
+                                        .append(NthInterfaces.getGatewayIsp())
+                                        .append("</span> routing-mark=<span style='color:red;'>")
+                                        .append(NthInterfaces.getWanIsp())
+                                        .append("</span> comment=\"LB Nth by buananet.com\" <br>");
+                }
+
+                for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
+                        html.append("add check-gateway=ping distance=<span style='color:red;'>")
+                                        .append(NthInterfaces.getId())
+                                        .append("</span> gateway=<span style='color:red;'>")
+                                        .append(NthInterfaces.getGatewayIsp())
+                                        .append("</span> comment=\"LB Nth by buananet.com\" <br>");
+                }
+
+                html.append("/ip firewall mangle<br>");
+                html.append(
+                                "add action=accept chain=prerouting dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment=\"LB Nth by buananet.com\" <br>");
+                html.append(
+                                "add action=accept chain=postrouting dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment=\"LB Nth by buananet.com\" <br>");
+                html.append(
+                                "add action=accept chain=forward dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment=\"LB Nth by buananet.com\" <br>");
+                html.append(
+                                "add action=accept chain=input dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment=\"LB Nth by buananet.com\" <br>");
+                html.append(
+                                "add action=accept chain=output dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment=\"LB Nth by buananet.com\" <br>");
+
+                for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
+                        html.append(
+                                        "add action=mark-connection chain=input in-interface=<span style='color:red;'>")
+                                        .append(NthInterfaces.getWanIsp())
+                                        .append("</span> new-connection-mark=\"cm-<span style='color:red;'>")
+                                        .append(NthInterfaces.getWanIsp())
+                                        .append("</span>\" passthrough=yes comment=\"LB Nth by buananet.com\" <br>");
+                }
+
+                for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
+                        html.append(
+                                        "add action=mark-routing chain=output connection-mark=\"cm-<span style='color:red;'>")
+                                        .append(NthInterfaces.getWanIsp())
+                                        .append("</span>\" new-routing-mark=\"to-<span style='color:red;'>")
+                                        .append(NthInterfaces.getWanIsp())
+                                        .append("</span>\" passthrough=yes comment=\"LB Nth by buananet.com\" <br>");
+                }
+
+                int totalInterfaces = NthBody.getInterfaces().length;
+
+                if (NthBody.getIdLocalTarget().equalsIgnoreCase("local-list1")) {
+                        for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
+                                html.append(
+                                                "add action=mark-connection chain=prerouting dst-address-type=!local new-connection-mark=\"cm-<span style='color:red;'>")
+                                                .append(NthInterfaces.getWanIsp())
+                                                .append("</span>\" passthrough=yes per-connection-classifier=both-addresses-and-ports:")
+                                                .append(totalInterfaces).append("/").append(NthInterfaces.getId() - 1)
+                                                .append(" dst-address-list=!LOCAL-IP src-address-list=LOCAL-IP comment=\"LB Nth by buananet.com\" <br>");
+                        }
+
+                        for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
+                                html.append(
+                                                "add action=mark-routing chain=prerouting connection-mark=\"cm-<span style='color:red;'>")
+                                                .append(NthInterfaces.getWanIsp())
+                                                .append("</span>\" new-routing-mark=\"to-<span style='color:red;'>")
+                                                .append(NthInterfaces.getWanIsp())
+                                                .append("</span>\" passthrough=yes dst-address-list=!LOCAL-IP src-address-list=LOCAL-IP comment=\"LB Nth by buananet.com\" <br>");
+                        }
+                }
+
+                if (NthBody.getIdLocalTarget().equalsIgnoreCase("local-list2")) {
+                        for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
+                                html.append(
+                                                "add action=mark-connection chain=prerouting dst-address-type=!local new-connection-mark=\"cm-<span style='color:red;'>")
+                                                .append(NthInterfaces.getWanIsp())
+                                                .append("</span>\" passthrough=yes per-connection-classifier=both-addresses-and-ports:")
+                                                .append(totalInterfaces).append("/").append(NthInterfaces.getId() - 1)
+                                                .append(" in-interface=<span style='color:red;'>")
+                                                .append(NthBody.getInterfaceTarget())
+                                                .append("</span> comment=\"LB Nth by buananet.com\" <br>");
+                        }
+
+                        for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
+                                html.append(
+                                                "add action=mark-routing chain=prerouting connection-mark=\"cm-<span style='color:red;'>")
+                                                .append(NthInterfaces.getWanIsp())
+                                                .append("</span>\" new-routing-mark=\"to-<span style='color:red;'>")
+                                                .append(NthInterfaces.getWanIsp())
+                                                .append("</span>\" passthrough=yes in-interface=<span style='color:red;'>")
+                                                .append(NthBody.getInterfaceTarget())
+                                                .append("</span> comment=\"LB Nth by buananet.com\" <br>");
+                        }
+                }
+
+                if (NthBody.getIdLocalTarget().equalsIgnoreCase("local-list3")) {
+                        for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
+                                html.append(
+                                                "add action=mark-connection chain=prerouting dst-address-type=!local new-connection-mark=\"cm-<span style='color:red;'>")
+                                                .append(NthInterfaces.getWanIsp())
+                                                .append("</span>\" passthrough=yes per-connection-classifier=both-addresses-and-ports:")
+                                                .append(totalInterfaces).append("/").append(NthInterfaces.getId() - 1)
+                                                .append(" in-interface-list=<span style='color:red;'>")
+                                                .append(NthBody.getInterfaceTarget())
+                                                .append("</span> comment=\"LB Nth by buananet.com\" <br>");
+                        }
+
+                        for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
+                                html.append(
+                                                "add action=mark-routing chain=prerouting connection-mark=\"cm-<span style='color:red;'>")
+                                                .append(NthInterfaces.getWanIsp())
+                                                .append("</span>\" new-routing-mark=\"to-<span style='color:red;'>")
+                                                .append(NthInterfaces.getWanIsp())
+                                                .append("</span>\" passthrough=yes in-interface-list=<span style='color:red;'>")
+                                                .append(NthBody.getInterfaceTarget())
+                                                .append("</span> comment=\"LB Nth by buananet.com\" <br>");
+                        }
+                }
+
                 html.append("</div>");
                 return html.toString();
         }
 
-        private String generatePlainTextScript(NthBody body) {
+        private String generatePlainTextScript(NthBody NthBody) {
                 StringBuilder text = new StringBuilder();
-
-                // text.append(" \n");
-
                 text.append("############################################################### \n");
-                text.append("# Load Balancing NTH (\"Every\" and \"Packet\") / LB NTH Script Generator \n");
-                text.append("# Date/Time: 3/5/2025, 22:00:5 \n");
+                text.append("# Load Balancing Per Connection Classifier (LB Nth) Script Generator \n");
+                text.append("# Date/Time: "+DateUtils.currentDate()+" \n");
                 text.append("# Created by: buananet.com - fb.me/buananet.pbun \n");
-                text.append("# Load Balancing Method -> NTH (\"Every\" and \"Packet\") \n");
+                text.append("# Load Balancing Method -> Nth (PER CONNECTION CLASSIFIER) \n");
                 text.append("############################################################### \n");
 
-                text.append("/ip firewall address-list \n");
-                text.append("add address=192.168.0.0/16 list=LOCAL-IP comment=\"LB NTH by buananet.com\" \n");
-                text.append("add address=172.16.0.0/12 list=LOCAL-IP comment=\"LB NTH by buananet.com\" \n");
-                text.append("add address=10.0.0.0/8 list=LOCAL-IP comment=\"LB NTH by buananet.com\" \n");
+                text.append("/ip firewall address-list\n");
+                text.append("add address=192.168.0.0/16 list=LOCAL-IP comment=\"LB Nth by buananet.com\" \n");
+                text.append("add address=172.16.0.0/12 list=LOCAL-IP comment=\"LB Nth by buananet.com\" \n");
+                text.append("add address=10.0.0.0/8 list=LOCAL-IP comment=\"LB Nth by buananet.com\" \n");
 
-                
+                text.append("/ip firewall nat \n");
+                for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
+                        text.append("add chain=srcnat out-interface=").append(NthInterfaces.getWanIsp())
+                                        .append(" action=masquerade comment=\"LB Nth by buananet.com\" \n");
+                }
+
+                if (NthBody.getIdRouterVersion().equalsIgnoreCase("ros7")) {
+                        text.append("/routing table \n");
+                        for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
+                                text.append("add name=\"to-").append(NthInterfaces.getWanIsp())
+                                                .append("\" fib comment=\"LB Nth by buananet.com\" \n");
+                        }
+                }
+
+                text.append("/ip route \n");
+                for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
+                        text.append("add check-gateway=ping distance=1 gateway=")
+                                        .append(NthInterfaces.getGatewayIsp())
+                                        .append(" routing-mark=").append(NthInterfaces.getWanIsp())
+                                        .append(" comment=\"LB Nth by buananet.com\" \n");
+                }
+
+                for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
+                        text.append("add check-gateway=ping distance=").append(NthInterfaces.getId())
+                                        .append(" gateway=").append(NthInterfaces.getGatewayIsp())
+                                        .append(" comment=\"LB Nth by buananet.com\" \n");
+                }
+
+                text.append("/ip firewall mangle \n");
+                text.append(
+                                "add action=accept chain=prerouting dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment=\"LB Nth by buananet.com\" \n");
+                text.append(
+                                "add action=accept chain=postrouting dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment=\"LB Nth by buananet.com\" \n");
+                text.append(
+                                "add action=accept chain=forward dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment=\"LB Nth by buananet.com\" \n");
+                text.append(
+                                "add action=accept chain=input dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment=\"LB Nth by buananet.com\" \n");
+                text.append(
+                                "add action=accept chain=output dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment=\"LB Nth by buananet.com\" \n");
+
+                for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
+                        text.append("add action=mark-connection chain=input in-interface=")
+                                        .append(NthInterfaces.getWanIsp())
+                                        .append(" new-connection-mark=\"cm-").append(NthInterfaces.getWanIsp())
+                                        .append("\" passthrough=yes comment=\"LB Nth by buananet.com\" \n");
+                }
+
+                for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
+                        text.append("add action=mark-routing chain=output connection-mark=\"cm-")
+                                        .append(NthInterfaces.getWanIsp())
+                                        .append("\" new-routing-mark=\"to-").append(NthInterfaces.getWanIsp())
+                                        .append("\" passthrough=yes comment=\"LB Nth by buananet.com\" \n");
+                }
+
+                int totalInterfaces = NthBody.getInterfaces().length;
+
+                if (NthBody.getIdLocalTarget().equalsIgnoreCase("local-list1")) {
+                        for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
+                                text.append(
+                                                "add action=mark-connection chain=prerouting dst-address-type=!local new-connection-mark=\"cm-")
+                                                .append(NthInterfaces.getWanIsp())
+                                                .append("\" passthrough=yes per-connection-classifier=both-addresses-and-ports:")
+                                                .append(totalInterfaces).append("/").append(NthInterfaces.getId() - 1)
+                                                .append(" dst-address-list=!LOCAL-IP src-address-list=LOCAL-IP comment=\"LB Nth by buananet.com\" \n");
+                        }
+
+                        for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
+                                text.append("add action=mark-routing chain=prerouting connection-mark=\"cm-")
+                                                .append(NthInterfaces.getWanIsp()).append("\" new-routing-mark=\"to-")
+                                                .append(NthInterfaces.getWanIsp())
+                                                .append("\" passthrough=yes dst-address-list=!LOCAL-IP src-address-list=LOCAL-IP comment=\"LB Nth by buananet.com\" \n");
+                        }
+                }
+
+                if (NthBody.getIdLocalTarget().equalsIgnoreCase("local-list2")) {
+                        for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
+                                text.append(
+                                                "add action=mark-connection chain=prerouting dst-address-type=!local new-connection-mark=\"cm-")
+                                                .append(NthInterfaces.getWanIsp())
+                                                .append("\" passthrough=yes per-connection-classifier=both-addresses-and-ports:")
+                                                .append(totalInterfaces).append("/").append(NthInterfaces.getId() - 1)
+                                                .append(" in-interface=").append(NthBody.getInterfaceTarget())
+                                                .append(" comment=\"LB Nth by buananet.com\" \n");
+                        }
+
+                        for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
+                                text.append("add action=mark-routing chain=prerouting connection-mark=\"cm-")
+                                                .append(NthInterfaces.getWanIsp()).append("\" new-routing-mark=\"to-")
+                                                .append(NthInterfaces.getWanIsp())
+                                                .append("\" passthrough=yes in-interface=")
+                                                .append(NthBody.getInterfaceTarget())
+                                                .append(" comment=\"LB Nth by buananet.com\" \n");
+                        }
+                }
+
+                if (NthBody.getIdLocalTarget().equalsIgnoreCase("local-list3")) {
+                        for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
+                                text.append(
+                                                "add action=mark-connection chain=prerouting dst-address-type=!local new-connection-mark=\"cm-")
+                                                .append(NthInterfaces.getWanIsp())
+                                                .append("\" passthrough=yes per-connection-classifier=both-addresses-and-ports:")
+                                                .append(totalInterfaces).append("/").append(NthInterfaces.getId() - 1)
+                                                .append(" in-interface-list=").append(NthBody.getInterfaceTarget())
+                                                .append(" comment=\"LB Nth by buananet.com\" \n");
+                        }
+
+                        for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
+                                text.append("add action=mark-routing chain=prerouting connection-mark=\"cm-")
+                                                .append(NthInterfaces.getWanIsp()).append("\" new-routing-mark=\"to-")
+                                                .append(NthInterfaces.getWanIsp())
+                                                .append("\" passthrough=yes in-interface-list=")
+                                                .append(NthBody.getInterfaceTarget())
+                                                .append(" comment=\"LB Nth by buananet.com\" \n");
+                        }
+                }
 
                 return text.toString();
         }
+
 }

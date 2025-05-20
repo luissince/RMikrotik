@@ -47,12 +47,12 @@ type ScriptResult = {
 const FormularioMikrotikFailoverScriptGenerator = () => {
   // Estado para controlar el número de líneas
   const [scriptResult, setScriptResult] = useState<ScriptResult | null>(null);
-
+  const [isLoading, setIsLoading] = useState(false);
   // Configuración de React Hook Form con validación Zod
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     setValue,
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -73,7 +73,14 @@ const FormularioMikrotikFailoverScriptGenerator = () => {
     control,
     name: "lineInterfaces",
   });
-
+  const handleCopyScript = () => {
+    if (scriptResult) {
+      navigator.clipboard
+        .writeText(scriptResult.text)
+        .then(() => alert("Script copiado al portapapeles!"))
+        .catch((err) => console.error("Error al copiar: ", err));
+    }
+  };
   // Actualiza el número de líneas cuando cambia la selección
   const onChangeSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newNumLines = Number(event.target.value) || 2;
@@ -162,7 +169,7 @@ const FormularioMikrotikFailoverScriptGenerator = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col lg:flex-row gap-6 bg-gray-900 p-6 rounded-lg shadow-lg h-[70vh]"
+      className="flex flex-col lg:flex-row gap-6 bg-gray-900 p-6 rounded-lg shadow-lg "
     >
       {/* Panel izquierdo - Controles */}
       <div className="flex flex-col gap-6 lg:w-1/2">
@@ -327,22 +334,31 @@ const FormularioMikrotikFailoverScriptGenerator = () => {
 
       {/* Panel derecho - Resultado */}
       <div className="flex flex-col lg:w-1/2 min-h-0">
-        <div className="flex-grow bg-gray-700 p-4 rounded-lg flex flex-col min-h-0">
+     <div className="flex-grow bg-gray-700 p-4 rounded-lg flex flex-col min-h-0">
           <label className="block text-sm font-semibold mb-2 text-gray-300">
-            Script Generator Result
+            Resultado del Generador de Script
           </label>
-          <div className="flex-grow overflow-y-auto bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400">
-            {scriptResult && (
+          <div className="h-60 overflow-y-auto  flex-grow o bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400 text-sm">
+            {scriptResult ? (
               <div dangerouslySetInnerHTML={{ __html: scriptResult.html }} />
+            ) : (
+              <p className="text-gray-500">
+                {isLoading
+                  ? "Generando script..."
+                  : "El script generado aparecerá aquí"}
+              </p>
             )}
           </div>
         </div>
         <div className="flex mt-4 space-x-4">
           <button
-            type="submit"
-            className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition"
-          >
-            Generar
+            type="button"
+            className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-600 transition disabled:bg-orange-300 disabled:cursor-not-allowed"
+            onClick={handleSubmit(onSubmit)}
+            disabled={isSubmitting || isLoading}
+          >    <i className="fa-solid fa-wand-magic-sparkles"></i>
+
+            {isSubmitting || isLoading ? "Generando..." : " Generar"}
           </button>
           <button
             type="reset"
@@ -352,9 +368,10 @@ const FormularioMikrotikFailoverScriptGenerator = () => {
           </button>
           <button
             type="button"
-            onClick={handleCopyToClipboard}
-            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
-          >
+            className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition disabled:bg-indigo-500 disabled:cursor-not-allowed"
+            onClick={handleCopyScript}
+            disabled={!scriptResult?.html}
+          > <i className="fa-solid fa-arrow-up-from-bracket mr-2"></i>
             Copiar Script
           </button>
         </div>

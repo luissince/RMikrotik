@@ -1,6 +1,5 @@
 package com.okta.mongodb.GeneradoScripts.model.nth;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,13 +11,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class NthBody {
-    
-    private String idYourLineWanIsp;
-    private String idRouterVersion;
-    private String idLocalTarget;
-    private String interfaceTarget;
-     private NthInterfaces[] interfaces;
+public class NthInterfaces {
+    private int id;
+    private String wanIsp;
+    private String gatewayIsp;
 }
-
-
