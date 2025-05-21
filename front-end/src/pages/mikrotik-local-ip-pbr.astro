@@ -1,0 +1,43 @@
+---
+import FormularioMikrotikLocalIpPbr from "../components/mikrotik-local-ip-pbr/formulario";
+import MainLayout from "../layout/MainLayout.astro";
+---
+
+<MainLayout title="Open Book">
+    <div class="flex flex-col py-10 space-y-5">
+        <div class="bg-gray-800 rounded-lg">
+            <!-- Header -->
+            <div class="text-center mb-6">
+                <h1 class="text-2xl lg:text-4xl font-bold text-orange-500">
+                    MIKROTIK LOCAL CLIENT IP STATIC ROUTING (POLICY BASED
+                    ROUTING)
+                </h1>
+                <p class="text-gray-300 mt-4">
+                    configuración de enrutamiento estático en una red, donde se
+                    usan reglas de Mangle para marcar o modificar paquetes según
+                    su puerto. Esto permite dirigir o priorizar el tráfico de
+                    juegos o aplicaciones específicas, controlando cómo se
+                    manejan los datos en función de puertos particulares, sin
+                    necesidad de ajustes dinámicos en el enrutamiento.
+                </p>
+            </div>
+        </div>
+
+        <div class="bg-gray-800 rounded-lg mx-4">
+            <!-- Contenido Principal -->
+            <div class="container mx-auto">
+                <!-- Diagrama -->
+                <div class="flex justify-center mb-8">
+                    <img
+                        src="/images/mikrotik-local-ip-pbr.png"
+                        alt="Routing Diagram"
+                        class="rounded-lg"
+                    />
+                </div>
+
+                <!-- Formulario Principal -->
+                <FormularioMikrotikLocalIpPbr client:load />
+            </div>
+        </div>
+    </div>
+</MainLayout>
