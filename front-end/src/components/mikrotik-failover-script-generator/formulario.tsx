@@ -334,7 +334,7 @@ const FormularioMikrotikFailoverScriptGenerator = () => {
 
       {/* Panel derecho - Resultado */}
       <div className="flex flex-col lg:w-1/2 min-h-0">
-     <div className="flex-grow bg-gray-700 p-4 rounded-lg flex flex-col min-h-0">
+        <div className="flex-grow bg-gray-700 p-4 rounded-lg flex flex-col min-h-0">
           <label className="block text-sm font-semibold mb-2 text-gray-300">
             Resultado del Generador de Script
           </label>
@@ -350,6 +350,7 @@ const FormularioMikrotikFailoverScriptGenerator = () => {
             )}
           </div>
         </div>
+        
         <div className="flex mt-4 space-x-4">
           <button
             type="button"
