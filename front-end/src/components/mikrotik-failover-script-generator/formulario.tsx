@@ -373,7 +373,7 @@ const FormularioMikrotikFailoverScriptGenerator = () => {
             onClick={handleCopyScript}
             disabled={!scriptResult?.html}
           > <i className="fa-solid fa-arrow-up-from-bracket mr-2"></i>
-            Copiar Script
+             Copiar Script
           </button>
         </div>
       </div>
