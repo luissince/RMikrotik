@@ -14,8 +14,8 @@ import com.okta.mongodb.GeneradoScripts.model.ecmp.EcmpBody;
 import com.okta.mongodb.GeneradoScripts.service.EcmpService;
 
 @RestController
-@RequestMapping("/ecmp")
-public class QueuetreegeneratorsharedController {
+@RequestMapping("/queue-tree-generator-shared")
+public class QueueTreeGeneratorSharedController {
 
     @Autowired
     private EcmpService ecmpService;
