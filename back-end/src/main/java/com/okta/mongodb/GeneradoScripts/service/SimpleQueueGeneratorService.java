@@ -8,18 +8,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.okta.mongodb.GeneradoScripts.model.simpleQueueGenerator.SimpleQueueGeneratorBody;
 
+import com.okta.mongodb.GeneradoScripts.model.simpleQueueGenerator.SimpleQueueGeneratorBody;
 import com.okta.mongodb.GeneradoScripts.utils.DateUtils;
 
 @Service
 public class SimpleQueueGeneratorService {
 
-        private static final Logger logger = LoggerFactory.getLogger(SimpleQueueGeneratorService.class);
-
-
-        @Autowired
-     
+        private static final Logger logger = LoggerFactory.getLogger(SimpleQueueGeneratorService.class);        
 
         public Map<String, String> create(SimpleQueueGeneratorBody body) {
                 logger.info("Body recibido: {}", body);
