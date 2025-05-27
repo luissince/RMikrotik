@@ -320,7 +320,7 @@ export default function FormularioScriptGenerator() {
 
                     <div className="mt-6">
                         <p className="text-orange-400 text-sm mb-2">
-                            BANDWIDTH WITH TOKEN BUCKET CALCULATION <br />
+                            ANCHO DE BANDA CON CÁLCULO DE TOKEN BUCKET <br />
                             Bucket Capacity (BC) = bucket-size * max-limit <br />
                             Time = BC / (Parent Max-limit - Token Rate)
                         </p>
