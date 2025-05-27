@@ -1,8 +1,10 @@
+
 import React, { useState } from "react";
+
 type ScriptResult = {
     html: string;
     text: string;
-}
+};
 
 interface FormData {
     parentNameQueue: string;
@@ -12,16 +14,14 @@ interface FormData {
     clientNameQueue: string;
     clientIdentity: string;
     startIPClient: string;
-    endIPClient:string;
-    upClient:string;
-    downClient:string;
-    bucketSizeUp:string;
-   bucketSizeDown :string;
-      
+    endIPClient: string;
+    upClient: string;
+    downClient: string;
+    bucketSizeUp: string;
+    bucketSizeDown: string;
 }
 
-
-const FormularioScriptGenerator = () => {
+export default function FormularioScriptGenerator() {
     const [parentNameQueue, setParentNameQueue] = useState("Global-Connection");
     const [targetLocalIP, setTargetLocalIP] = useState("192.168.88.0/24");
     const [upTotal, setUpTotal] = useState("5M");
@@ -36,7 +36,6 @@ const FormularioScriptGenerator = () => {
     const [bucketSizeDown, setBucketSizeDown] = useState("0.1");
     const [scriptResult, setScriptResult] = useState<ScriptResult | null>(null);
     const [isLoading, setIsLoading] = useState(false);
-
 
     const handleClear = () => {
         setParentNameQueue("");
@@ -53,17 +52,33 @@ const FormularioScriptGenerator = () => {
         setBucketSizeDown("0.1");
         setScriptResult(null);
     };
-     const handleGenerate = async () => {
+
+    const handleGenerate = async () => {
         setIsLoading(true);
         try {
+            const payload = {
+                parentNameQueue: parentNameQueue,
+                targetLocalIP: targetLocalIP,
+                upTotal: upTotal,
+                downTotal: downTotal,
+                clientNameQueue: clientNameQueue,
+                clientIdentity: clientIdentity,
+                startIPClient: startIPClient,
+                endIPClient: endIPClient,
+                upClient: upClient,
+                downClient: downClient,
+                bucketSizeUp: bucketSizeUp,
+                bucketSizeDown: bucketSizeDown,
+            };
+
             // Simulate API call
-            const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/vpn-remote-generator`, {
+            const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/simple-queue-generator`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'accept': 'application/json',
                 },
-              
+                body: JSON.stringify(payload),
             });
 
             if (!response.ok) {
@@ -80,7 +95,7 @@ const FormularioScriptGenerator = () => {
     };
 
     return (
-        <div className="flex flex-col lg:flex-row gap-6 bg-gray-900 p-6 rounded-lg shadow-lg ">
+        <div className="flex flex-col lg:flex-row gap-6 bg-gray-900 p-6 rounded-lg shadow-lg">
             {/* Form Section */}
             <div className="flex flex-col gap-6 lg:w-1/2">
                 <form className="space-y-4">
@@ -369,4 +384,3 @@ const FormularioScriptGenerator = () => {
     );
 };
 
-export default FormularioScriptGenerator;
