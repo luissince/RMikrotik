@@ -141,21 +141,21 @@ if (session) {
 
     loginGoogle?.addEventListener("click", () =>
       signIn("google", {
-        callbackUrl: "/dashboard",
+        callbackUrl: "/account",
         redirect: true,
       })
     );
 
     loginGithub?.addEventListener("click", () =>
       signIn("github", {
-        callbackUrl: "/dashboard",
+        callbackUrl: "/account",
         redirect: true,
       })
     );
 
     loginFacebook?.addEventListener("click", () =>
       signIn("facebook", {
-        callbackUrl: "/dashboard",
+        callbackUrl: "/account",
         redirect: true,
       })
     );
@@ -185,7 +185,7 @@ if (session) {
       await signIn("credentials", {
         email: inputEmail.value.trim(),
         password: inputPassword.value.trim(),
-        callbackUrl: "/dashboard",
+        callbackUrl: "/account",
         redirect: true,
       });
 

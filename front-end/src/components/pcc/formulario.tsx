@@ -3,6 +3,11 @@ import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { keyIPAddress } from "../../utils/keyEvent";
+import type { Session } from "@auth/core/types";
+
+interface Props {
+  session: Session | null;
+}
 
 const lineInterfaceSchema = z.object({
   id: z.number(),
@@ -31,7 +36,7 @@ type FormValues = z.infer<typeof formSchema>;
 type LineInterfacesType = z.infer<typeof lineInterfaceSchema>;
 type ScriptResult = { html: string; text: string };
 
-const FormularioPcc = () => {
+const FormularioPcc = ({ session }: Props) => {
   const {
     control,
     handleSubmit,
@@ -58,6 +63,13 @@ const FormularioPcc = () => {
   const localValue = watch("local");
   const [scriptResult, setScriptResult] = useState<ScriptResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showSessionModal, setShowSessionModal] = useState(false);
+
+  useEffect(() => {
+    if (!session) {
+      setShowSessionModal(true);
+    }
+  }, [session]);
 
   const generateLines = (numbers: number) => {
     const list: LineInterfacesType[] = Array.from({ length: numbers }).map(
@@ -81,6 +93,11 @@ const FormularioPcc = () => {
   }, []);
 
   const onSubmit = async (data: FormValues) => {
+    if (!session) {
+      setShowSessionModal(true);
+      return;
+    }
+
     setIsLoading(true);
     try {
       const payload = {
@@ -122,6 +139,11 @@ const FormularioPcc = () => {
   };
 
   const handleClearAll = () => {
+    if (!session) {
+      setShowSessionModal(true);
+      return;
+    }
+
     reset({
       linea: 2,
       router: "6.x",
@@ -137,6 +159,11 @@ const FormularioPcc = () => {
   };
 
   const handleCopyScript = () => {
+    if (!session) {
+      setShowSessionModal(true);
+      return;
+    }
+
     if (scriptResult) {
       navigator.clipboard
         .writeText(scriptResult.text)
@@ -145,15 +172,46 @@ const FormularioPcc = () => {
     }
   };
 
+  const handleCloseModal = () => {
+    window.location.href = '/account';
+  };
+
   return (
     <div className="flex flex-col lg:flex-row gap-6 bg-gray-900 p-6 rounded-lg shadow-lg">
+      {/* Modal para sesión nula */}
+      {showSessionModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="relative bg-white rounded-xl p-6 w-full max-w-md shadow-lg">
+            <button
+              onClick={handleCloseModal}
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-xl font-bold"
+              aria-label="Cerrar"
+            >
+              &times;
+            </button>
+            <h2 className="text-xl font-bold text-orange-600 mb-4">
+              SESIÓN NO INICIADA
+            </h2>
+            <p className="mb-4">Por favor, inicia sesión para continuar.</p>
+            <div className="flex justify-end">
+              <button
+                onClick={handleCloseModal}
+                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
+              >
+                Aceptar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Form Section */}
       <div className="flex flex-col gap-6 lg:w-1/2">
         <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-0">
             <label
               htmlFor="wan-type"
-              className="block font-semibold text-gray-200   bg-slate-700 rounded-t-lg  pl-2 p-1"
+              className="block font-semibold text-gray-200 bg-slate-700 rounded-t-lg pl-2 p-1"
             >
               Número de Líneas WAN ISP
             </label>
@@ -163,7 +221,7 @@ const FormularioPcc = () => {
               render={({ field }) => (
                 <select
                   id="wan-type"
-                  className=" w-full bg-gray-800 border border-slate-700 rounded-b-lg p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400"
+                  className="w-full bg-gray-800 border border-slate-700 rounded-b-lg p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400"
                   {...field}
                   onChange={(e) => {
                     const value = Number(e.target.value);
@@ -187,7 +245,7 @@ const FormularioPcc = () => {
           <div className="space-y-0">
             <label
               htmlFor="routeros-version"
-              className="block font-semibold text-gray-200   bg-slate-700 rounded-t-lg  pl-2 p-1"
+              className="block font-semibold text-gray-200 bg-slate-700 rounded-t-lg pl-2 p-1"
             >
               Versión de RouterOS
             </label>
@@ -197,7 +255,7 @@ const FormularioPcc = () => {
               render={({ field }) => (
                 <select
                   id="routeros-version"
-                  className={` w-full bg-gray-800 border ${errors.router ? "border-slate-700" : "border-slate-700"
+                  className={`w-full bg-gray-800 border ${errors.router ? "border-slate-700" : "border-slate-700"
                     } rounded-b-lg p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400`}
                   {...field}
                 >
@@ -218,15 +276,14 @@ const FormularioPcc = () => {
             <div className="space-y-0">
               <label
                 htmlFor="local-target"
-                className="block font-semibold text-gray-200   bg-blue-600 rounded-t-lg  pl-2"
+                className="block font-semibold text-gray-200 bg-blue-600 rounded-t-lg pl-2"
               >
-                 {/* === Botón con tooltip de ayuda ================== */}
-                <div className="relative inline-block group ">
+                {/* === Botón con tooltip de ayuda ================== */}
+                <div className="relative inline-block group">
                   {/* 1. Botón */}
                   <button
                     type="button"
-                    className="flex items-center gap-1   text-white
-               px-3 py-1.5  "
+                    className="flex items-center gap-1 text-white px-3 py-1.5"
                   >
                     Local Target
                     <span className="sr-only">Mostrar ayuda</span>
@@ -234,12 +291,7 @@ const FormularioPcc = () => {
 
                   {/* 2. Tooltip */}
                   <div
-                    className="absolute z-10 left-1/2 -translate-x-1/2 mt-2 w-56
-               rounded-lg bg-gray-800 text-gray-200 text-sm p-3 shadow-lg
-               opacity-0 scale-95 pointer-events-none transition 
-               duration-150 ease-out
-               group-hover:opacity-100 group-hover:scale-100 
-               group-hover:pointer-events-auto"
+                    className="absolute z-10 left-1/2 -translate-x-1/2 mt-2 w-56 rounded-lg bg-gray-800 text-gray-200 text-sm p-3 shadow-lg opacity-0 scale-95 pointer-events-none transition duration-150 ease-out group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto"
                   >
                     Ingrese el nombre del puerto LAN que conecta su Mikrotik al switch o dispositivo final.
                     <strong className="text-red-500">Debe coincidir exactamente con el nombre configurado en su Mikrotik </strong>.
@@ -274,15 +326,14 @@ const FormularioPcc = () => {
             <div className="space-y-0">
               <label
                 htmlFor="interface-target"
-                className="block font-semibold text-gray-200   bg-blue-600 rounded-t-lg  pl-2"
+                className="block font-semibold text-gray-200 bg-blue-600 rounded-t-lg pl-2"
               >
-                 {/* === Botón con tooltip de ayuda ================== */}
-                <div className="relative inline-block group ">
+                {/* === Botón con tooltip de ayuda ================== */}
+                <div className="relative inline-block group">
                   {/* 1. Botón */}
                   <button
                     type="button"
-                    className="flex items-center gap-1   text-white
-               px-3 py-1.5  "
+                    className="flex items-center gap-1 text-white px-3 py-1.5"
                   >
                     Interface Target
                     <span className="sr-only">Mostrar ayuda</span>
@@ -290,12 +341,7 @@ const FormularioPcc = () => {
 
                   {/* 2. Tooltip */}
                   <div
-                    className="absolute z-10 left-1/2 -translate-x-1/2 mt-2 w-56
-               rounded-lg bg-gray-800 text-gray-200 text-sm p-3 shadow-lg
-               opacity-0 scale-95 pointer-events-none transition 
-               duration-150 ease-out
-               group-hover:opacity-100 group-hover:scale-100 
-               group-hover:pointer-events-auto"
+                    className="absolute z-10 left-1/2 -translate-x-1/2 mt-2 w-56 rounded-lg bg-gray-800 text-gray-200 text-sm p-3 shadow-lg opacity-0 scale-95 pointer-events-none transition duration-150 ease-out group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto"
                   >
                     Ingrese el nombre del puerto LAN que conecta su Mikrotik al switch o dispositivo final.
                     <strong className="text-red-500">Debe coincidir exactamente con el nombre configurado en su Mikrotik </strong>.
@@ -303,10 +349,6 @@ const FormularioPcc = () => {
                   </div>
                 </div>
               </label>
-
-
-
-
 
               <Controller
                 name="interfaceTarget"
@@ -410,7 +452,7 @@ const FormularioPcc = () => {
           <label className="block text-sm font-semibold mb-2 text-gray-300">
             Resultado del Generador de Script
           </label>
-          <div className="h-60 overflow-y-auto  flex-grow o bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400 text-sm">
+          <div className="h-60 overflow-y-auto flex-grow bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400 text-sm">
             {scriptResult ? (
               <div dangerouslySetInnerHTML={{ __html: scriptResult.html }} />
             ) : (
@@ -424,14 +466,13 @@ const FormularioPcc = () => {
         </div>
 
         <div className="flex mt-4 space-x-4">
-   
           <button
             type="button"
             className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-600 transition disabled:bg-orange-300 disabled:cursor-not-allowed"
             onClick={handleSubmit(onSubmit)}
-            disabled={isSubmitting || isLoading}
-          >    <i className="fa-solid fa-wand-magic-sparkles"></i>
-      
+            disabled={isSubmitting || isLoading || !session}
+          >
+            <i className="fa-solid fa-wand-magic-sparkles"></i>
             {isSubmitting || isLoading ? "Generando..." : " Generar"}
           </button>
 
@@ -439,25 +480,23 @@ const FormularioPcc = () => {
             type="button"
             className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition"
             onClick={handleClearAll}
-          > <i className="fa-solid fa-trash mr-2"></i>
-             Borrar Todo
+            disabled={!session}
+          >
+            <i className="fa-solid fa-trash mr-2"></i>
+            Borrar Todo
           </button>
 
           <button
             type="button"
             className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition disabled:bg-indigo-500 disabled:cursor-not-allowed"
             onClick={handleCopyScript}
-            disabled={!scriptResult?.html}
-          > <i className="fa-solid fa-arrow-up-from-bracket mr-2"></i>
+            disabled={!scriptResult?.html || !session}
+          >
+            <i className="fa-solid fa-arrow-up-from-bracket mr-2"></i>
             Copiar Script
           </button>
         </div>
       </div>
-
-
-
-
-
     </div>
   );
 };

@@ -69,7 +69,6 @@ export default defineConfig({
 		},
 		// Este callback determina qué datos estarán disponibles en el cliente
 		session: async ({ session, user, token }) => {
-			console.log('session auth', session, user);
 			if (session.user) {
 				console.log('----------session----------');
 				session.user.providerId = token.providerId!;
