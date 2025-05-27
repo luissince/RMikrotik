@@ -5,9 +5,6 @@ import { getSession } from "auth-astro/server";
 
 const session = await getSession(Astro.request);
 
-if (!session) {
-  return Astro.redirect("/sign-in");
-}
 ---
 
 <MainLayout title="Open Book">
@@ -28,7 +25,7 @@ if (!session) {
       <!-- Contenido Principal -->
       <div class="container mx-auto">
         <!-- Formulario Principal -->
-        <FormularioPcc client:load />
+        <FormularioPcc client:load session={session} />
 
         <p class="text-2sm text-orange-500 mt-5">
           MikroTik LB PCC / Load Balancing PCC Script Generator for RouterOS
