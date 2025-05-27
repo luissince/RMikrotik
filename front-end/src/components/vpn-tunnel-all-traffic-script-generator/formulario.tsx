@@ -112,7 +112,7 @@ const FormularioVpnTunnelAllTrafficScriptGenerator = () => {
   };
 
   return (
-    <form className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[70vh]" onSubmit={handleSubmit}>
+    <form className="grid grid-cols-1 lg:grid-cols-2 gap-6 " onSubmit={handleSubmit}>
       {/* Form Section */}
       <div className="text-gray-950 shadow-2xl rounded-lg p-6 w-full ring-2 ring-blue-500">
         <div className="space-y-6">

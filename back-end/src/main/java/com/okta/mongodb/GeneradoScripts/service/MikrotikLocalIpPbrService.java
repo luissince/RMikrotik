@@ -38,10 +38,32 @@ public class MikrotikLocalIpPbrService {
         html.append(
                 "<span class='text-orange-400'># MikroTik Local Client IP Static Routing (Policy Based Routing)</span> <br>");
         html.append("<span class='text-orange-400'># Date/Time: " + DateUtils.currentDate() + "</span> <br>");
-        html.append("<span class='text-orange-400'># Created By: buananet.com - fb.me/buananet.pbun</span> <br>");
+        html.append("<span class='text-orange-400'># Created By: RMikrotik.com - fb.me/RMikrotik</span> <br>");
         html.append(
                 "<span class='text-orange-400'>########################################################</span> <br>");
-        html.append("</div>");
+
+        if (body.getIdRosVersion().equalsIgnoreCase("ros7")) {
+            html.append("/routing table add name=\"" + body.getRoutingMark()
+                    + "\" fib comment=\"IP Static Routing RMikrotik.com\"<br>");
+
+        }
+
+        if (body.getIdRoutingOption().equalsIgnoreCase("R1")) {
+            html.append("/ip route add check-gateway=ping distance=10 gateway=\"" + body.getIspGateway()
+                    + "\" routing-mark=\"" + body.getRoutingMark() + "\" comment=\"IP Static RMikrotik.com\"<br>");
+            html.append("/ip firewall mangle add action=mark-routing chain=prerouting src-address-list=\""
+                    + body.getTargetClientIp() + "\" new-routing-mark=\"" + body.getRoutingMark()
+                    + "\" passthrough=no comment=\"IP Static RoutingcccRMikrotik.com\"<br>");
+            html.append("/ip firewall address-list add address=\"" + body.getTargetClientIp() + "\" list=\""
+                    + body.getRoutingMark() + "\" comment=\"IP Static Routing RMikrotik.com\"<br>");
+        } else if (body.getIdRoutingOption().equalsIgnoreCase("R2")) {
+            html.append("/ip route add check-gateway=ping distance=10 gateway=\"" + body.getIspGateway()
+                    + "\" routing-mark=\"" + body.getRoutingMark()
+                    + "\" comment=\"IP Static Routing RMikrotik.com\"<br>");
+            html.append("/ip route rule add src-address=\"" + body.getTargetClientIp() + "\" table=\""
+                    + body.getRoutingMark() + "\" comment=\"IP Static Routing RMikrotik.com\"");
+        }
+
         return html.toString();
     }
 
@@ -52,6 +74,7 @@ public class MikrotikLocalIpPbrService {
         text.append("# Date/Time: " + DateUtils.currentDate() + " \n");
         text.append("# Created By: buananet.com - fb.me/buananet.pbun \n");
         text.append("######################################################## \n");
+
         return text.toString();
     }
 

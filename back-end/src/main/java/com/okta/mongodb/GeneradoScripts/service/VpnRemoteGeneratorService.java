@@ -41,8 +41,39 @@ public class VpnRemoteGeneratorService {
         html.append("<span class='text-orange-400'># Created By: buananet.com - fb.me/buananet.pbun</span> <br>");
         html.append(
                 "<span class='text-orange-400'>########################################################</span> <br>");
-        html.append("</div>");
-        return html.toString();
+
+        // html.append("/interface sstp-client");
+        if (body.getIdVpnConnection().equalsIgnoreCase("sstp")) {
+
+            html.append("/interface sstp-client <br>");
+            html.append("add connect-to=\"" + body.getVpnIpAddress() + "\" disabled=no name=\""
+                    + body.getVpnNameOnInterface() + "\" user=\"" + body.getVpnUsername() + "\" password=\""
+                    + body.getVpnPassword() + "\" comment=\"VPN Remote RMikrotik.com\"");
+
+        } else if (body.getIdVpnConnection().equalsIgnoreCase("pptp")) {
+            html.append("/interface pptp-client <br>");
+            html.append("add connect-to=\"" + body.getVpnIpAddress() + "\" disabled=no name=\""
+                    + body.getVpnNameOnInterface() + "\" user=\"" + body.getVpnUsername() + "\" password=\""
+                    + body.getVpnPassword() + "\" comment=\"VPN Remote RMikrotik.com\"");
+        }
+
+        if (body.getIdVpnConnection().equalsIgnoreCase("l2tp")) {
+
+            html.append("/interface l2tp-client <br>");
+            html.append("add connect-to=\"" + body.getVpnIpAddress() + "\" disabled=no name=\""
+                    + body.getVpnNameOnInterface() + "\" user=\"" + body.getVpnUsername() + "\" password=\""
+                    + body.getVpnPassword() + "\" comment=\"VPN Remote RMikrotik.com\"");
+
+        } else if (body.getIdVpnConnection().equalsIgnoreCase("ovpn")) {
+            html.append("/interface ovpn-client <br>");
+            html.append("add connect-to=\"" + body.getVpnIpAddress() + "\" disabled=no name=\""
+                    + body.getVpnNameOnInterface() + "\" user=\"" + body.getVpnUsername() + "\" password=\""
+                    + body.getVpnPassword() + "\" comment=\"VPN Remote RMikrotik.com\"");
+        }
+
+       
+
+        return html.toString(); 
     }
 
     private String generatePlainTextScript(VpnRemoteGeneratorBody body) {
@@ -52,6 +83,37 @@ public class VpnRemoteGeneratorService {
         text.append("# Date/Time: " + DateUtils.currentDate() + " \n");
         text.append("# Created By: buananet.com - fb.me/buananet.pbun \n");
         text.append("######################################################## \n");
+
+  // html.append("/interface sstp-client");
+        if (body.getIdVpnConnection().equalsIgnoreCase("sstp")) {
+
+            text.append("/interface sstp-client <br>");
+            text.append("add connect-to=\"" + body.getVpnIpAddress() + "\" disabled=no name=\""
+                    + body.getVpnNameOnInterface() + "\" user=\"" + body.getVpnUsername() + "\" password=\""
+                    + body.getVpnPassword() + "\" comment=\"VPN Remote RMikrotik.com\"");
+
+        } else if (body.getIdVpnConnection().equalsIgnoreCase("pptp")) {
+            text.append("/interface pptp-client <br>");
+            text.append("add connect-to=\"" + body.getVpnIpAddress() + "\" disabled=no name=\""
+                    + body.getVpnNameOnInterface() + "\" user=\"" + body.getVpnUsername() + "\" password=\""
+                    + body.getVpnPassword() + "\" comment=\"VPN Remote RMikrotik.com\"");
+        }
+
+        if (body.getIdVpnConnection().equalsIgnoreCase("l2tp")) {
+
+            text.append("/interface l2tp-client <br>");
+            text.append("add connect-to=\"" + body.getVpnIpAddress() + "\" disabled=no name=\""
+                    + body.getVpnNameOnInterface() + "\" user=\"" + body.getVpnUsername() + "\" password=\""
+                    + body.getVpnPassword() + "\" comment=\"VPN Remote RMikrotik.com\"");
+
+        } else if (body.getIdVpnConnection().equalsIgnoreCase("ovpn")) {
+            text.append("/interface ovpn-client <br>");
+            text.append("add connect-to=\"" + body.getVpnIpAddress() + "\" disabled=no name=\""
+                    + body.getVpnNameOnInterface() + "\" user=\"" + body.getVpnUsername() + "\" password=\""
+                    + body.getVpnPassword() + "\" comment=\"VPN Remote RMikrotik.com\"");
+        }
+
+
         return text.toString();
     }
 

@@ -17,10 +17,10 @@ import lombok.ToString;
 @ToString
 public class VpnGameGeneratorBody {
     
-    private String idVpnConnection;
-    private String vpnNameOnInterface;
+    private String vpnConnection;
+    private String vpnNameOrInterface;
     private String vpnIpAddress;
-    private String vpnUsername;
+    private String vpnUser;
     private String vpnPassword;
     private boolean ipGatewayIspGame;
     private String ipGatewayIspGameValue;

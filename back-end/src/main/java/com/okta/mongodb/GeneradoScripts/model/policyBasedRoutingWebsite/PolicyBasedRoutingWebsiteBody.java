@@ -1,5 +1,7 @@
 package com.okta.mongodb.GeneradoScripts.model.policyBasedRoutingWebsite;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,5 +21,6 @@ public class PolicyBasedRoutingWebsiteBody {
     private String idRoutingOption;
     private String firstRegexp;
     private String lastRegexp;
+    private List<PolicyBasedRoutingWebsiteDomain> domains;
     
 }

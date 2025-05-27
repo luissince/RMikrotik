@@ -13,7 +13,7 @@ import lombok.ToString;
 @ToString
 public class MikrotikLocalIpPbrBody {
     
-    private String idRoutingOptions;
+    private String idRoutingOption;
     private String idIpOptions;
     private String idRosVersion;
     private String ispGateway;

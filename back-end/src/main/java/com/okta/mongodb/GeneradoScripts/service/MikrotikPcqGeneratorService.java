@@ -46,14 +46,58 @@ public class MikrotikPcqGeneratorService {
 
         // /queue type
         html.append("<span class='font-black'>/queue type</span> <br>");
-        html.append("<span>add kind=pcq name=\"<span class='text-orange-400'>"+body.getPcqUploadName()+"</span>\" pcq-classifier=src-address pcq-rate=\"<span class='text-orange-400'>"+body.getPcqUpLimitClient()+"</span>\"</span> <br>");
-        html.append("<span>add kind=pcq name=\"<span class='text-orange-400'>"+body.getPcqDownloadName()+"</span>\" pcq-classifier=dst-address pcq-rate=\"<span class='text-orange-400'>"+body.getPcqDownLimitClient()+"</span>\"</span> <br>");
+        html.append("<span>add kind=pcq name=\"" + body.getPcqUploadName() + "\" pcq-classifier=src-address pcq-rate=\""
+                + body.getPcqUpLimitClient() + "\"<br>");
+        html.append("<span>add kind=pcq name=\"" + body.getPcqDownloadName()
+                + "\" pcq-classifier=dst-address pcq-rate=\"" + body.getPcqDownLimitClient() + "\" <br>");
 
-        // /queue tree
-        html.append("<span class='font-black'>/queue tree</span> <br>");
-        html.append("<span>add name=\"GLOBAL-CONNECTION\" parent=global comment=\"PCQ Generator by buananet.com\"</span> <br>");
-        html.append("<span>add max-limit=\"10M\" name=\"Upload-Client\" packet-mark=\"upload-client\" parent=\"GLOBAL-CONNECTION\" queue=\"PCQ-Up\"</span> <br>");
-        html.append("<span>add max-limit=\"50M\" name=\"Download-Client\" packet-mark=\"download-client\" parent=\"GLOBAL-CONNECTION\" queue=\"PCQ-Down\"</span> <br>");
+        if (body.getIdQueueOption().equalsIgnoreCase("queue-tree")) {
+            // /queue tree
+            html.append("<span class='font-black'>/queue tree</span> <br>");
+            html.append("<span>add name=\"" + body.getParentNameQueue()
+                    + "\" parent=global comment=\"PCQ Generator by buananet.com\"</span> <br>");
+            html.append("<span>add max-limit=\"" + body.getUploadMaxLimit() + "\" name=\"" + body.getSubQueueUpload()
+                    + "\" packet-mark=\"upload-client\" parent=\"" + body.getParentNameQueue() + " queue=\""
+                    + body.getPcqDownloadName() + "\" <br>");
+            html.append("<span>add max-limit=\"" + body.getDownloadMaxLimit() + "\" packet-mark=\""
+                    + body.getSubQueueDownload() + "\" parent=\"" + body.getParentNameQueue() + "\" queue=\""
+                    + body.getPcqUploadName() + "\"<br>");
+
+        }
+        if (body.getIdQueueOption().equalsIgnoreCase("queue-simple")) {
+
+            // /queue-simple
+            html.append("<span class='font-black'>/queue simple</span> <br>");
+
+            html.append("<span>add name=\"" + body.getParentNameQueue()
+                    + "\" target=\"192.168.0.0/16,172.16.0.0/12,10.0.0.0/8\" comment=\"PCQ Generator by buananet.com\"</span> <br>");
+            html.append("<span>\r\n" + //
+                    "add max-limit=\"" + body.getUploadMaxLimit() + "\\" + body.getUploadMaxLimit() + "\" name=\""
+                    + body.getSubQueueUpload() + "\" packet-marks=\"upload-client\" parent=\""
+                    + body.getParentNameQueue() + "\" queue=\"" + body.getPcqUploadName()
+                    + "/PCQ-Down\" target=\"192.168.0.0/16,172.16.0.0/12,10.0.0.0/8\"</span> <br>");
+            html.append("<span>\r\n" + //
+                    "add max-limit=\"" + body.getDownloadMaxLimit() + "\"/" + body.getDownloadMaxLimit()
+                    + "\"\" name=\"" + body.getSubQueueDownload() + "\" packet-marks=\"download-client\" parent=\""
+                    + body.getParentNameQueue() + " queue=\"PCQ-Up/" + body.getPcqDownloadName()
+                    + "\" target=\"192.168.0.0/16,172.16.0.0/12,10.0.0.0/8\"</span> <br>");
+
+        }
+
+        // /ip firewall mangle
+        html.append("<span class='font-black'>/ip firewall mangle</span> <br>");
+        html.append(
+                "<span>add action=mark-connection chain=forward new-connection-mark=\"global-conn\" passthrough=yes src-address-list=LOCAL-IP comment=\"PCQ Generator by buananet.com\"</span> <br>");
+        html.append(
+                "<span>add action=mark-packet chain=forward connection-mark=\"global-conn\" src-address-list=LOCAL-IP new-packet-mark=\"upload-client\" passthrough=no</span> <br>");
+        html.append(
+                "<span>add action=mark-packet chain=forward connection-mark=\"global-conn\" dst-address-list=LOCAL-IP new-packet-mark=\"download-client\" passthrough=no</span> <br>");
+
+        // /ip firewall address-list
+        html.append("<span class='font-black'>/ip firewall address-list</span> <br>");
+        html.append("<span>add address=192.168.0.0/16 list=LOCAL-IP</span> <br>");
+        html.append("<span>add address=172.16.0.0/12 list=LOCAL-IP</span> <br>");
+        html.append("<span>add address=10.0.0.0/8 list=LOCAL-IP</span> <br>");
 
         return html.toString();
     }
@@ -69,15 +113,36 @@ public class MikrotikPcqGeneratorService {
 
         // /queue type
         text.append("/queue type \n");
-        text.append("add kind=pcq name=\""+body.getPcqUploadName()+"\" pcq-classifier=src-address pcq-rate=\""+body.getPcqUpLimitClient()+"\" \n");
-        text.append("add kind=pcq name=\""+body.getPcqDownloadName()+"\" pcq-classifier=dst-address pcq-rate=\""+body.getPcqDownLimitClient()+"\" \n");
+        text.append("add kind=pcq name=\"" + body.getPcqUploadName() + "\" pcq-classifier=src-address pcq-rate=\""
+                + body.getPcqUpLimitClient() + "\" \n");
+        text.append("add kind=pcq name=\"" + body.getPcqDownloadName() + "\" pcq-classifier=dst-address pcq-rate=\""
+                + body.getPcqDownLimitClient() + "\" \n");
 
         // /queue tree
-        text.append("/queue tree \n");
-        text.append("add name=\"GLOBAL-CONNECTION\" parent=global comment=\"PCQ Generator by buananet.com\" \n");
-        text.append("add max-limit=\"10M\" name=\"Upload-Client\" packet-mark=\"upload-client\" parent=\"GLOBAL-CONNECTION\" queue=\"PCQ-Up\" \n");
-        text.append("add max-limit=\"50M\" name=\"Download-Client\" packet-mark=\"download-client\" parent=\"GLOBAL-CONNECTION\" queue=\"PCQ-Down\" \n");
+        text.append("<span class='font-black'>/queue tree</span> \n");
+        text.append("<span>add name=\"" + body.getParentNameQueue()
+                + "\" parent=global comment=\"PCQ Generator by buananet.com\"</span> \n");
+        text.append("<span>add max-limit=\"" + body.getUploadMaxLimit() + "\" name=\"" + body.getSubQueueUpload()
+                + "\" packet-mark=\"upload-client\" parent=\"" + body.getParentNameQueue() + " queue=\""
+                + body.getPcqDownloadName() + "\" \n");
+        text.append("<span>add max-limit=\"" + body.getDownloadMaxLimit() + "\" packet-mark=\""
+                + body.getSubQueueDownload() + "\" parent=\"" + body.getParentNameQueue() + "\" queue=\""
+                + body.getPcqUploadName() + "\"\n");
 
+        // /ip firewall mangle
+        text.append("<span class='font-black'>/ip firewall mangle</span> \n");
+        text.append(
+                "<span>add action=mark-connection chain=forward new-connection-mark=\"global-conn\" passthrough=yes src-address-list=LOCAL-IP comment=\"PCQ Generator by buananet.com\"</span> \n");
+        text.append(
+                "<span>add action=mark-packet chain=forward connection-mark=\"global-conn\" src-address-list=LOCAL-IP new-packet-mark=\"upload-client\" passthrough=no</span> \n");
+        text.append(
+                "<span>add action=mark-packet chain=forward connection-mark=\"global-conn\" dst-address-list=LOCAL-IP new-packet-mark=\"download-client\" passthrough=no</span> \n");
+
+        // /ip firewall address-list
+        text.append("<span class='font-black'>/ip firewall address-list</span> \n");
+        text.append("<span>add address=192.168.0.0/16 list=LOCAL-IP</span> \n");
+        text.append("<span>add address=172.16.0.0/12 list=LOCAL-IP</span> \n");
+        text.append("<span>add address=10.0.0.0/8 list=LOCAL-IP</span> \n");
         return text.toString();
     }
 
