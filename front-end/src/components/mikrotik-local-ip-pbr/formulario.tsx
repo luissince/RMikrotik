@@ -90,14 +90,14 @@ const FormularioMikrotikLocalIpPbr = () => {
                         >
                             <option value="R1">Route Mangle</option>
                             {/* <option value="R2">Route Routes</option> */}
-                            <option value="R3">Route Rules</option>
+                            <option value="R2">Route Rules</option>
                         </select>
                     </div>
 
                     <div>
-                        <label htmlFor="idIpOption" className="block font-semibold text-orange-400 mb-2">IP Options</label>
+                        <label htmlFor="idIpOptions" className="block font-semibold text-orange-400 mb-2">IP Options</label>
                         <select
-                            id="idIpOption"
+                            id="idIpOptions"
                             className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                             value={formData.idIpOption}
                             onChange={handleChange}

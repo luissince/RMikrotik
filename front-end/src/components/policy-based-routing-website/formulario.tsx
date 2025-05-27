@@ -14,6 +14,10 @@ interface ScriptResult {
     text: string;
 }
 
+interface Domain {
+    name: string
+}
+
 const FormularioPolicyBasedRoutingWebsite = () => {
     const [formData, setFormData] = useState<FormData>({
         ipGatewayIsp: '',
@@ -25,6 +29,8 @@ const FormularioPolicyBasedRoutingWebsite = () => {
     });
     const [error, setError] = useState<string | null>(null);
     const [scriptResult, setScriptResult] = useState<ScriptResult | null>(null);
+    const [domains, setDomains] = useState<Domain[]>([{ name: "youtube.com" }]);
+    const [newDomain, setNewDomain] = useState("");
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { id, value } = e.target;
@@ -32,6 +38,27 @@ const FormularioPolicyBasedRoutingWebsite = () => {
             ...prevData,
             [id]: value,
         }));
+    };
+
+    const handleAddDomain = () => {
+        // valida cuando el input es vacío
+        if (newDomain.trim() === "") return;
+
+        // valida si existe un duplicado
+        const valid = domains.some((value) => value.name === newDomain);
+        if(valid) return;
+
+        // agrega un nuevo dominio
+        const data = {
+            name: newDomain
+        }
+        setDomains([...domains, data]);
+        setNewDomain("");
+    };
+
+    const handleRemoveDomain = (name: string) => {
+        const updatedDomains = domains.filter((value) => value.name !== name);
+        setDomains(updatedDomains);
     };
 
     const handleGenerate = async () => {
@@ -43,7 +70,7 @@ const FormularioPolicyBasedRoutingWebsite = () => {
                     'Content-Type': 'application/json',
                     'accept': 'application/json',
                 },
-                body: JSON.stringify(formData),
+                body: JSON.stringify({ ...formData, domains }),
             });
 
             if (!response.ok) {
@@ -150,6 +177,44 @@ const FormularioPolicyBasedRoutingWebsite = () => {
                             onChange={handleChange}
                         />
                     </div>
+                </div>
+            </div>
+
+            {/* Dominios */}
+            <div className="bg-gray-800 p-6 rounded-lg shadow-md mb-6">
+                <div className="flex items-center mb-4">
+                    <input
+                        type="text"
+                        value={newDomain}
+                        onChange={(e) => setNewDomain(e.target.value)}
+                        placeholder="Try with 'domain.com' or use with Regex Function"
+                        className="flex-grow p-2 rounded-l-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    />
+                    <button
+                        type="button"
+                        onClick={handleAddDomain}
+                        className="bg-orange-500 text-white px-4 py-2 rounded-r-md hover:bg-orange-600 transition"
+                    >
+                        Add New Domain Name
+                    </button>
+                </div>
+                <div className="mt-2">
+                    {domains.map((domain, index) => (
+                        <div key={index} className="flex items-center mb-2">
+                            <input
+                                type="text"
+                                value={domain.name}
+                                readOnly
+                                className="flex-grow p-2 rounded-l-md bg-gray-700 text-white"
+                            />
+                            <button
+                                onClick={() => handleRemoveDomain(domain.name)}
+                                className="bg-gray-600 text-white px-4 py-2 rounded-r-md hover:bg-gray-700 transition"
+                            >
+                                Remove
+                            </button>
+                        </div>
+                    ))}
                 </div>
             </div>
 

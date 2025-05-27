@@ -94,6 +94,7 @@ const FormularioVpnRemoteGenerator = () => {
                             value={formData.idVpnConnection}
                             onChange={handleChange}
                         >
+                            <option value="sstp">Seleccione la VPN de conexion</option>
                             <option value="sstp">SSTP - Secure Socket Tunneling Protocol</option>
                             <option value="pptp">PPTP - Point to Point Tunneling Protocol</option>
                             <option value="l2tp">L2TP - Layer Two Tunneling Protocol</option>
@@ -109,7 +110,7 @@ const FormularioVpnRemoteGenerator = () => {
                             VPN Name on Interface
                         </label>
                         <input
-                            id="vpnNameOnInterface"
+                            id="vpnNameOnInterface" 
                             type="text"
                             placeholder="VPN-REMOTE"
                             className="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400"
