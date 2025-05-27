@@ -104,7 +104,7 @@ export default function FormularioScriptGenerator() {
                             htmlFor="parentNameQueue"
                             className="block text-sm font-semibold text-gray-300"
                         >
-                            Parent Name Queue
+                            Parent Nombre Queue
                         </label>
                         <input
                             id="parentNameQueue"
