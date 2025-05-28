@@ -1,0 +1,11 @@
+---
+import PaymentModal from "../components/pricing/formulario";
+import MainLayout from "../layout/MainLayout.astro";
+import { getSession } from "auth-astro/server";
+
+const session = await getSession(Astro.request);
+---
+
+<MainLayout title="Planes de Uso">
+    <PaymentModal client:load  session={session} />
+</MainLayout>

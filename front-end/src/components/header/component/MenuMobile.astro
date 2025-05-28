@@ -1,0 +1,221 @@
+---
+import { Image } from "astro:assets";
+import { images } from "../../../assets";
+import Icon from "../../Icon.astro";
+import Button from "../../Button.astro";
+import { socialLinks } from "../../../utils/data";
+import { getSession } from "auth-astro/server";
+
+const session = await getSession(Astro.request);
+---
+
+<div
+    id="sidebar"
+    data-sidebar
+    class="hidden xl:hidden w-full h-screen bottom-0 left-0 top-0 ring-0 z-50"
+>
+    <!--  -->
+    <div
+        id="overlay"
+        class="w-full h-screen absolute top-0 left-0 right-0 bottom-0 cursor-pointer"
+        style="background-color: rgba(0,0,0,0.7)"
+    >
+    </div>
+    <!--  -->
+    <div
+        class="absolute w-full h-screen py-5 top-0 right-0 bg-[#191919] max-w-[500px]"
+    >
+        <div class="flex flex-col h-full gap-y-5">
+            <!--  -->
+            <div class="flex justify-between px-5">
+                <Image
+                    src={images.Mikrotik || "/placeholder.svg"}
+                    alt="logo"
+                    width={130}
+                    height={130}
+                    class="h-10 w-auto"
+                />
+                <div class="-mx-2">
+                    <button
+                        id="close-button-sidebar"
+                        class="px-2 py-2 text-base font-semibold flex items-center justify-center border-[#191919] border-[1px] border-solid rounded-[4px] outline-none focus:bg-[#383838] hover:bg-[#383838] transition-colors duration-300"
+                    >
+                        <Icon name="close" size={26} class="text-[#ffffff]" />
+                    </button>
+                </div>
+            </div>
+            <!--  -->
+
+            <!-- Mobile search -->
+
+            <div class="px-5">
+                <div
+                    class="w-full flex items-center bg-[#2a2a2a] border-[#383838] border-[2px] border-solid rounded-full group focus-within:border-[#ffffff] text-white transition-all duration-300"
+                >
+                    <div class="p-2 h-full px-4 py-2">
+                        <Icon name="search" size={18} />
+                    </div>
+                    <input
+                        type="text"
+                        class="w-full h-full px-2 py-2 bg-inherit font-normal text-sm text-inherit outline-none border-none rounded-full"
+                        placeholder="Buscar scripts, herramientas..."
+                    />
+                    <button
+                        class="px-4 py-2 h-full rounded-r-full outline-none focus:bg-[#383838] hover:bg-[#383838] transition-colors duration-300"
+                    >
+                        <Icon name="sound" size={18} />
+                    </button>
+                </div>
+            </div>
+
+            <!--  -->
+
+            <!--  -->
+            <div class="flex flex-col gap-y-4 px-5">
+                <Button
+                    variant="primary"
+                    as="a"
+                    href="https://github.com/login"
+                    class="bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 transition-all duration-300"
+                >
+                    <span>Obtén descargas ilimitadas</span>
+                </Button>
+
+                {
+                    !session ? (
+                        <a
+                            class="bg-transparent text-white px-6 py-2 text-base font-semibold flex items-center justify-center border-white border-[1px] border-solid rounded-[4px] outline-none focus:bg-white hover:bg-white focus:border-white hover:border-white focus:text-[#191919] hover:text-[#191919] transition-colors duration-300"
+                            href="/sign-in"
+                        >
+                            <span>Iniciar Sesión</span>
+                        </a>
+                    ) : (
+                        <a
+                            class="bg-transparent text-white px-6 py-2 text-base font-semibold flex items-center justify-center border-white border-[1px] border-solid rounded-[4px] outline-none focus:bg-white hover:bg-white focus:border-white hover:border-white focus:text-[#191919] hover:text-[#191919] transition-colors duration-300"
+                            href="#"
+                        >
+                            <span>Cerrar Sesión</span>
+                        </a>
+                    )
+                }
+            </div>
+            <!--  -->
+
+            <!-- activar el menu tipo accordion -->
+            <div class="h-full">
+                <ul>
+                    <li>
+                        <button
+                            id="accordion-button"
+                            class="flex justify-between w-full text-white font-normal px-5 py-3 hover:bg-[#383838] text-left bg-[#4a4a4a]"
+                        >
+                            <span>Todas las categorías</span>
+                            <!-- -rotate-90 -->
+                            <svg
+                                id="accordion-icon"
+                                class="w-6 h-6 text-white transition-transform duration-200 rotate-0"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            >
+                                <path d="M6 9l6 6 6-6"></path>
+                            </svg>
+                        </button>
+                        <!-- h-auto -->
+                        <ul
+                            id="accordion-content"
+                            class="bg-[#383838] overflow-hidden transition-all duration-200 h-0"
+                        >
+                            <li>
+                                <button
+                                    class="w-full text-white font-normal px-5 py-3 hover:bg-[#383838] text-left bg-[#5a5a5a]"
+                                >
+                                    Precios
+                                </button>
+                            </li>
+                            <li>
+                                <button
+                                    class="w-full text-white font-normal px-5 py-3 hover:bg-[#383838] text-left bg-[#5a5a5a]"
+                                >
+                                    Soporte
+                                </button>
+                            </li>
+                            <li>
+                                <button
+                                    class="w-full text-white font-normal px-5 py-3 hover:bg-[#383838] text-left bg-[#5a5a5a]"
+                                >
+                                    Contacto
+                                </button>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <button
+                            class="w-full text-white font-normal px-5 py-3 hover:bg-[#383838] text-left"
+                        >
+                            Precios
+                        </button>
+                    </li>
+                    <li>
+                        <button
+                            class="w-full text-white font-normal px-5 py-3 hover:bg-[#383838] text-left"
+                        >
+                            Licencia
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <!--  -->
+
+            <!--  -->
+            <div class="px-3">
+                <div class="-mx-5">
+                    <ul
+                        class="flex flex-row flex-wrap list-none m-0 px-5 items-center gap-x-3"
+                    >
+                        {
+                            socialLinks.map((link, index) => (
+                                <li>
+                                    <a
+                                        href={link.href}
+                                        class="transition-colors duration-300"
+                                    >
+                                        <Icon
+                                            name={link.name}
+                                            size={32}
+                                            class="text-white hover:bg-[#383838] p-1.5 rounded-md"
+                                        />
+                                    </a>
+                                </li>
+                            ))
+                        }
+                    </ul>
+                </div>
+            </div>
+            <!--  -->
+        </div>
+    </div>
+    <!--  -->
+</div>
+
+<script>
+    const accordionButton = document.getElementById("accordion-button");
+    const accordionContent = document.getElementById("accordion-content");
+    const accordionIcon = document.getElementById("accordion-icon");
+
+    accordionButton!.addEventListener("click", () => {
+        // Alternar la visibilidad del contenido del acordeón
+        if (accordionContent!.classList.contains("h-0")) {
+            accordionContent!.classList.remove("h-0");
+            accordionContent!.classList.add("h-auto");
+            accordionIcon!.classList.remove("rotate-0");
+            accordionIcon!.classList.add("-rotate-90");
+        } else {
+            accordionContent!.classList.remove("h-auto");
+            accordionContent!.classList.add("h-0");
+            accordionIcon!.classList.remove("-rotate-90");
+            accordionIcon!.classList.add("rotate-0");
+        }
+    });
+</script>

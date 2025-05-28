@@ -1,105 +1,67 @@
 ---
-import { Image } from "astro:assets"
-import Icon from "../Icon.astro"
-import MenuButton from "./MenuButton.astro"
-import { getSession } from "auth-astro/server"
-import Button from "../Button.astro"
-import NavigationMenu from "./SubMenu"
-import { images } from "../../assets"
+import { Image } from "astro:assets";
+import Icon from "../Icon.astro";
+import MenuButton from "./component/MenuButton.astro";
+import { getSession } from "auth-astro/server";
+import Button from "../Button.astro";
+import { images } from "../../assets";
+import { navLinks } from "../../utils/data";
+import MenuMobile from "./component/MenuMobile.astro";
 
-const session = await getSession(Astro.request)
-
-const navLinks = [
-  {
-    name: "Inicio",
-    href: "/",
-  },
-  {
-    name: "Nosotros",
-    href: "/about",
-    submenu: [
-      { name: "Acerca de", href: "/about/team" },
-      { name: "Instructor", href: "/about/careers" },
-      { name: "Servicios", href: "/about/careers" },
-    ],
-  },
-  {
-    name: "Update",
-    href: "/update",
-  },
-  {
-    name: "Documentos",
-    href: "/documentos",
-  },
-  {
-    name: "Contactenos",
-    href: "/Contactenos",
-  },
-]
-
-const socialLinks = [
-  { name: "facebook", href: "#" },
-  { name: "instagram", href: "#" },
-  { name: "twitch", href: "#" },
-  { name: "twitter", href: "#" },
-  { name: "youtube", href: "#" },
-]
-
-const props = Astro.props
+const session = await getSession(Astro.request);
 ---
 
 <header class="bg-[#181918] sticky top-0 z-50 shadow-lg">
   <div class="2xl:container mx-auto px-4 md:px-8">
     <div class="flex flex-row justify-between py-3 md:py-4 gap-x-5 gap-y-5">
+      <!-- Logo y buscador -->
       <div class="flex justify-start items-center gap-x-5 w-full lg:w-auto">
         <a href="/" class="flex items-center">
-          <Image src={images.Mikrotik} alt="logo" width={200} height={200} class="h-10 w-auto" />
+          <Image
+            src={images.Mikrotik}
+            alt="logo"
+            width={200}
+            height={200}
+            class="h-10 w-auto"
+          />
         </a>
 
-        {
-          (props.type !== "sign-in" && props.type !== "sign-up") && (
-            <div class="hidden md:flex items-center bg-[#2a2a2a] border-[#383838] border-[2px] border-solid rounded-full group focus-within:border-[#ffffff] text-white transition-all duration-300">
-              <div class="p-2 h-full px-4 py-2">
-                <Icon name="search" size={18} />
-              </div>
-              <input
-                type="text"
-                class="w-full h-full px-2 py-2 bg-inherit font-normal text-sm text-inherit outline-none border-none rounded-full"
-                placeholder="Buscar scripts, herramientas..."
-              />
-              <button class="px-4 py-2 h-full rounded-r-full outline-none focus:bg-[#383838] hover:bg-[#383838] transition-colors duration-300">
-                <Icon name="send" size={18} />
-              </button>
-            </div>
-          )
-        }
+        <div
+          class="hidden md:flex items-center bg-[#2a2a2a] border-[#383838] border-[2px] border-solid rounded-full group focus-within:border-[#ffffff] text-white transition-all duration-300"
+        >
+          <div class="p-2 h-full px-4 py-2">
+            <Icon name="search" size={18} />
+          </div>
+          <input
+            type="text"
+            class="w-full h-full px-2 py-2 bg-inherit font-normal text-sm text-inherit outline-none border-none rounded-full"
+            placeholder="Buscar scripts, herramientas..."
+          />
+          <button
+            class="px-4 py-2 h-full rounded-r-full outline-none focus:bg-[#383838] hover:bg-[#383838] transition-colors duration-300"
+          >
+            <Icon name="send" size={18} />
+          </button>
+        </div>
       </div>
 
+      <!-- Menu decho en web-->
       <div class="xl:flex hidden flex-row justify-end gap-x-5 items-center">
-        {
-        (props.type !== "sign-in" && props.type !== "sign-up") && 
-          (
-            <>
-          
+        <a
+          class="text-[#cccccc] py-2 text-sm font-normal flex items-center justify-center outline-none focus:text-[#ffffff] hover:text-[#ffffff] transition-colors duration-300"
+          href="/pricing"
+        >
+          <span>Planes</span>
+        </a>
 
-              <a
-                class="text-[#cccccc] py-2 text-sm font-normal flex items-center justify-center outline-none focus:text-[#ffffff] hover:text-[#ffffff] transition-colors duration-300"
-                href="precios"
-              >
-                <span>Planes</span>
-              </a>
-
-              <Button 
-                variant="primary"  
-                as="a"
-                href="https://github.com/login"
-                class="bg-gradient-to-r from-red-500 to-red-900 hover:from-red-700 hover:to-red-800 transition-all duration-300"
-              >
-                <span class="text-[#ffffff]">Únete y suscríbete ahora</span>
-              </Button>
-            </>
-          )
-        }
+        <Button
+          variant="primary"
+          as="a"
+          href="https://github.com/login"
+          class="bg-gradient-to-r from-red-500 to-red-900 hover:from-red-700 hover:to-red-800 transition-all duration-300"
+        >
+          <span class="text-[#ffffff]">Únete y suscríbete ahora</span>
+        </Button>
 
         {
           !session ? (
@@ -110,61 +72,90 @@ const props = Astro.props
               <span>Iniciar Sesión</span>
             </a>
           ) : (
-            <button
-              id="logout"
-              class="text-[#cccccc] py-2 text-sm font-normal flex items-center justify-center outline-none focus:text-[#ffffff] hover:text-[#ffffff] transition-colors duration-300"
-            >
-              <span>Cerrar Sesión</span>
-            </button>
+            <div class="relative group">
+              <button class="text-[#cccccc] py-2 text-sm font-normal flex items-center justify-center outline-none focus:text-[#ffffff] hover:text-[#ffffff] transition-colors duration-300">
+                <img
+                  src={session.user!.image}
+                  alt="User"
+                  class="w-8 h-8 rounded-full mr-2"
+                />
+                <span>{session.user!.name}</span>
+                <Icon name="down-chevron" size={16} />
+              </button>
+
+              <div class="absolute right-0 top-full hidden group-hover:block bg-[#222222] p-2 rounded-md shadow-lg border border-[#383838] w-48 z-50">
+                <a
+                  class="text-[#cccccc] text-sm font-normal hover:text-white px-4 py-2 rounded-md hover:bg-[#383838] transition-colors duration-300 block whitespace-nowrap overflow-hidden text-ellipsis"
+                  href="/account"
+                >
+                  Perfil
+                </a>
+                <a
+                  class="text-[#cccccc] text-sm font-normal hover:text-white px-4 py-2 rounded-md hover:bg-[#383838] transition-colors duration-300 block whitespace-nowrap overflow-hidden text-ellipsis"
+                  href="/settings"
+                >
+                  Configuración
+                </a>
+                <button
+                  id="logout"
+                  class="text-[#cccccc] text-sm font-normal hover:text-white px-4 py-2 rounded-md hover:bg-[#383838] transition-colors duration-300 w-full text-left whitespace-nowrap overflow-hidden text-ellipsis"
+                >
+                  Cerrar Sesión
+                </button>
+              </div>
+            </div>
           )
         }
       </div>
 
+      <!-- Menu derecho en tablet -->
       <div class="lg:flex xl:hidden hidden items-center gap-5">
-        {
-          (props.type !== "sign-in" && props.type !== "sign-up") && (
-          <Button 
-            variant="primary"  
-            as="a"
-            href="https://github.com/login"
-            class="bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 transition-all duration-300"
-          >
-            <span>Obtén descargas ilimitadas</span>
-          </Button>
-          )
-        }
+        <Button
+          variant="primary"
+          as="a"
+          href="https://github.com/login"
+          class="bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 transition-all duration-300"
+        >
+          <span>Obtén descargas ilimitadas</span>
+        </Button>
 
         <MenuButton />
       </div>
 
+      <!-- Menu decho en mobile -->
       <div class="flex lg:hidden items-center">
         <MenuButton />
       </div>
     </div>
 
-    {
-      (props.type !== "sign-in" && props.type !== "sign-up") && (
-        <div class="xl:flex hidden justify-between items-center pb-3">
-          <div class="flex flex-row items-center justify-start gap-x-8">
-            {navLinks.map((link) => (
-              <div class="relative group">
-                <a 
-                  class="text-[#cccccc] text-sm font-medium hover:text-white transition-colors duration-300 flex items-center gap-1" 
+    <!-- Lista de navegación version web -->
+    <div class="xl:flex hidden justify-between items-center pb-3">
+      <div class="flex flex-row items-center justify-start gap-x-8">
+        {
+          navLinks.map((link) => {
+            if (link.submenu?.length === 0) {
+              return (
+                <a
+                  class="text-[#cccccc] text-sm font-medium hover:text-white transition-colors duration-300 flex items-center gap-1"
                   href={link.href}
                 >
                   <span>{link.name}</span>
-                  {link.submenu && (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform duration-300 group-hover:rotate-180">
-                      <path d="m6 9 6 6 6-6"/>
-                    </svg>
-                  )}
                 </a>
-                {/* Submenú */}
+              );
+            }
+
+            return (
+              <div class="relative group">
+                <button class="text-[#cccccc] py-2 text-sm font-normal flex items-center justify-center outline-none focus:text-[#ffffff] hover:text-[#ffffff] transition-colors duration-300">
+                  <span>{link.name}</span>
+                  {link.submenu && <Icon name="down-chevron" size={16} />}
+                </button>
+
                 {link.submenu && (
-                  <div class="absolute left-0 top-full hidden group-hover:flex flex-col mt-2 bg-[#222222] p-2 rounded-md shadow-lg border border-[#383838] min-w-40 z-50">
+                  <div class="absolute left-0 top-full hidden group-hover:block bg-[#222222] p-2 rounded-md shadow-lg border border-[#383838] w-48 z-50">
                     {link.submenu.map((sublink) => (
                       <a
-                        class="text-[#cccccc] text-sm font-normal hover:text-white px-4 py-2 rounded-md hover:bg-[#383838] transition-colors duration-300"
+                        class="text-[#cccccc] text-sm font-normal hover:text-white px-4 py-2 rounded-md hover:bg-[#383838] transition-colors duration-300 w-full block"
                         href={sublink.href}
                       >
                         {sublink.name}
@@ -173,191 +164,89 @@ const props = Astro.props
                   </div>
                 )}
               </div>
-            ))}
-          </div>
-
-          <div class="flex items-center gap-x-4">
-            <a class="text-[#cccccc] text-sm font-normal hover:bg-red-700 duration-300 rounded-lg px-3 py-1 flex items-center gap-1 transition-colors" href="/book">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path d="m10 15 5-3-5-3z"/></svg>
-              <span>YouTube</span>
-            </a>
-            
-            <a class="text-[#cccccc] text-sm font-normal hover:bg-sky-500 duration-300 rounded-lg px-3 py-1 flex items-center gap-1 transition-colors" href="/book">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
-              <span>Instagram</span>
-            </a>
-            
-            <a class="text-[#cccccc] text-sm font-normal hover:bg-blue-700 duration-300 rounded-lg px-3 py-1 flex items-center gap-1 transition-colors" href="/book">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-              <span>Facebook</span>
-            </a>
-            
-            <a class="text-[#cccccc] text-sm font-normal hover:bg-red-800 duration-300 rounded-lg px-3 py-1 flex items-center gap-1 transition-colors" href="/book">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8v8a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5V8a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5Z"/><path d="M10 12a3 3 0 1 1 4 2.83V17h-4v-2.17A3 3 0 0 1 10 12Z"/><path d="M16 7h.01"/></svg>
-              <span>Tiktok <span class="animate-color-change"> <strong> Live</strong> </span></span>
-            </a>
-          </div>
-        </div>
-      )
-    }
-  </div>
-\
-  <!-- menu bar -->
-  <div
-    id="sidebar"
-    data-sidebar
-    class="hidden xl:hidden w-full h-screen bottom-0 left-0 top-0 ring-0 z-50"
-  >
-    <!--  -->
-    <div
-      id="overlay"
-      class="w-full h-screen absolute top-0 left-0 right-0 bottom-0 cursor-pointer"
-      style="background-color: rgba(0,0,0,0.7)"
-    >
-    </div>
-    <!--  -->
-
-    <!--  -->
-    <div
-      class="absolute w-full h-screen py-5 top-0 right-0 bg-[#191919] max-w-[500px]"
-    >
-      <div class="flex flex-col h-full gap-y-5">
-        <!--  -->
-        <div class="flex justify-between px-5">
-          <Image src={images.Mikrotik || "/placeholder.svg"} alt="logo" width={130} height={130} class="h-10 w-auto" />
-          <div class="-mx-2">
-            <button
-              id="close-button-sidebar"
-              class="px-2 py-2 text-base font-semibold flex items-center justify-center border-[#191919] border-[1px] border-solid rounded-[4px] outline-none focus:bg-[#383838] hover:bg-[#383838] transition-colors duration-300"
-            >
-              <Icon name="close" size={26} class="text-[#ffffff]" />
-            </button>
-          </div>
-        </div>
-        <!--  -->
-
-        <!-- Mobile search -->
-        {
-          (props.type !== "sign-in" && props.type !== "sign-up") && (
-            <div class="px-5">
-              <div class="w-full flex items-center bg-[#2a2a2a] border-[#383838] border-[2px] border-solid rounded-full group focus-within:border-[#ffffff] text-white transition-all duration-300">
-                <div class="p-2 h-full px-4 py-2">
-                  <Icon name="search" size={18} />
-                </div>
-                <input
-                  type="text"
-                  class="w-full h-full px-2 py-2 bg-inherit font-normal text-sm text-inherit outline-none border-none rounded-full"
-                  placeholder="Buscar scripts, herramientas..."
-                />
-                <button class="px-4 py-2 h-full rounded-r-full outline-none focus:bg-[#383838] hover:bg-[#383838] transition-colors duration-300">
-                  <Icon name="sound" size={18} />
-                </button>
-              </div>
-            </div>
-          )
+            );
+          })
         }
-        <!--  -->
+      </div>
 
-        <!--  -->
-        <div class="flex flex-col gap-y-4 px-5">
-          {
-            (props.type !== "sign-in" && props.type !== "sign-up") && (
-            <Button 
-              variant="primary"  
-              as="a"
-              href="https://github.com/login"
-              class="bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 transition-all duration-300"
-            >
-                <span>Obtén descargas ilimitadas</span>
-            </Button>
-            )
-          }
+      <div class="flex items-center gap-x-4">
+        <a
+          class="text-[#cccccc] text-sm font-normal hover:bg-red-700 duration-300 rounded-lg px-3 py-1 flex items-center gap-1 transition-colors"
+          href="/book"
+        >
+          <Icon name="youtube" size={22} />
 
-          {
-            !session ? (
-              <a
-                class="bg-transparent text-white px-6 py-2 text-base font-semibold flex items-center justify-center border-white border-[1px] border-solid rounded-[4px] outline-none focus:bg-white hover:bg-white focus:border-white hover:border-white focus:text-[#191919] hover:text-[#191919] transition-colors duration-300"
-                href="/sign-in"
-              >
-                <span>Iniciar Sesión</span>
-              </a>
-            ) : (
-              <a
-                class="bg-transparent text-white px-6 py-2 text-base font-semibold flex items-center justify-center border-white border-[1px] border-solid rounded-[4px] outline-none focus:bg-white hover:bg-white focus:border-white hover:border-white focus:text-[#191919] hover:text-[#191919] transition-colors duration-300"
-                href="#"
-              >
-                <span>Cerrar Sesión</span>
-              </a>
-            )
-          }
-        </div>
-        <!--  -->
+          <span>YouTube</span>
+        </a>
 
-        <hr class="border-[#707070]" />
+        <a
+          class="text-[#cccccc] text-sm font-normal hover:bg-sky-500 duration-300 rounded-lg px-3 py-1 flex items-center gap-1 transition-colors"
+          href="/book"
+        >
+          <Icon name="instagram" size={22} />
+          <span>Instagram</span>
+        </a>
 
-        <!--  -->
-        <NavigationMenu type={props.type} client:load />
-        <!--  -->
+        <a
+          class="text-[#cccccc] text-sm font-normal hover:bg-blue-700 duration-300 rounded-lg px-3 py-1 flex items-center gap-1 transition-colors"
+          href="/book"
+        >
+          <Icon name="facebook" size={22} />
+          <span>Facebook</span>
+        </a>
 
-        <!--  -->
-        <div class="px-3">
-          <div class="-mx-5">
-            <ul
-              class="flex flex-row flex-wrap list-none m-0 px-5 items-center gap-x-3"
-            >
-              {
-                socialLinks.map((link) => (
-                  <li>
-                    <a href={link.href} class="transition-colors duration-300">
-                      <Icon
-                        name={link.name}
-                        size={32}
-                        class="text-white hover:bg-[#383838] p-1.5 rounded-md"
-                      />
-                    </a>
-                  </li>
-                ))
-              }
-            </ul>
-          </div>
-        </div>
-        <!--  -->
+        <a
+          class="text-[#cccccc] text-sm font-normal hover:bg-red-800 duration-300 rounded-lg px-3 py-1 flex items-center gap-1 transition-colors"
+          href="/book"
+        >
+          <Icon name="tiktok" size={22} />
+          <span>
+            Tiktok{" "}
+            <span class="animate-color-change">
+              {" "}
+              <strong> Live</strong>{" "}
+            </span>
+          </span>
+        </a>
       </div>
     </div>
-    <!--  -->
   </div>
+
+  <!-- menu bar -->
+  <MenuMobile />
 </header>
 
 <script>
-  const sidebar = document.getElementById("sidebar") as HTMLDivElement;
-  const closeButton = document.getElementById(
-    "close-button-sidebar"
-  ) as HTMLButtonElement;
-  const overlay = document.getElementById("overlay") as HTMLDivElement;
+  const sidebar = document.getElementById("sidebar");
+  const closeButton = document.getElementById("close-button-sidebar");
+  const overlay = document.getElementById("overlay");
 
-  closeButton.addEventListener("click", () => {
-    sidebar.classList.add("hidden");
-    sidebar.classList.remove("fixed");
+  closeButton!.addEventListener("click", () => {
+    sidebar!.classList.add("hidden");
+    sidebar!.classList.remove("fixed");
   });
 
-  overlay.addEventListener("click", () => {
-    sidebar.classList.add("hidden");
-    sidebar.classList.remove("fixed");
+  overlay!.addEventListener("click", () => {
+    sidebar!.classList.add("hidden");
+    sidebar!.classList.remove("fixed");
   });
 
   import { signOut } from "auth-astro/client";
   const logout = document.querySelector("#logout");
   if (logout) {
-    logout.addEventListener("click", () => signOut({
-      callbackUrl: '/goodbye',
-    redirect: true 
-    }));
+    logout.addEventListener("click", () =>
+      signOut({
+        callbackUrl: "/goodbye",
+        redirect: true,
+      }),
+    );
   }
 </script>
 
 <style>
   @keyframes color-change {
-    0%, 100% {
+    0%,
+    100% {
       color: #f11e1e; /* Rojo */
     }
     50% {

@@ -98,6 +98,11 @@ const FormularioPcc = ({ session }: Props) => {
       return;
     }
 
+    if (session.user?.subscription?.status !== "active") {
+      setShowSessionModal(true);
+      return;
+    }
+
     setIsLoading(true);
     try {
       const payload = {
@@ -140,6 +145,11 @@ const FormularioPcc = ({ session }: Props) => {
 
   const handleClearAll = () => {
     if (!session) {
+      setShowSessionModal(true);
+      return;
+    }
+
+    if (session.user?.subscription?.status !== "active") {
       setShowSessionModal(true);
       return;
     }
@@ -190,9 +200,21 @@ const FormularioPcc = ({ session }: Props) => {
               &times;
             </button>
             <h2 className="text-xl font-bold text-orange-600 mb-4">
-              SESIÓN NO INICIADA
+              {
+                !session && "SESIÓN NO INICIADA"
+              }
+              {
+                session && session.user?.subscription?.status !== "active" && "SUSCRIPCIÓN NO ACTIVA"
+              }
             </h2>
-            <p className="mb-4">Por favor, inicia sesión para continuar.</p>
+            <p className="mb-4">
+              {
+                !session && "Por favor, inicia sesión para continuar."
+              }
+              {
+                session && session.user?.subscription?.status !== "active" && "Por favor, compra una suscripción activa para continuar."
+              }
+            </p>
             <div className="flex justify-end">
               <button
                 onClick={handleCloseModal}
