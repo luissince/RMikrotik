@@ -55,6 +55,26 @@ export default defineConfig({
 		signIn: async ({ user }) => {
 			console.log('----------signIn----------');
 			console.log('Datos de usuario para guardar en la base de datos', user);
+
+			const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/user/auth/sync`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					"accept": "application/hal+json",
+				},
+				body: JSON.stringify({
+					providerId: user.providerId,
+					email: user.email,
+					name: user.name,
+					image: user.image,
+				}),
+			});
+
+			if (response.ok) {
+				const data = await response.json();
+				user.subscription = data.subscription;
+			}
+
 			return true;
 		},
 		jwt: async ({ token, user }) => {
@@ -63,6 +83,7 @@ export default defineConfig({
 				console.log('----------jwt----------');
 				token.providerId = user.providerId
 				token.userId = user.id
+				token.subscription = user.subscription || null;
 			}
 
 			return token;
@@ -73,6 +94,7 @@ export default defineConfig({
 				console.log('----------session----------');
 				session.user.providerId = token.providerId!;
 				session.user.id = token.userId!;
+				session.user.subscription = token.subscription || null;
 			}
 			return session;
 		},

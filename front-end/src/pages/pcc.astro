@@ -5,6 +5,16 @@ import { getSession } from "auth-astro/server";
 
 const session = await getSession(Astro.request);
 
+if (session) {
+  const response = await fetch(
+    `${import.meta.env.PUBLIC_BASE_URL_API}/payment?providerId=${session.user?.providerId}`,
+  );
+
+  if (response.ok) {
+    const data = await response.json();
+    session.user!.subscription = data;
+  }
+}
 ---
 
 <MainLayout title="Open Book">

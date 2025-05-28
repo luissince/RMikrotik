@@ -1,0 +1,61 @@
+---
+// src/pages/assets.astro
+import { getIcons } from '../utils/getIcons';
+import { getImages } from '../utils/getImages';
+import Icon from '../components/Icon.astro';
+
+const icons = getIcons();
+const images = getImages();
+---
+
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recursos Disponibles</title>
+</head>
+<body class="bg-gray-100 p-4">
+  <h1 class="text-2xl font-bold mb-4">Iconos Disponibles</h1>
+  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+    {icons.map(icon => {
+      const codeSnippet = `import Icon from '../components/Icon.astro';
+
+<Icon name="${icon}" size={48} />`;
+
+      return (
+        <div class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg">
+          <Icon name={icon} size={48} />
+          <p class="mt-2 text-center">{icon}</p>
+          <div class="mt-4 w-full bg-gray-200 p-2 rounded">
+            <pre class="text-xs overflow-x-auto"><code>{codeSnippet}</code></pre>
+          </div>
+        </div>
+      );
+    })}
+  </div>
+
+  <h1 class="text-2xl font-bold mb-4 mt-8">Imágenes Disponibles</h1>
+  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+    {images.map(image => {
+      const imageName = image.replace('.png', '');
+      const codeSnippet = `import ${imageName} from '/images/${image}';
+
+const images = {
+  ${imageName},
+};
+
+export { images };`;
+
+      return (
+        <div class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg">
+          <img src={`/images/${image}`} alt={image} class="w-full h-auto" />
+          <p class="mt-2 text-center">{image}</p>
+          <div class="mt-4 w-full bg-gray-200 p-2 rounded">
+            <pre class="text-xs overflow-x-auto"><code>{codeSnippet}</code></pre>
+          </div>
+        </div>
+      );
+    })}
+  </div>
+</body>
+</html>
