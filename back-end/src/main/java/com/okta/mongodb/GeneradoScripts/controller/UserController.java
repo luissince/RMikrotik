@@ -18,7 +18,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/auth/sync")
+    @PostMapping("/auth")
     public Map<String, Object> create(@RequestBody UserBody body) {
         return userService.create(body);
     }

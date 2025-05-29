@@ -9,9 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.okta.mongodb.GeneradoScripts.model.plan.Plan;
 import com.okta.mongodb.GeneradoScripts.model.subscription.PaymentBody;
 import com.okta.mongodb.GeneradoScripts.model.subscription.Subscription;
 import com.okta.mongodb.GeneradoScripts.model.user.User;
+import com.okta.mongodb.GeneradoScripts.repository.PlanRepository;
 import com.okta.mongodb.GeneradoScripts.repository.SubscriptionRepository;
 import com.okta.mongodb.GeneradoScripts.repository.UserRepository;
 
@@ -26,17 +28,9 @@ public class SubcriptionService {
     @Autowired
     private SubscriptionRepository subscriptionRepository;
 
-    private final Map<String, Integer> PLAN_DURATIONS = Map.of(
-            "monthly", 30,
-            "biweekly", 15,
-            "daily", 1,
-            "free", 1);
-
-    private final Map<String, Double> PLAN_PRICES = Map.of(
-            "monthly", 29.99,
-            "biweekly", 19.99,
-            "daily", 4.99,
-            "free", 0.0);
+    
+    @Autowired
+    private PlanRepository planRepository;
 
     public ResponseEntity<?> create(PaymentBody body) {
         logger.info("Body recibido: {}", body);
@@ -48,13 +42,6 @@ public class SubcriptionService {
         User user = userRepository.findByProviderId(body.getProviderId()).orElse(null);
         if (user == null) {
             return ResponseEntity.status(404).body("Usuario no encontrado");
-        }
-
-        Double expectedPrice = PLAN_PRICES.get(body.getPlanId());
-        Integer duration = PLAN_DURATIONS.get(body.getPlanId());
-
-        if (expectedPrice == null || duration == null || !expectedPrice.equals(body.getPrice())) {
-            return ResponseEntity.badRequest().body("Plan inválido o precio incorrecto");
         }
 
         LocalDate today = LocalDate.now();
@@ -75,14 +62,19 @@ public class SubcriptionService {
             subscriptionRepository.save(lastSub);
         }
 
+        Plan plan = planRepository.findById(body.getPlanId()).orElse(null);
+        if (plan == null) {
+            return ResponseEntity.status(404).body("Plan no encontrado");
+        }
+
         // Crear nueva suscripción
         Subscription newSub = new Subscription();
         newSub.setUser(user);
-        newSub.setPlanId(body.getPlanId());
+        newSub.setPlan(plan);
         newSub.setPrice(body.getPrice());
         newSub.setMethod(body.getMethod());
         newSub.setStartDate(today);
-        newSub.setEndDate(today.plusDays(duration));
+        newSub.setEndDate(today.plusDays(plan.getDurationInDays()));
         newSub.setStatus("active");
 
         subscriptionRepository.save(newSub);
@@ -110,7 +102,7 @@ public class SubcriptionService {
         }
 
         return ResponseEntity.ok(Map.of(
-                "planId", subscription.getPlanId(),
+                "planId", subscription.getPlan().getId(),
                 "status", subscription.getStatus(),
                 "startDate", subscription.getStartDate(),
                 "endDate", subscription.getEndDate(),

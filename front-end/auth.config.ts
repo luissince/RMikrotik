@@ -56,7 +56,7 @@ export default defineConfig({
 			console.log('----------signIn----------');
 			console.log('Datos de usuario para guardar en la base de datos', user);
 
-			const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/user/auth/sync`, {
+			const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/user/auth`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

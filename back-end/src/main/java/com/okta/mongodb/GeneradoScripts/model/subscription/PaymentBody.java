@@ -11,7 +11,7 @@ import lombok.ToString;
 @ToString
 public class PaymentBody {
     private String providerId;
-    private String planId;
+    private Long planId;
     private Double price;
     private String method;
 }

@@ -45,7 +45,7 @@ public class UserService {
 
                 if (subscription != null) {
                         Map<String, Object> subData = new java.util.HashMap<>();
-                        subData.put("planId", subscription.getPlanId());
+                        subData.put("planId", subscription.getPlan().getId());
                         subData.put("startDate", subscription.getStartDate());
                         subData.put("endDate", subscription.getEndDate());
                         subData.put("status", subscription.getStatus());

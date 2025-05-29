@@ -1,0 +1,34 @@
+---
+import AdminSubscriptions from "../components/administrator/formulario";
+import MainLayout from "../layout/MainLayout.astro";
+import { getSession } from "auth-astro/server";
+import type { Plan } from "../types/plan/plan";
+
+const session = await getSession(Astro.request);
+
+if (!session) {
+  return Astro.redirect("/sign-in");
+}
+
+const resposePayment = await fetch(
+  `${import.meta.env.PUBLIC_BASE_URL_API}/payment?providerId=${session.user?.providerId}`,
+);
+
+if (resposePayment.ok) {
+  const data = await resposePayment.json();
+  session.user!.subscription = data;
+}
+
+const responsePlan = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/plan`);
+
+let plans: Plan[] = [];
+
+if (responsePlan.ok) {
+    const data = await responsePlan.json();
+    plans = data;
+}
+---
+
+<MainLayout title="Open Book">
+  <AdminSubscriptions client:load session={session} plans={plans} />
+</MainLayout>
