@@ -1,57 +1,103 @@
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { X, CreditCard, QrCode, Lock } from 'lucide-react';
+import { useEffect, useState, useRef } from 'react';
+import { CreditCard, QrCode, Lock, Check, BoxSelect, ArrowLeft } from 'lucide-react';
 import type { Session } from '@auth/core/types';
+import type { Plan } from '../../types/plan/plan';
+import Modal from '../ui/modal';
+import Button from '../ui/Button';
+import { buttonPresets } from '../../styles/buttonStyles';
+import AlertKit, { alertKit } from 'alert-kit';
+import { luhnCheck } from '../../utils/helper';
 
 interface Props {
   session: Session | null;
+  plans: Plan[];
 }
 
-const cardSchema = z.object({
-  number: z.string().min(19, 'Número de tarjeta inválido'),
-  expiry: z.string().min(5, 'Fecha inválida'),
-  cvv: z.string().min(3).max(4, 'CVV inválido'),
-  name: z.string().min(3, 'Nombre requerido'),
+type CardData = {
+  number: string | null;
+  expiry: string | null;
+  cvv: string | null;
+  name: string | null;
+}
+
+const cardDefaultData: CardData = {
+  number: import.meta.env.PUBLIC_ENV === 'development' ? '4111 1111 1111 1111' : '',
+  expiry: import.meta.env.PUBLIC_ENV === 'development' ? '12/25' : '',
+  cvv: import.meta.env.PUBLIC_ENV === 'development' ? '123' : '',
+  name: import.meta.env.PUBLIC_ENV === 'development' ? 'Juan Pérez' : '',
+};
+
+AlertKit.setGlobalDefaults({
+  headerClassName: 'bg-white p-4 border-b border-gray-200 rounded-t-2xl cursor-move',
+  headerTitle: 'RMikrotik',  // Tu nombre de app por defecto
+  showCloseButton: false,
+
+  // Clases de botones por defecto (usando tus buttonPresets existentes)
+  primaryButtonClassName: buttonPresets.modalAccept,
+  cancelButtonClassName: buttonPresets.modalCancel,
+  acceptButtonClassName: buttonPresets.modalAccept,
+
+  // Textos por defecto en español
+  defaultTexts: {
+    success: 'Éxito',
+    error: 'Error',
+    warning: 'Advertencia',
+    info: 'Información',
+    question: 'Confirmación',
+    accept: 'Aceptar',
+    cancel: 'Cancelar',
+    ok: 'Aceptar'
+  }
 });
 
-type CardData = z.infer<typeof cardSchema>;
+const PaymentModal = ({ session, plans }: Props) => {
 
-const PaymentModal = ({ session }: Props) => {
+  /**
+   * Variable para manejar el modal de pago
+   */
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<any>(null);
+  const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
   const [paymentMethod, setPaymentMethod] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<CardData>({
-    resolver: zodResolver(cardSchema),
-    defaultValues: {
-      number: '4111 1111 1111 1111',
-      expiry: '12/25',
-      cvv: '123',
-      name: 'Juan Pérez',
-    },
+  const cardNumberRef = useRef<HTMLInputElement>(null);
+  const [cardData, setCardData] = useState<CardData>(cardDefaultData);
+  const [errors, setErrors] = useState<CardData>({
+    number: null,
+    expiry: null,
+    cvv: null,
+    name: null,
   });
 
-  const plans = [
-    { id: 'monthly', name: 'Plan Mensual', price: 29.99, duration: '30 días' },
-    { id: 'biweekly', name: 'Plan por 15 Días', price: 19.99, duration: '15 días' },
-    { id: 'daily', name: 'Plan por 1 Día', price: 4.99, duration: '1 día' },
-    { id: 'free', name: 'Plan Free', price: 0.0, duration: '1 día' },
-  ];
+  // ===========================================================================
+  // Función para enfocar el campo de número de tarjeta
+  // ===========================================================================
+  useEffect(() => {
+    if (paymentMethod === 'card' && cardNumberRef.current) {
+      cardNumberRef.current.focus();
+    }
+  }, [paymentMethod]);
 
-  const openModal = (planId: string) => {
+
+  // ===========================================================================
+  // Funciones para abrir y cerrar el modal de pago
+  // ===========================================================================
+  const openModal = (planId: number) => {
     const plan = plans.find(p => p.id === planId);
+
+    if (!plan) {
+      alertKit.warning({
+        title: 'Plan no encontrado',
+        message: 'No se encontró el plan seleccionado',
+        primaryButton: {
+          text: 'Aceptar',
+        }
+      });
+      return;
+    }
+
     setSelectedPlan(plan);
     setIsOpen(true);
     setPaymentMethod('');
-    reset(); // Esto seguirá usando los valores por defecto
   };
 
   const closeModal = () => {
@@ -59,231 +105,384 @@ const PaymentModal = ({ session }: Props) => {
     setSelectedPlan(null);
     setPaymentMethod('');
     setIsProcessing(false);
-    reset();
   };
 
-  const sendToApi = async (data: any) => {
+  // ===========================================================================
+  // Funciones para procesar el pago con tarjeta
+  // ===========================================================================
+
+  // Función para validar el número de tarjeta
+  const onSubmitCard = async () => {
+    if (!cardData.number || !/^\d{13,19}$/.test(cardData.number.replace(/\s+/g, '')) || !luhnCheck(cardData.number.replace(/\s+/g, ''))) {
+      setErrors(prev => ({ ...prev, number: 'Número de tarjeta inválido' }));
+      return false;
+    }
+
+    // Validación de la fecha de expiración
+    if (!cardData.expiry || !/^(0[1-9]|1[0-2])\/?([0-9]{2})$/.test(cardData.expiry)) {
+      setErrors(prev => ({ ...prev, expiry: 'Fecha de expiración inválida' }));
+      return false;
+    } else {
+      const [month, year] = cardData.expiry.split('/');
+      const expiryDate = new Date(parseInt(`20${year}`), parseInt(month) - 1);
+      const currentDate = new Date();
+
+      if (expiryDate < currentDate) {
+        setErrors(prev => ({ ...prev, expiry: 'La tarjeta ha expirado' }));
+        return false;
+      }
+    }
+
+    // Validación del CVV
+    if (!cardData.cvv || !/^\d{3,4}$/.test(cardData.cvv)) {
+      setErrors(prev => ({ ...prev, cvv: 'CVV inválido' }));
+      return false;
+    }
+
+    // Validación del nombre del titular
+    if (!cardData.name) {
+      setErrors(prev => ({ ...prev, name: 'Nombre inválido' }));
+      return false;
+    }
+
+    prepareAndSendData("card", cardData)
+  }
+
+  // Función para validar el código QR
+  const onSubmitPayment = async () => {
+    prepareAndSendData('qr')
+  };
+
+  // Función para preparar y enviar los datos del pago
+  const prepareAndSendData = async (method: string, cardData?: CardData) => {
+
+    // Validación de que exista un plan seleccionado
+    if (!selectedPlan) return;
+
+    // Validación de que exista una sesión iniciada
     if (!session?.user?.providerId) {
-      alert("No se pudo identificar al usuario");
+      alertKit.warning({
+        title: 'Procesar pago',
+        message: 'Inicie sesión para poder pagar',
+        primaryButton: {
+          text: 'Iniciar Sesión',
+        }
+      });
       return;
     }
 
-    try {
-      const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/payment`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...data,
-          providerId: session.user.providerId,
-        }),
-      });
+    // Creación del payload para el servicio de pago
+    const payload = {
+      planId: selectedPlan.id,
+      method: method,
+      cardData: method === 'card' ? cardData : undefined,
+      qrCode: method === 'qr' ? `PAYMENT:${selectedPlan.id}:${selectedPlan.price}` : undefined,
+    };
 
-      const result = await response.text();
-      
-      if (!response.ok) throw new Error(result || 'Error al procesar pago');
+    // Creación de la confirmación para el pago
+    const confirmation = await new Promise((resolve) => {
+      alertKit.question({
+        title: 'Plan',
+        message: '¿Está seguro de que desea pagar?',
+        acceptButton: {
+          text: 'Aceptar',
+        },
+        cancelButton: {
+          text: 'Cancelar',
+        },
+      }, resolve);
+    });
 
-      alert('Pago procesado con éxito');
-      closeModal();
-    } catch (error: any) {
-      alert(error.message);
-    } finally {
-      setIsProcessing(false);
+    // Procesamiento del pago
+    if (confirmation) {
+
+      // Marcar el pago como en proceso
+      setIsProcessing(true);
+
+      // Envío del pago
+      try {
+
+        // Envío del pago
+        const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/payment`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ...payload,
+            providerId: session!.user!.providerId,
+          }),
+        });
+
+        // Obtención del resultado del pago
+        const result = await response.text();
+
+        // Validación de que el pago haya sido exitoso
+        if (!response.ok) throw new Error(result || 'Error al procesar pago');
+
+        // Mostrar el mensaje de exito
+        alertKit.success({
+          title: 'Pago exitoso',
+          message: 'El pago se ha procesado con éxito',
+          primaryButton: {
+            text: 'Aceptar',
+          }
+        });
+
+        // cerrar el modal
+        closeModal();
+      } catch (error: any) {
+        // Mostrar el mensaje de error
+        alertKit.error({
+          title: 'Error al procesar pago',
+          message: error.message,
+          primaryButton: {
+            text: 'Aceptar',
+          }
+        });
+      } finally {
+        // Marcar el pago como finalizado
+        setIsProcessing(false);
+      }
     }
   };
 
-  const onSubmit = async (data: CardData) => {
-    if (!selectedPlan) return;
-
-    setIsProcessing(true);
-
-    const payload = {
-      planId: selectedPlan.id,
-      price: selectedPlan.price,
-      method: paymentMethod,
-      cardData: paymentMethod === 'card' ? data : undefined,
-      qrCode: paymentMethod === 'qr' ? `PAYMENT:${selectedPlan.id}:${selectedPlan.price}` : undefined,
-    };
-
-    await sendToApi(payload);
-  };
-
-  const handleQRSubmit = async () => {
-    setIsProcessing(true);
-    if (!selectedPlan) return;
-
-    const payload = {
-      planId: selectedPlan.id,
-      price: selectedPlan.price,
-      method: 'qr',
-      qrCode: `PAYMENT:${selectedPlan.id}:${selectedPlan.price}`,
-    };
-
-    await sendToApi(payload);
-  };
-
+  // ===========================================================================
+  // Renderización del componente
+  // ===========================================================================
   return (
-    <>
-      <div className="container mx-auto px-4 py-8">
-        <div className="bg-gray-800 shadow-lg p-6 rounded-lg text-center mb-8">
-          <h1 className="text-4xl font-bold text-blue-400">
-            <span className="text-white">PLANES DE USO</span>
-          </h1>
-          <p className="text-gray-500 mt-2 font-bold">
-            {session?.user?.name && `${session.user.name} |`} Elige el plan que mejor se adapte a tus necesidades
-          </p>
+    <div className="container mx-auto px-4 py-8">
+      {/* Cuerpo del formulario */}
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="bg-gray-800 rounded-lg p-6 mb-6">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-white mb-2">
+                Planes
+              </h1>
+              <p className="text-white">Gestión de suscripciones</p>
+            </div>
+            <div className="mt-4 lg:mt-0">
+              <div className="flex items-center space-x-4 text-sm">
+                <span className="text-gray-300">Usuario:</span>
+                <span className="text-blue-400 font-semibold">{session && session.user?.name || '-'}</span>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-8">
-          {plans.map(plan => (
-            <div key={plan.id} className="lg:w-1/4 bg-white rounded-xl shadow-lg p-6">
-              <h2 className="text-xl font-bold text-gray-800 text-center">{plan.name}</h2>
-              <p className="text-gray-600 text-center mt-2">Acceso completo por {plan.duration}</p>
-              <div className="mt-6">
-                <p className="text-gray-800 font-bold text-center">
-                  ${plan.price}
-                  {plan.id === 'monthly' ? '/mes' : ''}
-                </p>
-                <button
-                  onClick={() => openModal(plan.id)}
-                  className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg w-full mt-4 transition-colors"
-                >
-                  Seleccionar Plan
-                </button>
+        {/* Listado de Planes */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {plans.map((plan) => (
+            <div key={plan.id} className="bg-white rounded-lg shadow-lg">
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xl font-bold text-gray-900">{plan.name}</h3>
+                  <span className={`px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-600`}>
+                    ACTIVO
+                  </span>
+                </div>
+
+                <div className="mb-4">
+                  <div className="text-3xl font-bold text-gray-900 mb-1">
+                    ${plan.price}
+                    <span className="text-lg font-normal text-gray-500">
+                      /{plan.durationInDays} día{plan.durationInDays !== 1 ? 's' : ''}
+                    </span>
+                  </div>
+                  <p className="text-gray-600">{plan.description}</p>
+                </div>
+
+                <div className="mb-6 h-full">
+                  <h4 className="text-sm font-semibold text-gray-900 mb-2">Características:</h4>
+                  <ul className="space-y-1">
+                    {plan.characteristics.map((characteristic, index) => (
+                      <li key={index} className="text-sm text-gray-600 flex items-center">
+                        <Check className="w-3 h-3 text-green-500 mr-2 flex-shrink-0" />
+                        {characteristic.name}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="flex space-x-2">
+                  <Button
+                    onClick={() => openModal(plan.id)}
+                    variant="error"
+                    fullWidth
+                    leftIcon={<BoxSelect className="w-4 h-4" />}
+                  >
+                    Seleccionar Plan
+                  </Button>
+                </div>
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      {isOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between p-6 border-b">
-              <h2 className="text-xl font-bold text-gray-800">Procesar Pago</h2>
-              <button onClick={closeModal} className="text-gray-500 hover:text-gray-700 transition-colors">
-                <X size={24} />
+      {/* Modal para seleccionar Plan */}
+      <Modal
+        isOpen={isOpen}
+        onClose={closeModal}
+        title="Modal Básico"
+        size="md"
+      >
+
+        {paymentMethod && (
+          <Button
+            onClick={() => setPaymentMethod('')}
+            variant="link"
+            size="none"
+            className="text-gray-500"
+          >
+            <ArrowLeft size={16} className="mr-2" />
+            Cambiar método de pago
+          </Button>
+        )}
+
+        <div className="bg-gray-50 rounded-lg p-4 mb-6">
+          <h3 className="font-semibold text-gray-800">{selectedPlan?.name}</h3>
+          <p className="text-gray-600 text-sm">Duración: {selectedPlan?.durationInDays}</p>
+          <p className="text-2xl font-bold text-green-600 mt-2">${selectedPlan?.price}</p>
+        </div>
+
+        {selectedPlan?.price! > 0 && !paymentMethod && (
+          <>
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">Selecciona método de pago</h3>
+            <div className="space-y-3 mb-6">
+              <button
+                onClick={() => setPaymentMethod('card')}
+                className="w-full flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              >
+                <CreditCard className="text-blue-600 mr-3" size={24} />
+                <div>
+                  <p className="font-semibold text-gray-800">Tarjeta</p>
+                  <p className="text-sm text-gray-600">Visa, Mastercard</p>
+                </div>
+              </button>
+              <button
+                onClick={() => setPaymentMethod('qr')}
+                className="w-full flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-green-500 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              >
+                <QrCode className="text-green-600 mr-3" size={24} />
+                <div>
+                  <p className="font-semibold text-gray-800">Código QR</p>
+                  <p className="text-sm text-gray-600">Paga con tu app bancaria</p>
+                </div>
               </button>
             </div>
+          </>
+        )}
 
-            <div className="p-6">
-              <div className="bg-gray-50 rounded-lg p-4 mb-6">
-                <h3 className="font-semibold text-gray-800">{selectedPlan?.name}</h3>
-                <p className="text-gray-600 text-sm">Duración: {selectedPlan?.duration}</p>
-                <p className="text-2xl font-bold text-green-600 mt-2">${selectedPlan?.price}</p>
-              </div>
+        {paymentMethod === 'card' && (
+          <div className="space-y-4">
 
-              {selectedPlan?.price > 0 && !paymentMethod && (
-                <>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">Selecciona método de pago</h3>
-                  <div className="space-y-3 mb-6">
-                    <button
-                      onClick={() => setPaymentMethod('card')}
-                      className="w-full flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50"
-                    >
-                      <CreditCard className="text-blue-600 mr-3" size={24} />
-                      <div>
-                        <p className="font-semibold text-gray-800">Tarjeta</p>
-                        <p className="text-sm text-gray-600">Visa, Mastercard</p>
-                      </div>
-                    </button>
-                    <button
-                      onClick={() => setPaymentMethod('qr')}
-                      className="w-full flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-green-500 hover:bg-green-50"
-                    >
-                      <QrCode className="text-green-600 mr-3" size={24} />
-                      <div>
-                        <p className="font-semibold text-gray-800">Código QR</p>
-                        <p className="text-sm text-gray-600">Paga con tu app bancaria</p>
-                      </div>
-                    </button>
-                  </div>
-                </>
-              )}
-
-              {paymentMethod === 'card' && (
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                  <div className="flex items-center mb-4">
-                    <Lock className="text-green-600 mr-2" size={16} />
-                    <span className="text-sm text-gray-600">Pago seguro y encriptado</span>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">Número de tarjeta</label>
-                    <input
-                      type="text"
-                      {...register('number')}
-                      placeholder="1234 5678 9012 3456"
-                      className="w-full p-3 border rounded-lg"
-                    />
-                    {errors.number && <p className="text-red-500 text-sm">{errors.number.message}</p>}
-                  </div>
-
-                  <div className="flex gap-4">
-                    <div className="w-1/2">
-                      <label className="block text-sm font-medium text-gray-700">Fecha (MM/YY)</label>
-                      <input
-                        type="text"
-                        {...register('expiry')}
-                        placeholder="MM/YY"
-                        className="w-full p-3 border rounded-lg"
-                      />
-                      {errors.expiry && <p className="text-red-500 text-sm">{errors.expiry.message}</p>}
-                    </div>
-                    <div className="w-1/2">
-                      <label className="block text-sm font-medium text-gray-700">CVV</label>
-                      <input
-                        type="text"
-                        {...register('cvv')}
-                        placeholder="123"
-                        className="w-full p-3 border rounded-lg"
-                      />
-                      {errors.cvv && <p className="text-red-500 text-sm">{errors.cvv.message}</p>}
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">Nombre del titular</label>
-                    <input
-                      type="text"
-                      {...register('name')}
-                      placeholder="Juan Pérez"
-                      className="w-full p-3 border rounded-lg"
-                    />
-                    {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={isProcessing}
-                    className="w-full bg-green-600 text-white py-2 rounded-lg mt-4 hover:bg-green-700"
-                  >
-                    {isProcessing ? 'Procesando...' : 'Pagar con tarjeta'}
-                  </button>
-                </form>
-              )}
-
-              {paymentMethod === 'qr' && (
-                <div>
-                  <p className="text-center text-sm text-gray-600 mb-4">Escanea el siguiente código con tu app bancaria:</p>
-                  <div className="flex justify-center mb-4">
-                    <div className="w-48 h-48 bg-gray-200 flex items-center justify-center text-gray-400">
-                      QR CODE
-                    </div>
-                  </div>
-                  <button
-                    onClick={handleQRSubmit}
-                    disabled={isProcessing}
-                    className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700"
-                  >
-                    {isProcessing ? 'Procesando...' : 'Confirmar pago QR'}
-                  </button>
-                </div>
-              )}
+            <div className="flex items-center mb-4">
+              <Lock className="text-green-600 mr-2" size={16} />
+              <span className="text-sm text-gray-600">Pago seguro y encriptado</span>
             </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Número de tarjeta</label>
+              <input
+                type="text"
+                value={cardDefaultData.number!}
+                ref={cardNumberRef}
+                onChange={(e) => {
+                  setCardData({
+                    ...cardData,
+                    number: e.target.value,
+                  });
+                }}
+                placeholder="1234 5678 9012 3456"
+                className="w-full p-3 border rounded-lg"
+              />
+              {errors.number && <p className="text-red-500 text-sm">{errors.number}</p>}
+            </div>
+
+            <div className="flex gap-4">
+              <div className="w-1/2">
+                <label className="block text-sm font-medium text-gray-700">Fecha (MM/YY)</label>
+                <input
+                  type="text"
+                  value={cardDefaultData.expiry!}
+                  onChange={(e) => {
+                    setCardData({
+                      ...cardData,
+                      expiry: e.target.value,
+                    });
+                  }}
+                  placeholder="MM/YY"
+                  className="w-full p-3 border rounded-lg"
+                />
+                {errors.expiry && <p className="text-red-500 text-sm">{errors.expiry}</p>}
+              </div>
+              <div className="w-1/2">
+                <label className="block text-sm font-medium text-gray-700">CVV</label>
+                <input
+                  type="text"
+                  value={cardDefaultData.cvv!}
+                  onChange={(e) => {
+                    setCardData({
+                      ...cardData,
+                      cvv: e.target.value,
+                    });
+                  }}
+                  placeholder="123"
+                  className="w-full p-3 border rounded-lg"
+                />
+                {errors.cvv && <p className="text-red-500 text-sm">{errors.cvv}</p>}
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Nombre del titular</label>
+              <input
+                type="text"
+                value={cardDefaultData.name!}
+                onChange={(e) => {
+                  setCardData({
+                    ...cardData,
+                    name: e.target.value,
+                  });
+                }}
+                placeholder="Juan Pérez"
+                className="w-full p-3 border rounded-lg"
+              />
+              {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
+            </div>
+
+            <Button
+              onClick={onSubmitCard}
+              loading={isProcessing}
+              variant="success"
+              fullWidth
+            >
+              Pagar con tarjeta
+            </Button>
           </div>
-        </div>
-      )}
-    </>
+        )}
+
+        {paymentMethod === 'qr' && (
+          <div>
+            <p className="text-center text-sm text-gray-600 mb-4">Escanea el siguiente código con tu app bancaria:</p>
+            <div className="flex justify-center mb-4">
+              <div className="w-48 h-48 bg-gray-200 flex items-center justify-center text-gray-400">
+                QR CODE
+              </div>
+            </div>
+            <Button
+              onClick={onSubmitPayment}
+              loading={isProcessing}
+              variant="success"
+              fullWidth
+            >
+              Confirmar pago QR
+            </Button>
+          </div>
+        )}
+      </Modal>
+    </div>
   );
 };
 

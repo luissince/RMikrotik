@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.time.LocalDate;
 
+import com.okta.mongodb.GeneradoScripts.model.plan.Plan;
 import com.okta.mongodb.GeneradoScripts.model.user.User;
 
 @Entity
@@ -15,7 +16,9 @@ public class Subscription {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String planId;
+    @ManyToOne
+    @JoinColumn(name = "plan_id")
+    private Plan plan;
     private Double price;
     private String method;
 
@@ -27,4 +30,3 @@ public class Subscription {
     @JoinColumn(name = "user_id")
     private User user;
 }
-

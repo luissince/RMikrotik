@@ -2,10 +2,20 @@
 import PaymentModal from "../components/pricing/formulario";
 import MainLayout from "../layout/MainLayout.astro";
 import { getSession } from "auth-astro/server";
+import type { Plan } from "../types/plan/plan";
 
 const session = await getSession(Astro.request);
+
+const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/plan`);
+
+let plans: Plan[] = [];
+
+if (response.ok) {
+    const data = await response.json();
+    plans = data;
+}
 ---
 
 <MainLayout title="Planes de Uso">
-    <PaymentModal client:load  session={session} />
+    <PaymentModal client:load session={session} plans={plans} />
 </MainLayout>

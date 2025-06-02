@@ -1,5 +1,6 @@
 package com.okta.mongodb.GeneradoScripts.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -45,7 +46,7 @@ public class UserService {
 
                 if (subscription != null) {
                         Map<String, Object> subData = new java.util.HashMap<>();
-                        subData.put("planId", subscription.getPlanId());
+                        subData.put("planId", subscription.getPlan().getId());
                         subData.put("startDate", subscription.getStartDate());
                         subData.put("endDate", subscription.getEndDate());
                         subData.put("status", subscription.getStatus());
@@ -57,6 +58,10 @@ public class UserService {
                 }
 
                 return response;
+        }
+
+        public List<User> getAllUsers() {
+                return userRepository.findAll();
         }
 
 }
