@@ -5,6 +5,7 @@ import com.okta.mongodb.GeneradoScripts.model.subscription.Subscription;
 import com.okta.mongodb.GeneradoScripts.model.user.User;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -14,5 +15,7 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Long
             LocalDate date);
 
     Subscription findTopByUserOrderByEndDateDesc(User user);
+
+    List<Subscription> findByUserOrderByStartDateDesc(User user);
 
 }

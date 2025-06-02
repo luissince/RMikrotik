@@ -1,7 +1,7 @@
 import type { PlanCharacteristic } from "./plan-characteric";
 
 export interface Plan {
-    id: string;
+    id: number;
     active: boolean;
     durationInDays: number;
     name: string;

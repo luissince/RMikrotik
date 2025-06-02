@@ -1,6 +1,7 @@
 package com.okta.mongodb.GeneradoScripts.service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -28,7 +29,6 @@ public class SubcriptionService {
     @Autowired
     private SubscriptionRepository subscriptionRepository;
 
-    
     @Autowired
     private PlanRepository planRepository;
 
@@ -47,7 +47,8 @@ public class SubcriptionService {
         LocalDate today = LocalDate.now();
 
         // Buscar suscripción activa (status = "active" y endDate >= hoy)
-        Subscription activeSub = subscriptionRepository.findTopByUserAndStatusAndEndDateGreaterThanEqualOrderByEndDateDesc(user, "active", today);
+        Subscription activeSub = subscriptionRepository
+                .findTopByUserAndStatusAndEndDateGreaterThanEqualOrderByEndDateDesc(user, "active", today);
 
         if (activeSub != null) {
             return ResponseEntity.badRequest().body("Ya tienes una suscripción activa");
@@ -71,7 +72,7 @@ public class SubcriptionService {
         Subscription newSub = new Subscription();
         newSub.setUser(user);
         newSub.setPlan(plan);
-        newSub.setPrice(body.getPrice());
+        newSub.setPrice(plan.getPrice());
         newSub.setMethod(body.getMethod());
         newSub.setStartDate(today);
         newSub.setEndDate(today.plusDays(plan.getDurationInDays()));
@@ -80,6 +81,37 @@ public class SubcriptionService {
         subscriptionRepository.save(newSub);
 
         return ResponseEntity.ok(Map.of("message", "Suscripción registrada exitosamente"));
+    }
+
+    public ResponseEntity<?> getAllSubscriptions() {
+
+        List<Subscription> subscriptions = subscriptionRepository.findAll();
+
+        List<Map<String, Object>> responseList = subscriptions.stream().map(sub -> {
+
+            Map<String, Object> plan = Map.of(
+                    "id", sub.getPlan().getId(),
+                    "name", sub.getPlan().getName());
+
+            Map<String, Object> user = Map.of(
+                    "name", sub.getUser().getName(),
+                    "email", sub.getUser().getEmail(),
+                    "image", sub.getUser().getImage());
+
+            Map<String, Object> response = Map.of(
+                    "id", sub.getId(),
+                    "plan", plan,
+                    "price", sub.getPrice(),
+                    "method", sub.getMethod(),
+                    "startDate", sub.getStartDate(),
+                    "endDate", sub.getEndDate(),
+                    "status", sub.getStatus(),
+                    "user", user);
+
+            return response;
+        }).toList();
+
+        return ResponseEntity.ok(responseList);
     }
 
     public ResponseEntity<?> getActiveSubscription(String providerId) {
@@ -95,7 +127,8 @@ public class SubcriptionService {
         LocalDate today = LocalDate.now();
 
         // Obtener solo la suscripción activa actual
-        Subscription subscription = subscriptionRepository.findTopByUserAndStatusAndEndDateGreaterThanEqualOrderByEndDateDesc(user, "active", today);
+        Subscription subscription = subscriptionRepository
+                .findTopByUserAndStatusAndEndDateGreaterThanEqualOrderByEndDateDesc(user, "active", today);
 
         if (subscription == null) {
             return ResponseEntity.status(400).body("No hay suscripción activa");
@@ -110,4 +143,3 @@ public class SubcriptionService {
                 "method", subscription.getMethod()));
     }
 }
-

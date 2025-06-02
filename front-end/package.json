@@ -18,7 +18,7 @@
     "@hookform/resolvers": "5.0.1",
     "@types/react": "18.3.12",
     "@types/react-dom": "18.3.1",
-    "alert-kit": "^2.0.5",
+    "alert-kit": "^2.1.8",
     "astro": "4.16.8",
     "auth-astro": "4.1.2",
     "lucide-react": "^0.511.0",
@@ -31,6 +31,7 @@
     "zod": "3.24.3"
   },
   "devDependencies": {
-    "@tailwindcss/typography": "0.5.16"
+    "@tailwindcss/typography": "0.5.16",
+    "@types/node": "^22.15.24"
   }
 }

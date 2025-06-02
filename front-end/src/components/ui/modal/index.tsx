@@ -4,7 +4,7 @@ import { X } from 'lucide-react';
 interface ModalProps {
     isOpen: boolean;
     onClose: () => void;
-    title?: string;
+    title?: string | React.ReactNode;
     children: React.ReactNode;
     footer?: React.ReactNode;
     size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
@@ -110,16 +110,8 @@ const Modal: React.FC<ModalProps> = ({
 
     useEffect(() => {
         if (isOpen) {
-            // Guardar el elemento activo actual
-            previousActiveElement.current = document.activeElement as HTMLElement;
-
-            // Prevenir scroll del body si está habilitado
-            if (preventBodyScroll) {
-                document.body.style.overflow = 'hidden';
-            }
-
             // Enfocar el primer elemento focuseable del modal
-            setTimeout(() => {
+            requestAnimationFrame(() => {
                 if (modalRef.current) {
                     const focusableElements = getFocusableElements(modalRef.current);
                     if (focusableElements.length > 0) {
@@ -128,11 +120,23 @@ const Modal: React.FC<ModalProps> = ({
                         modalRef.current.focus();
                     }
                 }
-            }, 100);
+            });
+        }
+    }, [isOpen, getFocusableElements]);
+
+    useEffect(() => {
+        if (isOpen) {
+            // Guardar el elemento activo actual
+            previousActiveElement.current = document.activeElement as HTMLElement;
+
+            // Prevenir scroll del body si está habilitado
+            if (preventBodyScroll) {
+                document.body.style.overflow = 'hidden';
+            }
 
             // Agregar event listeners
-            document.addEventListener('keydown', handleEscape);
-            document.addEventListener('keydown', trapFocus);
+            modalRef.current?.addEventListener('keydown', handleEscape);
+            modalRef.current?.addEventListener('keydown', trapFocus);
 
             return () => {
                 // Restaurar scroll del body
@@ -146,8 +150,8 @@ const Modal: React.FC<ModalProps> = ({
                 }
 
                 // Remover event listeners
-                document.removeEventListener('keydown', handleEscape);
-                document.removeEventListener('keydown', trapFocus);
+                modalRef.current?.removeEventListener('keydown', handleEscape);
+                modalRef.current?.removeEventListener('keydown', trapFocus);
             };
         }
     }, [isOpen, handleEscape, trapFocus, getFocusableElements, preventBodyScroll]);
@@ -165,7 +169,7 @@ const Modal: React.FC<ModalProps> = ({
         >
             <div
                 ref={modalRef}
-                className={`bg-white rounded-xl shadow-2xl w-full ${getModalSize()} max-h-[90vh] overflow-hidden ${className} ${contentClassName}`}
+                className={`bg-white rounded-xl shadow-2xl w-full ${getModalSize()} max-h-[90vh] overflow-hidden focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${className} ${contentClassName}`}
                 onClick={(e) => e.stopPropagation()}
                 tabIndex={-1}
             >
@@ -180,7 +184,7 @@ const Modal: React.FC<ModalProps> = ({
                         {showCloseButton && (
                             <button
                                 onClick={onClose}
-                                className="text-gray-500 hover:text-gray-700 transition-colors p-1 rounded-lg hover:bg-gray-100"
+                                className="text-gray-500 hover:text-gray-700 focus:text-gray-700 transition-colors p-1 rounded-lg hover:bg-gray-100 focus:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
                                 aria-label="Cerrar modal"
                             >
                                 <X size={24} />

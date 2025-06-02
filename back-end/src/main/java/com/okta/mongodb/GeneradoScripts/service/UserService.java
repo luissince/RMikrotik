@@ -1,5 +1,6 @@
 package com.okta.mongodb.GeneradoScripts.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -57,6 +58,10 @@ public class UserService {
                 }
 
                 return response;
+        }
+
+        public List<User> getAllUsers() {
+                return userRepository.findAll();
         }
 
 }

@@ -28,4 +28,9 @@ public class SubcriptionController {
     public ResponseEntity<?> getActiveSubscription(@RequestParam String providerId) {
         return subcriptionService.getActiveSubscription(providerId);
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllSubscriptions() {
+        return subcriptionService.getAllSubscriptions();
+    }
 }
