@@ -1,11 +1,8 @@
-
 import React, { useState } from "react";
-
 type ScriptResult = {
     html: string;
     text: string;
 };
-
 interface FormData {
     parentNameQueue: string;
     targetLocalIP: string;
@@ -17,11 +14,10 @@ interface FormData {
     endIPClient: string;
     upClient: string;
     downClient: string;
-    bucketSizeUp: string;
-    bucketSizeDown: string;
+    upLimitAt: string;
+    downLimitAt: string;
 }
-
-export default function FormularioScriptGenerator() {
+const FormularioSimpleQueueGeneratorShared = () => {
     const [parentNameQueue, setParentNameQueue] = useState("Global-Connection");
     const [targetLocalIP, setTargetLocalIP] = useState("192.168.88.0/24");
     const [upTotal, setUpTotal] = useState("5M");
@@ -32,9 +28,10 @@ export default function FormularioScriptGenerator() {
     const [endIPClient, setEndIPClient] = useState("192.168.88.35");
     const [upClient, setUpClient] = useState("512K");
     const [downClient, setDownClient] = useState("1M");
-    const [bucketSizeUp, setBucketSizeUp] = useState("0.1");
-    const [bucketSizeDown, setBucketSizeDown] = useState("0.1");
-    const [scriptResult, setScriptResult] = useState<ScriptResult | null>(null);
+    const [upLimitAt, setUpLimitAt] = useState("0");
+    const [downLimitAt, setDownLimitAt] = useState("0");
+    const [autoSetBandwidth, setAutoSetBandwidth] = useState(false);
+     const [scriptResult, setScriptResult] = useState<ScriptResult | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 
     const handleClear = () => {
@@ -48,15 +45,15 @@ export default function FormularioScriptGenerator() {
         setEndIPClient("");
         setUpClient("");
         setDownClient("");
-        setBucketSizeUp("0.1");
-        setBucketSizeDown("0.1");
-        setScriptResult(null);
+        setUpLimitAt("0");
+        setDownLimitAt("0");
+        setAutoSetBandwidth(false);
     };
-
     const handleGenerate = async () => {
         setIsLoading(true);
         try {
             const payload = {
+
                 parentNameQueue: parentNameQueue,
                 targetLocalIP: targetLocalIP,
                 upTotal: upTotal,
@@ -67,12 +64,14 @@ export default function FormularioScriptGenerator() {
                 endIPClient: endIPClient,
                 upClient: upClient,
                 downClient: downClient,
-                bucketSizeUp: bucketSizeUp,
-                bucketSizeDown: bucketSizeDown,
+                upLimitAt: upLimitAt,
+                downLimitAt: downLimitAt,
+
+
             };
 
             // Simulate API call
-            const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/simple-queue-generator`, {
+            const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/simple-queue-generator-shared`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -95,16 +94,13 @@ export default function FormularioScriptGenerator() {
     };
 
     return (
-        <div className="flex flex-col lg:flex-row gap-6 bg-gray-900 p-6 rounded-lg shadow-lg">
+        <div className="flex flex-col lg:flex-row gap-6 bg-gray-900 p-6 rounded-lg shadow-lg ">
             {/* Form Section */}
             <div className="flex flex-col gap-6 lg:w-1/2">
                 <form className="space-y-4">
                     <div className="space-y-2">
-                        <label
-                            htmlFor="parentNameQueue"
-                            className="block text-sm font-semibold text-gray-300"
-                        >
-                            Parent Nombre Queue
+                        <label htmlFor="parentNameQueue" className="block text-sm font-semibold text-gray-300">
+                            Parent Name Queue
                         </label>
                         <input
                             id="parentNameQueue"
@@ -117,10 +113,7 @@ export default function FormularioScriptGenerator() {
                     </div>
 
                     <div className="space-y-2">
-                        <label
-                            htmlFor="targetLocalIP"
-                            className="block text-sm font-semibold text-gray-300"
-                        >
+                        <label htmlFor="targetLocalIP" className="block text-sm font-semibold text-gray-300">
                             Target Local IP / Interface
                         </label>
                         <input
@@ -135,11 +128,8 @@ export default function FormularioScriptGenerator() {
 
                     <div className="flex gap-4">
                         <div className="flex-1 space-y-2">
-                            <label
-                                htmlFor="upTotal"
-                                className="block text-sm font-semibold text-gray-300"
-                            >
-                                Up Total (K/M)
+                            <label htmlFor="upTotal" className="block text-sm font-semibold text-gray-300">
+                                Upload Max-Limit
                             </label>
                             <input
                                 id="upTotal"
@@ -151,11 +141,8 @@ export default function FormularioScriptGenerator() {
                             />
                         </div>
                         <div className="flex-1 space-y-2">
-                            <label
-                                htmlFor="downTotal"
-                                className="block text-sm font-semibold text-gray-300"
-                            >
-                                Down Total (K/M)
+                            <label htmlFor="downTotal" className="block text-sm font-semibold text-gray-300">
+                                Download Max-Limit
                             </label>
                             <input
                                 id="downTotal"
@@ -172,10 +159,7 @@ export default function FormularioScriptGenerator() {
 
                     <div className="flex gap-4">
                         <div className="flex-1 space-y-2">
-                            <label
-                                htmlFor="clientNameQueue"
-                                className="block text-sm font-semibold text-gray-300"
-                            >
+                            <label htmlFor="clientNameQueue" className="block text-sm font-semibold text-gray-300">
                                 Client Name Queue
                             </label>
                             <input
@@ -188,10 +172,7 @@ export default function FormularioScriptGenerator() {
                             />
                         </div>
                         <div className="flex-1 space-y-2">
-                            <label
-                                htmlFor="clientIdentity"
-                                className="block text-sm font-semibold text-gray-300"
-                            >
+                            <label htmlFor="clientIdentity" className="block text-sm font-semibold text-gray-300">
                                 Client Identity
                             </label>
                             <input
@@ -207,10 +188,7 @@ export default function FormularioScriptGenerator() {
 
                     <div className="flex gap-4">
                         <div className="flex-1 space-y-2">
-                            <label
-                                htmlFor="startIPClient"
-                                className="block text-sm font-semibold text-gray-300"
-                            >
+                            <label htmlFor="startIPClient" className="block text-sm font-semibold text-gray-300">
                                 Start IP Client
                             </label>
                             <input
@@ -223,10 +201,7 @@ export default function FormularioScriptGenerator() {
                             />
                         </div>
                         <div className="flex-1 space-y-2">
-                            <label
-                                htmlFor="endIPClient"
-                                className="block text-sm font-semibold text-gray-300"
-                            >
+                            <label htmlFor="endIPClient" className="block text-sm font-semibold text-gray-300">
                                 End IP Client
                             </label>
                             <input
@@ -242,11 +217,8 @@ export default function FormularioScriptGenerator() {
 
                     <div className="flex gap-4">
                         <div className="flex-1 space-y-2">
-                            <label
-                                htmlFor="upClient"
-                                className="block text-sm font-semibold text-gray-300"
-                            >
-                                Up Client (K/M)
+                            <label htmlFor="upClient" className="block text-sm font-semibold text-gray-300">
+                                Upload Max-Limit
                             </label>
                             <input
                                 id="upClient"
@@ -258,11 +230,8 @@ export default function FormularioScriptGenerator() {
                             />
                         </div>
                         <div className="flex-1 space-y-2">
-                            <label
-                                htmlFor="downClient"
-                                className="block text-sm font-semibold text-gray-300"
-                            >
-                                Down Client (K/M)
+                            <label htmlFor="downClient" className="block text-sm font-semibold text-gray-300">
+                                Download Max-Limit
                             </label>
                             <input
                                 id="downClient"
@@ -277,81 +246,66 @@ export default function FormularioScriptGenerator() {
 
                     <div className="flex gap-4">
                         <div className="flex-1 space-y-2">
-                            <label
-                                htmlFor="bucketSizeUp"
-                                className="block text-sm font-semibold text-gray-300"
-                            >
-                                Bucket Size Up
+                            <label htmlFor="upLimitAt" className="block text-sm font-semibold text-gray-300">
+                                Upload Limit-At
                             </label>
-                            <select
-                                id="bucketSizeUp"
-                                value={bucketSizeUp}
-                                onChange={(e) => setBucketSizeUp(e.target.value)}
+                            <input
+                                id="upLimitAt"
+                                type="text"
+                                value={upLimitAt}
+                                onChange={(e) => setUpLimitAt(e.target.value)}
                                 className="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400"
-                            >
-                                <option value="0.1">0.1 (default)</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                                <option value="6">6</option>
-                                <option value="7">7</option>
-                                <option value="8">8</option>
-                                <option value="9">9</option>
-                                <option value="10">10</option>
-                            </select>
+                                placeholder="0"
+                            />
                         </div>
                         <div className="flex-1 space-y-2">
-                            <label
-                                htmlFor="bucketSizeDown"
-                                className="block text-sm font-semibold text-gray-300"
-                            >
-                                Bucket Size Down
+                            <label htmlFor="downLimitAt" className="block text-sm font-semibold text-gray-300">
+                                Download Limit-At
                             </label>
-                            <select
-                                id="bucketSizeDown"
-                                value={bucketSizeDown}
-                                onChange={(e) => setBucketSizeDown(e.target.value)}
+                            <input
+                                id="downLimitAt"
+                                type="text"
+                                value={downLimitAt}
+                                onChange={(e) => setDownLimitAt(e.target.value)}
                                 className="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400"
-                            >
-                                <option value="0.1">0.1 (default)</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                                <option value="6">6</option>
-                                <option value="7">7</option>
-                                <option value="8">8</option>
-                                <option value="9">9</option>
-                                <option value="10">10</option>
-                            </select>
+                                placeholder="0"
+                            />
                         </div>
                     </div>
 
-                    <div className="mt-6">
-                        <p className="text-orange-400 text-sm mb-2">
-                            ANCHO DE BANDA CON CÁLCULO DE TOKEN BUCKET <br />
-                            Bucket Capacity (BC) = bucket-size * max-limit <br />
-                            Time = BC / (Parent Max-limit - Token Rate)
-                        </p>
+                    <div className="flex items-center space-x-2 mt-4">
+                        <input
+                            id="autoSetBandwidth"
+                            type="checkbox"
+                            checked={autoSetBandwidth}
+                            onChange={(e) => setAutoSetBandwidth(e.target.checked)}
+                            className="h-4 w-4 text-orange-500 focus:ring-orange-400 border-gray-600 rounded"
+                        />
+                        <label htmlFor="autoSetBandwidth" className="text-sm text-gray-300">
+                            Auto Set For Bandwidth Shared (UP-TO)
+                        </label>
                     </div>
 
-                    <div className="flex justify-between mt-6">
+                    <div className="flex mt-4 space-x-4">
                         <button
                             type="button"
                             className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition"
                             onClick={handleGenerate}
                         >
-                            Generate
+                            Generar
                         </button>
                         <button
                             type="button"
                             className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition"
                             onClick={handleClear}
                         >
-                            Clear All
+                            Borrar Todo
+                        </button>
+                        <button
+                            type="button"
+                            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
+                               onClick={() => scriptResult && navigator.clipboard.writeText(scriptResult.text)}                   >
+                            Copiar Script
                         </button>
                     </div>
                 </form>
@@ -368,31 +322,10 @@ export default function FormularioScriptGenerator() {
                     </div>
                 </div>
 
-                <div className="flex mt-4 space-x-4">
-                    <button
-                        type="button"
-                        className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition"
-                        onClick={handleGenerate}
-                    >
-                        Generar
-                    </button>
-                    <button
-                        type="button"
-                        className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition"
-                        onClick={handleClear}
-                    >
-                        Borrar Todo
-                    </button>
-                    <button
-                        type="button"
-                        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
-                        onClick={() => scriptResult && navigator.clipboard.writeText(scriptResult.text)}
-                    >
-                        Copiar Script
-                    </button>
-                </div>
+      
             </div>
         </div>
     );
 };
 
+export default FormularioSimpleQueueGeneratorShared;
