@@ -1,4 +1,4 @@
-package com.okta.mongodb.GeneradoScripts.model.mikrotikDnsDverHttpsDoh;
+package com.okta.mongodb.GeneradoScripts.model.mikrotikNetwatchMonitoring;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,8 +10,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class MikrotikDnsDverHttpsDohBody {
-
-  private String type;
-
+public class mikrotikNetwatchMonitoringBody {
+      private String totalClient;
 }

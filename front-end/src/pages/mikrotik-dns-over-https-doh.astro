@@ -1,6 +1,19 @@
 ---
 import FormulariomikrotikDnsOverHttpsDoh from "../components/mikrotikDnsDverHttpsDoh/formulario";
 import MainLayout from "../layout/MainLayout.astro";
+
+const response = await fetch(
+  `${import.meta.env.PUBLIC_BASE_URL_API}/mikrotik-dns-over-https-doh`,
+);
+
+let dnsOptions = [];
+
+if (response.ok) {
+  const data = await response.json();
+  dnsOptions = data;
+}
+
+console.log(dnsOptions)
 ---
 
 <MainLayout title="Open Book">
@@ -22,7 +35,7 @@ import MainLayout from "../layout/MainLayout.astro";
       <!-- Contenido Principal -->
       <div class="container mx-auto">
         <!-- Formulario Principal -->
-        <FormulariomikrotikDnsOverHttpsDoh client:load />
+        <FormulariomikrotikDnsOverHttpsDoh client:load dnsOptions={dnsOptions} />
       </div>
     </div>
   </div>
