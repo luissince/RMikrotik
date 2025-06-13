@@ -145,6 +145,17 @@ jobs:
           spring.jpa.hibernate.ddl-auto=${{secrets.SPRING_JPA_HIBERNATE_DDL_AUTO}}
           spring.jpa.show-sql=${{secrets.SPRING_JPA_SHOW_SQL}}
           spring.jpa.properties.hibernate.format_sql=${{secrets.SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL}}
+
+          paypal.url=${{secrets.PAYPAL_URL}}
+          paypal.client.id=${{secrets.PAYPAL_CLIENT_ID}}
+          paypal.client.secret=${{secrets.PAYPAL_CLIENT_SECRET}}
+
+          culqi.url.token=${{secrets.CULQI_URL_TOKEN}}
+          culqi.url.charges=${{secrets.CULQI_URL_CHARGES}}
+          culqi.public.key=${{secrets.CULQI_PUBLIC_KEY}}
+          culqi.private.key=${{secrets.CULQI_PRIVATE_KEY}}
+
+          url.front.end=${{secrets.URL_FRONT_END}}
           EOL
 
       - name: Verificar archivo application.properties

@@ -19,3 +19,55 @@ export const luhnCheck = (cardNumber: string) => {
 
     return sum % 10 === 0;
 };
+
+export const validNumberCreditCard = (number: string | null) => {
+    if (!number) {
+        return false;
+    }
+
+    if (number.length === 0) {
+        return false;
+    }
+
+    if (!/^\d{13,19}$/.test(number.replace(/\s+/g, ''))) {
+        return false;
+    }
+
+    if (!luhnCheck(number.replace(/\s+/g, ''))) {
+        return false;
+    }
+
+    return true;
+}
+
+export const validDateExpiry = (date: string | null) => {
+    if (!date) {
+        return false;
+    }
+
+    if (date.length === 0) {
+        return false;
+    }
+
+    if (!/^(0[1-9]|1[0-2])\/?([0-9]{2})$/.test(date)) {
+        return false;
+    }
+
+    return true;
+}
+
+export const validCvv = (cvv: string | null) => {
+    if (!cvv) {
+        return false;
+    }
+
+    if (cvv.length === 0) {
+        return false;
+    }
+
+    if (!/^\d{3,4}$/.test(cvv)) {
+        return false;
+    }
+
+    return true;
+}

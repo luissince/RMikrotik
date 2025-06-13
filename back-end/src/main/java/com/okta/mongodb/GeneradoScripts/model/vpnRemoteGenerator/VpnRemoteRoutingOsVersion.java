@@ -10,7 +10,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class VpnRemoteRoutingOsVersion {
-          private String id;
+    private String id;
     private String name;
 }
 

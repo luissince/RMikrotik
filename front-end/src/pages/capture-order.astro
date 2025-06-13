@@ -1,0 +1,87 @@
+---
+import MainLayout from "../layout/MainLayout.astro";
+
+const token = Astro.url.searchParams.get("token") || "";
+
+if (!token) {
+    return Astro.redirect("/");
+}
+
+const captureOrder = await fetch(
+    `${import.meta.env.PUBLIC_BASE_URL_API}/payment/${token}`,
+);
+
+let data = null;
+
+if (captureOrder.ok) {
+    const response = await captureOrder.json();
+    data = response.body; 
+} 
+---
+
+<MainLayout title="Detalles del Pago">
+    <div class="flex items-center justify-center text-gray-800">
+        <div class="w-full flex flex-col items-center justify-center gap-y-5 py-10 text-center max-w-lg">
+            {data ? (
+                <div class="bg-white shadow-md rounded-lg p-6 w-full">
+                    <h1 class="text-2xl font-semibold mb-4">Detalles del Pago</h1>
+                    <div class="mb-4">
+                        <p class="font-medium">Estado del Pago:</p>
+                        <p class="text-green-600">{data.status}</p>
+                    </div>
+                    <div class="mb-4">
+                        <p class="font-medium">ID de la Orden:</p>
+                        <p>{data.id}</p>
+                    </div>
+                    <div class="mb-4">
+                        <p class="font-medium">Nombre del Comprador:</p>
+                        <p>{data.payer.name.given_name} {data.payer.name.surname}</p>
+                    </div>
+                    <div class="mb-4">
+                        <p class="font-medium">Correo Electrónico:</p>
+                        <p>{data.payer.email_address}</p>
+                    </div>
+                    <div class="mb-4">
+                        <p class="font-medium">Dirección de Envío:</p>
+                        <p>
+                            {data.purchase_units[0].shipping.address.address_line_1},
+                            {data.purchase_units[0].shipping.address.admin_area_2},
+                            {data.purchase_units[0].shipping.address.admin_area_1},
+                            {data.purchase_units[0].shipping.address.country_code}
+                        </p>
+                    </div>
+                    <div class="mb-4">
+                        <p class="font-medium">Monto Total:</p>
+                        <p>
+                            {data.purchase_units[0].payments.captures[0].amount.value}
+                            {data.purchase_units[0].payments.captures[0].amount.currency_code}
+                        </p>
+                    </div>
+                    <a
+                        class="inline-flex items-center justify-center font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed bg-blue-600 hover:bg-blue-700 focus:ring-blue-400 text-white px-4 py-2 text-sm rounded-lg w-full"
+                        href="/account"
+                    >
+                        <span>Ir a perfil</span>
+                    </a>
+                </div>
+            ) : (
+                <div class="bg-white shadow-md rounded-lg p-6 w-full">
+                    <h1 class="text-2xl font-semibold">
+                        No se pudo procesar el pago
+                    </h1>
+                    <h1 class="text-8xl font-black">404</h1>
+                    <p>
+                        Genere nuevamente el token de pago y vuelva a intentarlo en un par de minutos
+                        o comuniquese con nosotros para que te ayudemos a resolver el problema.
+                    </p>
+                    <a
+                        class="inline-flex items-center justify-center font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed bg-red-600 hover:bg-red-700 focus:ring-red-400 text-white px-4 py-2 text-sm rounded-lg w-full"
+                        href="/pricing"
+                    >
+                        <span>Crear nuevamente</span>
+                    </a>
+                </div>
+            )}
+        </div>
+    </div>
+</MainLayout>

@@ -1,12 +1,19 @@
 import { useEffect, useState, useRef } from 'react';
 import { CreditCard, QrCode, Lock, Check, BoxSelect, ArrowLeft } from 'lucide-react';
+import { FaPaypal } from "react-icons/fa";
 import type { Session } from '@auth/core/types';
 import type { Plan } from '../../types/plan/plan';
 import Modal from '../ui/modal';
 import Button from '../ui/Button';
 import { buttonPresets } from '../../styles/buttonStyles';
 import AlertKit, { alertKit } from 'alert-kit';
-import { luhnCheck } from '../../utils/helper';
+import { validCvv, validDateExpiry, validNumberCreditCard } from '../../utils/helper';
+import { keyCardExpiry, keyNumberInteger } from '../../utils/keyEvent';
+
+interface Result {
+  message: string;
+  approveUrl: string;
+}
 
 interface Props {
   session: Session | null;
@@ -21,23 +28,19 @@ type CardData = {
 }
 
 const cardDefaultData: CardData = {
-  number: import.meta.env.PUBLIC_ENV === 'development' ? '4111 1111 1111 1111' : '',
-  expiry: import.meta.env.PUBLIC_ENV === 'development' ? '12/25' : '',
+  number: import.meta.env.PUBLIC_ENV === 'development' ? '4111111111111111' : '',
+  expiry: import.meta.env.PUBLIC_ENV === 'development' ? '09/30' : '',
   cvv: import.meta.env.PUBLIC_ENV === 'development' ? '123' : '',
   name: import.meta.env.PUBLIC_ENV === 'development' ? 'Juan Pérez' : '',
 };
 
 AlertKit.setGlobalDefaults({
   headerClassName: 'bg-white p-4 border-b border-gray-200 rounded-t-2xl cursor-move',
-  headerTitle: 'RMikrotik',  // Tu nombre de app por defecto
+  headerTitle: 'RMikrotik',
   showCloseButton: false,
-
-  // Clases de botones por defecto (usando tus buttonPresets existentes)
   primaryButtonClassName: buttonPresets.modalAccept,
   cancelButtonClassName: buttonPresets.modalCancel,
   acceptButtonClassName: buttonPresets.modalAccept,
-
-  // Textos por defecto en español
   defaultTexts: {
     success: 'Éxito',
     error: 'Error',
@@ -51,10 +54,6 @@ AlertKit.setGlobalDefaults({
 });
 
 const PaymentModal = ({ session, plans }: Props) => {
-
-  /**
-   * Variable para manejar el modal de pago
-   */
   const [isOpen, setIsOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
   const [paymentMethod, setPaymentMethod] = useState('');
@@ -68,19 +67,12 @@ const PaymentModal = ({ session, plans }: Props) => {
     name: null,
   });
 
-  // ===========================================================================
-  // Función para enfocar el campo de número de tarjeta
-  // ===========================================================================
   useEffect(() => {
     if (paymentMethod === 'card' && cardNumberRef.current) {
       cardNumberRef.current.focus();
     }
   }, [paymentMethod]);
 
-
-  // ===========================================================================
-  // Funciones para abrir y cerrar el modal de pago
-  // ===========================================================================
   const openModal = (planId: number) => {
     const plan = plans.find(p => p.id === planId);
 
@@ -107,23 +99,17 @@ const PaymentModal = ({ session, plans }: Props) => {
     setIsProcessing(false);
   };
 
-  // ===========================================================================
-  // Funciones para procesar el pago con tarjeta
-  // ===========================================================================
-
-  // Función para validar el número de tarjeta
   const onSubmitCard = async () => {
-    if (!cardData.number || !/^\d{13,19}$/.test(cardData.number.replace(/\s+/g, '')) || !luhnCheck(cardData.number.replace(/\s+/g, ''))) {
+    if (!validNumberCreditCard(cardData.number)) {
       setErrors(prev => ({ ...prev, number: 'Número de tarjeta inválido' }));
       return false;
     }
 
-    // Validación de la fecha de expiración
-    if (!cardData.expiry || !/^(0[1-9]|1[0-2])\/?([0-9]{2})$/.test(cardData.expiry)) {
+    if (!validDateExpiry(cardData.expiry)) {
       setErrors(prev => ({ ...prev, expiry: 'Fecha de expiración inválida' }));
       return false;
     } else {
-      const [month, year] = cardData.expiry.split('/');
+      const [month, year] = cardData.expiry!.split('/');
       const expiryDate = new Date(parseInt(`20${year}`), parseInt(month) - 1);
       const currentDate = new Date();
 
@@ -133,33 +119,30 @@ const PaymentModal = ({ session, plans }: Props) => {
       }
     }
 
-    // Validación del CVV
-    if (!cardData.cvv || !/^\d{3,4}$/.test(cardData.cvv)) {
+    if (!validCvv(cardData.cvv)) {
       setErrors(prev => ({ ...prev, cvv: 'CVV inválido' }));
       return false;
     }
 
-    // Validación del nombre del titular
     if (!cardData.name) {
       setErrors(prev => ({ ...prev, name: 'Nombre inválido' }));
       return false;
     }
 
-    prepareAndSendData("card", cardData)
-  }
-
-  // Función para validar el código QR
-  const onSubmitPayment = async () => {
-    prepareAndSendData('qr')
+    prepareAndSendData("card", cardData);
   };
 
-  // Función para preparar y enviar los datos del pago
-  const prepareAndSendData = async (method: string, cardData?: CardData) => {
+  const onSubmitPayment = async () => {
+    prepareAndSendData('qr');
+  };
 
-    // Validación de que exista un plan seleccionado
+  const onSubmitPayPal = async () => {
+    prepareAndSendData('paypal');
+  };
+
+  const prepareAndSendData = async (method: string, cardData?: CardData) => {
     if (!selectedPlan) return;
 
-    // Validación de que exista una sesión iniciada
     if (!session?.user?.providerId) {
       alertKit.warning({
         title: 'Procesar pago',
@@ -171,38 +154,26 @@ const PaymentModal = ({ session, plans }: Props) => {
       return;
     }
 
-    // Creación del payload para el servicio de pago
     const payload = {
       planId: selectedPlan.id,
       method: method,
-      cardData: method === 'card' ? cardData : undefined,
+      card: method === 'card' ? cardData : undefined,
       qrCode: method === 'qr' ? `PAYMENT:${selectedPlan.id}:${selectedPlan.price}` : undefined,
     };
 
-    // Creación de la confirmación para el pago
     const confirmation = await new Promise((resolve) => {
       alertKit.question({
         title: 'Plan',
         message: '¿Está seguro de que desea pagar?',
-        acceptButton: {
-          text: 'Aceptar',
-        },
-        cancelButton: {
-          text: 'Cancelar',
-        },
       }, resolve);
     });
 
-    // Procesamiento del pago
     if (confirmation) {
-
-      // Marcar el pago como en proceso
       setIsProcessing(true);
 
-      // Envío del pago
       try {
+        alertKit.loading({ message: 'Procesando pago...', });
 
-        // Envío del pago
         const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/payment`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -212,47 +183,41 @@ const PaymentModal = ({ session, plans }: Props) => {
           }),
         });
 
-        // Obtención del resultado del pago
-        const result = await response.text();
+        const result: Result = await response.json();
 
-        // Validación de que el pago haya sido exitoso
-        if (!response.ok) throw new Error(result || 'Error al procesar pago');
+        if (!response.ok) {
+          throw new Error(result.message || 'Error al procesar pago');
+        };
 
-        // Mostrar el mensaje de exito
-        alertKit.success({
-          title: 'Pago exitoso',
-          message: 'El pago se ha procesado con éxito',
-          primaryButton: {
-            text: 'Aceptar',
-          }
-        });
+        const title = method === 'paypal' ? 'Generado pago' : 'Plan';
 
-        // cerrar el modal
-        closeModal();
+        if (method === 'card') {
+          alertKit.success({
+            title: title,
+            message: result.message,
+          }, () => {
+            closeModal();
+          });
+        }
+
+        if (method === 'paypal') {
+          alertKit.loading({ message: result.message });
+          window.location.href = result.approveUrl;
+        }
       } catch (error: any) {
-        // Mostrar el mensaje de error
         alertKit.error({
-          title: 'Error al procesar pago',
+          title: 'Plan',
           message: error.message,
-          primaryButton: {
-            text: 'Aceptar',
-          }
         });
       } finally {
-        // Marcar el pago como finalizado
         setIsProcessing(false);
       }
     }
   };
 
-  // ===========================================================================
-  // Renderización del componente
-  // ===========================================================================
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Cuerpo del formulario */}
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
         <div className="bg-gray-800 rounded-lg p-6 mb-6">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
             <div>
@@ -270,7 +235,6 @@ const PaymentModal = ({ session, plans }: Props) => {
           </div>
         </div>
 
-        {/* Listado de Planes */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {plans.map((plan) => (
             <div key={plan.id} className="bg-white rounded-lg shadow-lg">
@@ -320,14 +284,12 @@ const PaymentModal = ({ session, plans }: Props) => {
         </div>
       </div>
 
-      {/* Modal para seleccionar Plan */}
       <Modal
         isOpen={isOpen}
         onClose={closeModal}
         title="Modal Básico"
         size="md"
       >
-
         {paymentMethod && (
           <Button
             onClick={() => setPaymentMethod('')}
@@ -354,8 +316,8 @@ const PaymentModal = ({ session, plans }: Props) => {
                 onClick={() => setPaymentMethod('card')}
                 className="w-full flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
               >
-                <CreditCard className="text-blue-600 mr-3" size={24} />
-                <div>
+                <CreditCard className="text-blue-600" size={24} />
+                <div className="flex flex-col text-left px-5">
                   <p className="font-semibold text-gray-800">Tarjeta</p>
                   <p className="text-sm text-gray-600">Visa, Mastercard</p>
                 </div>
@@ -364,10 +326,20 @@ const PaymentModal = ({ session, plans }: Props) => {
                 onClick={() => setPaymentMethod('qr')}
                 className="w-full flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-green-500 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
               >
-                <QrCode className="text-green-600 mr-3" size={24} />
-                <div>
+                <QrCode className="text-green-600" size={24} />
+                <div className="flex flex-col text-left px-5">
                   <p className="font-semibold text-gray-800">Código QR</p>
                   <p className="text-sm text-gray-600">Paga con tu app bancaria</p>
+                </div>
+              </button>
+              <button
+                onClick={() => setPaymentMethod('paypal')}
+                className="w-full flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-yellow-500 hover:bg-yellow-50 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              >
+                <FaPaypal className="text-yellow-600" size={24} />
+                <div className="flex flex-col text-left px-5">
+                  <p className="font-semibold text-gray-800">PayPal</p>
+                  <p className="text-sm text-gray-600">Paga con tu cuenta PayPal</p>
                 </div>
               </button>
             </div>
@@ -376,7 +348,6 @@ const PaymentModal = ({ session, plans }: Props) => {
 
         {paymentMethod === 'card' && (
           <div className="space-y-4">
-
             <div className="flex items-center mb-4">
               <Lock className="text-green-600 mr-2" size={16} />
               <span className="text-sm text-gray-600">Pago seguro y encriptado</span>
@@ -386,7 +357,7 @@ const PaymentModal = ({ session, plans }: Props) => {
               <label className="block text-sm font-medium text-gray-700">Número de tarjeta</label>
               <input
                 type="text"
-                value={cardDefaultData.number!}
+                value={cardData.number || ''}
                 ref={cardNumberRef}
                 onChange={(e) => {
                   setCardData({
@@ -394,6 +365,7 @@ const PaymentModal = ({ session, plans }: Props) => {
                     number: e.target.value,
                   });
                 }}
+                onKeyDown={(e) => keyNumberInteger(e)}
                 placeholder="1234 5678 9012 3456"
                 className="w-full p-3 border rounded-lg"
               />
@@ -405,13 +377,15 @@ const PaymentModal = ({ session, plans }: Props) => {
                 <label className="block text-sm font-medium text-gray-700">Fecha (MM/YY)</label>
                 <input
                   type="text"
-                  value={cardDefaultData.expiry!}
+                  value={cardData.expiry || ''}
                   onChange={(e) => {
                     setCardData({
                       ...cardData,
                       expiry: e.target.value,
                     });
                   }}
+                  maxLength={5}
+                  onKeyDown={(e) => keyCardExpiry(e)}
                   placeholder="MM/YY"
                   className="w-full p-3 border rounded-lg"
                 />
@@ -421,13 +395,14 @@ const PaymentModal = ({ session, plans }: Props) => {
                 <label className="block text-sm font-medium text-gray-700">CVV</label>
                 <input
                   type="text"
-                  value={cardDefaultData.cvv!}
+                  value={cardData.cvv || ''}
                   onChange={(e) => {
                     setCardData({
                       ...cardData,
                       cvv: e.target.value,
                     });
                   }}
+                  onKeyDown={(e) => keyNumberInteger(e)}
                   placeholder="123"
                   className="w-full p-3 border rounded-lg"
                 />
@@ -439,7 +414,7 @@ const PaymentModal = ({ session, plans }: Props) => {
               <label className="block text-sm font-medium text-gray-700">Nombre del titular</label>
               <input
                 type="text"
-                value={cardDefaultData.name!}
+                value={cardData.name || ''}
                 onChange={(e) => {
                   setCardData({
                     ...cardData,
@@ -478,6 +453,20 @@ const PaymentModal = ({ session, plans }: Props) => {
               fullWidth
             >
               Confirmar pago QR
+            </Button>
+          </div>
+        )}
+
+        {paymentMethod === 'paypal' && (
+          <div>
+            <p className="text-center text-sm text-gray-600 mb-4">Serás redirigido a PayPal para completar el pago.</p>
+            <Button
+              onClick={onSubmitPayPal}
+              loading={isProcessing}
+              variant="success"
+              fullWidth
+            >
+              Pagar con PayPal
             </Button>
           </div>
         )}
