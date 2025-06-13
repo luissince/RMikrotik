@@ -121,8 +121,19 @@ const Modal: React.FC<ModalProps> = ({
                     }
                 }
             });
+
+
+            // Agregar event listeners
+            modalRef.current?.addEventListener('keydown', handleEscape);
+            modalRef.current?.addEventListener('keydown', trapFocus);
         }
-    }, [isOpen, getFocusableElements]);
+
+        return () => {
+            // Remover event listeners
+            modalRef.current?.removeEventListener('keydown', handleEscape);
+            modalRef.current?.removeEventListener('keydown', trapFocus);
+        };
+    }, [isOpen]);
 
     useEffect(() => {
         if (isOpen) {
@@ -134,10 +145,6 @@ const Modal: React.FC<ModalProps> = ({
                 document.body.style.overflow = 'hidden';
             }
 
-            // Agregar event listeners
-            modalRef.current?.addEventListener('keydown', handleEscape);
-            modalRef.current?.addEventListener('keydown', trapFocus);
-
             return () => {
                 // Restaurar scroll del body
                 if (preventBodyScroll) {
@@ -148,13 +155,9 @@ const Modal: React.FC<ModalProps> = ({
                 if (previousActiveElement.current) {
                     previousActiveElement.current.focus();
                 }
-
-                // Remover event listeners
-                modalRef.current?.removeEventListener('keydown', handleEscape);
-                modalRef.current?.removeEventListener('keydown', trapFocus);
             };
         }
-    }, [isOpen, handleEscape, trapFocus, getFocusableElements, preventBodyScroll]);
+    }, [isOpen, preventBodyScroll]);
 
     if (!isOpen) return null;
 

@@ -68,3 +68,31 @@ spring.devtools.restart.enabled=true
 
 # (Optional) Enable LiveReload support
 spring.devtools.livereload.enabled=true
+
+# ----------------------------------------
+# Config paypal
+# ----------------------------------------
+
+paypal.url=https://api-m.sandbox.paypal.com
+
+paypal.client.id=
+
+paypal.client.secret=
+
+# ----------------------------------------
+# Config culqi
+# ----------------------------------------
+
+culqi.url.token=https://secure.culqi.com/v2/tokens
+
+culqi.url.charges=https://api.culqi.com/v2/charges
+
+culqi.public.key=
+
+culqi.private.key=
+
+# ----------------------------------------
+# Config front-end
+# ----------------------------------------
+
+url.front.end=http://localhost:4321
