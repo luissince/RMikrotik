@@ -14,6 +14,63 @@ export function keyNumberInteger(event: React.KeyboardEvent<HTMLInputElement>, e
   }
 }
 
+export function keyCardExpiry(
+  event: React.KeyboardEvent<HTMLInputElement>,
+  enterCallback?: () => void
+) {
+  const input = event.currentTarget;
+  const key = event.key;
+  const isDigit = /^\d$/.test(key);
+  const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
+  const isShortcut = (event.ctrlKey || event.metaKey) && ['c', 'v', 'x', 'a'].includes(key.toLowerCase());
+
+  // Bloquear caracteres no permitidos
+  if (!(isDigit || allowedKeys.includes(key) || isShortcut)) {
+    event.preventDefault();
+    return;
+  }
+
+  // Ejecutar el callback si la tecla es Enter
+  if (key === "Enter" && typeof enterCallback === "function") {
+    enterCallback();
+    return;
+  }
+
+  const rawValue = input.value.replace(/\D/g, ''); // Eliminar cualquier no número
+  const selectionStart = input.selectionStart ?? 0;
+  const selectionEnd = input.selectionEnd ?? 0;
+
+  // Permitir borrar
+  if (key === 'Backspace' || key === 'Delete') {
+    return;
+  }
+
+  // Simular el valor futuro
+  const isSelecting = selectionStart !== selectionEnd;
+  const futureValue = isSelecting
+    ? rawValue.slice(0, selectionStart) + key + rawValue.slice(selectionEnd)
+    : rawValue.slice(0, selectionStart) + key + rawValue.slice(selectionStart);
+
+  if (futureValue.length > 4) {
+    event.preventDefault(); // Limitar a 4 dígitos reales (sin contar "/")
+    return;
+  }
+
+  // Formatear automáticamente "MM/YY"
+  setTimeout(() => {
+    const clean = input.value.replace(/\D/g, '').slice(0, 4);
+    let formatted = clean;
+
+    if (clean.length >= 3) {
+      formatted = `${clean.slice(0, 2)}/${clean.slice(2)}`;
+    } else if (clean.length >= 1) {
+      formatted = clean;
+    }
+
+    input.value = formatted;
+  }, 0);
+}
+
 export function keyIPAddress(event: React.KeyboardEvent<HTMLInputElement>, enterCallback?: () => void) {
   const key = event.key;
   const input = event.currentTarget;

@@ -9,9 +9,9 @@ import lombok.ToString;
 @Setter
 @AllArgsConstructor
 @ToString
-public class PaymentBody {
-    private String providerId;
-    private Long planId;
-    private String method;
-    private Card card;
+public class Card {
+    private String number;
+    private String expiry;
+    private String cvv;
+    private String name;
 }
