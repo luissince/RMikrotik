@@ -36,16 +36,39 @@ public class WifidWmsSeamlessService {
               html.append("<span class='font-black'>/ip firewall filter\"</span> <br>");
 
 
-         //      html.append("add action=add-src-to-address-list address-list=\"port-knocking-first\" address-list-timeout=\""+body.getOnLoginTimeDuration()+"\" chain=input packet-size=\""+body.getFirstIcmpPacketSize()+"\" protocol=icmp comment=\"Port Knocking Generator RMikrotik.com\"\r\n" + //
-           //                                 "add action=add-src-to-address-list address-list=\"port-knocking-second\" address-list-timeout=\""+body.getOnLoginTimeDuration()+"\" chain=input packet-size=\""+body.getSecondIcmpPacketSize()+"\" protocol=icmp src-address-list=\"port-knocking-first\"\r\n" + //
-        //                                    "add action=accept chain=input dst-port=\""+body.getPortServiceToProtected()+"\" protocol=tcp src-address-list=\"port-knocking-second\"\r\n" + //
-          //                                  "add action=drop chain=input dst-port=\""+body.getPortServiceToProtected()+"\" protocol=tcp src-address-list=\"!port-knocking-second\" <br>");
-    //          html.append("/ppp profile {set [find name=\"" + body.getPppProfileName() + "\"] rate-limit=\""
-    //                        + body.getRateLimit() + "\" local-address=\"" + body.getLocalServerIPAddress()
-     //                       + "\" } <br>");
-     //         html.append("<span class='font-black'>/ppp secret</span> <br>");
 
- 
+
+      switch (body.getTargetInterface().toLowerCase()) {
+
+                        case "wlan1":
+                                html.append("/interface wireless set [ find default-name="+body.getWlan()+"] name="+body.getWlan()+" comment=\"WiFi.id Generator RMikrotik.com\"\r\n <br>" + //
+                              "/interface wireless set [ find default-name=wlan2] name=wlan2 comment=\"WiFi.id Generator RMikrotik.com\"\r\n <br>" + //
+                              "/ip firewall nat <br>   add chain=srcnat out-interface=\""+body.getWlan()+"\" action=masquerade comment=\"WiFi.id Generator RMikrotik.com\"\r\n <br>" + //
+                              "/ip dhcp-client\r\n <br>" + //
+                              "add default-route-distance=1 comment=\"WiFi.id Generator by buananet.com\" disabled=no interface=\""+body.getWlan()+"\"\r\n <br>" + //
+                              "/interface wireless security-profiles\r\n <br>" + //
+                              "add comment=\"WiFi.id Generator by buananet.com\" authentication-types=wpa-eap,wpa2-eap eap-methods=peap mode=dynamic-keys \\ mschapv2-password=\""+body.getPassword()+"\" mschapv2-username=\""+body.getUsername()+"\" radius-mac-accounting=yes radius-mac-authentication=yes \\ supplicant-identity=\""+body.getUsername()+"\" name=\"Seamless.wifi.id\" tls-mode=dont-verify-certificate\r\n <br>" + //
+                              "/interface wireless\r\n <br>" + //
+                              "set [ find default-name=\""+body.getTargetInterface()+"\" ] disabled=no installation=outdoor name=\""+body.getWlan()+"\" security-profile=\"Seamless.wifi.id\" wireless-protocol=802.11 <br>");
+                                break;
+
+                        case "wlan2":
+                                 html.append("/interface wireless set [ find default-name=wlan1] name=wlan1 comment=\"WiFi.id Generator RMikrotik.com\"\r\n <br>" + //
+                              "/interface wireless set [ find default-name=wlan2] name=wlan2 comment=\"WiFi.id Generator RMikrotik.com\"\r\n <br>" + //
+                              "/ip firewall nat <br>   add chain=srcnat out-interface=\""+body.getWlan()+"\" action=masquerade comment=\"WiFi.id Generator RMikrotik.com\"\r\n <br>" + //
+                              "/ip dhcp-client\r\n <br>" + //
+                              "add default-route-distance=1 comment=\"WiFi.id Generator by buananet.com\" disabled=no interface=\""+body.getWlan()+"\"\r\n <br>" + //
+                              "/interface wireless security-profiles\r\n <br>" + //
+                              "add comment=\"WiFi.id Generator by buananet.com\" authentication-types=wpa-eap,wpa2-eap eap-methods=peap mode=dynamic-keys \\ mschapv2-password=\""+body.getPassword()+"\" mschapv2-username=\""+body.getUsername()+"\" radius-mac-accounting=yes radius-mac-authentication=yes \\ supplicant-identity=\""+body.getUsername()+"\" name=\"Seamless.wifi.id\" tls-mode=dont-verify-certificate\r\n <br>" + //
+                              "/interface wireless\r\n <br>" + //
+                              "set [ find default-name=\""+body.getTargetInterface()  +"\" ] disabled=no installation=outdoor name=\""+body.getTargetInterface()+"\" security-profile=\"Seamless.wifi.id\" wireless-protocol=802.11 <br>");
+                                break;
+
+
+                }
+                // html.append("<span></span> <br>");
+
+                html.append("</div>");
               return html.toString();
        }
     private String generatePlainTextScript(WifidWmsSeamlessBody body) {

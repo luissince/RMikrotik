@@ -1,4 +1,4 @@
-package com.okta.mongodb.GeneradoScripts.model.queueTreeGeneratorShared;
+package com.okta.mongodb.GeneradoScripts.model.queuetreegeneratorshared;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

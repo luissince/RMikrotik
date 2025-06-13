@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.okta.mongodb.GeneradoScripts.model.queueTreeGeneratorShared.QueuetreegeneratorsharedBody;
 
+import com.okta.mongodb.GeneradoScripts.model.queuetreegeneratorshared.QueuetreegeneratorsharedBody;
 import com.okta.mongodb.GeneradoScripts.utils.DateUtils;
 
 

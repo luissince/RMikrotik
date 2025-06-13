@@ -322,13 +322,23 @@ const Formulario = () => {
               </div>
             </div>
           ))}
-
-          <div className="mt-4">
-            <p className="text-sm text-gray-400">
-              Cambie el nombre de su interfaz WAN con la condición de su
-              enrutador...
-            </p>
-          </div>
+        <p className="text-2sm text-orange-500 mx-1 text-left">
+          MIKROTIK LB NTH / LOAD BALANCING NTH SCRIPT GENERATOR FOR ROUTEROS
+        </p>
+        <p className="text-gray-400 mx-2 text-left">
+          /ip firewall nat remove [find comment="Balanceo NTH"] <br />
+          /ip route remove [find comment="Balanceo NTH"]<br />
+          /ip firewall mangle remove [find comment="Balanceo NTH"] <br />
+          /ip firewall address-list remove [find comment="Balanceo NTH"]<br />
+          /routing table remove [find comment="Balanceo NTH"]
+        </p>
+        <div className="bg-gray-700 p-1 rounded-lg mt-6 mb-2 mx-1">
+          <p className="text-sm text-gray-300 text-left">
+            Tenemos un video tutorial de como utilizar nuestra herramienta, Ver
+            Video...
+          </p>
+        </div>
+   
         </form>
       </div>
 

@@ -1,21 +1,21 @@
 import React, { useState } from "react";
 
 type ScriptResult = {
-  script: string;
-   text: string;
+  html: string;
+  text: string;
 };
 interface FormData {
- 
- wifiIdMode: string;
-    targetInterface: string;
-    username: string;
-    password: string;
-    makel: string;
-    gwId: string;
-    wlan: string;
-    sessionId: string;
-    redirUrl: string;
- 
+
+  wifiIdMode: string;
+  targetInterface: string;
+  username: string;
+  password: string;
+  makel: string;
+  gwId: string;
+  wlan: string;
+  sessionId: string;
+  redirUrl: string;
+
 
 }
 const FormularioWifidwmsSeamless = () => {
@@ -31,9 +31,9 @@ const FormularioWifidwmsSeamless = () => {
     redirUrl: "http://www.msftconnecttest.com/redirect",
   });
 
-    const [error, setError] = useState<string | null>(null);
-   
-    const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const [scriptResult, setScriptResult] = useState<ScriptResult | null>(null);
 
@@ -68,6 +68,7 @@ const FormularioWifidwmsSeamless = () => {
 
       const resultData: ScriptResult = await response.json();
       setScriptResult(resultData);
+      //  console.log("Hola castor");
     } catch (error) {
       setError("Error generating script: " + (error as Error).message);
     }
@@ -90,7 +91,7 @@ const FormularioWifidwmsSeamless = () => {
 
   const handleCopyScript = () => {
     if (scriptResult) {
-      navigator.clipboard.writeText(scriptResult.script);
+      navigator.clipboard.writeText(scriptResult.text);
     }
   };
 
@@ -110,6 +111,7 @@ const FormularioWifidwmsSeamless = () => {
               className="w-full p-2 border border-gray-600 rounded bg-gray-700"
             >
               <option value="SEAMLESS WIFI_ID">SEAMLESS WIFI_ID</option>
+              
             </select>
           </div>
 
@@ -124,6 +126,7 @@ const FormularioWifidwmsSeamless = () => {
               className="w-full p-2 border border-gray-600 rounded bg-gray-700"
             >
               <option value="wlan1">wlan1</option>
+              <option value="wlan2">wlan2</option>
             </select>
           </div>
 
@@ -160,9 +163,10 @@ const FormularioWifidwmsSeamless = () => {
             <input
               id="makel"
               type="text"
+              readOnly
               value={formData.makel}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-600 rounded bg-gray-700"
+              className="w-full p-2 border border-gray-600 rounded bg-gray-700 text-slate-500"
             />
           </div>
 
@@ -173,9 +177,10 @@ const FormularioWifidwmsSeamless = () => {
             <input
               id="gwId"
               type="text"
+              readOnly
               value={formData.gwId}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-600 rounded bg-gray-700"
+              className="w-full p-2 border border-gray-600 rounded bg-gray-700 text-slate-500"
             />
           </div>
 
@@ -186,9 +191,10 @@ const FormularioWifidwmsSeamless = () => {
             <input
               id="wlan"
               type="text"
+              readOnly
               value={formData.wlan}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-600 rounded bg-gray-700"
+              className="w-full p-2 border border-gray-600 rounded bg-gray-700 text-slate-500"
             />
           </div>
 
@@ -199,9 +205,10 @@ const FormularioWifidwmsSeamless = () => {
             <input
               id="sessionId"
               type="text"
+              readOnly
               value={formData.sessionId}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-600 rounded bg-gray-700"
+              className="w-full p-2 border border-gray-600 rounded bg-gray-700 text-slate-500"
             />
           </div>
 
@@ -212,9 +219,10 @@ const FormularioWifidwmsSeamless = () => {
             <input
               id="redirUrl"
               type="text"
+              readOnly
               value={formData.redirUrl}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-600 rounded bg-gray-700"
+              className="w-full p-2 rounded bg-gray-700 text-slate-500"
             />
           </div>
 
@@ -243,11 +251,9 @@ const FormularioWifidwmsSeamless = () => {
           <label className="block text-sm font-medium text-gray-300 mb-2">
             Copy-Paste Script to Terminal
           </label>
-          <div className="h-60 overflow-y-auto bg-gray-700 border border-gray-600 rounded p-2">
+          <div className=" overflow-y-auto bg-gray-700 border border-gray-600 rounded p-2">
             {scriptResult ? (
-              <pre className="text-gray-400 text-sm whitespace-pre-wrap">
-                {scriptResult.script}
-              </pre>
+              <div dangerouslySetInnerHTML={{ __html: scriptResult.html }} />
             ) : (
               <p className="text-gray-500">The generated script will appear here</p>
             )}
