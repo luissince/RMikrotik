@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import SocialTooltipButton from "../SocialTooltipButton";
 type ScriptResult = {
   html: string;
   text: string;
@@ -316,7 +317,9 @@ const FormularioQueueThreeGeneratorShared = () => {
               Copiar Script
             </button>
           </div>
+           <SocialTooltipButton />
         </form>
+         
       </div>
 
       {/* Result Section */}

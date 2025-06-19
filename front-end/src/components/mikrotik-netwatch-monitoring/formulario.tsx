@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import SocialTooltipButton from "../SocialTooltipButton";
 interface Host {
   ip: string;
   description: string;
@@ -104,7 +104,7 @@ const FormularioMkrotikNetwatchMonitoring = () => {
           </div>
         ))}
       </div>
-
+  <SocialTooltipButton />
       <div className="flex justify-center space-x-4">
         <button
           onClick={handleGenerateScript}

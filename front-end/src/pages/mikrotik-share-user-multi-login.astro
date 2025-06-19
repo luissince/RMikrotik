@@ -8,12 +8,26 @@ import MainLayout from "../layout/MainLayout.astro";
     <div class="bg-gray-800 rounded-lg">
       <!-- Header -->
       <div class="text-center mb-6">
-        <h1 class="text-2xl lg:text-4xl font-bold text-orange-500">
-          MIKROTIK BANDWIDTH SHARE FOR HOTSPOT SHARED USER SCRIPT GENERATOR
+   <h1 class="text-2xl lg:text-4xl   font-extrabold text-transparent bg-clip-text animated-gradient bg-gradient-to-r from-amber-400 via-orange-700 to-red-600">
+           GENERADOR DE SCRIPT PARA COMPARTIR ANCHO DE BANDA ENTRE USUARIOS HOTSPOT EN MIKROTIK
         </h1>
-        <p class="text-gray-300">
-          Static Routes and Firewall Mangle Rules for Games
+
+  <p class="text-gray-300">
+        Genera automáticamente un script para MikroTik que permita compartir de manera justa el ancho de banda entre todos los dispositivos conectados con un mismo usuario de Hotspot. <br> Ideal para evitar abusos cuando un solo usuario inicia sesión desde varios equipos.
         </p>
+ <style>
+     /* Animación personalizada para mover el degradado */
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .animated-gradient {
+      background-size: 200% 200%;
+      animation: gradientMove 5s ease infinite;
+    }
+  </style>
       </div>
     </div>
 

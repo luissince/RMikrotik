@@ -32,14 +32,16 @@ public class MikrotikUsernamePasswordHotspotGeneratorService {
     private String generateHtmlScript(MikrotikUsernamePasswordHotspotGeneratorBody body) {
         StringBuilder html = new StringBuilder();
 
+        html.append("<div>");
+
         // html.append("<span></span> <br>");
         html.append("/ip hotspot user profile add name=\"" + body.getProfileHotspot() + "\"<br>");
         html.append("/ip hotspot user profile {set [find name=\"" + body.getProfileHotspot() + "\"] rate-limit=\""
                 + body.getRateLimit() + "\" insert-queue-before=\"bottom\"}<br>");
         html.append("/ip hotspot user <br>");
-        html.append("add name=\"" + body.getTypeUsername() + "\" password=\"" + body.getTypeUsername() + "\" profile=\""
-                + body.getProfileHotspot() + "\" limit-uptime=\"" + body.getLimitUptime() + "\" limit-bytes-total=\""
-                + body.getLimitQuota() + "\"<br>");
+        // html.append("add name=\"" + body.getTypeUsername() + "\" password=\"" + body.getTypeUsername() + "\" profile=\""
+        //         + body.getProfileHotspot() + "\" limit-uptime=\"" + body.getLimitUptime() + "\" limit-bytes-total=\""
+        //         + body.getLimitQuota() + "\"<br>");
 
         switch (body.getTypePassword().toLowerCase()) {
 
@@ -127,7 +129,7 @@ public class MikrotikUsernamePasswordHotspotGeneratorService {
     private String generatePlainTextScript(MikrotikUsernamePasswordHotspotGeneratorBody body) {
         StringBuilder text = new StringBuilder();
 
-        text.append("<div>");
+        text.append("");
 
         return text.toString();
     }

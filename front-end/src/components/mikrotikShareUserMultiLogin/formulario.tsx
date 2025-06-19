@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import SocialTooltipButton from "../SocialTooltipButton";
 type ScriptResult = {
     html: string;
     text: string;
@@ -257,6 +257,7 @@ const FormularioMikrotikShareUserMultiLogin = () => {
                             Clear All
                         </button>
                     </div>
+                    <SocialTooltipButton />
                 </div>
             </div>
 

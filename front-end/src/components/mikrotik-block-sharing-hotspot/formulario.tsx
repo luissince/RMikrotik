@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import SocialTooltipButton from "../SocialTooltipButton";
 const FormulariomikrotikBlockSharingHotspot = () => {
   const [chains, setChains] = useState([
     {
@@ -38,9 +38,9 @@ const FormulariomikrotikBlockSharingHotspot = () => {
     <div className="flex flex-col gap-6 p-4">
       {/* Panel izquierdo - Tabla */}
       <div className="w-full ">
-        <table className="min-w-full bg-gray-100 border border-gray-300">
+        <table className="min-w-full bg-gray-800 border border-gray-900 rounded-t-lg">
           <thead>
-            <tr className="bg-gray-300 text-gray-700">
+            <tr className="bg-gray-800 text-gray-100">
               <th className="py-2 px-4 border">
                 <button
                   onClick={addChain}
@@ -146,6 +146,8 @@ const FormulariomikrotikBlockSharingHotspot = () => {
             Generate Script
           </button>
         </div>
+          <SocialTooltipButton />
+
       </div>
 
       {/* Panel derecho - Resultado */}

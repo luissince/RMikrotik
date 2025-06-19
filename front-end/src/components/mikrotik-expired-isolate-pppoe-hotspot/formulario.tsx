@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import SocialTooltipButton from "../SocialTooltipButton";
 type ScriptResult = {
   html: string;
   text: string;
@@ -200,6 +200,8 @@ const FormularioMikrotikExpirediSolatePppoeHotspot = () => {
               Clear All
             </button>
           </div>
+            <SocialTooltipButton />
+
         </div>
       </div>
 

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import SocialTooltipButton from "../SocialTooltipButton";
 type ScriptResult = {
   html: string;
   text: string;
@@ -165,7 +165,7 @@ const handleCopyScript = (text: string) => {
 
   </div>
 </div>
-
+  <SocialTooltipButton />
         </div>
       </div>
 

@@ -8,12 +8,27 @@ import MainLayout from "../layout/MainLayout.astro";
     <div class="bg-gray-800 rounded-lg">
       <!-- Header -->
       <div class="text-center mb-6">
-        <h1 class="text-2xl lg:text-4xl font-bold text-orange-500">
-MIKROTIK PORT KNOCKING USE ICMP + PACKET SIZE GENERATOR
+<h1 class="text-2xl lg:text-4xl   font-extrabold text-transparent bg-clip-text animated-gradient bg-gradient-to-r from-amber-400 via-orange-700 to-red-600">
+           PORT KNOCKING EN MIKROTIK USANDO ICMP Y TAMAÑO DE PAQUETE (GENERADOR DE REGLAS)
         </h1>
-        <p class="text-gray-300">
-          Static Routes and Firewall Mangle Rules for Games
+
+  <p class="text-gray-300">
+        Implementa una técnica avanzada de seguridad en MikroTik con port knocking basado en paquetes ICMP y tamaños personalizados. Este generador de reglas te permite <br> ocultar puertos críticos y solo abrirlos tras una secuencia específica de "golpes" ICMP, aumentando la protección contra accesos no autorizados. Ideal para redes ISP/WISP <br>que buscan seguridad de nivel experto sin comprometer el acceso remoto.
         </p>
+ <style>
+     /* Animación personalizada para mover el degradado */
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .animated-gradient {
+      background-size: 200% 200%;
+      animation: gradientMove 5s ease infinite;
+    }
+  </style>
+
       </div>
     </div>
 

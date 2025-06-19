@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import SocialTooltipButton from "../SocialTooltipButton";
 interface FormData {
     idRoutingOptions: string;
     idRosVersion: string;
@@ -152,6 +152,7 @@ const FormularioMikrotikStaticRouting = () => {
                         />
                     </div>
                 </div>
+                  <SocialTooltipButton />
             </div>
 
             {/* Resultado 1 */}

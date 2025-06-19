@@ -27,7 +27,13 @@ public class MikrotikDnsDverHttpsDohService {
 
         // Crear respuesta con ambos formatos
         Map<String, Object> response = new HashMap<>();
-        response.put("data", generateData());
+
+        if (body.getType().equalsIgnoreCase("1")) {
+            response.put("data", generateData1());
+        } else if (body.getType().equalsIgnoreCase("2")) {
+            response.put("data", generateData2());
+        }
+
         response.put("html1", htmlScript1);
         response.put("html2", htmlScript2);
         response.put("html3", htmlScript3);
@@ -38,9 +44,33 @@ public class MikrotikDnsDverHttpsDohService {
         return response;
     }
 
-    private Map<String, String> generateData() {
+    private Map<String, String> generateData1() {
         Map<String, String> map = Map.of(
                 "dnsIPv4Server1", "94.140.14.14",
+                "dnsIPv4Server2", "94.140.15.15",
+                "dnsIPv6Server1", "2a10:50c0::ad1:ff",
+                "dnsIPv6Server2", "2a10:50c0::ad2:ff",
+                "dohServer", "https://dns.adguard.com/dns-query",
+                "dohHostname", "dns.adguard.com");
+
+        return map;
+    }
+
+    private Map<String, String> generateData2() {
+        Map<String, String> map = Map.of(
+                "dnsIPv4Server1", "94.140.14.14",
+                "dnsIPv4Server2", "94.140.15.15",
+                "dnsIPv6Server1", "2a10:50c0::ad1:ff",
+                "dnsIPv6Server2", "2a10:50c0::ad2:ff",
+                "dohServer", "https://dns.adguard.com/dns-query",
+                "dohHostname", "dns.adguard.com");
+
+        return map;
+    }
+
+    private Map<String, String> generateData3() {
+        Map<String, String> map = Map.of(
+                "dnsIPv4Server1", "208.67.222.222",
                 "dnsIPv4Server2", "94.140.15.15",
                 "dnsIPv6Server1", "2a10:50c0::ad1:ff",
                 "dnsIPv6Server2", "2a10:50c0::ad2:ff",
@@ -53,11 +83,15 @@ public class MikrotikDnsDverHttpsDohService {
     private String generateHtmlScript1(MikrotikDnsDverHttpsDohBody body) {
         StringBuilder html = new StringBuilder();
 
-        html.append("/ip dns set allow-remote-requests=yes cache-max-ttl=1d servers=94.140.14.14,94.140.15.15 use-doh-server=https://dns.adguard.com/dns-query <br>");
+        // 1
+        html.append(
+                "/ip dns set allow-remote-requests=yes cache-max-ttl=1d servers=94.140.14.14,94.140.15.15 use-doh-server=https://dns.adguard.com/dns-query <br>");
         html.append("/ip dns static\r\n" + //
-                        "add address=94.140.14.14 name=dns.adguard.com\r\n" + //
-                        "add address=94.140.15.15 name=dns.adguard.com");
+                "add address=94.140.14.14 name=dns.adguard.com\r\n" + //
+                "add address=94.140.15.15 name=dns.adguard.com");
         html.append("</div>");
+
+        // 2
 
         return html.toString();
     }
@@ -65,6 +99,17 @@ public class MikrotikDnsDverHttpsDohService {
     private String generateHtmlScript2(MikrotikDnsDverHttpsDohBody body) {
         StringBuilder html = new StringBuilder();
 
+        // 1|
+        html.append("<div>");
+        html.append("<span> hola2 </span>");
+        html.append("</div>");
+
+        // 2
+        html.append("<div>");
+        html.append("<span> hola2 </span>");
+        html.append("</div>");
+
+        // 3
         html.append("<div>");
         html.append("<span> hola2 </span>");
         html.append("</div>");

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import SocialTooltipButton from "../SocialTooltipButton";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -438,6 +439,7 @@ const MikrotikForm = () => {
             </div>
           </div>
         </div>
+        <SocialTooltipButton />
       </div>
 
       {/* Panel derecho - Resultado */}

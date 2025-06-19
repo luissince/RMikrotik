@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import SocialTooltipButton from "../SocialTooltipButton";
 type ScriptResult = {
   html: string;
   text: string;
@@ -218,6 +219,7 @@ const FormularioMikrotikUsernamePasswordPppGenerator = () => {
             Generate
           </button>
         </div>
+          <SocialTooltipButton />
       </div>
 
       {/* Panel derecho - Resultado */}

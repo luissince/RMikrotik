@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import SocialTooltipButton from "../SocialTooltipButton";
+
 type ScriptResult = {
   html: string;
   text: string;
@@ -94,15 +96,15 @@ const FormularioMikrotikBondingInterface = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row gap-4 p-4 bg-gray-100">
+    <div className="flex flex-col md:flex-row gap-4 p-4 bg-gray-800">
       {/* MikroTik A */}
-      <div className="w-full md:w-1/2 bg-gray-200 p-4 rounded-lg">
+      <div className="w-full md:w-1/2 bg-gray-700 p-4 rounded-lg">
         <h2 className="text-xl font-bold text-center text-orange-500 mb-4">
           MIKROTIK - A
         </h2>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-100 mb-1">
               Bonding Name
             </label>
             <input
@@ -115,7 +117,7 @@ const FormularioMikrotikBondingInterface = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-100 mb-1">
               Bonding IP Address
             </label>
             <input
@@ -128,10 +130,10 @@ const FormularioMikrotikBondingInterface = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-100 mb-1">
               Bonding Slaves
             </label>
-            <div className="flex space-x-4">
+            <div className="flex space-x-4 text-gray-100">
               {["Ether1", "Ether2", "Ether3", "Ether4", "Ether5"].map((ether) => (
                 <div key={ether} className="flex items-center">
                   <input
@@ -155,7 +157,7 @@ const FormularioMikrotikBondingInterface = () => {
               onChange={handleChange}
               className="mr-2"
             />
-            <label htmlFor="arpMonitoring" className="text-sm font-medium text-gray-700">
+            <label htmlFor="arpMonitoring" className="text-sm font-medium text-gray-100">
               ARP Monitoring / Failover Bonding Interface
             </label>
           </div>
@@ -191,13 +193,13 @@ const FormularioMikrotikBondingInterface = () => {
       </div>
 
       {/* MikroTik B */}
-      <div className="w-full md:w-1/2 bg-gray-200 p-4 rounded-lg">
+      <div className="w-full md:w-1/2 bg-gray-600 p-4 rounded-lg">
         <h2 className="text-xl font-bold text-center text-orange-500 mb-4">
           MIKROTIK - B
         </h2>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-100 mb-1">
               Bonding Name
             </label>
             <input
@@ -210,7 +212,7 @@ const FormularioMikrotikBondingInterface = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-100 mb-1">
               Bonding IP Address
             </label>
             <input
@@ -223,10 +225,10 @@ const FormularioMikrotikBondingInterface = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-100 mb-1">
               Bonding Slaves
             </label>
-            <div className="flex space-x-4">
+            <div className="flex space-x-4 text-gray-100">
               {["Ether1", "Ether2", "Ether3", "Ether4", "Ether5"].map((ether) => (
                 <div key={ether} className="flex items-center">
                   <input
@@ -250,7 +252,7 @@ const FormularioMikrotikBondingInterface = () => {
                 onChange={handleChange}
               className="mr-2"
             />
-            <label htmlFor="arpMonitoring" className="text-sm font-medium text-gray-700">
+            <label htmlFor="arpMonitoring" className="text-sm font-medium text-gray-100">
               ARP Monitoring / Failover Bonding Interface
             </label>
           </div>
@@ -283,8 +285,11 @@ const FormularioMikrotikBondingInterface = () => {
             Generate
           </button>
         </div>
+     <SocialTooltipButton />
       </div>
+           
     </div>
+    
   );
 };
 

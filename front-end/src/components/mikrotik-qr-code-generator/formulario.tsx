@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import SocialTooltipButton from "../SocialTooltipButton";
 const FormularioMikrotikQrCodeGenerator = () => {
   const [routerOption, setRouterOption] = useState("MikroTik Hotspot");
   const [ssid, setSsid] = useState("MYCAFE-WIFI");
@@ -119,7 +119,9 @@ const FormularioMikrotikQrCodeGenerator = () => {
           >
             Print QR Template
           </button>
+          
         </div>
+        <SocialTooltipButton />
       </div>
 
       {/* Result Section */}

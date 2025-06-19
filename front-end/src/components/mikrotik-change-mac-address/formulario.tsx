@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import SocialTooltipButton from "../SocialTooltipButton";
 type ScriptResult = {
   html: string;
   text: string;
@@ -128,7 +128,7 @@ const  FormulariomikrotikChangeMacAddress = () => {
           </button>
         </div>
       </div>
-
+  <SocialTooltipButton />
       <div className="flex space-x-4 mt-4">
         <button
           type="button"

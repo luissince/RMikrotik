@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import SocialTooltipButton from "../SocialTooltipButton";
 type ScriptResult = {
     html1: string;
     html2: string;
@@ -86,7 +87,7 @@ const FormulariomikrotikAccessBlock = () => {
                 >
                     Generate Script
                 </button>
-
+  <SocialTooltipButton />
 
                 {scriptResult && (
                     <div className="mt-6">

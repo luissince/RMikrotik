@@ -1,5 +1,6 @@
 
 import React, { useState } from "react";
+import SocialTooltipButton from "../SocialTooltipButton";
 
 type ScriptResult = {
     html: string;
@@ -330,29 +331,20 @@ export default function FormularioScriptGenerator() {
                         </div>
                     </div>
 
-                    <div className="mt-6">
-                        <p className="text-orange-400 text-sm mb-2">
-                            ANCHO DE BANDA CON CÁLCULO DE TOKEN BUCKET <br />
-                            Bucket Capacity (BC) = bucket-size * max-limit <br />
-                            Time = BC / (Parent Max-limit - Token Rate)
-                        </p>
-                    </div>
+                 
 
                     <div className="flex justify-between mt-6">
                         <button
                             type="button"
-                            className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition"
+                            className="bg-orange-500 text-white w-full px-4 py-2 rounded hover:bg-orange-600 transition"
                             onClick={handleGenerate}
                         >
                             Generate
                         </button>
-                        <button
-                            type="button"
-                            className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition"
-                            onClick={handleClear}
-                        >
-                            Clear All
-                        </button>
+                     
+                    </div>
+                       <div className="mt-6">
+                        <SocialTooltipButton />
                     </div>
                 </form>
             </div>
@@ -369,13 +361,7 @@ export default function FormularioScriptGenerator() {
                 </div>
 
                 <div className="flex mt-4 space-x-4">
-                    <button
-                        type="button"
-                        className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition"
-                        onClick={handleGenerate}
-                    >
-                        Generar
-                    </button>
+                
                     <button
                         type="button"
                         className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition"

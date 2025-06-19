@@ -8,12 +8,25 @@ import MainLayout from "../layout/MainLayout.astro";
     <div class="bg-gray-800 rounded-lg">
       <!-- Header -->
       <div class="text-center mb-6">
-        <h1 class="text-2xl lg:text-4xl font-bold text-orange-500">
-DHCP ALERT: DHCP ROGUE / DISCOVER UNKNOWN DHCP SERVER
+<h1 class="text-2xl lg:text-4xl   font-extrabold text-transparent bg-clip-text animated-gradient bg-gradient-to-r from-amber-400 via-orange-700 to-red-600">
+            ALERTA DHCP: SERVIDOR DHCP DESCONOCIDO / DETECCIÓN DE DHCP ROGUE
         </h1>
-        <p class="text-gray-300">
-          Static Routes and Firewall Mangle Rules for Games
-        </p>
+
+  <p class="text-gray-300">
+        Detecta y bloquea servidores DHCP no autorizados (DHCP Rogue) en tu red MikroTik con scripts automatizados y alertas inteligentes. Protege tu infraestructura ISP/WISP<br> contra ataques de red y configuraciones maliciosas. Aprende cómo identificar paquetes DHCP Discover sospechosos y mantener tu red segura y estable.
+ <style>
+     /* Animación personalizada para mover el degradado */
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .animated-gradient {
+      background-size: 200% 200%;
+      animation: gradientMove 5s ease infinite;
+    }
+  </style>
       </div>
     </div>
 

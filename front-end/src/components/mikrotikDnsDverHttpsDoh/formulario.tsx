@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import SocialTooltipButton from "../SocialTooltipButton";
 type FormData = {
   dnsIPv4Server1: string;
   dnsIPv4Server2: string;
@@ -111,7 +111,9 @@ const FormulariomikrotikDnsOverHttpsDoh = ({ dnsOptions: initialDnsOptions }: Pr
               ))}
             </select>
           </div>
+          
         </div>
+          <SocialTooltipButton />
 
         {scriptResult && (
           <>
@@ -186,6 +188,7 @@ const FormulariomikrotikDnsOverHttpsDoh = ({ dnsOptions: initialDnsOptions }: Pr
             >
               Copy Script
             </button>
+            
           </>
         )}
       </div>

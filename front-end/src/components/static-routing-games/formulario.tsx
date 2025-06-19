@@ -1,3 +1,5 @@
+
+import SocialTooltipButton from "../SocialTooltipButton";
 import React, { useEffect, useState } from 'react';
 
 interface Game {
@@ -152,7 +154,7 @@ const FormularioStaticRoutingGames: React.FC = () => {
                         onChange={(e) => setFilter(e.target.value)}
                     />
                     {error && <p className="text-red-500">{error}</p>}
-                    <div className="flex-grow overflow-y-auto bg-gray-700 p-4 rounded max-h-[50vh]">
+                    <div className="flex-grow overflow-y-auto bg-gray-700 p-4 rounded ">
                         {filteredGames.map(category => (
                             <div key={category.name} className="mb-4">
                                 <h3 className="font-semibold text-gray-300 mb-2">{category.name}</h3>
@@ -173,6 +175,9 @@ const FormularioStaticRoutingGames: React.FC = () => {
                             </div>
                         ))}
                     </div>
+                         {/* Tienes dudas */}
+  <SocialTooltipButton />
+
                 </div>
             </div>
 

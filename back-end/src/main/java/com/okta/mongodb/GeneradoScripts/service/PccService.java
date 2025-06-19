@@ -36,7 +36,7 @@ public class PccService {
                 html.append("<div>");
                 html.append("############################################################### <br>");
                 html.append(
-                                "<span style='color:blue;'>#Load Balancing Per Connection Classifier (LB PCC) Script Generator</span> <br>");
+                                "<span style='color:blue;'>#Load Balancing Per Connection Classifier (LBa PCC) Script Generator</span> <br>");
                 html.append(
                                 "<span style='color:green;'># Date/Time:</span> <span style='color:red;'>"+DateUtils.currentDate()+"</span> <br>");
                 html.append(

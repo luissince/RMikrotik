@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import SocialTooltipButton from "../SocialTooltipButton";
 
 interface FormData {
   idRoutingOptions: string;
@@ -202,6 +203,7 @@ const FormularioMikrotikQueue = () => {
            />
           </div>
         </div>
+         <SocialTooltipButton />
       </div>
 
       <div className="flex justify-center mt-6 space-x-4">

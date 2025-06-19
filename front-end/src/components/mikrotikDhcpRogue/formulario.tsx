@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import SocialTooltipButton from "../SocialTooltipButton";
 type ScriptResult = {
   html: string;
   text: string;
@@ -160,7 +160,7 @@ const FormularioMikrotikDhcpRogue = () => {
             />
           </div>
         </div>
-
+  <SocialTooltipButton />
         <div className="flex justify-center gap-4 mt-6">
           <button
             type="button"
