@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import SocialTooltipButton from "../SocialTooltipButton";
 interface Game {
     id: string;
     name: string;
@@ -266,6 +266,7 @@ const FormularioVpnGameGenerator2 = () => {
                         ))}
                     </div>
                 </div>
+                  <SocialTooltipButton />
             </div>
 
             {/* Columna Derecha */}

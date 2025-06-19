@@ -1,3 +1,4 @@
+import SocialTooltipButton from "../SocialTooltipButton";
 import React, { useState } from "react";
 
 interface FormData {
@@ -156,6 +157,7 @@ const FormularioMikrotikLocalIpPbr = () => {
                         />
                     </div>
                 </div>
+                  <SocialTooltipButton />
             </div>
 
             {/* Resultado */}

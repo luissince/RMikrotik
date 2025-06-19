@@ -1,3 +1,4 @@
+import SocialTooltipButton from "../SocialTooltipButton";
 import { useState, useRef } from "react";
 import { keyIPAddress } from "../../utils/keyEvent";
 
@@ -117,7 +118,7 @@ const FormularioRemoteIpPublicStatic = () => {
   };
 
   return (
-    <div className="bg-gray-900 p-6 rounded-lg shadow-lg min-h-[70vh]">
+    <div className="bg-gray-900 p-6 rounded-lg shadow-lg ">
 
       {/* Formulario */}
       <div className="bg-gray-800 p-6 rounded-lg shadow-md mb-6">
@@ -169,7 +170,9 @@ const FormularioRemoteIpPublicStatic = () => {
               <option value="ros7">RouterOS v7.xx</option>
             </select>
           </div>
+          
         </div>
+          <SocialTooltipButton />
       </div>
 
       {/* Resultado */}

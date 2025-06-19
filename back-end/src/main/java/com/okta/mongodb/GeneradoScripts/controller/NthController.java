@@ -13,7 +13,7 @@ import com.okta.mongodb.GeneradoScripts.model.nth.NthBody;
 import com.okta.mongodb.GeneradoScripts.service.NthService;
 
 @RestController
-@RequestMapping("/nth")
+@RequestMapping("/Balanceo_NTH")
 public class NthController {
 
     @Autowired

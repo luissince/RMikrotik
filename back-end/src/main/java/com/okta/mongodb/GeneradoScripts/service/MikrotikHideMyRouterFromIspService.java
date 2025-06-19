@@ -40,7 +40,7 @@ public class MikrotikHideMyRouterFromIspService {
                 html.append("<span>###############################################################<span> <br>");
 
                 html.append("/interface list add name=WAN-PROTECT comment=\"MikroTik Ninja by buananet.com\" <br>");
-                html.append("/interface list member add interface=\"eth1\" list=WAN-PROTECT comment=\"MikroTik Ninja by buananet.com\" <br>");
+                html.append("/interface list member add interface=\""+body.getInterfaceToIsp()+"\" list=WAN-PROTECT comment=\"MikroTik Ninja RMikrotik.com\" <br>");
                 
                 if(body.isBlockWinboxScan()) {
                         html.append("## Block Winbox Scan <br>");

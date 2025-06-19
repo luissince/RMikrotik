@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import SocialTooltipButton from "../SocialTooltipButton";
 const PCQCalculator = () => {
     const [totalClient, setTotalClient] = useState(40);
     const [queueSize, setQueueSize] = useState(50);
@@ -79,7 +79,9 @@ const PCQCalculator = () => {
             >
                 CALCULATE
             </button>
+                 <SocialTooltipButton />
         </div>
+   
     </div>
 
     {/* Copy Paste Burst Result on Winbox */}

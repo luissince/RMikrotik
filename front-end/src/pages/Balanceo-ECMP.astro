@@ -17,22 +17,7 @@ import MainLayout from "../layout/MainLayout.astro";
 
       <Formulario client:load />
 
-      <p class="text-2sm text-orange-500 mx-6">
-        MikroTik LB ECMP / Load Balancing ECMP Script Generator for RouterOS
-      </p>
-      <p class="text-gray-400 mx-8">
-        /ip firewall nat remove [find comment="Balanceo ECMP"] <br />
-        /ip route remove [find comment="Balanceo ECMP"]<br />
-        /ip firewall mangle remove [find comment="Balanceo ECMP"] <br />
-        /ip firewall address-list remove [find comment="Balanceo ECMP"]<br />
-        /routing table remove [find comment="Balanceo ECMP"]
-      </p>
-      <div class="bg-gray-700 p-4 rounded-lg mt-6 mb-4 mx-8">
-        <p class="text-sm text-gray-300">
-          Tenemos un video tutorial de como utilizar nuestra herramienta, Ver
-          Video...
-        </p>
-      </div>
+      
     </div>
   </body>
 </MainLayout>

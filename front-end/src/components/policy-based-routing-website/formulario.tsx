@@ -1,3 +1,5 @@
+import SocialTooltipButton from "../SocialTooltipButton";
+
 import React, { useState } from "react";
 
 interface FormData {
@@ -178,6 +180,7 @@ const FormularioPolicyBasedRoutingWebsite = () => {
                         />
                     </div>
                 </div>
+                  <SocialTooltipButton />
             </div>
 
             {/* Dominios */}

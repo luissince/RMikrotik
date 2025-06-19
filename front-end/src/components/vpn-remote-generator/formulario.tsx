@@ -1,4 +1,6 @@
+import SocialTooltipButton from "../SocialTooltipButton";
 import React, { useState } from "react";
+
 
 type ScriptResult = {
     html: string;
@@ -169,9 +171,11 @@ const FormularioVpnRemoteGenerator = () => {
                             onChange={handleChange}
                         />
                     </div>
+                      <SocialTooltipButton />
                 </form>
+             
             </div>
-
+   
             {/* Result Section */}
             <div className="flex flex-col lg:w-1/2 min-h-0">
                 <div className="flex-grow bg-gray-700 p-4 rounded-lg flex flex-col min-h-0">

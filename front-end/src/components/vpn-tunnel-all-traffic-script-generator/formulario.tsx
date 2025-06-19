@@ -1,3 +1,4 @@
+import SocialTooltipButton from "../SocialTooltipButton";
 import { useState } from "react";
 import { keyIPAddress } from "../../utils/keyEvent";
 
@@ -235,6 +236,7 @@ const FormularioVpnTunnelAllTrafficScriptGenerator = () => {
             )}
           </div>
         </div>
+          <SocialTooltipButton />
       </div>
 
       {/* Result Section */}

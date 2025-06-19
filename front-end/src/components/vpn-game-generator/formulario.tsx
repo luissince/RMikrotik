@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { keyIPAddress } from '../../utils/keyEvent';
+import SocialTooltipButton from "../SocialTooltipButton";
 
 interface Game {
     id: string;
@@ -268,6 +269,7 @@ const FormularioVpnGameGenerator = () => {
                         ))}
                     </div>
                 </div>
+                  <SocialTooltipButton />
             </div>
 
             {/* Columna Derecha */}

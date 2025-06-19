@@ -10,18 +10,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.okta.mongodb.GeneradoScripts.model.ecmp.EcmpBody;
-import com.okta.mongodb.GeneradoScripts.service.EcmpService;
+import com.okta.mongodb.GeneradoScripts.model.queuetreegeneratorshared.QueuetreegeneratorsharedBody;
+import com.okta.mongodb.GeneradoScripts.service.QueueTreeGeneratorSharedService;
 
 @RestController
 @RequestMapping("/queue-tree-generator-shared")
 public class QueueTreeGeneratorSharedController {
 
     @Autowired
-    private EcmpService ecmpService;
+    private QueueTreeGeneratorSharedService queueTreeGeneratorSharedService;
 
     @PostMapping
-    public ResponseEntity<Map<String, String>> create(@RequestBody EcmpBody ecmpBody) {
-        return ResponseEntity.ok(ecmpService.create(ecmpBody));
+    public ResponseEntity<Map<String, String>> create(@RequestBody QueuetreegeneratorsharedBody body) {
+        return ResponseEntity.ok(queueTreeGeneratorSharedService.create(body));
     }
 }

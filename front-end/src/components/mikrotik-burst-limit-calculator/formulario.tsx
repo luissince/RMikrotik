@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import SocialTooltipButton from "../SocialTooltipButton";
 interface FormData {
     uploadMaxLimit: string;
     uploadBurstLimit: string;
@@ -171,14 +171,13 @@ const FormularioMikrotikBurstLimitCalculator: React.FC = () => {
                             </tr>
                         </tbody>
                     </table>
-                    <div className="bg-gray-700 p-4 rounded-lg mt-6 mb-4 mx-8">
-                        <p className="text-sm text-gray-300">
-                            Tenemos un video tutorial de cómo utilizar nuestra herramienta, Ver Video...
-                        </p>
-                    </div>
+                  
+                     <SocialTooltipButton />
                     <div className="flex justify-center mb-8 mt-8">
                         <img src="/images/NAT.png" alt="Routing Diagram" className="rounded-lg" />
+                        
                     </div>
+                   
                 </div>
             </div>
 

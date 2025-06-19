@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import SocialTooltipButton from "../SocialTooltipButton";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -344,7 +345,9 @@ const FormumarioMikrotikPcqGenerator = () => {
                     >
                         Borrar Todo
                     </button>
+                 
                 </div>
+                <SocialTooltipButton />
             </div>
 
             {/* Panel derecho - Resultado */}

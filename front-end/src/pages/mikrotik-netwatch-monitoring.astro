@@ -1,145 +1,43 @@
 ---
+import FormularioMkrotikNetwatchMonitoring from "../components/mikrotik-netwatch-monitoring/formulario";
 import MainLayout from "../layout/MainLayout.astro";
 ---
 
 <MainLayout title="Open Book">
-    <body
-        class="bg-gray-900 text-white font-sans min-h-screen flex items-center justify-center"
-    >
-        <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
-            <!-- Contenido -->
-            <!-- Header -->
-                 <!-- Título -->
-                 <div class="text-center mb-6">
-                    <h1
-                        class="text-2xl lg:text-4xl font-bold text-orange-500"
-                    >
-                    MIKROTIK: SEND NETWATCH MONITORING TO TELEGRAM :: WHATSAPP :: SMS :: E-MAIL
-                    </h1>
-                    <p class="text-gray-300 mt-4">
-                      Facil y confiable
-                    </p>
-                </div>
-        </div>
-                <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
-             
-<!-- Contenido inicio -->
+  <div class="flex flex-col py-10 space-y-5">
+    <div class="bg-gray-800 rounded-lg">
+      <!-- Header -->
+      <div class="text-center mb-6">
+     <h1 class="text-2xl lg:text-4xl   font-extrabold text-transparent bg-clip-text animated-gradient bg-gradient-to-r from-amber-400 via-orange-700 to-red-600">
+           ENVIAR ALERTAS DE NETWATCH A TELEGRAM :: WHATSAPP :: SMS :: E-MAIL
+        </h1>
 
-
-
-  <div class="container mx-auto p-6 bg-gray-800 rounded-lg shadow-lg ">
-    <!-- Título -->
-  
-
-      <div class="container mx-auto p-6 bg-gray-800 rounded-lg shadow-lg ">
-        <!-- Título -->
-        <div class="text-center mb-6">
-     
-  
-        </div>
-    
-   
-        <!-- Formulario Principal -->
-<!-- Contenedor borde azul -->
-<div class="text-gray-950 shadow-2xl rounded-lg p-6 w-full ring-2 ring-blue-500">
-   <!-- Formulario Principal -->
-   <form class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-5">
-    <!-- Columna Izquierda -->
-    <div>
-        <label class="block font-semibold text-orange-400 mb-2">Sending Options</label>
-        <select
-        id="wan-type"
-        class="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400"
-      >
-        <option value="2">Telegram</option>
-        <option value="3">Whatsapp</option>
-        <option value="3">SMS</option>
-        <option value="3">E-Mail</option>
-  
-      </select>
-      </div> 
-    <div>
-      <label class="block font-semibold text-orange-400 mb-2">BOT Telegram</label>
-      <input id="textbox1" type="text" placeholder="5633162xxx:AAFU1dsXcARJlAH_jJmvF1D4Bp8LLTLJjaX" class="w-full bg-gray-700 text-gray-300 rounded-lg p-2 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-orange-500">
-    </div>
-    <div>
-      <label class="block font-semibold text-orange-400 mb-2">Chat ID Telegram</label>
-      <input id="textbox2" type="text" placeholder="5537582xxx" class="w-full bg-gray-700 text-gray-300 rounded-lg p-2 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-orange-500">
-    </div>
-   
-    <!-- Columna Derecha -->             
-  </form>
-</div>
-      <div class="flex flex-wrap justify-center gap-4 mb-6 mt-7">
-     
-        <button
-          class="text-white px-4 py-2 rounded-md transition ease-in-out delay-150 bg-orange-500 hover:-translate-y-1 hover:scale-110 hover:bg-orange-600 duration-300"
-        >
-          Generar Script
-        </button>
-
-        <button
-          class="text-white px-4 py-2 rounded-md transition ease-in-out delay-150 bg-green-500 hover:-translate-y-1 hover:scale-110 hover:bg-teal-600 duration-300"
-        >
-          Copiar Todo
-        </button>
-      </div>
-
-         <!-- Gestión de Dominios -->
-
- 
-        <div class="bg-gray-700 p-4 rounded-lg flex flex-col">
-          <label class="block text-sm font-semibold mb-2 text-gray-300"
-            >Script Generator Result</label
-          >
-          <textarea
-            class="flex-grow bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400"
-            placeholder="Please Login and Subscribe .."
-            readonly></textarea>
-    
-      </div>
-    
- 
-      <p class="text-2sm text-orange-500 mx-2 pt-6">
-        HOW TO GET BOT / API / TOKEN TELEGRAM : 
-       
-      </p>
-      <p class="text-gray-400 mx-2">
-        1. Search in your Telegram @BotFather or https://t.me/BotFather <br>
-2. Send /newbot<br>
-3. Create name like this -> Example: YourName_bot and input again with same name YourName_bot<br>
-4. Save your TOKEN / BOT / API -> Example: 5633162xxx:AAFU1dsXcARJlAH_jJmvF1D4Bp8LLTLJjaX<br>
-5. Search in your Telegram @YourName_bot and then click START Button<br>
-      </p>
-      <div class="bg-gray-700 p-4 rounded-lg mt-6 mb-4 mx-8">
-        <p class="text-sm text-gray-300">
-            HOT TO GET CHAT ID TELEGRAM :   <br>
-
-            1. Search in your Telegram @get_id_bot or https://t.me/get_id_bot<br>
-            2. Send /start
-            3. Save your Chat ID like this -> Example: 5537582xxx<br>
-            
-            <p>Finaly test from your Browser:</p>
-            <code>
-                <p>https://api.telegram.org/bot<token>/sendMessage?chat_id=<chat_id>&text=Hello%20World</p>
-            </code>
+  <p class="text-gray-300">
+        Monitorea el estado de tu red con Netwatch de MikroTik y recibe alertas instantáneas cuando un enlace cae o se recupera, directamente en Telegram, WhatsApp, SMS o correo electrónico. <br>Esta herramienta genera automáticamente los scripts necesarios para mantenerte siempre informado, estés donde estés.
         </p>
-        
+ <style>
+     /* Animación personalizada para mover el degradado */
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .animated-gradient {
+      background-size: 200% 200%;
+      animation: gradientMove 5s ease infinite;
+    }
+  </style>
       </div>
- 
+    </div>
 
-
- <!-- Contenido Fin -->
-
-
-
-
-
-            </div>
-
-            <!-- Contenido Fin Aqui para abajo es otro codigo q u se borrara -->
-       
- 
-
-    </body>
+    <!-- Contenido inicio -->
+    <div class="bg-gray-800 rounded-lg mx-4">
+      <!-- Contenido Principal -->
+      <div class="container mx-auto">
+        <!-- Formulario Principal -->
+        <FormularioMkrotikNetwatchMonitoring client:load />
+      </div>
+    </div>
+  </div>
 </MainLayout>
