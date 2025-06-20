@@ -11,7 +11,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 @ControllerAdvice
-public class GlobalExceptionHandler {
+public class GlobalExceptionMiddleware {
 
     // Manejar rutas no encontradas (404)
     @ExceptionHandler(NoHandlerFoundException.class)

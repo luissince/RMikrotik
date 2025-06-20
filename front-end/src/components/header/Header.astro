@@ -236,7 +236,7 @@ const session = await getSession(Astro.request);
   if (logout) {
     logout.addEventListener("click", () =>
       signOut({
-        callbackUrl: "/goodbye",
+        callbackUrl: "/",
         redirect: true,
       }),
     );

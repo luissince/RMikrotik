@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Eye, Check, X, RefreshCw, Calendar, Filter, ChevronDown, Plus, Edit, Trash2, Settings, Users, RefreshCcw, Ban } from 'lucide-react';
-import type { Session } from '@auth/core/types';
+import { Plus } from 'lucide-react';
 import type { Plan } from '../../types/plan/plan';
 import type { Subscription } from '../../types/subscription/subscription';
 import type { User } from '../../types/user/user';
@@ -21,7 +20,8 @@ import CouponModal from './CouponModal';
 import type { Coupon } from '../../types/coupon/coupon';
 
 interface Props {
-  session: Session | null;
+  subscription: Subscription | null;
+  user: User | null;
   subscriptions: Subscription[];
   plans: Plan[];
   users: User[];
@@ -281,7 +281,7 @@ const AdminSubscriptions: React.FC<Props> = (initialProps) => {
     }, initialProps.plans[0])
   };
 
-  if (!initialProps.session) {
+  if (!initialProps.subscription) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-900">
         <div className="text-center">
@@ -295,11 +295,11 @@ const AdminSubscriptions: React.FC<Props> = (initialProps) => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-7xl mx-auto">
-        <AdminHeader session={initialProps.session} />
+        <AdminHeader user={initialProps.user} />
         <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
         {activeTab === 'subscriptions' && (
-            <>
+          <>
             <SubscriptionStats stats={stats} />
             <SubscriptionFilters
               searchTerm={searchTerm}
@@ -348,41 +348,41 @@ const AdminSubscriptions: React.FC<Props> = (initialProps) => {
 
         {activeTab === 'users' && (
           <>
-          <UserStats userStats={userStats} />
-          <div className="bg-white rounded-lg p-6 mb-6 shadow-lg">
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
-              <div>
-                <h2 className="text-xl font-bold text-gray-900 mb-2">Gestión de Usuarios</h2>
-                <p className="text-gray-600">Administra los usuarios registrados</p>
+            <UserStats userStats={userStats} />
+            <div className="bg-white rounded-lg p-6 mb-6 shadow-lg">
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900 mb-2">Gestión de Usuarios</h2>
+                  <p className="text-gray-600">Administra los usuarios registrados</p>
+                </div>
               </div>
             </div>
-          </div>
-          <UsersTable filteredUsers={filteredUsers} loading={loading} />
-        </>
+            <UsersTable filteredUsers={filteredUsers} loading={loading} />
+          </>
         )}
 
         {activeTab === 'coupons' && (
           <>
-          <CouponStats couponStats={couponStats} />
-          <div className="bg-white rounded-lg p-6 mb-6 shadow-lg">
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
-              <div>
-                <h2 className="text-xl font-bold text-gray-900 mb-2">Gestión de Cupones</h2>
-                <p className="text-gray-600">Administra los cupones disponibles</p>
+            <CouponStats couponStats={couponStats} />
+            <div className="bg-white rounded-lg p-6 mb-6 shadow-lg">
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900 mb-2">Gestión de Cupones</h2>
+                  <p className="text-gray-600">Administra los cupones disponibles</p>
+                </div>
+                <button
+                  onClick={() => openModalCoupon(null, 'create')}
+                  className="mt-4 lg:mt-0 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center transition-colors"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Crear Cupón
+                </button>
               </div>
-              <button
-                onClick={() => openModalCoupon(null, 'create')}
-                className="mt-4 lg:mt-0 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center transition-colors"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Crear Cupón
-              </button>
             </div>
-          </div>
-          <CouponsTable coupons={initialProps.coupons} openModalCoupon={openModalCoupon} />
-        </>
+            <CouponsTable coupons={initialProps.coupons} openModalCoupon={openModalCoupon} />
+          </>
         )}
-     
+
         <SubscriptionModal
           showSubscriptionModal={showSubscriptionModal}
           closeModalSubscription={closeModalSubscription}

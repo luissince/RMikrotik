@@ -37,13 +37,11 @@ public class SwaggerConfig {
     }
 
     return new OpenAPI()
-        // .addSecurityItem(
-        // new SecurityRequirement().addList("Bearer Authentication")
-        // )
-        // .components(
-        // new Components()
-        // .addSecuritySchemes("Bearer Authentication", createAPIKeyScheme())
-        // )
+        .addSecurityItem(
+            new SecurityRequirement().addList("Bearer Authentication"))
+        .components(
+            new Components()
+                .addSecuritySchemes("Bearer Authentication", createAPIKeyScheme()))
         .servers(servers)
         .info(
             new Info()
@@ -57,10 +55,10 @@ public class SwaggerConfig {
                         .url("xanderlsdev@gmail.com")));
   }
 
-  // private SecurityScheme createAPIKeyScheme() {
-  // return new SecurityScheme()
-  // .type(SecurityScheme.Type.HTTP)
-  // .bearerFormat("JWT")
-  // .scheme("bearer");
-  // }
+  private SecurityScheme createAPIKeyScheme() {
+    return new SecurityScheme()
+        .type(SecurityScheme.Type.HTTP)
+        .bearerFormat("JWT")
+        .scheme("bearer");
+  }
 }
