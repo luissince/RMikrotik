@@ -1,12 +1,29 @@
-import type { Session } from "@auth/core/types";
-import React, { useState } from "react";
+import React from "react";
 import person from "../../assets/icons/person.svg";
+import { formatDate } from "../../utils/helper";
+import type { User } from "../../types/user/user";
+import type { Subscription } from "../../types/subscription/subscription";
 
 interface Props {
-  session: Session | null;
+  user: User;
+  subscription: Subscription;
 }
 
-const FormularioAccount: React.FC<Props> = ({ session }) => {
+
+const FormularioAccount: React.FC<Props> = ({ user, subscription }) => {
+  // Función para manejar valores nulos en la suscripción
+  const getSubscriptionStatus = () => {
+    if (!subscription) {
+      return <td className="px-4 py-2 text-yellow-600 font-semibold">NO SUSCRITO</td>;
+    }
+
+    if (subscription.status === "active") {
+      return <td className="px-4 py-2 text-green-600 font-semibold">ACTIVADO</td>;
+    }
+
+    return <td className="px-4 py-2 text-red-600 font-semibold">EXPIRADO</td>;
+  };
+
   return (
     <>
       {/* Contenido principal */}
@@ -16,10 +33,10 @@ const FormularioAccount: React.FC<Props> = ({ session }) => {
           <div className="flex flex-col items-center">
             {/* Foto de perfil */}
             <div className="w-32 h-32 rounded-full overflow-hidden mb-4">
-              <img src={session?.user?.image || person.src} alt="Profile" className="w-full h-full object-cover" />
+              <img src={user?.image || person.src} alt="Profile" className="w-full h-full object-cover" />
             </div>
-            <h2 className="text-xl font-bold text-gray-800">{session?.user?.name}</h2>
-            <p className="text-gray-600">{session?.user?.email}</p>
+            <h2 className="text-xl font-bold text-gray-800">{user?.name || "Nombre no disponible"}</h2>
+            <p className="text-gray-600">{user?.email || "Email no disponible"}</p>
           </div>
 
           {/* Botones de acción */}
@@ -43,11 +60,11 @@ const FormularioAccount: React.FC<Props> = ({ session }) => {
             <tbody>
               <tr className="border-t">
                 <td className="px-4 py-2 font-medium">Identificador de correo electrónico</td>
-                <td className="px-4 py-2">{session?.user?.email}</td>
+                <td className="px-4 py-2">{user?.email || "Email no disponible"}</td>
               </tr>
               <tr className="border-t">
                 <td className="px-4 py-2 font-medium">Nombre</td>
-                <td className="px-4 py-2">{session?.user?.name}</td>
+                <td className="px-4 py-2">{user?.name || "Nombre no disponible"}</td>
               </tr>
             </tbody>
           </table>
@@ -57,37 +74,31 @@ const FormularioAccount: React.FC<Props> = ({ session }) => {
             <tbody>
               <tr className="border-t">
                 <td className="px-4 py-2 font-medium">Estado</td>
-                {
-                  session?.user?.subscription === null ? (
-                    <td className="px-4 py-2 text-red-600 font-semibold">✘ NO SUSCRITO</td>
-                  ) : session?.user?.subscription?.status === "active" ? (
-                    <td className="px-4 py-2 text-green-600 font-semibold">✔ ACTIVADO</td>
-                  ) : (
-                    <td className="px-4 py-2 text-red-600 font-semibold">✘ EXPIRADO</td>
-                  )
-                }
-
+                {getSubscriptionStatus()}
               </tr>
               <tr className="border-t">
-                <td className="px-4 py-2 font-medium">Paquete</td>
-                <td className="px-4 py-2">{session?.user?.subscription?.planId}</td>
+                <td className="px-4 py-2 font-medium">Plan</td>
+                <td className="px-4 py-2">{subscription?.plan?.name || "Plan no disponible"}</td>
+              </tr>
+              <tr className="border-t">
+                <td className="px-4 py-2 font-medium">Precio</td>
+                <td className="px-4 py-2">$ {subscription?.price || "Precio no disponible"}</td>
               </tr>
               <tr className="border-t">
                 <td className="px-4 py-2 font-medium">Fecha de Pago</td>
-                <td className="px-4 py-2">{session?.user?.subscription?.startDate}</td>
+                <td className="px-4 py-2">{subscription?.startDate ? formatDate(subscription.startDate) : "Fecha no disponible"}</td>
               </tr>
               <tr className="border-t">
                 <td className="px-4 py-2 font-medium">Fecha de Caducidad</td>
-                <td className="px-4 py-2">{session?.user?.subscription?.endDate}</td>
+                <td className="px-4 py-2">{subscription?.endDate ? formatDate(subscription.endDate) : "Fecha no disponible"}</td>
               </tr>
             </tbody>
           </table>
 
           <div className="mt-6 flex flex-col sm:flex-row gap-3">
-            <a href="/pricing" className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex-1">
+            <a href="/pricing" className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex-1 text-center">
               <i className="fas fa-credit-card mr-2"></i> Comprar Membresía
             </a>
-            <input type="text" placeholder="Ingrese código de cupón" className="border border-gray-300 rounded-lg px-4 py-2 flex-1 focus:outline-none focus:ring-2 focus:ring-blue-500" />
           </div>
         </div>
       </div>
@@ -124,3 +135,4 @@ const FormularioAccount: React.FC<Props> = ({ session }) => {
 };
 
 export default FormularioAccount;
+

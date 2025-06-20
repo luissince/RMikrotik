@@ -143,7 +143,7 @@ const PaymentModal = ({ session, plans }: Props) => {
   const prepareAndSendData = async (method: string, cardData?: CardData) => {
     if (!selectedPlan) return;
 
-    if (!session?.user?.providerId) {
+    if (!session?.user) {
       alertKit.warning({
         title: 'Procesar pago',
         message: 'Inicie sesión para poder pagar',
@@ -176,16 +176,18 @@ const PaymentModal = ({ session, plans }: Props) => {
 
         const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/payment`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            ...payload,
-            providerId: session!.user!.providerId,
-          }),
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": `${session?.user?.type} ${session.user?.token}`,
+          },
+          body: JSON.stringify(payload),
         });
 
         const result: Result = await response.json();
 
         if (!response.ok) {
+          console.log(result);
           throw new Error(result.message || 'Error al procesar pago');
         };
 

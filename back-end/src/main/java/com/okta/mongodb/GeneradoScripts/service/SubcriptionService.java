@@ -237,33 +237,33 @@ public class SubcriptionService {
         return ResponseEntity.ok(responseList);
     }
 
-    public ResponseEntity<?> getActiveSubscription(String providerId) {
+    public ResponseEntity<?> getSubscription(String providerId) {
+        // Validar que el providerId sea válido
         if (providerId == null || providerId.isEmpty()) {
             return ResponseEntity.badRequest().body("Falta providerId");
         }
 
+        // obtener el usuario y verificar si existe
         User user = userRepository.findByProviderId(providerId).orElse(null);
         if (user == null) {
             return ResponseEntity.status(404).body("Usuario no encontrado");
         }
 
+        // Obtener la fecha actual
         LocalDate today = LocalDate.now();
 
-        // Obtener solo la suscripción activa actual
+        // Obtener la suscripción activa y validar que exista
         Subscription subscription = subscriptionRepository
                 .findTopByUserAndStatusAndEndDateGreaterThanEqualOrderByEndDateDesc(user, "active", today);
-
         if (subscription == null) {
             return ResponseEntity.status(400).body("No hay suscripción activa");
         }
 
+        // Devolver la información de la suscripción
         return ResponseEntity.ok(Map.of(
-                "planId", subscription.getPlan().getId(),
-                "status", subscription.getStatus(),
-                "startDate", subscription.getStartDate(),
-                "endDate", subscription.getEndDate(),
-                "price", subscription.getPrice(),
-                "method", subscription.getMethod()));
+                "subscription", subscription,
+                "user", user
+        ));
     }
 
     private String generateTokenCulqi(Map<String, Object> cardData) throws Exception {

@@ -4,10 +4,31 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { keyIPAddress } from "../../utils/keyEvent";
 import type { Session } from "@auth/core/types";
+import AlertKit, { alertKit } from "alert-kit";
+import { buttonPresets } from "../../styles/buttonStyles";
 
 interface Props {
   session: Session | null;
 }
+
+AlertKit.setGlobalDefaults({
+  headerClassName: 'bg-white p-4 border-b border-gray-200 rounded-t-2xl cursor-move',
+  headerTitle: 'RMikrotik',
+  showCloseButton: false,
+  primaryButtonClassName: buttonPresets.modalAccept,
+  cancelButtonClassName: buttonPresets.modalCancel,
+  acceptButtonClassName: buttonPresets.modalAccept,
+  defaultTexts: {
+    success: 'Éxito',
+    error: 'Error',
+    warning: 'Advertencia',
+    info: 'Información',
+    question: 'Confirmación',
+    accept: 'Aceptar',
+    cancel: 'Cancelar',
+    ok: 'Aceptar'
+  }
+});
 
 const lineInterfaceSchema = z.object({
   id: z.number(),
@@ -63,11 +84,16 @@ const FormularioPcc = ({ session }: Props) => {
   const localValue = watch("local");
   const [scriptResult, setScriptResult] = useState<ScriptResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [showSessionModal, setShowSessionModal] = useState(false);
 
   useEffect(() => {
     if (!session) {
-      setShowSessionModal(true);
+      alertKit.warning({
+        title: 'Sesión no iniciada',
+        message: 'Inicie sesión para continuar.',
+        primaryButton: {
+          text: 'Aceptar',
+        }
+      });
     }
   }, [session]);
 
@@ -94,12 +120,24 @@ const FormularioPcc = ({ session }: Props) => {
 
   const onSubmit = async (data: FormValues) => {
     if (!session) {
-      setShowSessionModal(true);
+      alertKit.warning({
+        title: 'Sesión no iniciada',
+        message: 'Inicie sesión para continuar.',
+        primaryButton: {
+          text: 'Aceptar',
+        }
+      });
       return;
     }
 
     if (session.user?.subscription?.status !== "active") {
-      setShowSessionModal(true);
+      alertKit.warning({
+        title: 'Suscripción no activa',
+        message: 'Compruebe suscripción para continuar.',
+        primaryButton: {
+          text: 'Aceptar',
+        }
+      });
       return;
     }
 
@@ -123,7 +161,7 @@ const FormularioPcc = ({ session }: Props) => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "accept": "application/hal+json",
+            "accept": "application/json",
           },
           body: JSON.stringify(payload),
         }
@@ -145,12 +183,24 @@ const FormularioPcc = ({ session }: Props) => {
 
   const handleClearAll = () => {
     if (!session) {
-      setShowSessionModal(true);
+      alertKit.warning({
+        title: 'Sesión no iniciada',
+        message: 'Inicie sesión para continuar.',
+        primaryButton: {
+          text: 'Aceptar',
+        }
+      });
       return;
     }
 
     if (session.user?.subscription?.status !== "active") {
-      setShowSessionModal(true);
+      alertKit.warning({
+        title: 'Suscripción no activa',
+        message: 'Compruebe suscripción para continuar.',
+        primaryButton: {
+          text: 'Aceptar',
+        }
+      });
       return;
     }
 
@@ -170,7 +220,13 @@ const FormularioPcc = ({ session }: Props) => {
 
   const handleCopyScript = () => {
     if (!session) {
-      setShowSessionModal(true);
+      alertKit.warning({
+        title: 'Sesión no iniciada',
+        message: 'Inicie sesión para continuar.',
+        primaryButton: {
+          text: 'Aceptar',
+        }
+      });
       return;
     }
 
@@ -188,45 +244,6 @@ const FormularioPcc = ({ session }: Props) => {
 
   return (
     <div className="flex flex-col lg:flex-row gap-6 bg-gray-900 p-6 rounded-lg shadow-lg">
-      {/* Modal para sesión nula */}
-      {showSessionModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="relative bg-white rounded-xl p-6 w-full max-w-md shadow-lg">
-            <button
-              onClick={handleCloseModal}
-              className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-xl font-bold"
-              aria-label="Cerrar"
-            >
-              &times;
-            </button>
-            <h2 className="text-xl font-bold text-orange-600 mb-4">
-              {
-                !session && "SESIÓN NO INICIADA"
-              }
-              {
-                session && session.user?.subscription?.status !== "active" && "SUSCRIPCIÓN NO ACTIVA"
-              }
-            </h2>
-            <p className="mb-4">
-              {
-                !session && "Por favor, inicia sesión para continuar."
-              }
-              {
-                session && session.user?.subscription?.status !== "active" && "Por favor, compra una suscripción activa para continuar."
-              }
-            </p>
-            <div className="flex justify-end">
-              <button
-                onClick={handleCloseModal}
-                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
-              >
-                Aceptar
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Form Section */}
       <div className="flex flex-col gap-6 lg:w-1/2">
         <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>

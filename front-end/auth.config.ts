@@ -60,7 +60,7 @@ export default defineConfig({
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
-					"accept": "application/hal+json",
+					"accept": "application/json",
 				},
 				body: JSON.stringify({
 					providerId: user.providerId,
@@ -70,20 +70,26 @@ export default defineConfig({
 				}),
 			});
 
-			if (response.ok) {
-				const data = await response.json();
-				user.subscription = data.subscription;
+			const result = await response.json();
+
+			if(response.ok){
+				// response {
+				// 	type: 'Bearer',
+				// 	token: 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbGV4YW5kZXIgKFhhbmRlcikiLCJpYXQiOjE3NDk5OTQ2MTMsImV4cCI6MTc1MDA4MTAxM30.7YynI9GFgn23qIW8cHqYMMLRGxjZsbh864jlU6Bs9hE'
+				//   }
+				console.log('response', result);
+				user.token = result.token;
+				user.type = result.type;
 			}
 
+			
 			return true;
 		},
 		jwt: async ({ token, user }) => {
 			// Cuando el usuario hace login, 'user' contiene la info
 			if (user) {
 				console.log('----------jwt----------');
-				token.providerId = user.providerId
-				token.userId = user.id
-				token.subscription = user.subscription || null;
+				token.user = user;
 			}
 
 			return token;
@@ -92,9 +98,8 @@ export default defineConfig({
 		session: async ({ session, user, token }) => {
 			if (session.user) {
 				console.log('----------session----------');
-				session.user.providerId = token.providerId!;
-				session.user.id = token.userId!;
-				session.user.subscription = token.subscription || null;
+				session.user.token = token.user.token;
+				session.user.type = token.user.type;
 			}
 			return session;
 		},

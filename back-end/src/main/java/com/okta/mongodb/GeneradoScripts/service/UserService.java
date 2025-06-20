@@ -13,6 +13,7 @@ import com.okta.mongodb.GeneradoScripts.model.user.User;
 import com.okta.mongodb.GeneradoScripts.model.user.UserBody;
 import com.okta.mongodb.GeneradoScripts.repository.SubscriptionRepository;
 import com.okta.mongodb.GeneradoScripts.repository.UserRepository;
+import com.okta.mongodb.GeneradoScripts.utils.JwtUtil;
 
 @Service
 public class UserService {
@@ -24,6 +25,9 @@ public class UserService {
 
         @Autowired
         private SubscriptionRepository subscriptionRepository;
+
+        @Autowired
+        private JwtUtil jwtUtil;
 
         public Map<String, Object> create(UserBody body) {
                 logger.info("Body recibido: {}", body);
@@ -39,23 +43,27 @@ public class UserService {
                                 });
 
                 // Obtener la última suscripción
-                Subscription subscription = subscriptionRepository.findTopByUserOrderByEndDateDesc(user);
+                // Subscription subscription = subscriptionRepository.findTopByUserOrderByEndDateDesc(user);
 
                 Map<String, Object> response = new java.util.HashMap<>();
-                response.put("user", user);
+                // response.put("user", user);
 
-                if (subscription != null) {
-                        Map<String, Object> subData = new java.util.HashMap<>();
-                        subData.put("planId", subscription.getPlan().getId());
-                        subData.put("startDate", subscription.getStartDate());
-                        subData.put("endDate", subscription.getEndDate());
-                        subData.put("status", subscription.getStatus());
-                        subData.put("price", subscription.getPrice());
-                        subData.put("method", subscription.getMethod());
-                        response.put("subscription", subData);
-                } else {
-                        response.put("subscription", null);
-                }
+                // if (subscription != null) {
+                //         Map<String, Object> subData = new java.util.HashMap<>();
+                //         subData.put("planId", subscription.getPlan().getId());
+                //         subData.put("startDate", subscription.getStartDate());
+                //         subData.put("endDate", subscription.getEndDate());
+                //         subData.put("status", subscription.getStatus());
+                //         subData.put("price", subscription.getPrice());
+                //         subData.put("method", subscription.getMethod());
+                //         response.put("subscription", subData);
+                // } else {
+                //         response.put("subscription", null);
+                // }
+
+                String token =jwtUtil.generateToken(user);
+                response.put("token", token);
+                response.put("type", "Bearer");
 
                 return response;
         }
