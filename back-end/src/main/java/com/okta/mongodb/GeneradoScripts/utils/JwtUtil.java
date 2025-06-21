@@ -43,7 +43,7 @@ public class JwtUtil {
                 .compact();
     }
 
-    public boolean validateToken(String token) {
+    public String validateToken(String token) {
         try {
             Jws<Claims> claims = Jwts
                     .parserBuilder()
@@ -53,15 +53,17 @@ public class JwtUtil {
 
             // logger.info("Validando token: {}", claims.getBody());
 
-            return !claims.getBody().getExpiration().before(new Date());
+            return !claims.getBody().getExpiration().before(new Date()) ? "100" : "Token expirado";
         } catch (ExpiredJwtException e) {
             logger.info("Token expirado");
+            return "Token expirado";
         } catch (MalformedJwtException e) {
             logger.info("Token inválido");
+            return "Token inválido";
         } catch (Exception e) {
             logger.info("Error al validar token: " + e.getMessage());
+            return "Error al validar token: " + e.getMessage();
         }
-        return false;
     }
 
     private Key getKey() {
