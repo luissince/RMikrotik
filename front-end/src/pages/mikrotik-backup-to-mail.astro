@@ -1,33 +1,38 @@
 ---
 import FormularioBackupToEmail from "../components/mikrotik-backup-to-email/formulario";
 import MainLayout from "../layout/MainLayout.astro";
+import { getAuthData } from "../utils/auth";
+
+// Obtener los datos de la sesión y suscripción
+const { session, subscription, shouldSignOut } = await getAuthData(
+  Astro.request,
+);
+
+// Si necesita cerrar sesión, redirigir a logout
+if (shouldSignOut) {
+  return Astro.redirect("/logout?reason=expired");
+}
 ---
 
-<MainLayout title="Open Book">
+<MainLayout title="RMicrotik">
   <div class="flex flex-col py-10 space-y-5">
     <div class="bg-gray-800 rounded-lg">
       <!-- Header -->
       <div class="text-center mb-6">
-      <h1 class="text-2xl lg:text-4xl   font-extrabold text-transparent bg-clip-text animated-gradient bg-gradient-to-r from-amber-400 via-orange-700 to-red-600">
+        <h1
+          class="text-2xl lg:text-4xl font-extrabold text-transparent bg-clip-text animated-gradient bg-gradient-to-r from-amber-400 via-orange-700 to-red-600"
+        >
           GENERADOR DE BACKUPS AUTOMÁTICOS DE MIKROTIK POR CORREO ELECTRÓNICO
         </h1>
 
-  <p class="text-gray-300">
-        Automatiza las copias de seguridad de tu MikroTik RouterOS y recíbelas directamente en tu correo electrónico con este generador de scripts avanzado. Protege tu configuración ante fallos<br> o pérdidas, ideal para redes ISP/WISP que requieren respaldo constante y seguro. Aprende a programar backups diarios, semanales o personalizados con envío automático vía email.
+        <p class="text-gray-300">
+          Automatiza las copias de seguridad de tu MikroTik RouterOS y recíbelas
+          directamente en tu correo electrónico con este generador de scripts
+          avanzado. Protege tu configuración ante fallos<br /> o pérdidas, ideal
+          para redes ISP/WISP que requieren respaldo constante y seguro. Aprende
+          a programar backups diarios, semanales o personalizados con envío automático
+          vía email.
         </p>
- <style>
-     /* Animación personalizada para mover el degradado */
-    @keyframes gradientMove {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    .animated-gradient {
-      background-size: 200% 200%;
-      animation: gradientMove 5s ease infinite;
-    }
-  </style>
       </div>
     </div>
 
@@ -35,9 +40,31 @@ import MainLayout from "../layout/MainLayout.astro";
       <!-- Contenido Principal -->
       <div class="container mx-auto">
         <!-- Formulario Principal -->
-        <FormularioBackupToEmail client:load />
- 
+        <FormularioBackupToEmail
+          client:load
+          session={session}
+          subscription={subscription}
+        />
       </div>
     </div>
   </div>
 </MainLayout>
+
+<style>
+  @keyframes gradientMove {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  .animated-gradient {
+    background-size: 200% 200%;
+    animation: gradientMove 5s ease infinite;
+  }
+</style>
