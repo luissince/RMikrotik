@@ -1,156 +1,42 @@
 ---
+import FormularioMikrotikDhcpRogue from "../components/mikrotikDhcpRogue/formulario";
 import MainLayout from "../layout/MainLayout.astro";
 ---
 
-<MainLayout title="Open Book">
-    <body
-        class="bg-gray-900 text-white font-sans min-h-screen flex items-center justify-center"
-    >
-        <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
-            <!-- Contenido -->
-            <!-- Header -->
-                 <!-- Título -->
-                 <div class="text-center mb-6">
-                    <h1
-                        class="text-2xl lg:text-4xl font-bold text-orange-500"
-                    >
-                    Remote Access ISP "Public IP Static"
-                    </h1>
-                    <p class="text-gray-300 mt-4">
-                      configuración de enrutamiento estático en una red, donde se usan reglas de Mangle para marcar o modificar paquetes según su puerto. Esto permite dirigir o priorizar el tráfico de juegos o aplicaciones específicas, controlando cómo se manejan los datos en función de puertos particulares, sin necesidad de ajustes dinámicos en el enrutamiento.
-                    </p>
-                </div>
-        </div>
-                <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
-             
-<!-- Contenido inicio -->
+<MainLayout title="RMicrotik">
+  <div class="flex flex-col py-10 space-y-5">
+    <div class="bg-gray-800 rounded-lg">
+      <!-- Header -->
+      <div class="text-center mb-6">
+<h1 class="text-2xl lg:text-4xl   font-extrabold text-transparent bg-clip-text animated-gradient bg-gradient-to-r from-amber-400 via-orange-700 to-red-600">
+            ALERTA DHCP: SERVIDOR DHCP DESCONOCIDO / DETECCIÓN DE DHCP ROGUE
+        </h1>
 
+  <p class="text-gray-300">
+        Detecta y bloquea servidores DHCP no autorizados (DHCP Rogue) en tu red MikroTik con scripts automatizados y alertas inteligentes. Protege tu infraestructura ISP/WISP<br> contra ataques de red y configuraciones maliciosas. Aprende cómo identificar paquetes DHCP Discover sospechosos y mantener tu red segura y estable.
+ <style>
+     /* Animación personalizada para mover el degradado */
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
 
+    .animated-gradient {
+      background-size: 200% 200%;
+      animation: gradientMove 5s ease infinite;
+    }
+  </style>
+      </div>
+    </div>
 
-  <div class="container mx-auto p-6 bg-gray-800 rounded-lg shadow-lg ">
-    <!-- Título -->
-  
-
-      <div class="container mx-auto p-6 bg-gray-800 rounded-lg shadow-lg ">
-        <!-- Título -->
-        <div class="text-center mb-6">
-     
-  
-        </div>
-    
-        <!-- Diagrama -->
-        <div class="flex justify-center mb-8">
-          <img src="/images/mikrotik-dhcp-rogue.png" alt="Routing Diagram" class="rounded-lg">
-        </div>
-    
+    <!-- Contenido inicio -->
+    <div class="bg-gray-800 rounded-lg mx-4">
+      <!-- Contenido Principal -->
+      <div class="container mx-auto">
         <!-- Formulario Principal -->
-<!-- Contenedor borde azul -->
-<div class="text-gray-950 shadow-2xl rounded-lg p-6 w-full ring-2 ring-blue-500">
-   <!-- Formulario Principal -->
-   <form class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-5">
-    <!-- Columna Izquierda -->
-    <div>
-     
-      <label
-                  for="gateway1"
-                  class="block text-sm font-semibold text-gray-300"
-                  >DHCP Interface / Bridge</label
-                >
-      <input id="textbox1" type="text" placeholder="ether1 o Bridge" class="w-full bg-gray-700 text-gray-300 rounded-lg p-2 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-orange-500 mt-2">
-    </div>
-    <div>
-     
-      <label
-                  for="gateway1"
-                  class="block text-sm font-semibold text-gray-300"
-                  >Valid MAC Interface</label
-                >
-      <input id="textbox2" type="text" placeholder="XX:XX:XX:XX:XX:XX" class="w-full bg-gray-700 text-gray-300 rounded-lg p-2 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-orange-500 mt-2">
-    </div>
-    <div>
-
-        <label
-                  for="gateway1"
-                  class="block text-sm font-semibold text-gray-300"
-                  >Alert Timeout</label
-                >
-        <input id="textbox2" type="text" placeholder="00:01:00" class="w-full bg-gray-700 text-gray-300 rounded-lg p-2 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-orange-500 mt-2">
-      </div>    
-    <!-- Columna Derecha -->             
-  </form>
-     <!-- Formulario Principal -->
-     <form class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-5">
-        <!-- Columna Izquierda -->
-        <div>
-            <label class="block text-sm font-semibold text-gray-300 m-2">Sending Options</label>
-            <select
-            id="wan-type"
-            class="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400"
-          >
-            <option value="2">Telegram</option>
-            <option value="3">E-Mail</option>
-            <option value="3">SMS</option>
-            <option value="3">Log Message Only</option>
-      
-          </select>
-          </div> 
-        <div>
-          <label class="block text-sm font-semibold text-gray-300 m-2">BOT Telegram</label>
-          <input id="textbox1" type="text" placeholder="5633162xxx:AAFU1dsXcARJlAH_jJmvF1D4Bp8LLTLJjaX" class="w-full bg-gray-700 text-gray-300 rounded-lg p-2 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-orange-500 ">
-        </div>
-        <div>
-          <label class="block text-sm font-semibold text-gray-300 m-2">Chat ID Telegram</label>
-          <input id="textbox2" type="text" placeholder="192.168.1.1" class="w-full bg-gray-700 text-gray-300 rounded-lg p-2 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-orange-500">
-        </div>
-        
-        <!-- Columna Derecha -->             
-      </form>
-</div>
-      <div class="flex flex-wrap  gap-4 mb-6 mt-7">
-   
-        <button
-          class="text-white px-4 py-2 rounded-md transition ease-in-out delay-150 bg-orange-500 hover:-translate-y-1 hover:scale-110 hover:bg-orange-600 duration-300"
-        >
-          Generar Script
-        </button>
-
-        <button
-          class="text-white px-4 py-2 rounded-md transition ease-in-out delay-150 bg-green-500 hover:-translate-y-1 hover:scale-110 hover:bg-teal-600 duration-300"
-        >
-          Copiar Todo
-        </button>
+        <FormularioMikrotikDhcpRogue client:load />
       </div>
-
-         <!-- Gestión de Dominios -->
-
- 
-        <div class="bg-gray-700 p-4 rounded-lg flex flex-col">
-          <label class="block text-sm font-semibold mb-2 text-gray-300"
-            >Script Generator Result</label
-          >
-          <textarea
-            class="flex-grow bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400"
-            placeholder="Please Login and Subscribe .."
-            readonly></textarea>
-    
-      </div>
-    
- 
-    
- 
-
-
- <!-- Contenido Fin -->
-
-
-
-
-
-            </div>
-
-            <!-- Contenido Fin Aqui para abajo es otro codigo q u se borrara -->
-       
- 
-
-    </body>
+    </div>
+  </div>
 </MainLayout>

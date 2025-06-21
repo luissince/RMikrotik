@@ -1,75 +1,45 @@
 ---
+import FormulariomikrotikBlockSharingHotspot  from "../components/mikrotik-block-sharing-hotspot/formulario";
 import MainLayout from "../layout/MainLayout.astro";
 ---
 
-<MainLayout title="Open Book">
-    <body
-        class="bg-gray-900 text-white font-sans min-h-screen flex items-center justify-center"
-    >
-        <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
-            <!-- Contenido -->
-            <!-- Header -->
-            <!-- Título -->
-            <div class="text-center mb-6">
-                <h1 class="text-2xl lg:text-4xl font-bold text-orange-500">
-                    MIKROTIK BLOCK SHARING HOTSPOT OR LOCAL CONNECTIONS WITH 'CHANGE TTL'
-                </h1>
-                <p class="text-gray-300">
-                    Recursive Gateway, Check Gateway, Netwatch Ping
-                </p>
-            </div>
-        </div>
-        <!-- Contenido inicio -->
+<MainLayout title="RMicrotik">
+  <div class="flex flex-col py-10 space-y-5">
+    <div class="bg-gray-800 rounded-lg">
+      <!-- Header -->
+      <div class="text-center mb-6">
+<h1 class="text-2xl lg:text-4xl   font-extrabold text-transparent bg-clip-text animated-gradient bg-gradient-to-r from-amber-400 via-orange-700 to-red-600">
+            BLOQUEAR EL REPARTO DE CONEXIÓN EN HOTSPOT O RED LOCAL CON 'CHANGE TTL' EN MIKROTIK
+        </h1>
 
-        <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
-            <!-- Diagrama -->
-            <div class="flex justify-center mb-8 mt-8">
-                <img
-                    src="/images/mikrotik-block-sharing-hotspot.png"
-                    alt="Routing Diagram"
-                    class="rounded-lg"
-                />
-            </div>
+  <p class="text-gray-300">
+        Evita que los usuarios compartan su conexión del Hotspot o red local (por cable o Wi-Fi) hacia otros dispositivos usando la técnica de Change TTL (Time To Live) en MikroTik. <br>Este método impide que se hagan "puentes" o repartan Internet sin autorización.
+        </p>
+ <style>
+     /* Animación personalizada para mover el degradado */
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
 
-            <div class="container mx-auto p-6 bg-gray-800 rounded-lg shadow-lg">
-                <!-- Formulario -->
+    .animated-gradient {
+      background-size: 200% 200%;
+      animation: gradientMove 5s ease infinite;
+    }
+  </style>
+      </div>
+      <!-- Diagrama -->
+   
+    </div>
 
-                <!-- Contenedor borde azul -->
-           
-                <!-- Botones -->
-                <div class="flex justify-center gap-4 ">
-                    <button
-                        class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition"
-                        >Generar</button
-                    >
-                    <button
-                        class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition"
-                        >Borrar Todo</button
-                    >
-                    <button
-                        class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
-                        >Copiar Script</button
-                    >
-                </div>
-
-                <!-- Script Generator Result -->
-                <div class="mt-8 p-4 bg-gray-700 rounded">
-                    <h2 class="block text-sm font-semibold text-gray-300 mb-2">
-                        Script Generator Result
-                    </h2>
-
-                    <textarea
-                        readonly
-                        class="w-full p-2 rounded bg-gray-800 text-gray-400 focus:outline-none"
-                        rows="6"
-                    >
-                        # Script result will appear here...
-                    </textarea>
-                </div>
-            </div>
-            
-        </div>
-
-        <!-- Contenido Fin Aqui para abajo es otro codigo q u se borrara -->
-    </body>
+    <!-- Contenido inicio -->
+    <div class="bg-gray-800 rounded-lg mx-4">
+      <!-- Contenido Principal -->
+      <div class="container mx-auto">
+        <!-- Formulario Principal -->
+        <FormulariomikrotikBlockSharingHotspot  client:load />
+      </div>
+    </div>
+  </div>
 </MainLayout>

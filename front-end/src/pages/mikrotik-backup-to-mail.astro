@@ -1,18 +1,37 @@
 ---
 import FormularioBackupToEmail from "../components/mikrotik-backup-to-email/formulario";
 import MainLayout from "../layout/MainLayout.astro";
+import { getAuthData } from "../utils/auth";
+
+// Obtener los datos de la sesión y suscripción
+const { session, subscription, shouldSignOut } = await getAuthData(
+  Astro.request,
+);
+
+// Si necesita cerrar sesión, redirigir a logout
+if (shouldSignOut) {
+  return Astro.redirect("/logout?reason=expired");
+}
 ---
 
-<MainLayout title="Open Book">
+<MainLayout title="RMicrotik">
   <div class="flex flex-col py-10 space-y-5">
     <div class="bg-gray-800 rounded-lg">
       <!-- Header -->
       <div class="text-center mb-6">
-        <h1 class="text-2xl lg:text-4xl font-bold text-orange-500">
-          MIKROTIK AUTO BACKUP TO E-MAIL GENERATOR
+        <h1
+          class="text-2xl lg:text-4xl font-extrabold text-transparent bg-clip-text animated-gradient bg-gradient-to-r from-amber-400 via-orange-700 to-red-600"
+        >
+          GENERADOR DE BACKUPS AUTOMÁTICOS DE MIKROTIK POR CORREO ELECTRÓNICO
         </h1>
+
         <p class="text-gray-300">
-          Port TCP/UDP Static Routing. ¡Fácil, rápido y efectivo! 🚀
+          Automatiza las copias de seguridad de tu MikroTik RouterOS y recíbelas
+          directamente en tu correo electrónico con este generador de scripts
+          avanzado. Protege tu configuración ante fallos<br /> o pérdidas, ideal
+          para redes ISP/WISP que requieren respaldo constante y seguro. Aprende
+          a programar backups diarios, semanales o personalizados con envío automático
+          vía email.
         </p>
       </div>
     </div>
@@ -21,27 +40,31 @@ import MainLayout from "../layout/MainLayout.astro";
       <!-- Contenido Principal -->
       <div class="container mx-auto">
         <!-- Formulario Principal -->
-        <FormularioBackupToEmail client:load />
-
-        <p class="text-2sm text-orange-500 mt-5">
-          CREATE YOUR OWN GMAIL SERVER :
-        </p>
-
-        <p class="text-gray-400">
-          1. First go here https://myaccount.google.com/security then follow the
-          instructions to activate 2-step verification, then a code will be sent
-          to your cellphone number.<br />
-          2. Then create an application password here https://myaccount.google.com/apppasswords
-          later this password will be used to input the Mikrotik mail server.
-        </p>
-
-        <div class="bg-gray-700 p-4 rounded-lg mt-5">
-          <p class="text-sm text-gray-300">
-            Tenemos un video tutorial de como utilizar nuestra herramienta, Ver
-            Video...
-          </p>
-        </div>
+        <FormularioBackupToEmail
+          client:load
+          session={session}
+          subscription={subscription}
+        />
       </div>
     </div>
   </div>
 </MainLayout>
+
+<style>
+  @keyframes gradientMove {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  .animated-gradient {
+    background-size: 200% 200%;
+    animation: gradientMove 5s ease infinite;
+  }
+</style>

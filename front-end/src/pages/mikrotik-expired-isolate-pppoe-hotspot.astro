@@ -1,265 +1,43 @@
 ---
+import FormularioMikrotikExpirediSolatePppoeHotspot from "../components/mikrotik-expired-isolate-pppoe-hotspot/formulario";
 import MainLayout from "../layout/MainLayout.astro";
 ---
 
-<MainLayout title="Open Book">
-  <body
-    class="bg-gray-900 text-white font-sans min-h-screen flex items-center justify-center"
-  >
-    <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
-      <!-- Contenido -->
+<MainLayout title="RMicrotik">
+  <div class="flex flex-col py-10 space-y-5">
+    <div class="bg-gray-800 rounded-lg">
       <!-- Header -->
-      <!-- Título -->
       <div class="text-center mb-6">
-        <h1 class="text-2xl lg:text-4xl font-bold text-orange-500">
-          SIMPLE QUEUE SCRIPT GENERATOR FOR MIKROTIK PLUS TOKEN BUCKET
+    <h1 class="text-2xl lg:text-4xl   font-extrabold text-transparent bg-clip-text animated-gradient bg-gradient-to-r from-amber-400 via-orange-700 to-red-600">
+           GENERADOR DE SCRIPT DE SIMPLE QUEUE PARA MIKROTIK CON TOKEN BUCKET
         </h1>
-        <p class="text-gray-300 mt-4">
-          PRECIO DE SUSCRIPCIÓN. ¡Fácil, rápido y efectivo! 🚀
+
+  <p class="text-gray-300">
+        Crea automáticamente colas simples en MikroTik utilizando el mecanismo Token Bucket, ideal para administrar el ancho de banda de manera flexible y eficiente. Esta herramienta configura parámetros <br> como Burst Rate, Burst Threshold, Burst Time y prioridades, mejorando la experiencia del usuario y el control del tráfico.
         </p>
+ <style>
+     /* Animación personalizada para mover el degradado */
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .animated-gradient {
+      background-size: 200% 200%;
+      animation: gradientMove 5s ease infinite;
+    }
+  </style>
       </div>
     </div>
-    <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
-      <!-- Contenido inicio -->
 
-      <div class="container mx-auto p-6 bg-gray-800 rounded-lg shadow-lg">
-        <!-- Título -->
-
+    <!-- Contenido inicio -->
+    <div class="bg-gray-800 rounded-lg mx-4">
+      <!-- Contenido Principal -->
+      <div class="container mx-auto">
         <!-- Formulario Principal -->
-        <form class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <!-- Columna Izquierda -->
-          <!-- Contenedor borde azul -->
-
-          <div class="space-y-6">
-            <!-- Selección de RouterOS -->
-
-            <div
-              class="text-gray-950 shadow-2xl rounded-lg p-6 w-full ring-2 ring-blue-500"
-            >
-              <div>
-                <div>
-                  <label
-                    for="wan1"
-                    class="block text-sm font-semibold text-gray-300 my-2"
-                    >RouterOS Versión</label
-                  >
-                  <select
-                    id="routeros-version"
-                    class="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400"
-                  >
-                    <option value="6.x">RouterOS v6.xx</option>
-                    <option value="7.x">RouterOS v7.xx</option>
-                  </select>
-                </div>
-              </div>
-
-              <!-- Gateway del ISP -->
-              <div>
-                <label
-                  for="gateway"
-                  class="block font-semibold text-gray-300 mt-4"
-                  >WAN IP Address (IP Gateway)
-                </label>
-                <label for="gateway" class="text-sm text-gray-600 mt-1"
-                  >Ejemplo: 192.168.1.1 (use main gateway)
-                </label>
-
-                <input
-                  id="gateway"
-                  type="text"
-                  placeholder="192.168.88.0/24"
-                  class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-                />
-              </div>
-              <!-- Gateway del ISP -->
-              <div>
-                <label
-                  for="gateway"
-                  class="block font-semibold text-gray-300 mt-4"
-                  >Proxy Port (Redirect)
-                </label>
-                <label for="gateway" class="text-sm text-gray-600 mt-1"
-                  >Don't use 3128 or 8080
-                </label>
-
-                <input
-                  id="gateway"
-                  type="text"
-                  placeholder="8082"
-                  class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-                />
-              </div>
-              <!-- Gateway del ISP -->
-              <div>
-                <label
-                  for="gateway"
-                  class="block font-semibold text-gray-300 mt-4"
-                  >Expired Message
-                </label>
-                <label for="gateway" class="text-sm text-gray-600 mt-1"
-                  >Can Use HMTL Tag
-                </label>
-
-                <input
-                  id="gateway"
-                  type="text"
-                  placeholder="EXPIRE!"
-                  class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-                />
-              </div>
-              <!-- Opciones Avanzadas -->
-              <!-- Script Generator Section -->
-              <div class="bg-gray-700 rounded-lg flex flex-col mt-4">
-                <textarea
-                  class="flex-grow bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400"
-                  placeholder="DEAR CUSTOMERS, WE INFORM YOU THAT YOUR INTERNET SERVICE IS CURRENTLY TERMINATED. PLEASE MAKE BILL PAYMENTS THROUGH THE ACCOUNT WE PROVIDE. IN ORDER TO REMAIN INTERNET SERVICE ACTIVE, YOU ARE REQUESTED TO MAKE PAYMENT BEFORE THE DATE OF EVERY MONTH<br>Contact Admin: +62813-2222-3333"
-                  readonly></textarea>
-              </div>
-              <!-- WAN ISP and Gateways -->
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-                <div>
-                  <label
-                    for="wan1"
-                    class="block text-sm font-semibold text-gray-300"
-                    >Color de Titulo</label
-                  >
-                  <input
-                    id="wan1"
-                    type="text"
-                    placeholder="white"
-                    class="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  />
-                </div>
-                <div>
-                  <label
-                    for="gateway1"
-                    class="block text-sm font-semibold text-gray-300"
-                    >Contenido Color</label
-                  >
-                  <input
-                    id="gateway1"
-                    type="text"
-                    placeholder="black"
-                    class="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  />
-                </div>
-              </div>
-
-              <!-- Gateway del ISP -->
-
-              <!-- Gateway del ISP -->
-              <!-- Gateway del ISP -->
-              <div>
-                <label
-                  for="gateway"
-                  class="block font-semibold text-gray-300 mt-4"
-                  >Background Image
-                </label>
-
-                <input
-                  id="gateway"
-                  type="text"
-                  placeholder="linear-gradient(to bottom right, red, orange)"
-                  class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-                />
-              </div>
-
-              <!-- Gateway del ISP -->
-            </div>
-
-            <!-- Selección de Juegos -->
-          </div>
-
-          <!-- Columna Derecha -->
-
-          <div
-            class="text-gray-950 shadow-2xl rounded-lg p-6 w-full ring-2 ring-blue-500"
-          >
-            <!-- Script Generator Section -->
-            <div class="bg-gray-700 p-4 rounded-lg flex flex-col">
-              <label class="block text-sm font-semibold mb-2 text-gray-300"
-                >Script Generator Result</label
-              >
-              <textarea
-                class="flex-grow bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400"
-                placeholder="Please Login and Subscribe .."
-                readonly></textarea>
-              <div class="flex mt-4 space-x-4">
-                <button
-                  class="text-white px-4 py-2 rounded-md transition ease-in-out delay-150 bg-green-500 hover:-translate-y-1 hover:scale-110 hover:bg-teal-600 duration-300"
-                >
-                  Generar Script
-                </button>
-                <button
-                  class="text-white px-4 py-2 rounded-md transition ease-in-out delay-150 bg-red-500 hover:-translate-y-1 hover:scale-110 hover:bg-teal-600 duration-300"
-                >
-                  Copiar Todo
-                </button>
-              </div>
-            </div>
-            <!-- Vista Previa del QR -->
-            <div class="w-full flex items-center justify-center mt-4">
-              <div
-                class="w-full h-full bg-gradient-to-r from-indigo-800 via-purple-500 to-red-700 text-white rounded-r-lg relative"
-              >
-                <div
-                  class="absolute top-4 right-4 bg-white rounded-full p-2 shadow-md"
-                >
-                  <span class="text-orange-600 font-bold text-sm"
-                    >Mensaje de Alerta</span
-                  >
-                </div>
-
-                <div class="text-center my-4 mt-8 pr-4 pl-2 pb-8">
-                  <!-- Título del SSID -->
-                  <h1 class="text-3xl font-bold mb-4 text-orange-400">
-                    EXPIRE!
-                  </h1>
-                  <p class="text-lg mb-6">
-                    DEAR CUSTOMERS, WE INFORM YOU THAT YOUR INTERNET SERVICE IS
-                    CURRENTLY TERMINATED. PLEASE MAKE BILL PAYMENTS THROUGH THE
-                    ACCOUNT WE PROVIDE. IN ORDER TO REMAIN INTERNET SERVICE
-                    ACTIVE, YOU ARE REQUESTED TO MAKE PAYMENT BEFORE THE DATE OF
-                    EVERY MONTH Contact Admin: +62813-2222-3333
-                  </p>
-
-                  <!-- Icono de Redes -->
-
-                  <p class="mt-4 text-sm">WIFI QR CODE GENERATED</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </form>
-      </div>
-      <p class="text-2sm text-orange-500 mx-6">
-        Tutorial práctico:
-      </p>
-      <p class="text-gray-400 mx-8">
-       
-        1. Descargue el archivo error.html y cárguelo en Winbox en "Archivo" en la carpeta webproxy <span class="text-lg text-red-400 text-2sm">"webproxy/error.html"</span> .<br>
-        2. Para habilitar la página de caducidad, simplemente configure su perfil en "CADUCADO" en Hotspot o PPPoE en Winbox<br>
-        El cupón de Hotspot venció, puede usarlo solo para Hotspot mensualmente.<br>
-        3. Puede ver la página de caducidad manual para IP estática, simplemente ingrese la IP del usuario en Firewall -> Listas de direcciones -> EXPIRADA<br>
-      </p>
-      <div class="bg-gray-700 p-4 rounded-lg mt-6 mb-4 mx-8">
-        <p class="text-sm text-gray-300">
-          <span class="text-lg text-red-400 text-2sm">#Este script sirve para eliminar todos los scripts de este generador:<br></span> 
-/ip proxy set enabled=no port=8080 max-cache-size=none<br>
-/ip firewall nat remove [find comment=""]<br>
-/ip firewall filter remove [find comment="Expired by buananet.com"]<br>
-/ip firewall address-list remove [find comment="Expired by buananet.com"]<br>
-/ppp profile remove [find comment="Expired by buananet.com"]<br>
-/ip proxy access remove [find comment="Expired by buananet.com"]<br>
-/ip hotspot user profile remove [find name ="EXPIRED"]<br>
-/ip address remove [find comment="Expired by buananet.com"]<br>
-        </p>
+        <FormularioMikrotikExpirediSolatePppoeHotspot client:load />
       </div>
     </div>
-    
-
-    <!-- Contenido Fin -->
-  </body>
-
-  <!-- Contenido Fin Aqui para abajo es otro codigo q u se borrara -->
+  </div>
 </MainLayout>

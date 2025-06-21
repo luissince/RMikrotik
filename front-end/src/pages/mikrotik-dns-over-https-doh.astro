@@ -1,357 +1,56 @@
 ---
+import FormulariomikrotikDnsOverHttpsDoh from "../components/mikrotikDnsDverHttpsDoh/formulario";
 import MainLayout from "../layout/MainLayout.astro";
+
+const response = await fetch(
+  `${import.meta.env.PUBLIC_BASE_URL_API}/mikrotik-dns-over-https-doh`,
+);
+
+let dnsOptions = [];
+
+if (response.ok) {
+  const data = await response.json();
+  dnsOptions = data;
+}
+
+console.log(dnsOptions)
 ---
 
-<MainLayout title="Open Book">
-  <body
-    class="bg-gray-900 text-white font-sans min-h-screen flex items-center justify-center"
-  >
-    <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
-      <!-- Contenido -->
+<MainLayout title="RMicrotik">
+  <div class="flex flex-col py-10 space-y-5">
+    <div class="bg-gray-800 rounded-lg">
       <!-- Header -->
-      <!-- Título -->
       <div class="text-center mb-6">
-        <h1 class="text-2xl lg:text-4xl font-bold text-orange-500">
-          MIKROTIK DNS over HTTPS (DoH) SERVER GENERATOR
+  <h1 class="text-2xl lg:text-4xl   font-extrabold text-transparent bg-clip-text animated-gradient bg-gradient-to-r from-amber-400 via-orange-700 to-red-600">
+           GENERADOR DE SCRIPT PARA SERVIDOR DNS OVER HTTPS (DOH) EN MIKROTIK
         </h1>
-        <p class="text-gray-300 mt-4">
-          Port TCP/UDP Static Routing. ¡Fácil, rápido y efectivo! 🚀
+
+  <p class="text-gray-300">
+         Configura fácilmente DNS over HTTPS (DoH) en tu MikroTik para mejorar la seguridad, privacidad y rendimiento del sistema de resolución de nombres de dominio. Esta herramienta <br> genera automáticamente el script necesario para activar DoH en RouterOS, protegiendo tus consultas DNS contra espionaje y manipulación.
         </p>
+ <style>
+     /* Animación personalizada para mover el degradado */
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .animated-gradient {
+      background-size: 200% 200%;
+      animation: gradientMove 5s ease infinite;
+    }
+  </style>
       </div>
     </div>
-    <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
-      <!-- Contenido inicio -->
 
-      <div class="container mx-auto p-6 bg-gray-800 rounded-lg shadow-lg">
-        <!-- Título -->
-
-        <div class="container mx-auto p-6 bg-gray-800 rounded-lg shadow-lg">
-          <!-- Título -->
-          <div class="text-center mb-6"></div>
-
-          <!-- Formulario Principal -->
-          <form class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- Columna Izquierda -->
-          </form>
-
-          <!-- Gráfico (Placeholder para el esquema) -->
-          <!-- Routing Mark -->
-          <!-- Contenedor borde azul -->
-          <div
-            class="text-gray-950 shadow-2xl rounded-lg p-6 w-full ring-2 ring-blue-500 text-center"
-          >
-            <div>
-              <select
-                id="ros-version"
-                class="w-5/6 p-2 rounded text-white focus:outline-none focus:ring-2 focus:ring-orange-500 bg-blue-500 shadow-lg shadow-blue-500/50"
-              >
-                <option value="v6.xx">AdGuard DNS - 94.140.14.14</option>
-                <option value="v7.xx">Cloudflare DNS - 1.1.1.1</option>
-                <option value="v7.xx"> Cisco OpenDNS - 208.67.222.222 </option>
-                <option value="v7.xx"> Google DNS - 8.8.8.8 </option>
-                <option value="v7.xx"> Quad9 DNS - 9.9.9.9 </option>
-                <option value="v7.xx"> NextDNS - 45.90.28.140 </option>
-                <option value="v7.xx">
-                  Applied Privacy DNS - 94.130.106.88</option
-                >
-                <option value="v7.xx"> Ali DNS - 223.5.5.5 </option>
-                <option value="v7.xx"> BlahDNS - 95.216.212.177 </option>
-                <option value="v7.xx">
-                  Comodo Secure DNS - 8.26.56.26 - Not Support DoH
-                </option>
-                <option value="v7.xx"> CleanBrowsing - 185.228.168.168 </option>
-                <option value="v7.xx">
-                  CIRA Shield DNS - 149.112.121.10
-                </option>
-                <option value="v7.xx"> CZ.NIC ODVR - 193.17.47.1 </option>
-                <option value="v7.xx"> ControlD DNS - 76.76.2.0</option>
-                <option value="v7.xx"> CFIEC Public DNS - 240C::6666 </option>
-                <option value="v7.xx">
-                  Captnemo DNS 139.59.48.222:4434 - Not Support DoH
-                </option>
-                <option value="v7.xx"> Comss.ru DNS - 92.38.152.163 </option>
-                <option value="v7.xx"> DNS for Family - 94.130.180.225 </option>
-                <option value="v7.xx">
-                  Dyn DNS - 216.146.35.35 - Not Support DoH
-                </option>
-                <option value="v7.xx"> DNSPod - 119.29.29.29 </option>
-                <option value="v7.xx"> DNS.SB - 185.222.222.222 </option>
-                <option value="v7.xx"> DNS Forge - 176.9.93.198 </option>
-                <option value="v7.xx">
-                  DNS Privacy - 185.49.141.37 - Not Support DoH
-                </option>
-                <option value="v7.xx">
-                  Digitale Gesellschaft DNS - 185.95.218.42
-                </option>
-                <option value="v7.xx">
-                  DNS.WATCH - 84.200.69.80 - Not Support DoH
-                </option>
-                <option value="v7.xx">
-                  FreeDNS - 172.104.237.57 - Not Support DoH
-                </option>
-                <option value="v7.xx">
-                  Freenom World - 80.80.80.80 - Not Support DoH</option
-                >
-                <option value="v7.xx">
-                  Fondation Restena DNS - 158.64.1.29
-                </option>
-                <option value="v7.xx">
-                  Fvz DNS - 185.121.177.177 - Not Support DoH
-                </option>
-                <option value="v7.xx"> FFMUC DNS </option>
-                <option value="v7.xx"> Ibksturm DNS - 178.82.102.190 </option>
-                <option value="v7.xx"> Lelux DNS - 51.158.147.50 </option>
-                <option value="v7.xx"> LibreDNS - 88.198.92.222 </option>
-                <option value="v7.xx"> Mullvad </option>
-                <option value="v7.xx">
-                  Neustar UltraDNS - 156.154.70.1 - Not Support DoH
-                </option>
-                <option value="v7.xx"> OSZX DNS - 51.38.83.141 </option>
-                <option value="v7.xx">
-                  OpenNIC DNS - 185.121.177.17 - Not Support DoH
-                </option>
-                <option value="v7.xx">
-                  OneDNS - 117.50.10.10 - Not Support DoH
-                </option>
-                <option value="v7.xx">
-                  Privacy-First DNS - 174.138.21.128
-                </option>
-                <option value="v7.xx">
-                  PuntCAT DNS - 109.69.8.51 - Not Support DoH
-                </option>
-                <option value="v7.xx"> PI-DNS - 88.198.91.187 </option>
-                <option value="v7.xx"> Quad101 - 101.101.101.101 </option>
-                <option value="v7.xx"> RethinkDNS </option>
-                <option value="v7.xx"> SWITCH DNS - 130.59.31.248 </option>
-                <option value="v7.xx">
-                  SkyDNS RU - 193.58.251.251 - Not Support DoH
-                </option>
-                <option value="v7.xx">
-                  Safe DNS - 195.46.39.39 - Not Support DoH
-                </option>
-                <option value="v7.xx"> Snopyta DNS - 95.216.24.230 </option>
-                <option value="v7.xx">
-                  Strongarm DNS - 54.174.40.213 - Not Support DoH
-                </option>
-                <option value="v7.xx">
-                  SafeSurfer DNS - 104.155.237.225 - Not Support DoH
-                </option>
-                <option value="v7.xx">Seby DNS - 45.76.113.31 </option>
-                <option value="v7.xx">
-                  Verisign Public DNS - 64.6.64.6 - Not Support DoH</option
-                >
-                <option value="v7.xx">
-                  Yandex-DNS - 77.88.8.8 - Not Support DoH
-                </option>
-                <option value="v7.xx"> 360 Secure DNS - 101.226.4.6 </option>
-                <option value="v7.xx">
-                  114DNS - 114.114.114.114 - Not Support DoH
-                </option>
-              </select>
-            </div>
-          </div>
-          <!-- Gestión de Dominios -->
-
-          <!-- Tabla del formulario -->
-          <div class="overflow-x-auto rounded-t-lg my-16">
-            <table class="table-auto w-full border-spacing-2 border-slate-600">
-              <thead>
-                <tr class="bg-gray-700 text-gray-200">
-                  <th class="border-slate-700 p-2 border">Protocol</th>
-                  <th class="border-slate-700 p-2 border">Server 1</th>
-                  <th class="border-slate-700 p-2 border">Server 2</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="text-gray-800">
-                  <td class="border-slate-700 p-2 border pl-4">
-                    <label
-                      class="block text-sm font-semibold mb-2 text-gray-300"
-                      >DNS, IPv4</label
-                    >
-                  </td>
-                  <td class="border-slate-700 p-2 border pl-4">
-                    <label
-                      class="block text-sm font-semibold mb-2 text-gray-300"
-                      >94.140.14.14</label
-                    >
-                  </td>
-                  <td class="border-slate-700 p-2 border pl-4">
-                    <label
-                      class="block text-sm font-semibold mb-2 text-gray-300"
-                    >
-                      94.140.15.15</label
-                    >
-                  </td>
-                </tr>
-              </tbody>
-              <tbody>
-                <tr class="text-gray-800">
-                  <td class="border-slate-700 p-2 border pl-4">
-                    <label
-                      class="block text-sm font-semibold mb-2 text-gray-300"
-                      >DNS, IPv6</label
-                    >
-                  </td>
-                  <td class="border-slate-700 p-2 border pl-4">
-                    <label
-                      class="block text-sm font-semibold mb-2 text-gray-300"
-                      >2a10:50c0::ad1:ff</label
-                    >
-                  </td>
-                  <td class="border-slate-700 p-2 border pl-4">
-                    <label
-                      class="block text-sm font-semibold mb-2 text-gray-300"
-                    >
-                      2a10:50c0::ad2:ff</label
-                    >
-                  </td>
-                </tr>
-              </tbody>
-              <tbody>
-                <tr class="text-gray-800">
-                  <td class="border-slate-700 p-2 border pl-4">
-                    <label
-                      class="block text-sm font-semibold mb-2 text-gray-300"
-                      >DNS over HTTPS, DoH</label
-                    >
-                  </td>
-                  <td class="border-slate-700 p-2 border pl-4">
-                    <label
-                      class="block text-sm font-semibold mb-2 text-gray-300"
-                      >https://dns.adguard.com/dns-query</label
-                    >
-                  </td>
-                </tr>
-              </tbody>
-              <tbody>
-                <tr class="text-gray-800">
-                  <td class="border-slate-700 p-2 border pl-4">
-                    <label
-                      class="block text-sm font-semibold mb-2 text-gray-300"
-                      >DoH Hostname</label
-                    >
-                  </td>
-                  <td class="border-slate-700 p-2 border pl-4">
-                    <label
-                      class="block text-sm font-semibold mb-2 text-gray-300"
-                      >dns.adguard.com</label
-                    >
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <!-- Tabla del formulario -->
-          <div class="overflow-x-auto rounded-t-lg my-4">
-            <table class="table-auto w-full border-spacing-2 border-slate-600">
-              <thead>
-                <tr class="bg-gray-700 text-gray-200">
-                  <th class="border-slate-700 p-2 border"
-                    >DNS or DoH,<a class="no-underline hover:underline">IPv4</a>
-                    - Mikrotik Script</th
-                  >
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="text-gray-800">
-                  <td class="border-slate-700 p-2 border pl-4">
-                    <label
-                      class="block text-base mb-2 text-gray-300 font-sans md:ui-serif"
-                      >/ip dns set <span class="text-sky-400">
-                        allow-remote-requests</span
-                      >=yes <span class="text-sky-400">cache-max-ttl</span>=1d <span
-                        class="text-sky-400">servers</span
-                      >=94.140.14.14,94.140.15.15 <span class="text-sky-400"
-                        >use-doh-server</span
-                      >=https://dns.adguard.com/dns-query <br />
-                      /ip dns static <br />
-                      add address=<span class="text-sky-400"
-                        >94.140.14.14
-                      </span>name=dns.adguard.com<br />
-                      add address=<span class="text-sky-400"
-                        >94.140.15.15
-                      </span>name=dns.adguard.com</label
-                    >
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <!-- Tabla del formulario -->
-          <div class="overflow-x-auto rounded-t-lg my-4">
-            <table class="table-auto w-full border-spacing-2 border-slate-600">
-              <thead>
-                <tr class="bg-gray-700 text-gray-200">
-                  <th class="border-slate-700 p-2 border"
-                    >DNS or DoH,<a class="no-underline hover:underline">IPv6</a>
-                    - Mikrotik Script</th
-                  >
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="text-gray-800">
-                  <td class="border-slate-700 p-2 border pl-4">
-                    <label
-                      class="block text-base mb-2 text-gray-300 font-sans md:ui-serif"
-                      >/ip dns set <span class="text-sky-400"
-                        >allow-remote-requests</span
-                      >=yes <span class="text-sky-400">cache-max-ttl</span>=1d <span
-                        class="text-sky-400">servers</span
-                      >=2a10:50c0::ad1:ff, 2a10:50c0::ad2:ff <span
-                        class="text-sky-400">use-doh-server</span
-                      >=https://dns.adguard.com/dns-query<br />
-                      /ip dns static <br />
-                      add address=<span class="text-sky-400"
-                        >2a10:50c0::ad1:ff
-                      </span>name=dns.adguard.com<br />
-                      add address=<span class="text-sky-400"
-                        >2a10:50c0::ad2:ff</span
-                      >name=dns.adguard.com</label
-                    >
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <!-- Tabla del formulario -->
-          <div class="overflow-x-auto rounded-t-lg my-2">
-            <table class="table-auto w-full border-spacing-2 border-slate-600">
-              <thead>
-                <tr class="bg-gray-700 text-gray-200">
-                  <th class="border-slate-700 p-2 border"
-                    >Verify DoH<a class="no-underline hover:underline"
-                      >Certificate</a
-                    > - Mikrotik Script (Optional)</th
-                  >
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="text-gray-800">
-                  <td class="border-slate-700 p-2 border pl-4">
-                    <label
-                      class="block text-base mb-2 text-gray-300 font-sans md:ui-serif"
-                      >Step1: /tool fetch url=<span class="text-sky-400"
-                        >https://cacerts.digicert.com/DigiCertGlobalRootCA.crt.pem</span
-                      >
-                      <br />
-                      Step2: /certificate import file-name<span
-                        class="text-sky-400"
-                        >=DigiCertGlobalRootCA.crt.pem passphrase=""</span
-                      ><br />
-                      Step3: /ip dns set verify-doh-cert=yes<br />
-                    </label>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <!-- Contenido Fin -->
-        </div>
-
-        <!-- Contenido Fin Aqui para abajo es otro codigo q u se borrara -->
+    <!-- Contenido inicio -->
+    <div class="bg-gray-800 rounded-lg mx-4">
+      <!-- Contenido Principal -->
+      <div class="container mx-auto">
+        <!-- Formulario Principal -->
+        <FormulariomikrotikDnsOverHttpsDoh client:load dnsOptions={dnsOptions} />
       </div>
     </div>
-  </body></MainLayout
->
+  </div>
+</MainLayout>

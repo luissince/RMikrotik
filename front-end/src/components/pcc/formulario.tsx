@@ -1,16 +1,20 @@
 import { useEffect, useState } from "react";
-import { useForm, Controller, useFieldArray } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { keyIPAddress } from "../../utils/keyEvent";
 import type { Session } from "@auth/core/types";
+<<<<<<< HEAD
 import AlertKit, { alertKit } from "alert-kit";
 import { buttonPresets } from "../../styles/buttonStyles";
+=======
+import type { Subscription } from "../../types/subscription/subscription";
+import { useApiCall, useAuthValidation, useScriptOperations } from "../forms/BaseForm";
+>>>>>>> aderyq
 
 interface Props {
   session: Session | null;
+  subscription: Subscription | null;
 }
 
+<<<<<<< HEAD
 AlertKit.setGlobalDefaults({
   headerClassName: 'bg-white p-4 border-b border-gray-200 rounded-t-2xl cursor-move',
   headerTitle: 'RMikrotik',
@@ -40,42 +44,37 @@ const lineInterfaceSchema = z.object({
     .min(1, { message: "Gateway es requerido" })
     .regex(/^(\d{1,3}\.){3}\d{1,3}$/, { message: "Formato de IP inválido" }),
 });
+=======
+interface InterfacesType {
+  id: number;
+  wan: string;
+  wanIsp: string;
+  gateway: string;
+  gatewayIsp: string;
+}
+>>>>>>> aderyq
 
-const formSchema = z.object({
-  linea: z.number().min(2).max(9),
-  router: z.string().min(1, { message: "Versión de RouterOS es requerida" }),
-  local: z.string().min(1, { message: "Local target es requerido" }),
-  interfaceTarget: z.string().optional().refine((val) => {
-    // Solo validar si el campo no está deshabilitado
-    const localValue = document.getElementById("local-target") as HTMLSelectElement;
-    return localValue?.value !== "local-ip" || !val || /^[a-zA-Z0-9\-_]+$/.test(val);
-  }, { message: "Interface target inválido" }),
-  lineInterfaces: z.array(lineInterfaceSchema),
-});
+interface FormDataType {
+  idLineWan: number;
+  idRouterVersion: string;
+  idLocalTarget: string;
+  interfaceTarget: string;
+  interfaces: InterfacesType[],
+}
 
-type FormValues = z.infer<typeof formSchema>;
-type LineInterfacesType = z.infer<typeof lineInterfaceSchema>;
-type ScriptResult = { html: string; text: string };
+const defaultData: FormDataType = {
+  idLineWan: 2,
+  idRouterVersion: "6.x",
+  idLocalTarget: "local-ip",
+  interfaceTarget: "ether1",
+  interfaces: [],
+}
 
-const FormularioPcc = ({ session }: Props) => {
-  const {
-    control,
-    handleSubmit,
-    setValue,
-    watch,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      linea: 2,
-      router: "6.x",
-      local: "local-ip",
-      interfaceTarget: "ether1",
-      lineInterfaces: [],
-    },
-  });
+const FormularioPcc = ({ session, subscription }: Props) => {
+  // Datos del formulario
+  const [formData, setFormData] = useState<FormDataType>(defaultData);
 
+<<<<<<< HEAD
   const { fields, replace } = useFieldArray({
     control,
     name: "lineInterfaces",
@@ -84,8 +83,16 @@ const FormularioPcc = ({ session }: Props) => {
   const localValue = watch("local");
   const [scriptResult, setScriptResult] = useState<ScriptResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+=======
+  // Usar hooks personalizados
+  const { validateAuth } = useAuthValidation(session, subscription);
+  const { makeApiCall, isLoading } = useApiCall(session);
+  const { scriptResult, setScriptResult, handleCopyScript } = useScriptOperations(session, subscription);
+>>>>>>> aderyq
 
+  // Función para generar líneas iniciales
   useEffect(() => {
+<<<<<<< HEAD
     if (!session) {
       alertKit.warning({
         title: 'Sesión no iniciada',
@@ -96,20 +103,25 @@ const FormularioPcc = ({ session }: Props) => {
       });
     }
   }, [session]);
+=======
+    generateLines(2);
+  }, []);
+>>>>>>> aderyq
 
   const generateLines = (numbers: number) => {
-    const list: LineInterfacesType[] = Array.from({ length: numbers }).map(
+    const list: InterfacesType[] = Array.from({ length: numbers }).map(
       (_, i) => {
         const index = i + 1;
         return {
           id: index,
           wan: `WAN ISP ${index}`,
-          wanInput: `ether${index}`,
+          wanIsp: `ether${index}`,
           gateway: `Gateway ISP-${index}`,
-          gatewayInput: `192.168.${index}.1`,
+          gatewayIsp: `192.168.${index}.1`,
         };
       }
     );
+<<<<<<< HEAD
     replace(list);
     setValue("linea", numbers);
   };
@@ -214,10 +226,31 @@ const FormularioPcc = ({ session }: Props) => {
         wanInput: `ether${field.id}`,
         gatewayInput: `192.168.${field.id}.1`,
       })),
+=======
+    setFormData({
+      ...formData,
+      interfaces: list,
+>>>>>>> aderyq
     });
+  };
+
+  const handleSubmit = async () => {
+    if (!validateAuth()) return;
+
+    const result = await makeApiCall("/pcc", formData);
+    if (result) {
+      setScriptResult(result);
+    }
+  };
+
+  const handleClear = () => {
+    if (!validateAuth()) return;
+
+    setFormData(defaultData);
     setScriptResult(null);
   };
 
+<<<<<<< HEAD
   const handleCopyScript = () => {
     if (!session) {
       alertKit.warning({
@@ -242,11 +275,13 @@ const FormularioPcc = ({ session }: Props) => {
     window.location.href = '/account';
   };
 
+=======
+>>>>>>> aderyq
   return (
     <div className="flex flex-col lg:flex-row gap-6 bg-gray-900 p-6 rounded-lg shadow-lg">
       {/* Form Section */}
       <div className="flex flex-col gap-6 lg:w-1/2">
-        <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+        <form className="space-y-4">
           <div className="space-y-0">
             <label
               htmlFor="wan-type"
@@ -254,31 +289,30 @@ const FormularioPcc = ({ session }: Props) => {
             >
               Número de Líneas WAN ISP
             </label>
-            <Controller
-              name="linea"
-              control={control}
-              render={({ field }) => (
-                <select
-                  id="wan-type"
-                  className="w-full bg-gray-800 border border-slate-700 rounded-b-lg p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400"
-                  {...field}
-                  onChange={(e) => {
-                    const value = Number(e.target.value);
-                    field.onChange(value);
-                    generateLines(value);
-                  }}
-                >
-                  <option value="2">2 Líneas WAN</option>
-                  <option value="3">3 Líneas WAN</option>
-                  <option value="4">4 Líneas WAN</option>
-                  <option value="5">5 Líneas WAN</option>
-                  <option value="6">6 Líneas WAN</option>
-                  <option value="7">7 Líneas WAN</option>
-                  <option value="8">8 Líneas WAN</option>
-                  <option value="9">9 Líneas WAN</option>
-                </select>
-              )}
-            />
+
+            <select
+              id="wan-type"
+              className="w-full bg-gray-800 border border-slate-700 rounded-b-lg p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400"
+              value={formData.idLineWan}
+              onChange={(e) => {
+                const value = Number(e.target.value);
+                setFormData({
+                  ...formData,
+                  idLineWan: value,
+                });
+                generateLines(value);
+              }}
+            >
+              <option value="2">2 Líneas WAN</option>
+              <option value="3">3 Líneas WAN</option>
+              <option value="4">4 Líneas WAN</option>
+              <option value="5">5 Líneas WAN</option>
+              <option value="6">6 Líneas WAN</option>
+              <option value="7">7 Líneas WAN</option>
+              <option value="8">8 Líneas WAN</option>
+              <option value="9">9 Líneas WAN</option>
+            </select>
+
           </div>
 
           <div className="space-y-0">
@@ -288,27 +322,21 @@ const FormularioPcc = ({ session }: Props) => {
             >
               Versión de RouterOS
             </label>
-            <Controller
-              name="router"
-              control={control}
-              render={({ field }) => (
-                <select
-                  id="routeros-version"
-                  className={`w-full bg-gray-800 border ${errors.router ? "border-slate-700" : "border-slate-700"
-                    } rounded-b-lg p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400`}
-                  {...field}
-                >
-                  <option value="">- Seleccionar -</option>
-                  <option value="6.x">RouterOS v6.xx</option>
-                  <option value="v7">RouterOS v7.xx</option>
-                </select>
-              )}
-            />
-            {errors.router && (
-              <p className="mt-1 text-sm text-red-500">
-                {errors.router.message}
-              </p>
-            )}
+            <select
+              id="routeros-version"
+              className={`w-full bg-gray-800 border border-slate-700 rounded-b-lg p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400`}
+              value={formData.idRouterVersion}
+              onChange={(e) => {
+                setFormData({
+                  ...formData,
+                  idRouterVersion: e.target.value,
+                });
+              }}
+            >
+              <option value="">- Seleccionar -</option>
+              <option value="6.x">RouterOS v6.xx</option>
+              <option value="v7">RouterOS v7.xx</option>
+            </select>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -338,28 +366,22 @@ const FormularioPcc = ({ session }: Props) => {
                   </div>
                 </div>
               </label>
-              <Controller
-                name="local"
-                control={control}
-                render={({ field }) => (
-                  <select
-                    id="local-target"
-                    className={`w-full bg-gray-800 border ${errors.local ? "border-red-500" : "border-blue-600"
-                      } rounded-b-lg p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400`}
-                    {...field}
-                  >
-                    <option value="">- Seleccionar -</option>
-                    <option value="local-ip">IP Address List</option>
-                    <option value="local-ip1">in_interface</option>
-                    <option value="local-ip2">in_interface_List</option>
-                  </select>
-                )}
-              />
-              {errors.local && (
-                <p className="mt-1 text-sm text-red-500">
-                  {errors.local.message}
-                </p>
-              )}
+              <select
+                id="local-target"
+                className={`w-full bg-gray-800 border border-blue-600 rounded-b-lg p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400`}
+                value={formData.idLocalTarget}
+                onChange={(e) => {
+                  setFormData({
+                    ...formData,
+                    idLocalTarget: e.target.value,
+                  });
+                }}
+              >
+                <option value="">- Seleccionar -</option>
+                <option value="local-ip">IP Address List</option>
+                <option value="local-ip1">in_interface</option>
+                <option value="local-ip2">in_interface_List</option>
+              </select>
             </div>
 
             <div className="space-y-0">
@@ -388,32 +410,24 @@ const FormularioPcc = ({ session }: Props) => {
                   </div>
                 </div>
               </label>
-
-              <Controller
-                name="interfaceTarget"
-                control={control}
-                render={({ field }) => (
-                  <input
-                    id="interface-target"
-                    type="text"
-                    disabled={localValue === "local-ip"}
-                    placeholder="Ej: ether1, bridge-local"
-                    className={`${localValue === "local-ip" ? "bg-gray-800" : "bg-gray-800"
-                      } w-full border ${errors.interfaceTarget ? "border-red-500" : "border-blue-600"
-                      } rounded-b-lg p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400`}
-                    {...field}
-                  />
-                )}
+              <input
+                id="interface-target"
+                type="text"
+                disabled={formData.idLocalTarget === "local-ip"}
+                placeholder="Ej: ether1, bridge-local"
+                className={`${formData.idLocalTarget === "local-ip" ? "bg-gray-700 opacity-60 cursor-not-allowed" : "bg-gray-800"} w-full border border-blue-600 rounded-b-lg p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400`}
+                value={formData.interfaceTarget}
+                onChange={(e) => {
+                  setFormData({
+                    ...formData,
+                    interfaceTarget: e.target.value,
+                  });
+                }}
               />
-              {errors.interfaceTarget && localValue !== "local-ip" && (
-                <p className="mt-1 text-sm text-red-500">
-                  {errors.interfaceTarget.message}
-                </p>
-              )}
             </div>
           </div>
 
-          {fields.map((field, index) => (
+          {formData.interfaces.map((field, index) => (
             <div key={field.id} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <label
@@ -422,27 +436,25 @@ const FormularioPcc = ({ session }: Props) => {
                 >
                   {field.wan}
                 </label>
-                <Controller
-                  name={`lineInterfaces.${index}.wanInput`}
-                  control={control}
-                  render={({ field: inputField }) => (
-                    <input
-                      id={`wan-${index}`}
-                      type="text"
-                      placeholder={`Ej: ether${index + 1}`}
-                      className={`text-sky-400 font-semibold w-full bg-gray-800 border ${errors.lineInterfaces?.[index]?.wanInput
-                        ? "border-red-500"
-                        : "border-gray-600"
-                        } rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500`}
-                      {...inputField}
-                    />
-                  )}
+
+                <input
+                  id={`wan-${index}`}
+                  type="text"
+                  placeholder={`Ej: ether${index + 1}`}
+                  className={`text-sky-400 font-semibold w-full bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500`}
+                  value={field.wanIsp}
+                  onChange={(e)=>{
+                    const list = [...formData.interfaces];
+
+                    list[index].wanIsp = e.target.value;
+
+                    setFormData({
+                      ...formData,
+                      interfaces: list,
+                    });
+                  }}
                 />
-                {errors.lineInterfaces?.[index]?.wanInput && (
-                  <p className="mt-1 text-sm text-red-500">
-                    {errors.lineInterfaces[index]?.wanInput?.message}
-                  </p>
-                )}
+
               </div>
               <div className="space-y-2">
                 <label
@@ -451,28 +463,26 @@ const FormularioPcc = ({ session }: Props) => {
                 >
                   {field.gateway}
                 </label>
-                <Controller
-                  name={`lineInterfaces.${index}.gatewayInput`}
-                  control={control}
-                  render={({ field: inputField }) => (
-                    <input
-                      id={`gateway-${index}`}
-                      type="text"
-                      placeholder={`Ej: 192.168.${index + 1}.1`}
-                      className={`w-full bg-gray-800 text-amber-600 border font-semibold ${errors.lineInterfaces?.[index]?.gatewayInput
-                        ? "border-red-500"
-                        : "border-gray-600"
-                        } rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500`}
-                      {...inputField}
-                      onKeyDown={(e) => keyIPAddress(e)}
-                    />
-                  )}
+
+                <input
+                  id={`gateway-${index}`}
+                  type="text"
+                  placeholder={`Ej: 192.168.${index + 1}.1`}
+                  className={`w-full bg-gray-800 text-amber-600 border font-semibold border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500`}
+                  value={field.gatewayIsp}
+                  onChange={(e) => {
+                    const list = [...formData.interfaces];
+
+                    list[index].gatewayIsp = e.target.value;
+
+                    setFormData({
+                      ...formData,
+                      interfaces: list,
+                    });
+                  }}
+                  onKeyDown={(e) => keyIPAddress(e)}
                 />
-                {errors.lineInterfaces?.[index]?.gatewayInput && (
-                  <p className="mt-1 text-sm text-red-500">
-                    {errors.lineInterfaces[index]?.gatewayInput?.message}
-                  </p>
-                )}
+
               </div>
             </div>
           ))}
@@ -508,17 +518,17 @@ const FormularioPcc = ({ session }: Props) => {
           <button
             type="button"
             className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-600 transition disabled:bg-orange-300 disabled:cursor-not-allowed"
-            onClick={handleSubmit(onSubmit)}
-            disabled={isSubmitting || isLoading || !session}
+            onClick={handleSubmit}
+            disabled={isLoading || !session}
           >
             <i className="fa-solid fa-wand-magic-sparkles"></i>
-            {isSubmitting || isLoading ? "Generando..." : " Generar"}
+            {isLoading ? "Generando..." : " Generar"}
           </button>
 
           <button
             type="button"
             className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition"
-            onClick={handleClearAll}
+            onClick={handleClear}
             disabled={!session}
           >
             <i className="fa-solid fa-trash mr-2"></i>

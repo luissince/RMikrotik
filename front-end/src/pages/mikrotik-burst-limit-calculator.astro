@@ -3,17 +3,32 @@ import FormularioMikrotikBurstLimitCalculator from "../components/mikrotik-burst
 import MainLayout from "../layout/MainLayout.astro";
 ---
 
-<MainLayout title="Open Book">
+<MainLayout title="RMicrotik">
     <div class="flex flex-col py-10 space-y-5">
         <div class="bg-gray-800 rounded-lg">
             <!-- Header -->
             <div class="text-center mb-6">
-                <h1 class="text-2xl lg:text-4xl font-bold text-orange-500">
-                    MIKROTIK BURST LIMIT CALCULATOR FOR ROUTER-OS
-                </h1>
-                <p class="text-gray-300">
-                    PRECIO DE SUSCRIPCIÓN. ¡Fácil, rápido y efectivo! 🚀
-                </p>
+            <h1 class="text-2xl lg:text-4xl   font-extrabold text-transparent bg-clip-text animated-gradient bg-gradient-to-r from-amber-400 via-orange-700 to-red-600">
+          CALCULADORA DE BURST LIMIT PARA MIKROTIK ROUTEROS
+        </h1>
+
+  <p class="text-gray-300">
+        Calcula fácilmente los valores ideales de Burst Limit, Burst Threshold y Burst Time en MikroTik RouterOS. Mejora la velocidad inicial de navegación de tus clientes<br> sin comprometer el ancho de banda total. Herramienta útil para ISPs, WISPs y administradores de red que buscan ofrecer un servicio ágil y eficiente.
+        </p>
+ <style>
+     /* Animación personalizada para mover el degradado */
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .animated-gradient {
+      background-size: 200% 200%;
+      animation: gradientMove 5s ease infinite;
+    }
+  </style>
+
             </div>
         </div>
 

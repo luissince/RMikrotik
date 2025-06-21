@@ -187,7 +187,10 @@ const PaymentModal = ({ session, plans }: Props) => {
         const result: Result = await response.json();
 
         if (!response.ok) {
+<<<<<<< HEAD
           console.log(result);
+=======
+>>>>>>> aderyq
           throw new Error(result.message || 'Error al procesar pago');
         };
 

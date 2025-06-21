@@ -1,144 +1,56 @@
 ---
+import FormulariomikrotikChangeMacAddress from "../components/mikrotik-change-mac-address/formulario";
 import MainLayout from "../layout/MainLayout.astro";
+
 ---
 
-<MainLayout title="Open Book">
-    <body
-        class="bg-gray-900 text-white font-sans min-h-screen flex items-center justify-center"
-    >
-        <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
-            <!-- Contenido -->
-            <!-- Header -->
-                 <!-- Título -->
-                 <div class="text-center mb-6">
-                    <h1
-                        class="text-2xl lg:text-4xl font-bold text-orange-500"
-                    >
-                    CHANGE OR RANDOM MAC ADDRESS INTERFACE MIKROTIK
-                    </h1>
-                    <p class="text-gray-300 mt-4">
-                      Facil y confiable
-                    </p>
-                </div>
+<MainLayout title="RMicrotik">
+  <div class="flex flex-col py-10 space-y-5">
+    <div class="bg-gray-800 rounded-lg">
+      <!-- Header -->
+      <div class="text-center mb-6">
+<h1 class="text-2xl lg:text-4xl   font-extrabold text-transparent bg-clip-text animated-gradient bg-gradient-to-r from-amber-400 via-orange-700 to-red-600">
+          CAMBIAR O ALEATORIZAR DIRECCIÓN MAC EN INTERFACES MIKROTIK
+        </h1>
+
+  <p class="text-gray-300">
+         Cambiar o generar direcciones MAC aleatorias en interfaces MikroTik con scripts avanzados y fáciles de implementar. Mejora la seguridad, evita conflictos de red y optimiza<br> tu infraestructura ISP/WISP con esta potente herramienta automatizada. Ideal para administradores de red que buscan soluciones profesionales y eficientes.
+        </p>
+ <style>
+     /* Animación personalizada para mover el degradado */
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .animated-gradient {
+      background-size: 200% 200%;
+      animation: gradientMove 5s ease infinite;
+    }
+  </style>
+      </div>
+    </div>
+
+    <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
+      <!-- Contenido inicio -->
+      <!-- Diagrama -->
+      <div class="flex justify-center mb-2">
+        <img
+          src="/images/mikrotik-mac-address.png"
+          alt="Routing Diagram"
+          class="rounded-lg"
+        />
+      </div>
+
+      <!-- Contenido inicio -->
+      <div class="bg-gray-800 rounded-lg mx-4">
+        <!-- Contenido Principal -->
+        <div class="container mx-auto">
+          <!-- Formulario Principal -->
+          <FormulariomikrotikChangeMacAddress client:load />
         </div>
-        
-                <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
-             
-<!-- Contenido inicio -->
- <!-- Diagrama -->
- <div class="flex justify-center mb-2">
-  <img src="/images/mikrotik-mac-address.png" alt="Routing Diagram" class="rounded-lg">
-</div>
-
-
-  <div class="container mx-auto p-6 bg-gray-800 rounded-lg shadow-lg ">
-    <!-- Título -->
-  
-
-      <div class="container mx-auto p-6 bg-gray-800 rounded-lg shadow-lg ">
-     <!-- Contenedor borde azul -->
-<div class="text-gray-950 shadow-2xl rounded-lg p-6 w-full ring-2 ring-blue-500">
- 
-
-        <!-- Tabla del formulario -->
-        <div class="overflow-x-auto rounded-t-lg">
-          <table
-            class="table-auto w-full border-spacing-2 border-slate-600"
-          >
-            <thead>
-              <tr class="bg-gray-700 text-gray-200">
-                <th class="border-slate-700 p-2 border">Interface Name (ether)</th>
-                <th class="border-slate-700 p-2 border">MAC Options</th>
-                <th class="border-slate-700 p-2 border">MAC Address</th>
-                <th class="border-slate-700 p-2 border"></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="text-gray-800">
-              
-                <td class="border-slate-700 p-2 border">
-                  <input
-                    type="text"
-                    placeholder="ether1"
-                    class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  />
-                </td>
-                <td class="border-slate-700 p-2 border">
-                  <select
-                    class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  >
-                    <option value="TCP">Change MAC Address Only</option>
-                    <option value="UDP">Auto Random MAC (run after reboot)</option>
-                  </select>
-                </td>
-                <td class="border-slate-700 p-2 border">
-                  <input
-                    type="text"
-                    placeholder="52:E2:4F:28:8B:9F"
-                    class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  />
-                </td>
-                <td class="p-2 border border-slate-700">
-                  <button
-                    type="button"
-                    class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded"
-                    >Ramdom</button
-                  >
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>  
       </div>
-   
-        <!-- Formulario Principal -->
-
-      <div class="flex flex-wrap justify-center gap-4 mb-6 mt-7">
-     
-        <button
-          class="text-white px-4 py-2 rounded-md transition ease-in-out delay-150 bg-orange-500 hover:-translate-y-1 hover:scale-110 hover:bg-orange-600 duration-300"
-        >
-          Generar Script
-        </button>
-
-        <button
-          class="text-white px-4 py-2 rounded-md transition ease-in-out delay-150 bg-green-500 hover:-translate-y-1 hover:scale-110 hover:bg-teal-600 duration-300"
-        >
-          Copiar Todo
-        </button>
-      </div>
-
-         <!-- Gestión de Dominios -->
-
- 
-        <div class="bg-gray-700 p-4 rounded-lg flex flex-col">
-          <label class="block text-sm font-semibold mb-2 text-gray-300"
-            >Script Generator Result</label
-          >
-          <textarea
-            class="flex-grow bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400"
-            placeholder="Please Login and Subscribe .."
-            readonly></textarea>
-    
-      </div>
-    
- 
-        
-      </div>
- 
-
-
- <!-- Contenido Fin -->
-
-
-
-
-
-            </div>
-
-            <!-- Contenido Fin Aqui para abajo es otro codigo q u se borrara -->
-       
- 
-
-    </body>
+    </div>
+  </div>
 </MainLayout>

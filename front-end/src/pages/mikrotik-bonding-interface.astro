@@ -1,205 +1,44 @@
 ---
+import FormularioMikrotikBondingInterface from "../components/mikrotikBondingInterface/formulario";
 import MainLayout from "../layout/MainLayout.astro";
 ---
 
-<MainLayout title="Open Book">
-  <body
-    class="bg-gray-900 text-white font-sans min-h-screen flex items-center justify-center"
-  >
-    <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
-      <!-- Contenido -->
+<MainLayout title="RMicrotik">
+  <div class="flex flex-col py-10 space-y-5">
+    <div class="bg-gray-800 rounded-lg">
       <!-- Header -->
-      <!-- Título -->
       <div class="text-center mb-6">
-        <h1 class="text-2xl lg:text-4xl font-bold text-orange-500">
-          MIKROTIK DNS over HTTPS (DoH) SERVER GENERATOR
-        </h1>
-        <p class="text-gray-300 mt-4">
-          Port TCP/UDP Static Routing. ¡Fácil, rápido y efectivo! 🚀
+  <h1 class="text-2xl lg:text-4xl   font-extrabold text-transparent bg-clip-text animated-gradient bg-gradient-to-r from-amber-400 via-orange-700 to-red-600">
+      INTERFAZ BONDING EN MIKROTIK: AGREGACIÓN DE ENLACES CON BALANCE-RR
+
+       </h1>
+
+  <p class="text-gray-300">
+        Configura interfaces bonding en MikroTik con el modo balance-rr para lograr una agregación de enlaces eficiente y mayor ancho de banda. Aprende paso a paso cómo implementar esta solución <br> profesional para redes ISP/WISP, mejorando la redundancia, el rendimiento y la estabilidad de tu infraestructura de red.
         </p>
+ <style>
+     /* Animación personalizada para mover el degradado */
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .animated-gradient {
+      background-size: 200% 200%;
+      animation: gradientMove 5s ease infinite;
+    }
+  </style>
       </div>
     </div>
-    
-    <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
-      <!-- Contenido inicio -->
-      <div class="text-center mb-6">
-    
-        <p class="text-gray-300 mt-4">
-            Bonding es una tecnología que permite combinar más de una interfaz ethernet y combinarlas en un enlace virtual para que podamos obtener un mayor rendimiento del ancho de banda. Como ejemplo, su enrutador ether1 solo admite 100 Mbps, puede conectarse con ether2 y finalmente obtendrá más velocidad a 200 Mbps.
-        </p>
-      </div>
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- Script Generator Section -->
-        <div class="bg-gray-700 p-4 rounded-lg flex flex-col">
-            <div class="text-center mb-6">
-                <h1 class="text-2xl lg:text-4xl font-bold text-orange-500">
-                  MIKROTIK A
-                </h1>
-               
-              </div>
-              <!-- Dropdowns -->
-            <div>
-                <label
-                  for="gateway1"
-                  class="block text-sm font-semibold text-gray-300"
-                  >Bonding Name</label
-                >
-                <input
-                  id="gateway1"
-                  type="text"
-                  placeholder="bonding"
-                  class="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 mt-2"
-                />
-              </div>
-              
-              <div>
-                <label
-                  for="gateway1"
-                  class="block text-sm font-semibold text-gray-300"
-                  >Bonding IP Address</label
-                >
-                <input
-                  id="gateway1"
-                  type="text"
-                  placeholder="192.168.50.1/24"
-                  class="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 mt-2"
-                />
-              </div>
-              <div>
-                <h3 class="font-semibold text-gray-300 mb-2 mt-3">Bonding Slaves</h3>
-                <div class=" bg-cyan-600 p-4 rounded flex space-x-4 text-sm font-semibold text-gray-300 mt-4">
-                  
-                 
-                    <input type="checkbox" id="game1"><label for="game1">Ether 1</label>
-                    <input type="checkbox" id="game2" class="mr-2"><label for="game2">Ether 2</label>
-                    <input type="checkbox" id="game3" class="mr-2"><label for="game3">Ether 3</label>
-                    <input type="checkbox" id="game4" class="mr-2"><label for="game3">Ether 4</label>
-                    <input type="checkbox" id="game5" class="mr-2"><label for="game3">Ether 5</label>
-                   
-                    <!-- Añadir más juegos aquí -->
-                                  
-                </div>
-              </div>
-              <div>
-                <h3 class="font-semibold text-gray-300 mb-2 mt-2">Link Monitoring / Failover Bonding Interface</h3>
-                <div class="  rounded flex space-x-4 text-sm font-semibold text-gray-300 ">
-                  
-                 
-                    <input type="checkbox" id="game1"><label for="game1">ARP Monitoring</label>
-                   
-                    <!-- Añadir más juegos aquí -->
-                                  
-                </div>
-              </div>
-          
-          <textarea
-            class="flex-grow bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400 mt-4"
-            placeholder="Please Login and Subscribe .."
-            readonly></textarea>
-          <div class="flex mt-4 space-x-4">
-         
-      <div class="flex flex-wrap justify-center gap-4 mb-6 mt-7">
-        <button
-          class="text-white px-4 py-2 rounded-md transition ease-in-out delay-150 bg-cyan-600 hover:-translate-y-1 hover:scale-110 hover:bg-red-800 duration-300"
-        >
-          Copiar Script
-        </button>
-        
-      </div>
 
-
-          </div>
-        </div>
-
-        <!-- Script Generator Section -->
-        <div class="bg-gray-700 p-4 rounded-lg flex flex-col">
-            <div class="text-center mb-6">
-                <h1 class="text-2xl lg:text-4xl font-bold text-orange-500">
-                  MIKROTIK B
-                </h1>
-               
-              </div>
-              <!-- Dropdowns -->
-            <div>
-                <label
-                  for="gateway1"
-                  class="block text-sm font-semibold text-gray-300"
-                  >Bonding Name</label
-                >
-                <input
-                  id="gateway1"
-                  type="text"
-                  placeholder="bonding"
-                  class="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 mt-2"
-                />
-              </div>
-              
-              <div>
-                <label
-                  for="gateway1"
-                  class="block text-sm font-semibold text-gray-300"
-                  >Bonding IP Address</label
-                >
-                <input
-                  id="gateway1"
-                  type="text"
-                  placeholder="192.168.50.2/24"
-                  class="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 mt-2"
-                />
-              </div>
-              <div>
-                <h3 class="font-semibold text-gray-300 mb-2 mt-3">Bonding Slaves</h3>
-                <div class=" bg-green-700 p-4 rounded flex space-x-4 text-sm font-semibold text-gray-300 mt-4">
-                  
-                 
-                    <input type="checkbox" id="game1"><label for="game1">Ether 1</label>
-                    <input type="checkbox" id="game2" class="mr-2"><label for="game2">Ether 2</label>
-                    <input type="checkbox" id="game3" class="mr-2"><label for="game3">Ether 3</label>
-                    <input type="checkbox" id="game4" class="mr-2"><label for="game3">Ether 4</label>
-                    <input type="checkbox" id="game5" class="mr-2"><label for="game3">Ether 5</label>
-                   
-                    <!-- Añadir más juegos aquí -->
-                                  
-                </div>
-              </div>
-              <div>
-                <h3 class="font-semibold text-gray-300 mb-2 mt-2">Link Monitoring / Failover Bonding Interface</h3>
-                <div class="  rounded flex space-x-4 text-sm font-semibold text-gray-300 ">
-                  
-                 
-                    <input type="checkbox" id="game1"><label for="game1">ARP Monitoring</label>
-                   
-                    <!-- Añadir más juegos aquí -->
-                                  
-                </div>
-              </div>
-          
-          <textarea
-            class="flex-grow bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400 mt-4"
-            placeholder="Please Login and Subscribe .."
-            readonly></textarea>
-          <div class="flex mt-4 space-x-4">
-         
-      <div class="flex flex-wrap justify-center gap-4 mb-6 mt-7">
-        <button
-          class="text-white px-4 py-2 rounded-md transition ease-in-out delay-150 bg-green-600 hover:-translate-y-1 hover:scale-110 hover:bg-red-800 duration-300"
-        >
-          Copiar Script
-        </button>
-        
-      </div>
-
-
-          </div>
-        </div>
-      </div>
-  
-
-          <!-- Contenido Fin -->
-        </div>
-
-        <!-- Contenido Fin Aqui para abajo es otro codigo q u se borrara -->
+    <!-- Contenido inicio -->
+    <div class="bg-gray-800 rounded-lg mx-4">
+      <!-- Contenido Principal -->
+      <div class="container mx-auto">
+        <!-- Formulario Principal -->
+        <FormularioMikrotikBondingInterface client:load />
       </div>
     </div>
-  </body></MainLayout
->
+  </div>
+</MainLayout>

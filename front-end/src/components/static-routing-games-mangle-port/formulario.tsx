@@ -1,4 +1,6 @@
 
+import SocialTooltipButton from "../SocialTooltipButton";
+
 import React, { useState, useEffect } from "react";
 
 interface Game {
@@ -180,6 +182,7 @@ const FormularioStaticRoutingGamesManglePort = () => {
             </div>
           ))}
         </div>
+          <SocialTooltipButton />
       </div>
 
       {/* Columna Derecha */}

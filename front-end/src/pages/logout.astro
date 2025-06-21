@@ -1,0 +1,52 @@
+---
+import MainLayout from "../layout/MainLayout.astro";
+
+const url = new URL(Astro.request.url);
+const reason = url.searchParams.get("reason") || "default";
+
+const messages: {
+    [key: string]: string;
+} = {
+    expired: "Tu sesión ha expirado por inactividad",
+    invalid: "Tu sesión es inválida",
+    default: "Cerrando sesión...",
+};
+
+const message = messages[reason] || messages.default;
+---
+
+<MainLayout title="Cerrando sesión">
+    <div class="flex flex-col items-center justify-center">
+        <div class="bg-gray-800 rounded-lg p-8 text-center max-w-md">
+            <div class="text-yellow-400 mb-4">
+                <svg
+                    class="w-16 h-16 mx-auto"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                >
+                    <path
+                        fill-rule="evenodd"
+                        d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                        clip-rule="evenodd"></path>
+                </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-white mb-4">Sesión Terminada</h2>
+            <p class="text-gray-300 mb-6">{message}</p>
+            <div
+                class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400 mx-auto"
+            >
+            </div>
+            <p class="text-sm text-gray-400 mt-4">
+                Redirigiendo en unos segundos...
+            </p>
+        </div>
+    </div>
+</MainLayout>
+
+<script>
+    import { signOut } from "auth-astro/client";
+    signOut({
+        callbackUrl: "/",
+        redirect: true,
+    });
+</script>

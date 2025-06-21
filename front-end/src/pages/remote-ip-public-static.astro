@@ -3,22 +3,32 @@ import Formularioremoteippublicstatic from "../components/remote-ip-public-stati
 import MainLayout from "../layout/MainLayout.astro";
 ---
 
-<MainLayout title="Open Book">
+<MainLayout title="RMicrotik">
   <div class="flex flex-col py-10 space-y-5">
     <div class="bg-gray-800 rounded-lg">
         <!-- Header -->
         <div class="text-center mb-6">
-            <h1 class="text-2xl lg:text-4xl font-bold text-orange-500">
-              Remote Access ISP "Public IP Static"
-            </h1>
-            <p class="text-gray-300">
-              configuración de enrutamiento estático en una red, donde se usan
-              reglas de Mangle para marcar o modificar paquetes según su puerto.
-              Esto permite dirigir o priorizar el tráfico de juegos o aplicaciones
-              específicas, controlando cómo se manejan los datos en función de
-              puertos particulares, sin necesidad de ajustes dinámicos en el
-              enrutamiento.
-            </p>
+
+          <h1 class="text-2xl lg:text-4xl   font-extrabold text-transparent bg-clip-text animated-gradient bg-gradient-to-r from-amber-400 via-orange-700 to-red-600">
+    ACCESO REMOTO A MIKROTIK CON IP PÚBLICA ESTÁTICA (ISP)
+        </h1>
+
+  <p class="text-gray-300">
+        Habilita el acceso remoto seguro a tu router MikroTik desde cualquier lugar del mundo usando una IP pública estática asignada por tu proveedor de Internet (ISP).<br> Ideal para monitoreo, soporte técnico, configuraciones o gestión a distancia.
+        </p>
+ <style>
+     /* Animación personalizada para mover el degradado */
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .animated-gradient {
+      background-size: 200% 200%;
+      animation: gradientMove 5s ease infinite;
+    }
+  </style>
         </div>
     </div>
 

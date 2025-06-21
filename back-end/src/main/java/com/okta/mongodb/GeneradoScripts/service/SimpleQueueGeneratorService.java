@@ -41,23 +41,17 @@ public class SimpleQueueGeneratorService {
                 html.append("<span class='text-orange-400'># Date/Time: " + DateUtils.currentDate() + "</span> <br>");
                 html.append("<span class='text-orange-400'># Created By: buananet.com - fb.me/buananet.pbun</span> <br>");
                 html.append("<span class='text-orange-400'>###################################################################</span> <br>");
-
-                // /ip firewall address-list
-                html.append("<span class='font-black'>/ip firewall address-list</span> <br>");
-                html.append("<span>add list=LOCAL-IP address=10.0.0.0/8 comment=\"Routing Games by buananet.com\"</span> <br>");
-                html.append("<span>add list=LOCAL-IP address=172.16.0.0/12 comment=\"Routing Games by buananet.com\"</span> <br>");
-                html.append("<span>add list=LOCAL-IP address=192.168.0.0/16 comment=\"Routing Games by buananet.com\"</span> <br>");
-
-                // /ip route
-                html.append("<span class='font-black'>/ip route</span> <br>");
-                html.append("<span>add gateway=x.x.x.x routing-mark=routing-game comment=\"Routing Games by buananet.com\"</span> <br>");
+          
+               
                 html.append("<span class='text-green-500'>##############################################################</span> <br>");
                 html.append("<span class='text-green-500'># If you want to add a game script only, you can ignore the script above</span> <br>");
                 html.append("<span class='text-green-500'>##############################################################</span> <br>");
 
-        
-
-                html.append("</div>");
+         html.append("<span class='font-black'>/queue simple</span> <br>");
+         html.append("add max-limit=\""+body.getUpTotal()+"/"+body.getDownTotal()+"\" target=\""+body.getTargetLocalIP()+"\" name=\""+body.getParentNameQueue()+"\" bucket-size=\"0.1/0.1\" comment=\"Simple Queue Generator RMikrotik\"<br>");
+ html.append("add max-limit=\""+body.getUpClient()+"/"+body.getDownClient()+"\" target=\""+body.getStartIPClient()+"\" name=\""+body.getClientNameQueue()+"\" parent=\""+body.getParentNameQueue()+"\" bucket-size=\""+body.getBucketSizeUp()+"/"+body.getBucketSizeDown()+"\"<br>");
+               
+ html.append("</div>");
                 return html.toString();
         }
 

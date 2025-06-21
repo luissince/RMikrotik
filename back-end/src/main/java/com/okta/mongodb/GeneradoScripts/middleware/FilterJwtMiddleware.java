@@ -51,13 +51,14 @@ public class FilterJwtMiddleware extends OncePerRequestFilter {
         logger.info("header: {}", header);
 
         if (header == null || !header.startsWith("Bearer ")) {
-            sendJsonError(response, HttpServletResponse.SC_UNAUTHORIZED, "Falta el token o formato incorrecto");
+            sendJsonError(response, HttpServletResponse.SC_UNAUTHORIZED, "Falta el token o formato incorrecto.");
             return;
         }
 
         String token = header.substring(7);
-        if (!jwtUtil.validateToken(token)) {
-            sendJsonError(response, HttpServletResponse.SC_UNAUTHORIZED, "Falta el token o formato incorrecto");
+        String valid = jwtUtil.validateToken(token);
+        if (!valid.equalsIgnoreCase(String.valueOf(HttpServletResponse.SC_CONTINUE))) {
+            sendJsonError(response, HttpServletResponse.SC_UNAUTHORIZED, valid);
             return;
         }
 

@@ -3,17 +3,31 @@ import PCQCalculator from "../components/mikrotik-pcq-burst-rate-queue-size-gene
 import MainLayout from "../layout/MainLayout.astro";
 ---
 
-<MainLayout title="Open Book">
+<MainLayout title="RMicrotik">
   <div class="flex flex-col py-10 space-y-5">
     <div class="bg-gray-800 rounded-lg">
       <!-- Header -->
       <div class="text-center mb-6">
-        <h1 class="text-2xl lg:text-4xl font-bold text-orange-500">
-  MIKROTIK PCQ BURST RATE + QUEUE SIZE CALCULATOR
+  <h1 class="text-2xl lg:text-4xl   font-extrabold text-transparent bg-clip-text animated-gradient bg-gradient-to-r from-amber-400 via-orange-700 to-red-600">
+            CALCULADORA DE PCQ BURST RATE Y TAMAÑO DE COLA EN MIKROTIK
         </h1>
-        <p class="text-gray-300">
-          PRECIO DE SUSCRIPCIÓN. ¡Fácil, rápido y efectivo! 🚀
+
+  <p class="text-gray-300">
+        Configura de forma precisa las colas simples o queues en MikroTik con esta herramienta que calcula automáticamente el PCQ Burst Rate y el tamaño ideal de cola (Queue Size). <br>Mejora el rendimiento del ancho de banda compartido, optimiza la experiencia del usuario y evita la saturación de tu red.
         </p>
+ <style>
+     /* Animación personalizada para mover el degradado */
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .animated-gradient {
+      background-size: 200% 200%;
+      animation: gradientMove 5s ease infinite;
+    }
+  </style>
       </div>
     </div>
 

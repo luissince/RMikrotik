@@ -1,252 +1,29 @@
 ---
+import FormularioWifidwmsSeamless from "../components/wifid-wms-seamless/formulario";
 import MainLayout from "../layout/MainLayout.astro";
 ---
 
-<MainLayout title="Open Book">
-    <body
-        class="bg-gray-900 text-white font-sans min-h-screen flex items-center justify-center"
-    >
-        <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
-            <!-- Contenido -->
-            <!-- Header -->
-            <!-- Título -->
-            <div class="text-center mb-6">
-                <h1 class="text-2xl lg:text-4xl font-bold text-orange-500">
-                    SIMPLE QUEUE SCRIPT GENERATOR FOR MIKROTIK PLUS TOKEN BUCKET
-                </h1>
-                <p class="text-gray-300 mt-4">
-                    PRECIO DE SUSCRIPCIÓN. ¡Fácil, rápido y efectivo! 🚀
-                </p>
-            </div>
-        </div>
-        <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
-            <!-- Contenido inicio -->
+<MainLayout title="RMicrotik">
+  <div class="flex flex-col py-10 space-y-5">
+    <div class="bg-gray-800 rounded-lg">
+      <!-- Header -->
+      <div class="text-center mb-6">
+        <h1 class="text-2xl lg:text-4xl font-bold text-orange-500">
+MIKROTIK PORT KNOCKING USE ICMP + PACKET SIZE GENERATOR
+        </h1>
+        <p class="text-gray-300">
+          Static Routes and Firewall Mangle Rules for Games
+        </p>
+      </div>
+    </div>
 
-            <div class="container mx-auto p-6 bg-gray-800 rounded-lg shadow-lg">
-                <!-- Título -->
-
-                <!-- Formulario Principal -->
-                <form class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <!-- Columna Izquierda -->
-                    <!-- Contenedor borde azul -->
-
-                    <div class="space-y-6">
-                        <!-- Selección de RouterOS -->
-
-                        <div
-                            class="text-gray-950 shadow-2xl rounded-lg p-6 w-full ring-2 ring-blue-500"
-                        >
-                            <div>
-                                <div>
-                                    <label
-                                        for="wan1"
-                                        class="block text-sm font-semibold text-gray-300 my-2"
-                                        >Select Wifi.id Mode</label
-                                    >
-                                    <select
-                                        id="routeros-version"
-                                        class="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400"
-                                    >
-                                        <option value="6.x"
-                                            >SEAMLESS WIFI.ID</option
-                                        >
-                                        <option value="7.x"
-                                            >WMS (Wifi Managed Service) -
-                                            Maintenance</option
-                                        >
-                                        <option value="7.x"
-                                            >Wifi.id Only / Custom Makeid -
-                                            Maintenance</option
-                                        >
-                                    </select>
-                                </div>
-                            </div>
-                            <div>
-                                <div>
-                                    <label
-                                        for="wan1"
-                                        class="block text-sm font-semibold text-gray-300 my-2"
-                                        >Select target default interface</label
-                                    >
-                                    <select
-                                        id="routeros-version"
-                                        class="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400"
-                                    >
-                                        <option value="6.x">wlan1</option>
-                                        <option value="7.x">wlan2</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- Gateway del ISP -->
-                            <div>
-                                <label
-                                    for="gateway"
-                                    class="block font-semibold text-gray-300 mt-4"
-                                    >Username
-                                </label>
-                                <input
-                                    id="gateway"
-                                    type="text"
-                                    placeholder="Wifi_Nombre"
-                                    class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-                                />
-                            </div>
-                            <!-- Gateway del ISP -->
-                            <div>
-                                <label
-                                    for="gateway"
-                                    class="block font-semibold text-gray-300 mt-4"
-                                    >Password
-                                </label>
-
-                                <input
-                                    id="gateway"
-                                    type="text"
-                                    placeholder="Contraseña"
-                                    class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-                                />
-                            </div>
-                            <!-- Gateway del ISP -->
-                            <div>
-                                <label
-                                    for="gateway"
-                                    class="block font-semibold text-gray-300 mt-4"
-                                    >makeId
-                                </label>
-                                <input
-                                    id="gateway"
-                                    type="text"
-                                    placeholder="@wms.1562532780.000"
-                                    class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-                                />
-                            </div>
-                            <!-- Gateway del ISP -->
-                            <div>
-                                <label
-                                    for="gateway"
-                                    class="block font-semibold text-gray-300 mt-4"
-                                    >gw_id
-                                </label>
-                                <input
-                                    id="gateway"
-                                    type="text"
-                                    placeholder="WAG-D5-KBU"
-                                    class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-                                />
-                            </div>
-                            <!-- Gateway del ISP -->
-                            <div>
-                                <label
-                                    for="gateway"
-                                    class="block font-semibold text-gray-300 mt-4"
-                                    >wlan
-                                </label>
-                                <input
-                                    id="gateway"
-                                    type="text"
-                                    placeholder="MGMUN00048-N/TLK-DI-103929:CINTA"
-                                    class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-                                />
-                            </div>
-                            <!-- Gateway del ISP -->
-                            <div>
-                                <label
-                                    for="gateway"
-                                    class="block font-semibold text-gray-300 mt-4"
-                                    >sessionid
-                                </label>
-                                <input
-                                    id="gateway"
-                                    type="text"
-                                    placeholder="0C02FFFF78006120-70C0DFA0"
-                                    class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-                                />
-                            </div>
-                            <!-- Gateway del ISP -->
-                            <div>
-                                <label
-                                    for="gateway"
-                                    class="block font-semibold text-gray-300 mt-4"
-                                    >Redirect
-                                </label>
-                                <input
-                                    id="gateway"
-                                    type="text"
-                                    placeholder="http://www.msftconnecttest.com/redirect"
-                                    class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-                                />
-                            </div>
-
-                            <!-- Opciones Avanzadas -->
-                            <!-- Script Generator Section -->
-
-                            <!-- Gateway del ISP -->
-
-                            <!-- Gateway del ISP -->
-
-                            <!-- Gateway del ISP -->
-                        </div>
-                        <div class="flex mt-4 space-x-4">
-                            <button
-                                class="text-white px-4 py-2 rounded-md transition ease-in-out delay-150 bg-green-500 hover:-translate-y-1 hover:scale-110 hover:bg-teal-600 duration-300"
-                            >
-                                Generar Script
-                            </button>
-                            <button
-                                class="text-white px-4 py-2 rounded-md transition ease-in-out delay-150 bg-red-500 hover:-translate-y-1 hover:scale-110 hover:bg-teal-600 duration-300"
-                            >
-                                Borrar Scritp
-                            </button>
-                        </div>
-
-                        <!-- Selección de Juegos -->
-                    </div>
-
-                    <!-- Columna Derecha -->
-
-                    <div
-                        class="text-gray-950 shadow-2xl rounded-lg p-6 w-full ring-2 ring-blue-500"
-                    >
-                        <!-- Script Generator Section -->
-                        <div class="bg-gray-700 p-4 rounded-lg flex flex-col">
-                            <label
-                                class="block text-sm font-semibold mb-2 text-gray-300"
-                                >Script Generator Result</label
-                            >
-                            <textarea
-                                class="flex-grow bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400"
-                                placeholder="Please Login and Subscribe .."
-                                readonly></textarea>
-                            <div class="flex mt-4 space-x-4">
-                                <button
-                                class="text-white px-4 py-2 rounded-md transition ease-in-out delay-150 bg-gray-600 hover:-translate-y-1 hover:scale-110 hover:bg-slate-700 duration-300"
-                              >
-                                Borrar Todo
-                              </button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <p class="text-2sm text-orange-500 mx-6">Tutorial práctico:</p>
-            <p class="text-gray-400 mx-8">
-                1. Primero, configure su WLAN para conectarse al SSID en WMS o Seamless. <br>
-                2. Ingrese los datos requeridos en la herramienta, los datos WMS se pueden encontrar en la URL<br>
-                la primera página de inicio de sesión en el navegador web, luego haga clic derecho y seleccione
-                "Ver código fuente de la página" para ver los datos de "makeid"<br>
-                3. Haga clic en Generar, luego copie y pegue directamente en la terminal.<br>
-                4. Intente hacer ping a 1.1.1.1 o 8.8.8.8. Si responde significa que ha tenido éxito.<br>
-            </p>
-            <div class="bg-gray-700 p-4 rounded-lg mt-6 mb-4 mx-8">
-                <p class="text-sm text-gray-300">
-                  Video Tutorial
-                </p>
-            </div>
-        </div>
-
-        <!-- Contenido Fin -->
-    </body>
-
-    <!-- Contenido Fin Aqui para abajo es otro codigo q u se borrara -->
+    <!-- Contenido inicio -->
+    <div class="bg-gray-800 rounded-lg mx-4">
+      <!-- Contenido Principal -->
+      <div class="container mx-auto">
+        <!-- Formulario Principal -->
+        <FormularioWifidwmsSeamless client:load />
+      </div>
+    </div>
+  </div>
 </MainLayout>

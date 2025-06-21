@@ -3,18 +3,31 @@ import FormularioMikrotikPortForwardGenerator from "../components/mikrotik-port-
 import MainLayout from "../layout/MainLayout.astro";
 ---
 
-<MainLayout title="Open Book">
+<MainLayout title="RMicrotik">
   <div class="flex flex-col py-10 space-y-5">
     <div class="bg-gray-800 rounded-lg">
       <!-- Header -->
       <div class="text-center mb-6">
-        <h1 class="text-2xl lg:text-4xl font-bold text-orange-500">
-          Port Forwarding with NAT
+  <h1 class="text-2xl lg:text-4xl   font-extrabold text-transparent bg-clip-text animated-gradient bg-gradient-to-r from-amber-400 via-orange-700 to-red-600">
+          REDIRECCIÓN DE PUERTOS CON NAT EN MIKROTIK (PORT FORWARDING)
         </h1>
-        <p class="text-gray-300">
-          Port Forwarding en segundos. Optimiza tu red, Direccionamiento de
-          aplicaciones y paquetes. ¡Fácil, rápido y efectivo! 🚀
+
+  <p class="text-gray-300">
+        Accede a dispositivos internos desde el exterior configurando fácilmente la redirección de puertos con NAT en MikroTik. Ideal para cámaras IP, servidores web, juegos online, control remoto y mucho más.
         </p>
+ <style>
+     /* Animación personalizada para mover el degradado */
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .animated-gradient {
+      background-size: 200% 200%;
+      animation: gradientMove 5s ease infinite;
+    }
+  </style>
       </div>
     </div>
 
