@@ -8,12 +8,26 @@ import MainLayout from "../layout/MainLayout.astro";
     <div class="bg-gray-800 rounded-lg">
         <!-- Header -->
         <div class="text-center mb-6">
-            <h1 class="text-2xl lg:text-4xl font-bold text-orange-500">
-              All Traffic to VPN Tunnel
-            </h1>
-            <p class="text-gray-300">
-              All Traffic to VPN Tunnel. ¡Fácil, rápido y efectivo! 🚀
-            </p>
+      <h1 class="text-2xl lg:text-4xl   font-extrabold text-transparent bg-clip-text animated-gradient bg-gradient-to-r from-amber-400 via-orange-700 to-red-600">
+          TODO EL TRÁFICO A TRAVÉS DEL TÚNEL VPN EN MIKROTIK
+        </h1>
+
+  <p class="text-gray-300">
+        Redirige todo el tráfico de tu red local mediante un túnel VPN seguro desde MikroTik. Ideal para proteger la navegación, acceder a contenidos restringidos <br>por región o conectar oficinas remotas con privacidad total.
+        </p>
+ <style>
+     /* Animación personalizada para mover el degradado */
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .animated-gradient {
+      background-size: 200% 200%;
+      animation: gradientMove 5s ease infinite;
+    }
+  </style>
         </div>
     </div>
 
@@ -25,22 +39,7 @@ import MainLayout from "../layout/MainLayout.astro";
 
        
         </div>
-             <p class="text-2sm text-orange-500 mt-6">
-              Este script sirve para Eliminar todos los Scripts de este Generador.
-            </p>
-            <p class="text-gray-400">
-              /interface pptp-client remove [find comment="VPN Tunel"] <br />
-              /interface l2tp-client remove [find comment="VPN Tunel1"]<br />
-              /ip route remove [find comment="VPN Tunel"] <br />
-              /ip firewall nat remove [find comment="VPN Tunel"]<br />
-              
-            </p>
-            <div class="bg-gray-700 p-4 rounded-lg mt-6">
-              <p class="text-sm text-gray-300">
-                Tenemos un video tutorial de como utilizar nuestra herramienta, Ver
-                Video...
-              </p>
-            </div>
+      
     </div>
 </div>
 </MainLayout>

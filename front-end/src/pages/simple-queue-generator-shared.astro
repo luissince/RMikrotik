@@ -1,289 +1,44 @@
 ---
+import FormularioSimpleQueueGeneratorShared from "../components/simple-queue-generator-shared/formulario";
 import MainLayout from "../layout/MainLayout.astro";
 ---
 
+
 <MainLayout title="Open Book">
-  <body
-    class="bg-gray-900 text-white font-sans min-h-screen flex items-center justify-center"
-  >
-    <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
-      <!-- Contenido -->
+  <div class="flex flex-col py-10 space-y-5">
+    <div class="bg-gray-800 rounded-lg">
       <!-- Header -->
-      <!-- Título -->
       <div class="text-center mb-6">
-        <h1 class="text-2xl lg:text-4xl font-bold text-orange-500">              
-SIMPLE QUEUE SCRIPT GENERATOR MIKROTIK + BANDWIDTH SHARED (UPTO)
+    <h1 class="text-2xl lg:text-4xl   font-extrabold text-transparent bg-clip-text animated-gradient bg-gradient-to-r from-amber-400 via-orange-700 to-red-600">
+           SIMPLE QUEUE PARA MIKROTIK CON ANCHO DE BANDA COMPARTIDO (UPTO)
         </h1>
-        <p class="text-gray-300 mt-4">
-          PRECIO DE SUSCRIPCIÓN. ¡Fácil, rápido y efectivo! 🚀
+
+  <p class="text-gray-300">
+        Crea fácilmente colas simples en MikroTik para varios usuarios o clientes con límites de velocidad compartida usando la opción "Upto". Esta configuración permite que el ancho de banda<br> se distribuya dinámicamente entre los usuarios activos, mejorando el rendimiento general sin desperdiciar capacidad.
         </p>
+ <style>
+     /* Animación personalizada para mover el degradado */
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .animated-gradient {
+      background-size: 200% 200%;
+      animation: gradientMove 5s ease infinite;
+    }
+  </style>
       </div>
     </div>
-    <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
-      <!-- Contenido inicio -->
-  
-      <div class="container mx-auto p-6 bg-gray-800 rounded-lg shadow-lg">
-        <!-- Título -->
 
+    <!-- Contenido inicio -->
+    <div class="bg-gray-800 rounded-lg mx-4">
+      <!-- Contenido Principal -->
+      <div class="container mx-auto">
         <!-- Formulario Principal -->
-        <form class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- Columna Izquierda -->
-            <!-- Contenedor borde azul -->
-
-            <div class="space-y-6">
-                <!-- Selección de RouterOS -->
-           
-                <div class="text-gray-950 shadow-2xl rounded-lg p-6 w-full ring-2 ring-blue-500">
-
-                <div>
-          
-                 
-                    <div>
-                      <label
-                          for="gateway"
-                          class="block font-semibold text-gray-300 mb-2 mt-4"
-                          >Parent Name Queue
-                      </label>
-                      <input
-                          id="gateway"
-                          type="text"
-                          placeholder="Nombre de la Conexión"
-                          class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-                      />
-                  </div>
-                </div>
-
-                <!-- Gateway del ISP -->
-                <div>
-                    <label
-                        for="gateway"
-                        class="block font-semibold text-gray-300 mb-2 mt-4"
-                        >Target Local IP / Interface
-                    </label>
-                    <input
-                        id="gateway"
-                        type="text"
-                        placeholder="192.168.88.0/24"
-                        class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-                    />
-                </div>
-                       <!-- Opciones Avanzadas -->
-                   <!-- WAN ISP and Gateways -->
-                   <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-                    <div>
-                      <label
-                        for="wan1"
-                        class="block text-sm font-semibold text-gray-300"
-                        >Up Total (K/M)</label
-                      >
-                      <input
-                        id="wan1"
-                        type="text"
-                        placeholder="5M"
-                        class="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-                      />
-                    </div>
-                    <div>
-                      <label
-                        for="gateway1"
-                        class="block text-sm font-semibold text-gray-300"
-                        >Down Total (K/M)</label
-                      >
-                      <input
-                        id="gateway1"
-                        type="text"
-                        placeholder="10M"
-                        class="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-                      />
-                    </div>
-                  </div>
-          
-
-                <!-- Gateway del ISP -->
-                <label
-                for="routeros"
-                class="font-semibold text-gray-300 mb-2 h-14 bg-gradient-to-r from-blue-900 to-blue-500 rounded-t-lg grid gap-4 place-items-center mt-5"
-                >Sub Parent Queue / Child Queue</label
-            >
-            <!-- WAN ISP and Gateways -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-              <div>
-                <label
-                  for="wan1"
-                  class="block text-sm font-semibold text-gray-300 my-2"
-                  >Client Name Queue</label
-                >
-                <input
-                  id="wan1"
-                  type="text"
-                  placeholder="Cliente"
-                  class="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-                />
-              </div>
-              <div>
-                <label
-                  for="gateway1"
-                  class="block text-sm font-semibold text-gray-300 my-2"
-                  >Client Identity</label
-                >
-                <input
-                  id="gateway1"
-                  type="text"
-                  placeholder="1"
-                  class="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-                />
-              </div>
-            </div>
-                <!-- Gateway del ISP -->
-     <!-- WAN ISP and Gateways -->
-     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <div>
-        <label
-          for="wan1"
-          class="block text-sm font-semibold text-gray-300 my-2"
-          >Start IP Client</label
-        >
-        <input
-          id="wan1"
-          type="text"
-          placeholder="192.168.88.10"
-          class="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-        />
-      </div>
-      <div>
-        <label
-          for="gateway1"
-          class="block text-sm font-semibold text-gray-300 my-2"
-          >End IP Client</label
-        >
-        <input
-          id="gateway1"
-          type="text"
-          placeholder="192.168.88.35"
-          class="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-        />
+        <FormularioSimpleQueueGeneratorShared client:load />
       </div>
     </div>
-         <!-- WAN ISP and Gateways -->
-         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label
-              for="wan1"
-              class="block text-sm font-semibold text-gray-300 my-2"
-              >Upload Max-Limit</label
-            >
-            <input
-              id="wan1"
-              type="text"
-              placeholder="512K"
-              class="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-            />
-          </div>
-          <div>
-            <label
-              for="gateway1"
-              class="block text-sm font-semibold text-gray-300 my-2"
-              >Download Max-Limit</label
-            >
-            <input
-              id="gateway1"
-              type="text"
-              placeholder="1M"
-              class="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-            />
-          </div>
-        </div>
-             <!-- WAN ISP and Gateways -->
-             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label
-                  for="wan1"
-                  class="block text-sm font-semibold text-gray-300 my-2"
-                  >Upload Limit-At</label
-                >
-              <input
-              id="gateway1"
-              type="text"
-              placeholder="0"
-              class="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-            />
-              </div>
-              <div>
-                <label
-                  for="gateway1"
-                  class="block text-sm font-semibold text-gray-300 my-2"
-                  > Download Limit-At</label
-                >
-                <input
-                id="gateway1"
-                type="text"
-                placeholder="0"
-                class="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-              />
-              </div>
-            </div>
-            <div class="text-gray-300"><input type="checkbox" id="game1" class="mr-2 my-4"><label for="game1" >Auto Set For Bandwidth Shared (UP-TO)</label></div>
-
-         
-                <!-- Gateway del ISP -->
-            
- 
-                </div>
-
-                <!-- Selección de Juegos -->
-        
-   
-                <div class="flex flex-wrap justify-center gap-4 mb-6 mt-7">
-                  <button
-                    class="text-white px-4 py-2 rounded-md transition ease-in-out delay-150 bg-gray-600 hover:-translate-y-1 hover:scale-110 hover:bg-slate-700 duration-300"
-                  >
-                    Generar Script
-                  </button>
-                  <button
-                    class="text-white px-4 py-2 rounded-md transition ease-in-out delay-150 bg-orange-500 hover:-translate-y-1 hover:scale-110 hover:bg-orange-600 duration-300"
-                  >
-                  Borrar Todo
-                  </button>
-          
-             
-                </div>
-          
-
-            </div>
-
-            <!-- Columna Derecha -->
-       
-              <div class="text-gray-950 shadow-2xl rounded-lg p-6 w-full ring-2 ring-blue-500">
-  
-               <!-- Script Generator Section -->
-        <div class="bg-gray-700 p-4 rounded-lg flex flex-col">
-          <label class="block text-sm font-semibold mb-2 text-gray-300"
-            >Script Generator Result</label
-          >
-          <textarea
-            class="flex-grow bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400"
-            placeholder="Please Login and Subscribe .."
-            readonly></textarea>
-          <div class="flex mt-4 space-x-4">
-            <button
-            class="text-white px-4 py-2 rounded-md transition ease-in-out delay-150 bg-green-500 hover:-translate-y-1 hover:scale-110 hover:bg-teal-600 duration-300"
-          >
-            Copiar Todo
-          </button>
-          
-        
-            
-          </div>
-        </div>
-            </div>
-        </form>
-    </div>
-</div>
-
-
-      
-    <!-- Contenido Fin -->
-  </body>
-
-  <!-- Contenido Fin Aqui para abajo es otro codigo q u se borrara -->
+  </div>
 </MainLayout>

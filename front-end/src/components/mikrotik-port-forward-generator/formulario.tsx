@@ -1,3 +1,4 @@
+import SocialTooltipButton from "../SocialTooltipButton";
 import { useEffect, useState } from "react";
 import { z } from "zod";
 import { keyIPAddress, keyNumberInteger } from "../../utils/keyEvent";
@@ -219,6 +220,7 @@ const FormularioMikrotikPortForwardGenerator = () => {
             ))}
           </tbody>
         </table>
+          <SocialTooltipButton />
       </div>
 
       {error && <p className="text-red-500">{error}</p>}

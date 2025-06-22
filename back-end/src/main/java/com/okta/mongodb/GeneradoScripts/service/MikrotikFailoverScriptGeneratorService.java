@@ -41,7 +41,7 @@ public class MikrotikFailoverScriptGeneratorService {
                 html.append("<span style='color:blue;'># MIKROTIK FAILOVER CHECK GATEWAY, RECUSIVE, NETWATCH GENERATOR</span> <br>");
                 html.append("<span style='color:green;'># Date/Time:</span> <span style='color:red;'>"
                                 + DateUtils.currentDate() + "</span> <br>");
-                html.append("<span style='color:green;'># Created by:</span> <span style='color:red;'>buananet.com - fb.me/buananet.pbun</span> <br>");
+                html.append("<span style='color:green;'># Created by:</span> <span style='color:red;'>RMikrotik.com - fb.me/buananet.pbun</span> <br>");
 
                 for (MikrotikFailoverScriptGeneratorFailOverMethod mikrotikFailoverScriptGeneratorFailOverMethod : FAIL_OVER_METHODS) {
                         if (body.getIdSelectYourFailoverMethod()
@@ -144,7 +144,7 @@ public class MikrotikFailoverScriptGeneratorService {
                 text.append("############################################################### \n");
                 text.append("# MIKROTIK FAILOVER CHECK GATEWAY, RECUSIVE, NETWATCH GENERATOR \n");
                 text.append("# Date/Time: " + DateUtils.currentDate() + " \n");
-                text.append("# Created By: buananet.com - fb.me/buananet.pbun \n");
+                text.append("# Created By: RMikrotik.com  \n");
 
                 for (MikrotikFailoverScriptGeneratorFailOverMethod mikrotikFailoverScriptGeneratorFailOverMethod : FAIL_OVER_METHODS) {
                         if (body.getIdSelectYourFailoverMethod()

@@ -1,3 +1,4 @@
+import SocialTooltipButton from "../SocialTooltipButton";
 import { useState } from "react";
 import { keyIPAddress, keyNumberInteger } from "../../utils/keyEvent";
 
@@ -311,8 +312,10 @@ const FormularioMikrotikPortStaticRouting = () => {
                             Add Firewall Rule
                         </button>
                     </div>
-                </div>
+                    
 
+                </div>
+  <SocialTooltipButton />
                 {error && <p className="text-red-500 text-center mt-4">{error}</p>}
 
                 <div className="flex flex-wrap justify-center gap-4 mb-6 mt-7">

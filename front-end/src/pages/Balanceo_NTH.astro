@@ -1,38 +1,38 @@
 ---
 import Formulario from "../components/balanceo-nth/formulario";
+
 import MainLayout from "../layout/MainLayout.astro";
 ---
 
 <MainLayout title="Open Book">
-  <body
-    class="bg-gray-900 text-white font-sans min-h-screen flex items-center justify-center"
-  >
-    <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
-      <!-- Contenido -->
+  <div class="flex flex-col py-10 space-y-5">
+
+    <div class="bg-gray-800 rounded-lg">
       <!-- Header -->
-      <h1 class="text-2xl font-bold text-orange-500 text-center mb-6">
-        MikroTik NTH / Generador de scripts NTH de balanceo de carga para
-        RouterOS
-      </h1>
-
-      <Formulario client:load />
-
-      <p class="text-2sm text-orange-500 mx-6">
-        MIKROTIK LB NTH / LOAD BALANCING NTH SCRIPT GENERATOR FOR ROUTEROS
-      </p>
-      <p class="text-gray-400 mx-8">
-        /ip firewall nat remove [find comment="Balanceo NTH"] <br />
-        /ip route remove [find comment="Balanceo NTH"]<br />
-        /ip firewall mangle remove [find comment="Balanceo NTH"] <br />
-        /ip firewall address-list remove [find comment="Balanceo NTH"]<br />
-        /routing table remove [find comment="Balanceo NTH"]
-      </p>
-      <div class="bg-gray-700 p-4 rounded-lg mt-6 mb-4 mx-8">
-        <p class="text-sm text-gray-300">
-          Tenemos un video tutorial de como utilizar nuestra herramienta, Ver
-          Video...
+      
+     <div class="text-center mb-6">
+        <h1 class="text-2xl lg:text-4xl   font-extrabold text-transparent bg-clip-text animated-gradient bg-gradient-to-r from-amber-400 via-orange-700 to-red-600">
+            MIKROTIK NTH / GENERADOR DE SCRIPTS NTH
+        </h1>
+        <p class="text-gray-300">
+         Automatiza tu balanceo de carga con este generador de scripts NTH para RouterOS. Rápido, eficiente y listo para usar.
         </p>
       </div>
+   
+
+
+ <!-- fin titulos -->
+       
+    <div class="bg-gray-800 rounded-lg mx-4">
+      <!-- Contenido Principal -->
+      <div class="container mx-auto">
+        <!-- Formulario Principal -->
+        <Formulario client:load />
+ 
+      </div>
     </div>
-  </body>
-</MainLayout>
+
+      </div>
+    </div>
+  </div>
+  </MainLayout>

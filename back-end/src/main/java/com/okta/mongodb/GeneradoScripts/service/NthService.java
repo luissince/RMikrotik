@@ -34,30 +34,27 @@ public class NthService {
         private String generateHtmlScript(NthBody NthBody) {
                 StringBuilder html = new StringBuilder();
                 html.append("<div>");
-                html.append("############################################################### <br>");
-                html.append(
-                                "<span style='color:blue;'>#Load Balancing Per Connection Classifier (LB Nth) Script Generator</span> <br>");
-                html.append(
-                                "<span style='color:green;'># Date/Time:</span> <span style='color:red;'>"+DateUtils.currentDate()+"</span> <br>");
-                html.append(
-                                "<span style='color:green;'># Created by:</span> <span style='color:red;'>buananet.com - fb.me/buananet.pbun</span> <br>");
-                html.append(
-                                "<span style='color:green;'># Load Balancing Method -> Nth (PER CONNECTION CLASSIFIER)</span> <br>");
-                html.append("############################################################### <br>");
+         
+              html.append("<span class='text-orange-400'>###################################################################</span> <br>");
+              html.append("<span class='text-orange-400'># Static Routing NTH  Generator RMikrotik.com</span> <br>");
+              html.append("<span class='text-orange-400'># Date/Time: " + DateUtils.currentDate() + "</span> <br>");
+              html.append("<span class='text-orange-400'># Created By: RMikrotik.com </span> <br>");
+              html.append("<span class='text-orange-400'>###################################################################</span> <br>");
+    
 
                 html.append("/ip firewall address-list <br>");
                 html.append(
-                                "add address=<span style='color:red;'>192.168.0.0/16</span> list=LOCAL-IP comment=\"LB Nth by buananet.com\" <br>");
+                                "add address=<span style='color:red;'>192.168.0.0/16</span> list=LOCAL-IP comment=\"RMikrotik.com\" <br>");
                 html.append(
-                                "add address=<span style='color:red;'>172.16.0.0/12</span> list=LOCAL-IP comment=\"LB Nth by buananet.com\" <br>");
+                                "add address=<span style='color:red;'>172.16.0.0/12</span> list=LOCAL-IP comment=\"RMikrotik.com\" <br>");
                 html.append(
-                                "add address=<span style='color:red;'>10.0.0.0/8</span> list=LOCAL-IP comment=\"LB Nth by buananet.com\" <br>");
+                                "add address=<span style='color:red;'>10.0.0.0/8</span> list=LOCAL-IP comment=\"RMikrotik.com\" <br>");
 
                 html.append("/ip firewall nat <br>");
                 for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
                         html.append("add chain=srcnat out-interface=<span style='color:red;'>")
                                         .append(NthInterfaces.getWanIsp())
-                                        .append("</span> action=masquerade comment=\"LB Nth by buananet.com\" <br>");
+                                        .append("</span> action=masquerade comment=\"RMikrotik.com\" <br>");
                 }
 
                 if (NthBody.getIdRouterVersion().equalsIgnoreCase("ros7")) {
@@ -65,7 +62,7 @@ public class NthService {
                         for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
                                 html.append("add name=\"to-<span style='color:red;'>")
                                                 .append(NthInterfaces.getWanIsp())
-                                                .append("</span>\" fib comment=\"LB Nth by buananet.com\" <br>");
+                                                .append("</span>\" fib comment=\"RMikrotik.com\" <br>");
                         }
                 }
 
@@ -75,7 +72,7 @@ public class NthService {
                                         .append(NthInterfaces.getGatewayIsp())
                                         .append("</span> routing-mark=<span style='color:red;'>")
                                         .append(NthInterfaces.getWanIsp())
-                                        .append("</span> comment=\"LB Nth by buananet.com\" <br>");
+                                        .append("</span> comment=\"RMikrotik.com\" <br>");
                 }
 
                 for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
@@ -83,28 +80,28 @@ public class NthService {
                                         .append(NthInterfaces.getId())
                                         .append("</span> gateway=<span style='color:red;'>")
                                         .append(NthInterfaces.getGatewayIsp())
-                                        .append("</span> comment=\"LB Nth by buananet.com\" <br>");
+                                        .append("</span> comment=\"RMikrotik.com\" <br>");
                 }
 
                 html.append("/ip firewall mangle<br>");
                 html.append(
-                                "add action=accept chain=prerouting dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment=\"LB Nth by buananet.com\" <br>");
+                                "add action=accept chain=prerouting dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment=\"RMikrotik.com\" <br>");
                 html.append(
-                                "add action=accept chain=postrouting dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment=\"LB Nth by buananet.com\" <br>");
+                                "add action=accept chain=postrouting dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment=\"RMikrotik.com\" <br>");
                 html.append(
-                                "add action=accept chain=forward dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment=\"LB Nth by buananet.com\" <br>");
+                                "add action=accept chain=forward dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment=\"RMikrotik.com\" <br>");
                 html.append(
-                                "add action=accept chain=input dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment=\"LB Nth by buananet.com\" <br>");
+                                "add action=accept chain=input dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment=\"RMikrotik.com\" <br>");
                 html.append(
-                                "add action=accept chain=output dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment=\"LB Nth by buananet.com\" <br>");
+                                "add action=accept chain=output dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment=\"RMikrotik.com\" <br>");
 
                 for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
                         html.append(
-                                        "add action=mark-connection chain=input in-interface=<span style='color:red;'>")
+                                        "add action=mark-connection chain=prerouting in-interface=\"<span style='color:red;'>")
                                         .append(NthInterfaces.getWanIsp())
-                                        .append("</span> new-connection-mark=\"cm-<span style='color:red;'>")
+                                        .append("</span>\" new-connection-mark=\"cm-<span style='color:red;'>")
                                         .append(NthInterfaces.getWanIsp())
-                                        .append("</span>\" passthrough=yes comment=\"LB Nth by buananet.com\" <br>");
+                                        .append("</span>\" passthrough=yes comment=\"RMikrotik.com\" <br>");
                 }
 
                 for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
@@ -113,8 +110,9 @@ public class NthService {
                                         .append(NthInterfaces.getWanIsp())
                                         .append("</span>\" new-routing-mark=\"to-<span style='color:red;'>")
                                         .append(NthInterfaces.getWanIsp())
-                                        .append("</span>\" passthrough=yes comment=\"LB Nth by buananet.com\" <br>");
+                                        .append("</span>\" passthrough=yes comment=\"RMikrotik.com\" <br>");
                 }
+             
 
                 int totalInterfaces = NthBody.getInterfaces().length;
 
@@ -125,7 +123,7 @@ public class NthService {
                                                 .append(NthInterfaces.getWanIsp())
                                                 .append("</span>\" passthrough=yes per-connection-classifier=both-addresses-and-ports:")
                                                 .append(totalInterfaces).append("/").append(NthInterfaces.getId() - 1)
-                                                .append(" dst-address-list=!LOCAL-IP src-address-list=LOCAL-IP comment=\"LB Nth by buananet.com\" <br>");
+                                                .append(" dst-address-list=!LOCAL-IP src-address-list=LOCAL-IP comment=\"RMikrotik.com\" <br>");
                         }
 
                         for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
@@ -134,7 +132,7 @@ public class NthService {
                                                 .append(NthInterfaces.getWanIsp())
                                                 .append("</span>\" new-routing-mark=\"to-<span style='color:red;'>")
                                                 .append(NthInterfaces.getWanIsp())
-                                                .append("</span>\" passthrough=yes dst-address-list=!LOCAL-IP src-address-list=LOCAL-IP comment=\"LB Nth by buananet.com\" <br>");
+                                                .append("</span>\" passthrough=yes dst-address-list=!LOCAL-IP src-address-list=LOCAL-IP comment=\"RMikrotik.com\" <br>");
                         }
                 }
 
@@ -147,7 +145,7 @@ public class NthService {
                                                 .append(totalInterfaces).append("/").append(NthInterfaces.getId() - 1)
                                                 .append(" in-interface=<span style='color:red;'>")
                                                 .append(NthBody.getInterfaceTarget())
-                                                .append("</span> comment=\"LB Nth by buananet.com\" <br>");
+                                                .append("</span> comment=\"RMikrotik.com\" <br>");
                         }
 
                         for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
@@ -158,7 +156,7 @@ public class NthService {
                                                 .append(NthInterfaces.getWanIsp())
                                                 .append("</span>\" passthrough=yes in-interface=<span style='color:red;'>")
                                                 .append(NthBody.getInterfaceTarget())
-                                                .append("</span> comment=\"LB Nth by buananet.com\" <br>");
+                                                .append("</span> comment=\"RMikrotik.com\" <br>");
                         }
                 }
 
@@ -171,7 +169,7 @@ public class NthService {
                                                 .append(totalInterfaces).append("/").append(NthInterfaces.getId() - 1)
                                                 .append(" in-interface-list=<span style='color:red;'>")
                                                 .append(NthBody.getInterfaceTarget())
-                                                .append("</span> comment=\"LB Nth by buananet.com\" <br>");
+                                                .append("</span> comment=\"RMikrotik.com\" <br>");
                         }
 
                         for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
@@ -182,7 +180,7 @@ public class NthService {
                                                 .append(NthInterfaces.getWanIsp())
                                                 .append("</span>\" passthrough=yes in-interface-list=<span style='color:red;'>")
                                                 .append(NthBody.getInterfaceTarget())
-                                                .append("</span> comment=\"LB Nth by buananet.com\" <br>");
+                                                .append("</span> comment=\"RMikrotik.com\" <br>");
                         }
                 }
 
@@ -200,21 +198,21 @@ public class NthService {
                 text.append("############################################################### \n");
 
                 text.append("/ip firewall address-list\n");
-                text.append("add address=192.168.0.0/16 list=LOCAL-IP comment=\"LB Nth by buananet.com\" \n");
-                text.append("add address=172.16.0.0/12 list=LOCAL-IP comment=\"LB Nth by buananet.com\" \n");
-                text.append("add address=10.0.0.0/8 list=LOCAL-IP comment=\"LB Nth by buananet.com\" \n");
+                text.append("add address=192.168.0.0/16 list=LOCAL-IP comment=\"RMikrotik.com\" \n");
+                text.append("add address=172.16.0.0/12 list=LOCAL-IP comment=\"RMikrotik.com\" \n");
+                text.append("add address=10.0.0.0/8 list=LOCAL-IP comment=\"RMikrotik.com\" \n");
 
                 text.append("/ip firewall nat \n");
                 for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
                         text.append("add chain=srcnat out-interface=").append(NthInterfaces.getWanIsp())
-                                        .append(" action=masquerade comment=\"LB Nth by buananet.com\" \n");
+                                        .append(" action=masquerade comment=\"RMikrotik.com\" \n");
                 }
 
                 if (NthBody.getIdRouterVersion().equalsIgnoreCase("ros7")) {
                         text.append("/routing table \n");
                         for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
                                 text.append("add name=\"to-").append(NthInterfaces.getWanIsp())
-                                                .append("\" fib comment=\"LB Nth by buananet.com\" \n");
+                                                .append("\" fib comment=\"RMikrotik.com\" \n");
                         }
                 }
 
@@ -223,39 +221,39 @@ public class NthService {
                         text.append("add check-gateway=ping distance=1 gateway=")
                                         .append(NthInterfaces.getGatewayIsp())
                                         .append(" routing-mark=").append(NthInterfaces.getWanIsp())
-                                        .append(" comment=\"LB Nth by buananet.com\" \n");
+                                        .append(" comment=\"RMikrotik.com\" \n");
                 }
 
                 for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
                         text.append("add check-gateway=ping distance=").append(NthInterfaces.getId())
                                         .append(" gateway=").append(NthInterfaces.getGatewayIsp())
-                                        .append(" comment=\"LB Nth by buananet.com\" \n");
+                                        .append(" comment=\"RMikrotik.com\" \n");
                 }
 
                 text.append("/ip firewall mangle \n");
                 text.append(
-                                "add action=accept chain=prerouting dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment=\"LB Nth by buananet.com\" \n");
+                                "add action=accept chain=prerouting dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment=\"RMikrotik.com\" \n");
                 text.append(
-                                "add action=accept chain=postrouting dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment=\"LB Nth by buananet.com\" \n");
+                                "add action=accept chain=postrouting dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment=\"RMikrotik.com\" \n");
                 text.append(
-                                "add action=accept chain=forward dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment=\"LB Nth by buananet.com\" \n");
+                                "add action=accept chain=forward dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment=\"RMikrotik.com\" \n");
                 text.append(
-                                "add action=accept chain=input dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment=\"LB Nth by buananet.com\" \n");
+                                "add action=accept chain=input dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment=\"RMikrotik.com\" \n");
                 text.append(
-                                "add action=accept chain=output dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment=\"LB Nth by buananet.com\" \n");
+                                "add action=accept chain=output dst-address-list=LOCAL-IP src-address-list=LOCAL-IP comment=\"RMikrotik.com\" \n");
 
                 for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
                         text.append("add action=mark-connection chain=input in-interface=")
                                         .append(NthInterfaces.getWanIsp())
                                         .append(" new-connection-mark=\"cm-").append(NthInterfaces.getWanIsp())
-                                        .append("\" passthrough=yes comment=\"LB Nth by buananet.com\" \n");
+                                        .append("\" passthrough=yes comment=\"RMikrotik.com\" \n");
                 }
 
                 for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
                         text.append("add action=mark-routing chain=output connection-mark=\"cm-")
                                         .append(NthInterfaces.getWanIsp())
                                         .append("\" new-routing-mark=\"to-").append(NthInterfaces.getWanIsp())
-                                        .append("\" passthrough=yes comment=\"LB Nth by buananet.com\" \n");
+                                        .append("\" passthrough=yes comment=\"RMikrotik.com\" \n");
                 }
 
                 int totalInterfaces = NthBody.getInterfaces().length;
@@ -267,14 +265,14 @@ public class NthService {
                                                 .append(NthInterfaces.getWanIsp())
                                                 .append("\" passthrough=yes per-connection-classifier=both-addresses-and-ports:")
                                                 .append(totalInterfaces).append("/").append(NthInterfaces.getId() - 1)
-                                                .append(" dst-address-list=!LOCAL-IP src-address-list=LOCAL-IP comment=\"LB Nth by buananet.com\" \n");
+                                                .append(" dst-address-list=!LOCAL-IP src-address-list=LOCAL-IP comment=\"RMikrotik.com\" \n");
                         }
 
                         for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
                                 text.append("add action=mark-routing chain=prerouting connection-mark=\"cm-")
                                                 .append(NthInterfaces.getWanIsp()).append("\" new-routing-mark=\"to-")
                                                 .append(NthInterfaces.getWanIsp())
-                                                .append("\" passthrough=yes dst-address-list=!LOCAL-IP src-address-list=LOCAL-IP comment=\"LB Nth by buananet.com\" \n");
+                                                .append("\" passthrough=yes dst-address-list=!LOCAL-IP src-address-list=LOCAL-IP comment=\"RMikrotik.com\" \n");
                         }
                 }
 
@@ -286,7 +284,7 @@ public class NthService {
                                                 .append("\" passthrough=yes per-connection-classifier=both-addresses-and-ports:")
                                                 .append(totalInterfaces).append("/").append(NthInterfaces.getId() - 1)
                                                 .append(" in-interface=").append(NthBody.getInterfaceTarget())
-                                                .append(" comment=\"LB Nth by buananet.com\" \n");
+                                                .append(" comment=\"RMikrotik.com\" \n");
                         }
 
                         for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
@@ -295,7 +293,7 @@ public class NthService {
                                                 .append(NthInterfaces.getWanIsp())
                                                 .append("\" passthrough=yes in-interface=")
                                                 .append(NthBody.getInterfaceTarget())
-                                                .append(" comment=\"LB Nth by buananet.com\" \n");
+                                                .append(" comment=\"RMikrotik.com\" \n");
                         }
                 }
 
@@ -307,7 +305,7 @@ public class NthService {
                                                 .append("\" passthrough=yes per-connection-classifier=both-addresses-and-ports:")
                                                 .append(totalInterfaces).append("/").append(NthInterfaces.getId() - 1)
                                                 .append(" in-interface-list=").append(NthBody.getInterfaceTarget())
-                                                .append(" comment=\"LB Nth by buananet.com\" \n");
+                                                .append(" comment=\"RMikrotik.com\" \n");
                         }
 
                         for (NthInterfaces NthInterfaces : NthBody.getInterfaces()) {
@@ -316,7 +314,7 @@ public class NthService {
                                                 .append(NthInterfaces.getWanIsp())
                                                 .append("\" passthrough=yes in-interface-list=")
                                                 .append(NthBody.getInterfaceTarget())
-                                                .append(" comment=\"LB Nth by buananet.com\" \n");
+                                                .append(" comment=\"RMikrotik.com\" \n");
                         }
                 }
 

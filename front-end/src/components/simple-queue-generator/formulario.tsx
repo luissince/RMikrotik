@@ -1,5 +1,6 @@
 
 import React, { useState } from "react";
+import SocialTooltipButton from "../SocialTooltipButton";
 
 type ScriptResult = {
     html: string;
@@ -290,10 +291,16 @@ export default function FormularioScriptGenerator() {
                                 className="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400"
                             >
                                 <option value="0.1">0.1 (default)</option>
-                                <option value="0.2">0.2</option>
-                                <option value="0.3">0.3</option>
-                                <option value="0.4">0.4</option>
-                                <option value="0.5">0.5</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
                             </select>
                         </div>
                         <div className="flex-1 space-y-2">
@@ -310,37 +317,34 @@ export default function FormularioScriptGenerator() {
                                 className="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400"
                             >
                                 <option value="0.1">0.1 (default)</option>
-                                <option value="0.2">0.2</option>
-                                <option value="0.3">0.3</option>
-                                <option value="0.4">0.4</option>
-                                <option value="0.5">0.5</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
                             </select>
                         </div>
                     </div>
 
-                    <div className="mt-6">
-                        <p className="text-orange-400 text-sm mb-2">
-                            ANCHO DE BANDA CON CÁLCULO DE TOKEN BUCKET <br />
-                            Bucket Capacity (BC) = bucket-size * max-limit <br />
-                            Time = BC / (Parent Max-limit - Token Rate)
-                        </p>
-                    </div>
+                 
 
                     <div className="flex justify-between mt-6">
                         <button
                             type="button"
-                            className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition"
+                            className="bg-orange-500 text-white w-full px-4 py-2 rounded hover:bg-orange-600 transition"
                             onClick={handleGenerate}
                         >
                             Generate
                         </button>
-                        <button
-                            type="button"
-                            className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition"
-                            onClick={handleClear}
-                        >
-                            Clear All
-                        </button>
+                     
+                    </div>
+                       <div className="mt-6">
+                        <SocialTooltipButton />
                     </div>
                 </form>
             </div>
@@ -357,13 +361,7 @@ export default function FormularioScriptGenerator() {
                 </div>
 
                 <div className="flex mt-4 space-x-4">
-                    <button
-                        type="button"
-                        className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition"
-                        onClick={handleGenerate}
-                    >
-                        Generar
-                    </button>
+                
                     <button
                         type="button"
                         className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition"

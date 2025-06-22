@@ -1,37 +1,37 @@
 ---
+import FormulariomikrotikAccessBlock from "../components/mikrotikAccessBlock/formulario";
 import MainLayout from "../layout/MainLayout.astro";
 ---
 
 <MainLayout title="Open Book">
-  <body
-    class="bg-gray-900 text-white font-sans min-h-screen flex items-center justify-center"
-  >
-    <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
-      <!-- Contenido -->
+  <div class="flex flex-col py-10 space-y-5">
+    <div class="bg-gray-800 rounded-lg">
       <!-- Header -->
-      <!-- Título -->
       <div class="text-center mb-6">
-        <h1 class="text-2xl lg:text-4xl font-bold text-orange-500">
-          MIKROTIK BLOCK FOR YOUTUBE, TIKTOK, FACEBOOK, WHATSAPP, etc.
+<h1 class="text-2xl lg:text-4xl   font-extrabold text-transparent bg-clip-text animated-gradient bg-gradient-to-r from-amber-400 via-orange-700 to-red-600">
+           BLOQUEO DE YOUTUBE, TIKTOK, FACEBOOK, WHATSAPP Y MÁS EN MIKROTIK
         </h1>
-        <p class="text-gray-300 mt-4">
-          configuración 
+
+  <p class="text-gray-300">
+      Aprende a bloquear el acceso a plataformas como YouTube, TikTok, Facebook, WhatsApp y otras redes sociales desde tu router MikroTik. Implementa filtros avanzados por DNS, Layer 7 <br> o direcciones IP para controlar el tráfico en tu red ISP/WISP. Ideal para mejorar el rendimiento, aplicar políticas de uso o reforzar la seguridad en entornos corporativos o educativos.
         </p>
+ <style>
+     /* Animación personalizada para mover el degradado */
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .animated-gradient {
+      background-size: 200% 200%;
+      animation: gradientMove 5s ease infinite;
+    }
+  </style>
+
       </div>
     </div>
-    <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
-      <!-- Contenido inicio -->
-
-      <div class="container mx-auto p-6 bg-gray-800 rounded-lg shadow-lg">
-        <!-- Título -->
-
-        <div
-          class="container mx-auto p-6 bg-gray-800 rounded-lg shadow-lg max-w-5xl"
-        >
-          <!-- Título -->
-          <div class="text-center mb-6"></div>
-
-          <!-- Diagrama -->
+   <!-- Diagrama -->
           <div class="flex justify-center mb-8">
             <img
               src="/images/mikrotik-access-block.png"
@@ -39,102 +39,13 @@ import MainLayout from "../layout/MainLayout.astro";
               class="rounded-lg"
             />
           </div>
-
-          <!-- Formulario Principal -->
-          <form class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-    
-
-         
-          </form>
-          <!-- Gestión de Dominios -->
-          <div>
-            <label class="block font-semibold text-orange-400 mb-2"
-              >Domain Management</label
-            >
-            <div class="space-y-2 ">
-              <div class="flex items-center">
-                <select
-                  id="ros-version"
-                  class="w-lvw p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-                >
-                  <option value="v6.xx">Youtube</option>
-                  <option value="v7.xx">Tiktok</option>
-                  <option value="v7.xx">Vidio</option>
-                  <option value="v7.xx">Iflix</option>
-                  <option value="v7.xx">Netflix</option>
-                  <option value="v7.xx">Facebook</option>
-                  <option value="v7.xx">Instagram</option>
-                  <option value="v7.xx">WhatsApp</option>
-                  <option value="v7.xx">Twitter</option>
-                  <option value="v7.xx">Telegram</option>
-                  <option value="v7.xx">Threads</option>
-                  <option value="v7.xx">Imo.im</option>
-                  <option value="v7.xx">Shopee</option>
-                  <option value="v7.xx">Tokopedia</option>
-                  <option value="v7.xx">Bukalapak</option>
-                  <option value="v7.xx">Lazada</option>
-                  <option value="v7.xx">Zoom Meeting</option>
-                  <option value="v7.xx">Microsoft Teams</option>
-                  <option value="v7.xx">Google Meet</option>
-                  <option value="v7.xx">Meta</option>
-                  <option value="v7.xx">Google</option>
-                  <option value="v7.xx">Speedtest</option>
-                  <option value="v7.xx">GGC (Google Global Cache)</option>
-                  <option value="v7.xx">Nice IIX or OIXP (indonesia)</option>
-                 
-
-                </select>
-                <button
-                  type="button"
-                  class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded ml-2 w-2/4"
-                  >Generar Script</button
-                >
-              </div>
-              <!-- Agregar más dominios -->
-            </div>
-            <button
-              type="button"
-              class="mt-4 bg-blue-500 hover:bg-orange-600 text-white py-2 px-4 rounded mb-4"
-            >
-              Copiar Script
-            </button> 
-            
-          </div>
-          <div class="bg-gray-700 p-4 rounded-lg flex flex-col">
-            <label class="block text-sm font-semibold mb-2 text-gray-300"
-              >Script Generator Result</label
-            >
-            <textarea
-              class="flex-grow bg-gray-800 border border-gray-100 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400"
-              placeholder="Please Login and Subscribe .."
-              readonly></textarea>
-            <div class="flex mt-4 space-x-4"></div>
-          </div>
-          <!-- Botones -->
-          <div class="flex  gap-4 mt-4 mb-4">
-          
-            <button
-              type="button"
-              class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded"
-              >Copiar Script</button
-            >
-          </div>
-          <div class="bg-gray-700 p-4 rounded-lg flex flex-col">
-            <label class="block text-sm font-semibold mb-2 text-gray-300"
-              >Script Generator Result</label
-            >
-            <textarea
-              class="flex-grow bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400"
-              placeholder="Please Login and Subscribe .."
-              readonly></textarea>
-          
-          </div>
-
-          <!-- Contenido Fin -->
-        </div>
-
-        <!-- Contenido Fin Aqui para abajo es otro codigo q u se borrara -->
+    <!-- Contenido inicio -->
+    <div class="bg-gray-800 rounded-lg mx-4">
+      <!-- Contenido Principal -->
+      <div class="container mx-auto">
+        <!-- Formulario Principal -->
+        <FormulariomikrotikAccessBlock client:load />
       </div>
     </div>
-  </body></MainLayout
->
+  </div>
+</MainLayout>
