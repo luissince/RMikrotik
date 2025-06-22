@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.okta.mongodb.GeneradoScripts.model.subscription.PaymentBody;
 import com.okta.mongodb.GeneradoScripts.service.SubcriptionService;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/payment")
 public class SubcriptionController {
@@ -21,13 +23,16 @@ public class SubcriptionController {
     private SubcriptionService subcriptionService;
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody PaymentBody body) {
+    public ResponseEntity<?> create(@RequestBody PaymentBody body, HttpServletRequest request) {
+        String providerId = (String) request.getAttribute("providerId");
+        body.setProviderId(providerId);
         return subcriptionService.create(body);
     }
 
     @GetMapping
-    public ResponseEntity<?> getActiveSubscription(@RequestParam String providerId) {
-        return subcriptionService.getActiveSubscription(providerId);
+    public ResponseEntity<?> getSubscription(HttpServletRequest request) {
+        String providerId = (String) request.getAttribute("providerId");
+        return subcriptionService.getSubscription(providerId);
     }
 
     @GetMapping("/all")
@@ -35,7 +40,7 @@ public class SubcriptionController {
         return subcriptionService.getAllSubscriptions();
     }
 
-    @GetMapping("/{token}") 
+    @GetMapping("/{token}")
     public ResponseEntity<?> captureOrden(@PathVariable String token) {
         return subcriptionService.captureOrden(token);
     }

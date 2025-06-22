@@ -9,7 +9,7 @@ interface TabsProps {
 const Tabs: React.FC<TabsProps> = ({ activeTab, setActiveTab }) => {
   return (
     <div className="bg-white rounded-lg shadow-lg mb-6">
-      <div className="border-b border-gray-200">
+      <div className="border-none border-gray-200">
         <nav className="-mb-px flex">
           <button
             onClick={() => setActiveTab('subscriptions')}

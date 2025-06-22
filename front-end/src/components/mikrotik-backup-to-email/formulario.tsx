@@ -1,8 +1,10 @@
-import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import SocialTooltipButton from "../SocialTooltipButton";
 import { z } from "zod";
+import { useApiCall, useAuthValidation, useScriptOperations } from "../forms/BaseForm";
+import type { Session } from "@auth/core/types";
+import type { Subscription } from "../../types/subscription/subscription";
 
 // Esquema de validación con Zod
 const backupFormSchema = z.object({
@@ -53,18 +55,12 @@ const backupFormSchema = z.object({
 
 type FormValues = z.infer<typeof backupFormSchema>;
 
-interface ScriptResponse {
-    html: string;
-    text: string;
+interface Props {
+    session: Session | null;
+    subscription: Subscription | null;
 }
 
-export default function FormularioBackupToEmail() {
-    const [scriptResponse, setScriptResponse] = useState<ScriptResponse | null>(
-        null
-    );
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-
+export default function FormularioBackupToEmail({ session, subscription }: Props) {
     const {
         control,
         handleSubmit,
@@ -84,51 +80,18 @@ export default function FormularioBackupToEmail() {
         },
     });
 
+    const { validateAuth } = useAuthValidation(session, subscription);
+    const { makeApiCall, isLoading } = useApiCall(session);
+    const { scriptResult, setScriptResult, handleCopyScript } = useScriptOperations(session, subscription);
+
     // Función para enviar a la API
     const submitToApi = async (data: FormValues) => {
-        setIsLoading(true);
-        setError(null);
+        if (!validateAuth()) return;
 
-        try {
-            const response = await fetch(
-                `${import.meta.env.PUBLIC_BASE_URL_API}/mikrotik-backup-to-mail`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(data),
-                }
-            );
-
-            if (!response.ok) {
-                throw new Error(`Error ${response.status}: ${response.statusText}`);
-            }
-
-            const result = await response.json();
-            setScriptResponse(result);
-            console.log("Respuesta de la API:", result);
-        } catch (err) {
-            console.error("Error al enviar datos:", err);
-            setError(
-                err instanceof Error
-                    ? err.message
-                    : "Ocurrió un error al contactar con el servidor"
-            );
-        } finally {
-            setIsLoading(false);
+        const result = await makeApiCall("/pcc", data);
+        if (result) {
+            setScriptResult(result);
         }
-    };
-
-    // Función para copiar el script al portapapeles
-    const copyToClipboard = () => {
-        if (scriptResponse?.text) {
-            navigator.clipboard
-                .writeText(scriptResponse.text)
-                .then(() => alert("Script copiado al portapapeles"))
-                .catch((err) => console.error("Error al copiar: ", err));
-        }
-
     };
 
     return (
@@ -137,7 +100,6 @@ export default function FormularioBackupToEmail() {
             {/* Panel de Configuración */}
             <div className="flex flex-col gap-6 lg:w-1/2">
                 {/* E-Mail Server */}
-
 
                 <form className="ring-2 ring-blue-500 p-4 rounded-lg" onSubmit={handleSubmit(submitToApi)}>
                     <div>
@@ -466,36 +428,26 @@ export default function FormularioBackupToEmail() {
                             {isLoading ? "Generando..." : "Generar"}
                         </button>
                     </div>
-
-                    {/* Error message */}
-                    {error && (
-                        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-4">
-                            <strong className="font-bold">Error:</strong>
-                            <span className="block sm:inline"> {error}</span>
-                        </div>
-                    )}
                 </form>
+
                 <p className="text-2sm text-orange-500 mt-5">
                     CREA TU PROPIO SERVIDOR GMAIL:
                 </p>
 
                 <p className="text-gray-400">
                     1. Primero, accede a https://myaccount.google.com/security y sigue las instrucciones para activar la verificación en dos pasos. Recibirás un código en tu número de teléfono.
-                  <p>   2. Crea una contraseña para la aplicación aquí: https://myaccount.google.com/apppasswords. Esta contraseña se usará para acceder al servidor de correo Mikrotik.</p>
+                    <p>   2. Crea una contraseña para la aplicación aquí: https://myaccount.google.com/apppasswords. Esta contraseña se usará para acceder al servidor de correo Mikrotik.</p>
                 </p>
 
-
                 <SocialTooltipButton />
-
-
             </div>
             {/* Script Generator Section */}
             <div className="flex flex-col lg:w-1/2 min-h-0 ">
                 <div className="flex-grow bg-gray-700 p-4 rounded-lg flex flex-col min-h-0">
                     <label className="block text-sm font-semibold mb-2 text-gray-300">Script Generator Result</label>
                     <div className="flex-grow overflow-y-auto bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400">
-                        {scriptResponse && (
-                            <div dangerouslySetInnerHTML={{ __html: scriptResponse.html }} />
+                        {scriptResult && (
+                            <div dangerouslySetInnerHTML={{ __html: scriptResult.html }} />
                         )}
                     </div>
                 </div>
@@ -503,10 +455,10 @@ export default function FormularioBackupToEmail() {
                 <div className="flex mt-4 space-x-4">
                     <button
                         type="button"
-                        onClick={copyToClipboard}
+                        onClick={handleCopyScript}
                         className="bg-orange-500 text-white px-4 py-2 w-full justify-center  rounded hover:bg-orange-600 transition flex items-center"
-                        disabled={!scriptResponse?.text}
-                    >
+                        disabled={!scriptResult?.html || !session}
+                        >
                         Copiar Script
                     </button>
                 </div>

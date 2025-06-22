@@ -172,7 +172,7 @@ const session = await getSession(Astro.request);
       <div class="flex items-center gap-x-4">
         <a
           class="text-[#cccccc] text-sm font-normal hover:bg-red-700 duration-300 rounded-lg px-3 py-1 flex items-center gap-1 transition-colors"
-          href="/book"
+          href="https://www.youtube.com"
         >
           <Icon name="youtube" size={22} />
 
@@ -181,7 +181,7 @@ const session = await getSession(Astro.request);
 
         <a
           class="text-[#cccccc] text-sm font-normal hover:bg-sky-500 duration-300 rounded-lg px-3 py-1 flex items-center gap-1 transition-colors"
-          href="/book"
+          href="https://www.instagram.com"
         >
           <Icon name="instagram" size={22} />
           <span>Instagram</span>
@@ -189,7 +189,7 @@ const session = await getSession(Astro.request);
 
         <a
           class="text-[#cccccc] text-sm font-normal hover:bg-blue-700 duration-300 rounded-lg px-3 py-1 flex items-center gap-1 transition-colors"
-          href="/book"
+          href="https://www.facebook.com"
         >
           <Icon name="facebook" size={22} />
           <span>Facebook</span>
@@ -197,7 +197,7 @@ const session = await getSession(Astro.request);
 
         <a
           class="text-[#cccccc] text-sm font-normal hover:bg-red-800 duration-300 rounded-lg px-3 py-1 flex items-center gap-1 transition-colors"
-          href="/book"
+          href="https://www.tiktok.com"
         >
           <Icon name="tiktok" size={22} />
           <span>
@@ -234,12 +234,12 @@ const session = await getSession(Astro.request);
   import { signOut } from "auth-astro/client";
   const logout = document.querySelector("#logout");
   if (logout) {
-    logout.addEventListener("click", () =>
+    logout.addEventListener("click", () =>{
       signOut({
-        callbackUrl: "/goodbye",
+        callbackUrl: "/",
         redirect: true,
-      }),
-    );
+      })
+    });
   }
 </script>
 

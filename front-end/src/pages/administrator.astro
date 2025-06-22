@@ -18,24 +18,37 @@ if (!session) {
 // Obtener si el usuario tiene una suscripción activa
 // ===========================================================================
 const resposePayment = await fetch(
-  `${import.meta.env.PUBLIC_BASE_URL_API}/payment?providerId=${session.user?.providerId}`,
+  `${import.meta.env.PUBLIC_BASE_URL_API}/payment`,
+  {
+    headers: {
+      "Content-Type": "application/json",
+      "accept": "application/json",
+      "Authorization": `${session?.user?.type} ${session.user?.token}`,
+    },
+  },
 );
+
+let subscription = null;
+let user = null;
 
 if (resposePayment.ok) {
   const data = await resposePayment.json();
-  session.user!.subscription = data;
+  subscription = data.subscription;
+  user = data.user;
 }
 
 // ===========================================================================
 // Obtener la lista de suscripciones
 // ===========================================================================
-
-// curl -X 'GET' \
-//   'http://localhost:8080/payment/all' \
-//   -H 'accept: */*'
-
 const responseSubscriptions = await fetch(
   `${import.meta.env.PUBLIC_BASE_URL_API}/payment/all`,
+  {
+    headers: {
+      "Content-Type": "application/json",
+      "accept": "application/json",
+      "Authorization": `${session?.user?.type} ${session.user?.token}`,
+    },
+  },
 );
 
 let subscriptions: Subscription[] = [];
@@ -48,35 +61,59 @@ if (responseSubscriptions.ok) {
 // ===========================================================================
 // Obtener los planes disponibles
 // ===========================================================================
-const responsePlan = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/plan`);
+const responsePlan = await fetch(
+  `${import.meta.env.PUBLIC_BASE_URL_API}/plan`,
+  {
+    headers: {
+      "Content-Type": "application/json",
+      "accept": "application/json",
+      "Authorization": `${session?.user?.type} ${session.user?.token}`,
+    },
+  },
+);
 
 let plans: Plan[] = [];
 
 if (responsePlan.ok) {
-    const data = await responsePlan.json();
-    plans = data;
+  const data = await responsePlan.json();
+  plans = data;
 }
 
 // ===========================================================================
 // Obtener lista de usuarios
 // ===========================================================================
-const responseUsers = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/user`);
+const responseUsers = await fetch(
+  `${import.meta.env.PUBLIC_BASE_URL_API}/user`,
+  {
+    headers: {
+      "Content-Type": "application/json",
+      "accept": "application/json",
+      "Authorization": `${session?.user?.type} ${session.user?.token}`,
+    },
+  },
+);
 
 let users: User[] = [];
 
 if (responseUsers.ok) {
-    const data = await responseUsers.json();
-    users = data;
+  const data = await responseUsers.json();
+  users = data;
 }
 // ===========================================================================
 ---
 
+<<<<<<< HEAD
 <MainLayout title="Open Book">
-  <AdminSubscriptions client:load 
-  session={session}
-   subscriptions={subscriptions}
-   plans={plans}
-   users={users} 
-   coupons={[]}
-   />
+=======
+<MainLayout title="RMicrotik">
+>>>>>>> aderyq
+  <AdminSubscriptions
+    client:load
+    subscription={subscription}
+    user={user}
+    subscriptions={subscriptions}
+    plans={plans}
+    users={users}
+    coupons={[]}
+  />
 </MainLayout>

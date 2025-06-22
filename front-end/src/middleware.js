@@ -1,4 +1,5 @@
 import { sequence } from "astro:middleware";
+
 const validAuthRoutes = ['signin' , 'csrf', 'signout', 'error','callback', 'signin/github', 'signin/google', 'signin/facebook', 'callback/google', 'callback/github', 'callback/facebook', 'callback/credentials'];
 
 async function auth(context, next) {
