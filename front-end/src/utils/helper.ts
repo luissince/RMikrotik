@@ -85,18 +85,9 @@ export function formatDate(date: string): string {
     const today = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
     const day = today.getDate() > 9 ? today.getDate() : '0' + today.getDate();
     const month =
-<<<<<<< HEAD
-      today.getMonth() + 1 > 9
-        ? today.getMonth() + 1
-        : '0' + (today.getMonth() + 1);
-    const year = today.getFullYear();
-    return `${day}/${month}/${year}`;
-  }
-=======
         today.getMonth() + 1 > 9
             ? today.getMonth() + 1
             : '0' + (today.getMonth() + 1);
     const year = today.getFullYear();
     return `${day}/${month}/${year}`;
 }
->>>>>>> aderyq
