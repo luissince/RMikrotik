@@ -1,9 +1,5 @@
 ---
-import { CodeBlock } from "../components/CodeBlock";
 import MainLayout from "../layout/MainLayout.astro";
-import {listaalgo} from "../utils/lista"
-import {listar2} from "../utils/lista"
-import {listar3} from "../utils/lista"
 // const ejemplo1 = `
 // # API-SSL Port Enable
 // /ip service set api-ssl port=8729 address=0.0.0.0/0 disabled=no
@@ -54,32 +50,7 @@ import {listar3} from "../utils/lista"
                             </tr>
                         </thead>
                         <tbody>
-                            {
-                                listaalgo.map((item, _) => {
-                                    return (
-                                        <tr class="text-gray-800">
-                                            <td class="p-2 border border-slate-700 ">
-                                                <p class={`text-sm lg:text-3xl font-bold ${item.bc == 1  ?"text-orange-500 " : "text-red-500 "} justify-center`}>
-                                                    {item.title}
-                                                </p>
-                                            </td>
-                                            <td class=" border-slate-700 p-2 border pl-4">
-                                                <p class="text-gray-400 mt-4 ">
-                                                    {item.description}
-                                                    <br />
-                                                    <section>                                                        
-                                                        <CodeBlock
-                                                            client:load
-                                                            code={item.code}
-                                                            language="javascript"
-                                                        />
-                                                    </section>
-                                                </p>
-                                            </td>
-                                        </tr>
-                                    );
-                                })
-                            }
+                           
                         </tbody>
                         <thead>
                             <tr class="bg-gray-700 text-gray-200">
@@ -92,32 +63,7 @@ import {listar3} from "../utils/lista"
                             </tr>
                         </thead>
                         <tbody>
-                            {
-                                listar2.map((item, _) => {
-                                    return (
-                                        <tr class="text-gray-800">
-                                            <td class="p-2 border border-slate-700 ">
-                                                <p class={`text-sm lg:text-3xl font-bold ${item.bc == 1  ?"text-orange-500 " : "text-red-500 "} justify-center`}>
-                                                    {item.title}
-                                                </p>
-                                            </td>
-                                            <td class=" border-slate-700 p-2 border pl-4">
-                                                <p class="text-gray-400 mt-4 ">
-                                                    {item.description}
-                                                    <br />
-                                                    <section>                                                        
-                                                        <CodeBlock
-                                                            client:load
-                                                            code={item.code}
-                                                            language="javascript"
-                                                        />
-                                                    </section>
-                                                </p>
-                                            </td>
-                                        </tr>
-                                    );
-                                })
-                            }
+                           
                         </tbody>
                         <thead>
                             <tr class="bg-gray-700 text-gray-200">
@@ -130,32 +76,7 @@ import {listar3} from "../utils/lista"
                             </tr>
                         </thead>
                         <tbody>
-                            {
-                                listar3.map((item, _) => {
-                                    return (
-                                        <tr class="text-gray-800">
-                                            <td class="p-2 border border-slate-700 ">
-                                                <p class={`text-sm lg:text-2xl font-bold ${item.bc == 1  ?"text-orange-500 " : "text-red-500 "} justify-center`}>
-                                                    {item.title}
-                                                </p>
-                                            </td>
-                                            <td class=" border-slate-700 p-2 border pl-4">
-                                                <p class="text-gray-400 mt-4 ">
-                                                    {item.description}
-                                                    <br />
-                                                    <section>                                                        
-                                                        <CodeBlock
-                                                            client:load
-                                                            code={item.code}
-                                                            language="javascript"
-                                                        />
-                                                    </section>
-                                                </p>
-                                            </td>
-                                        </tr>
-                                    );
-                                })
-                            }
+                            
                         </tbody>
                     </table>
                 </div>

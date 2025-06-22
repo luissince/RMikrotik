@@ -1,5 +1,3 @@
-import type { Session } from "@auth/core/types";
-
 // Función para validar el número de tarjeta usando el algoritmo de Luhn
 export const luhnCheck = (cardNumber: string) => {
     let sum = 0;

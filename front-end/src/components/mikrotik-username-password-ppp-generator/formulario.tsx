@@ -85,9 +85,6 @@ const FormularioMikrotikUsernamePasswordPppGenerator = () => {
 
   };
 
-  const handleCopyScript = (text: string) => {
-    navigator.clipboard.writeText(text);
-  };
   return (
     <div className="flex flex-col lg:flex-row gap-6 p-4 bg-gray-900 text-white">
       {/* Panel izquierdo - Formulario */}

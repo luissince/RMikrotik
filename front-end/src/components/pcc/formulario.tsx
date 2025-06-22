@@ -1,50 +1,14 @@
 import { useEffect, useState } from "react";
 import { keyIPAddress } from "../../utils/keyEvent";
 import type { Session } from "@auth/core/types";
-<<<<<<< HEAD
-import AlertKit, { alertKit } from "alert-kit";
-import { buttonPresets } from "../../styles/buttonStyles";
-=======
 import type { Subscription } from "../../types/subscription/subscription";
 import { useApiCall, useAuthValidation, useScriptOperations } from "../forms/BaseForm";
->>>>>>> aderyq
 
 interface Props {
   session: Session | null;
   subscription: Subscription | null;
 }
 
-<<<<<<< HEAD
-AlertKit.setGlobalDefaults({
-  headerClassName: 'bg-white p-4 border-b border-gray-200 rounded-t-2xl cursor-move',
-  headerTitle: 'RMikrotik',
-  showCloseButton: false,
-  primaryButtonClassName: buttonPresets.modalAccept,
-  cancelButtonClassName: buttonPresets.modalCancel,
-  acceptButtonClassName: buttonPresets.modalAccept,
-  defaultTexts: {
-    success: 'Éxito',
-    error: 'Error',
-    warning: 'Advertencia',
-    info: 'Información',
-    question: 'Confirmación',
-    accept: 'Aceptar',
-    cancel: 'Cancelar',
-    ok: 'Aceptar'
-  }
-});
-
-const lineInterfaceSchema = z.object({
-  id: z.number(),
-  wan: z.string(),
-  wanInput: z.string().min(1, { message: "WAN interface es requerido" }),
-  gateway: z.string(),
-  gatewayInput: z
-    .string()
-    .min(1, { message: "Gateway es requerido" })
-    .regex(/^(\d{1,3}\.){3}\d{1,3}$/, { message: "Formato de IP inválido" }),
-});
-=======
 interface InterfacesType {
   id: number;
   wan: string;
@@ -52,7 +16,6 @@ interface InterfacesType {
   gateway: string;
   gatewayIsp: string;
 }
->>>>>>> aderyq
 
 interface FormDataType {
   idLineWan: number;
@@ -74,39 +37,15 @@ const FormularioPcc = ({ session, subscription }: Props) => {
   // Datos del formulario
   const [formData, setFormData] = useState<FormDataType>(defaultData);
 
-<<<<<<< HEAD
-  const { fields, replace } = useFieldArray({
-    control,
-    name: "lineInterfaces",
-  });
-
-  const localValue = watch("local");
-  const [scriptResult, setScriptResult] = useState<ScriptResult | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-=======
   // Usar hooks personalizados
   const { validateAuth } = useAuthValidation(session, subscription);
   const { makeApiCall, isLoading } = useApiCall(session);
   const { scriptResult, setScriptResult, handleCopyScript } = useScriptOperations(session, subscription);
->>>>>>> aderyq
 
   // Función para generar líneas iniciales
   useEffect(() => {
-<<<<<<< HEAD
-    if (!session) {
-      alertKit.warning({
-        title: 'Sesión no iniciada',
-        message: 'Inicie sesión para continuar.',
-        primaryButton: {
-          text: 'Aceptar',
-        }
-      });
-    }
-  }, [session]);
-=======
     generateLines(2);
   }, []);
->>>>>>> aderyq
 
   const generateLines = (numbers: number) => {
     const list: InterfacesType[] = Array.from({ length: numbers }).map(
@@ -121,116 +60,9 @@ const FormularioPcc = ({ session, subscription }: Props) => {
         };
       }
     );
-<<<<<<< HEAD
-    replace(list);
-    setValue("linea", numbers);
-  };
-
-  useEffect(() => {
-    generateLines(2);
-  }, []);
-
-  const onSubmit = async (data: FormValues) => {
-    if (!session) {
-      alertKit.warning({
-        title: 'Sesión no iniciada',
-        message: 'Inicie sesión para continuar.',
-        primaryButton: {
-          text: 'Aceptar',
-        }
-      });
-      return;
-    }
-
-    if (session.user?.subscription?.status !== "active") {
-      alertKit.warning({
-        title: 'Suscripción no activa',
-        message: 'Compruebe suscripción para continuar.',
-        primaryButton: {
-          text: 'Aceptar',
-        }
-      });
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      const payload = {
-        idLineWan: String(data.linea),
-        idRouterVersion: data.router,
-        idLocalTarget: data.local,
-        interfaceTarget: data.interfaceTarget || "",
-        interfaces: data.lineInterfaces.map((line) => ({
-          id: line.id,
-          wanIsp: line.wanInput,
-          gatewayIsp: line.gatewayInput,
-        })),
-      };
-
-      const response = await fetch(
-        `${import.meta.env.PUBLIC_BASE_URL_API}/pcc`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "accept": "application/json",
-          },
-          body: JSON.stringify(payload),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
-      }
-
-      const responseData: ScriptResult = await response.json();
-      setScriptResult(responseData);
-    } catch (error) {
-      console.error("Error al enviar datos:", error);
-      // Aquí podrías mostrar un mensaje de error al usuario
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleClearAll = () => {
-    if (!session) {
-      alertKit.warning({
-        title: 'Sesión no iniciada',
-        message: 'Inicie sesión para continuar.',
-        primaryButton: {
-          text: 'Aceptar',
-        }
-      });
-      return;
-    }
-
-    if (session.user?.subscription?.status !== "active") {
-      alertKit.warning({
-        title: 'Suscripción no activa',
-        message: 'Compruebe suscripción para continuar.',
-        primaryButton: {
-          text: 'Aceptar',
-        }
-      });
-      return;
-    }
-
-    reset({
-      linea: 2,
-      router: "6.x",
-      local: "local-ip",
-      interfaceTarget: "ether1",
-      lineInterfaces: fields.map((field) => ({
-        ...field,
-        wanInput: `ether${field.id}`,
-        gatewayInput: `192.168.${field.id}.1`,
-      })),
-=======
     setFormData({
       ...formData,
       interfaces: list,
->>>>>>> aderyq
     });
   };
 
@@ -250,33 +82,6 @@ const FormularioPcc = ({ session, subscription }: Props) => {
     setScriptResult(null);
   };
 
-<<<<<<< HEAD
-  const handleCopyScript = () => {
-    if (!session) {
-      alertKit.warning({
-        title: 'Sesión no iniciada',
-        message: 'Inicie sesión para continuar.',
-        primaryButton: {
-          text: 'Aceptar',
-        }
-      });
-      return;
-    }
-
-    if (scriptResult) {
-      navigator.clipboard
-        .writeText(scriptResult.text)
-        .then(() => alert("Script copiado al portapapeles!"))
-        .catch((err) => console.error("Error al copiar: ", err));
-    }
-  };
-
-  const handleCloseModal = () => {
-    window.location.href = '/account';
-  };
-
-=======
->>>>>>> aderyq
   return (
     <div className="flex flex-col lg:flex-row gap-6 bg-gray-900 p-6 rounded-lg shadow-lg">
       {/* Form Section */}

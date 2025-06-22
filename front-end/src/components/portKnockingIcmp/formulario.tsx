@@ -1,17 +1,11 @@
 import React, { useState } from "react";
 import SocialTooltipButton from "../SocialTooltipButton";
+
 type ScriptResult = {
   html: string;
   text: string;
 };
-interface FormData {
- 
- firstIcmpPacketSize: string;
-    secondIcmpPacketSize: string;
-    onLoginTimeDuration: string;
-    portServiceToProtected: string;
 
-}
 const FormularioPortKnockingIcmp = () => {
   const [formData, setFormData] = useState({
     firstIcmpPacketSize: "100",
