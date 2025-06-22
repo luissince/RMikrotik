@@ -8,7 +8,7 @@ import { nameApp } from "../utils/constants";
 import { getAuthData } from "../utils/auth";
 
 // Obtener los datos de la sesión y suscripción
-const { session, subscription, shouldSignOut } = await getAuthData(
+const { subscription, shouldSignOut } = await getAuthData(
   Astro.request,
 );
 

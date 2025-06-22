@@ -67,18 +67,6 @@ const FormularioMikrotikQueue = () => {
     }
   };
 
-  const handleClear = () => {
-    setFormData({
-      idRoutingOptions: "Youtube",
-      idRosVersion: "ros6",
-      ispGateway: "0.0.0.0",
-      routingMark: "",
-    maxLimit:"",
-     priority:"",
-    });
-    setScriptResult(null);
-  };
-
   const handleCopyScript = (text: string) => {
     navigator.clipboard.writeText(text);
   };

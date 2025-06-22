@@ -39,7 +39,7 @@ const FormularioAdvancedMikrotikProtection: React.FC<TableProps> = ({ listaalgo,
                       {item.description}
                       <br />
                       <section>
-                        <CodeBlock clientLoad code={item.code} language="javascript" />
+                        {/* <CodeBlock clientLoad code={item.code} language="javascript" /> */}
                       </section>
                     </p>
                   </td>
@@ -65,7 +65,7 @@ const FormularioAdvancedMikrotikProtection: React.FC<TableProps> = ({ listaalgo,
                       {item.description}
                       <br />
                       <section>
-                        <CodeBlock clientLoad code={item.code} language="javascript" />
+                        {/* <CodeBlock clientLoad code={item.code} language="javascript" /> */}
                       </section>
                     </p>
                   </td>
@@ -91,7 +91,7 @@ const FormularioAdvancedMikrotikProtection: React.FC<TableProps> = ({ listaalgo,
                       {item.description}
                       <br />
                       <section>
-                        <CodeBlock clientLoad code={item.code} language="javascript" />
+                        {/* <CodeBlock clientLoad code={item.code} language="javascript" /> */}
                       </section>
                     </p>
                   </td>

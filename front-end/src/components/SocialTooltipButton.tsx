@@ -1,5 +1,3 @@
-import React from 'react';
-
 const SocialTooltipButton = () => {
   return (
     <div className="mt-4">

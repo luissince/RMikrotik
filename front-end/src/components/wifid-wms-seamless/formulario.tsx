@@ -3,21 +3,8 @@ import React, { useState } from "react";
 type ScriptResult = {
   html: string;
   text: string;
-};
-interface FormData {
-
-  wifiIdMode: string;
-  targetInterface: string;
-  username: string;
-  password: string;
-  makel: string;
-  gwId: string;
-  wlan: string;
-  sessionId: string;
-  redirUrl: string;
-
-
 }
+
 const FormularioWifidwmsSeamless = () => {
   const [formData, setFormData] = useState({
     wifiIdMode: "SEAMLESS WIFI_ID",

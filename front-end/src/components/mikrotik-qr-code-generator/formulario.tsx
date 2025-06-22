@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import SocialTooltipButton from "../SocialTooltipButton";
 const FormularioMikrotikQrCodeGenerator = () => {
   const [routerOption, setRouterOption] = useState("MikroTik Hotspot");

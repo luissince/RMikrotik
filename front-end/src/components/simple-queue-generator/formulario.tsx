@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import { useState } from "react";
 import SocialTooltipButton from "../SocialTooltipButton";
 
 type ScriptResult = {
