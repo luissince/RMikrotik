@@ -1,5 +1,13 @@
 import React, { useState } from "react";
 import SocialTooltipButton from "../SocialTooltipButton";
+
+import type { Session } from "@auth/core/types";
+import type { Subscription } from "../../types/subscription/subscription";
+
+interface Props {
+  session: Session | null;
+  subscription: Subscription | null;
+}
 type ScriptResult = {
   html: string;
   text: string;
@@ -11,7 +19,7 @@ interface FormData {
   macAddress: string;
 }
 
-const  FormulariomikrotikChangeMacAddress = () => {
+const  FormulariomikrotikChangeMacAddress = ({ session, subscription }: Props) => {
   const [formData, setFormData] = useState<FormData>({
     interfaceName: "ether1",
     macOption: "Change MAC Address Only",

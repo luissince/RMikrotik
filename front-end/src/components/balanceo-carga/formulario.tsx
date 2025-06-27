@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-
+import type { Session } from "@auth/core/types";
+import type { Subscription } from "../../types/subscription/subscription";
+interface Props {
+  session: Session | null;
+  subscription: Subscription | null;
+}
 const lineInterfaceSchema = z.object({
   id: z.number(),
   wan: z.string(),
@@ -31,7 +36,8 @@ type ScriptResult = {
   text: string;
 };
 
-const Formulario = () => {
+const Formulario = ({ session, subscription }: Props) => {
+  
   const {
     control,
     handleSubmit,

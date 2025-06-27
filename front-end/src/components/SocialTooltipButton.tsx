@@ -1,13 +1,27 @@
+import React, { useState } from 'react';
+
 const SocialTooltipButton = () => {
+  const [isTooltipVisible, setTooltipVisible] = useState(false);
+
+  const showTooltip = () => setTooltipVisible(true);
+  const hideTooltip = () => setTooltipVisible(false);
+
   return (
     <div className="mt-4">
       <div className="relative flex justify-end group">
-        <button className="shadow-xl/30 text-white text-sm font-medium py-1.5 px-4 rounded-md transition duration-200">
+        <button className="shadow-xl/30 text-white text-sm font-medium py-1.5 px-4 rounded-md transition duration-200"
+          onMouseEnter={showTooltip}
+          onMouseLeave={hideTooltip}
+        >
           ¿Tienes dudas?
         </button>
 
         {/* Tooltip flotante con redes sociales */}
-        <div className="absolute bottom-full right-0 mb-2 w-100 bg-gray-900 bg-opacity-90 text-white text-sm rounded-lg p-4 shadow-lg opacity-0 scale-0 transition-all duration-200 group-hover:opacity-100 group-hover:scale-100 z-10 pointer-events-auto">
+         {isTooltipVisible && (
+        <div className="absolute bottom-full right-0 mb-0 w-100 bg-gray-900 bg-opacity-90 text-white text-sm rounded-lg p-4 shadow-lg  z-10 pointer-events-auto"
+          onMouseEnter={showTooltip}
+          onMouseLeave={hideTooltip}
+        >
           <p className="mb-3">Aprende cómo usar la herramienta con nuestro video explicativo</p>
 
           {/* Botones de redes */}
@@ -57,6 +71,7 @@ const SocialTooltipButton = () => {
           {/* Triángulo */}
           <div className="absolute -bottom-1.5 right-3 w-3 h-3 rotate-45 bg-gray-900 bg-opacity-90"></div>
         </div>
+         )}
       </div>
     </div>
   );

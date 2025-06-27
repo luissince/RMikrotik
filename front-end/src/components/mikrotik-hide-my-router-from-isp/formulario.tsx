@@ -3,7 +3,13 @@ import SocialTooltipButton from "../SocialTooltipButton";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { Session } from "@auth/core/types";
+import type { Subscription } from "../../types/subscription/subscription";
 
+interface Props {
+  session: Session | null;
+  subscription: Subscription | null;
+}
 // Esquema para validación
 const formSchema = z.object({
   interface: z.string().min(1, { message: "Interface es requerido" }),
@@ -36,7 +42,7 @@ type ScriptResult = {
   text: string;
 };
 
-const MikrotikForm = () => {
+const MikrotikForm = ({ session, subscription }: Props) => {
   const [scriptResult, setScriptResult] = useState<ScriptResult>({
     html: "",
     text: "",

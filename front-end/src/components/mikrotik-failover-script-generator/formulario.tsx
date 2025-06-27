@@ -2,6 +2,13 @@ import React, { useState } from "react";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import type { Session } from "@auth/core/types";
+import type { Subscription } from "../../types/subscription/subscription";
+
+interface Props {
+  session: Session | null;
+  subscription: Subscription | null;
+}
 
 // Esquema de validación con Zod
 const lineInterfaceSchema = z.object({
@@ -44,7 +51,7 @@ type ScriptResult = {
   text: string;
 };
 
-const FormularioMikrotikFailoverScriptGenerator = () => {
+const FormularioMikrotikFailoverScriptGenerator = ({ session, subscription }: Props) => {
   // Estado para controlar el número de líneas
   const [scriptResult, setScriptResult] = useState<ScriptResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);

@@ -1,5 +1,12 @@
 import React, { useState } from "react";
 import SocialTooltipButton from "../SocialTooltipButton";
+import type { Session } from "@auth/core/types";
+import type { Subscription } from "../../types/subscription/subscription";
+
+interface Props {
+  session: Session | null;
+  subscription: Subscription | null;
+}
 interface FormData {
     idRoutingOptions: string;
     idRosVersion: string;
@@ -14,7 +21,7 @@ interface ScriptResult {
     text2: string;
 }
 
-const FormularioMikrotikStaticRouting = () => {
+const FormularioMikrotikStaticRouting = ({ session, subscription }: Props) => {
     const [formData, setFormData] = useState<FormData>({
         idRoutingOptions: 'Youtube',
         idRosVersion: 'ros6',

@@ -1,7 +1,13 @@
 import SocialTooltipButton from "../SocialTooltipButton";
 import { useState } from "react";
 import { keyIPAddress } from "../../utils/keyEvent";
+import type { Session } from "@auth/core/types";
+import type { Subscription } from "../../types/subscription/subscription";
 
+interface Props {
+  session: Session | null;
+  subscription: Subscription | null;
+}
 interface ScriptResult {
   html: string;
   text: string;
@@ -16,7 +22,7 @@ interface FormData {
   targetIpGatewayYourIsp: string;
 }
 
-const FormularioVpnTunnelAllTrafficScriptGenerator = () => {
+const FormularioVpnTunnelAllTrafficScriptGenerator = ({ session, subscription }: Props) => {
   const [formData, setFormData] = useState<FormData>({
     idSelectVpnConnection: "pptp",
     createVpnNameOnInterfaceVpn: "VPN-Tunnel",

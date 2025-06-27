@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import SocialTooltipButton from "../SocialTooltipButton";
-const FormulariomikrotikBlockSharingHotspot = () => {
+import type { Session } from "@auth/core/types";
+import type { Subscription } from "../../types/subscription/subscription";
+
+interface Props {
+  session: Session | null;
+  subscription: Subscription | null;
+}
+const FormulariomikrotikBlockSharingHotspot = ({ session, subscription }: Props) => {
   const [chains, setChains] = useState([
     {
       id: 1,

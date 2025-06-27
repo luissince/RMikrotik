@@ -1,6 +1,13 @@
 import SocialTooltipButton from "../SocialTooltipButton";
 import { useState, useRef } from "react";
 import { keyIPAddress } from "../../utils/keyEvent";
+import type { Session } from "@auth/core/types";
+import type { Subscription } from "../../types/subscription/subscription";
+
+interface Props {
+  session: Session | null;
+  subscription: Subscription | null;
+}
 
 interface ScriptResult {
   html: string;
@@ -13,7 +20,7 @@ interface FormData {
   idRosVersion: string;
 }
 
-const FormularioRemoteIpPublicStatic = () => {
+const FormularioRemoteIpPublicStatic = ({ session, subscription }: Props) => {
   // Estados iniciales con valores por defecto
   const [formData, setFormData] = useState<FormData>({
     interfaceIsp: "ether1-ISP",

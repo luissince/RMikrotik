@@ -1,6 +1,13 @@
 import { useState } from "react";
 import SocialTooltipButton from "../SocialTooltipButton";
-const PCQCalculator = () => {
+import type { Session } from "@auth/core/types";
+import type { Subscription } from "../../types/subscription/subscription";
+
+interface Props {
+  session: Session | null;
+  subscription: Subscription | null;
+}
+const PCQCalculator = ({ session, subscription }: Props) => {
     const [totalClient, setTotalClient] = useState(40);
     const [queueSize, setQueueSize] = useState(50);
     const [rate, setRate] = useState(512);

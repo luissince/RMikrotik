@@ -1,11 +1,18 @@
 import { useState } from "react";
 import SocialTooltipButton from "../SocialTooltipButton";
+import type { Session } from "@auth/core/types";
+import type { Subscription } from "../../types/subscription/subscription";
+
+interface Props {
+  session: Session | null;
+  subscription: Subscription | null;
+}
 interface Host {
   ip: string;
   description: string;
 }
 
-const FormularioMkrotikNetwatchMonitoring = () => {
+const FormularioMkrotikNetwatchMonitoring = ({ session, subscription }: Props) => {
   const [sendingOption, setSendingOption] = useState("Telegram");
   const [botTelegram, setBotTelegram] = useState("5633162xxx:AAFU1dsXcARJIAH_jJmvF...");
   const [chatIdTelegram, setChatIdTelegram] = useState("5537582xxx");

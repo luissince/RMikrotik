@@ -3,7 +3,13 @@ import SocialTooltipButton from "../SocialTooltipButton";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import type { Session } from "@auth/core/types";
+import type { Subscription } from "../../types/subscription/subscription";
 
+interface Props {
+  session: Session | null;
+  subscription: Subscription | null;
+}
 // Esquema de validación con Zod
 const formSchema = z.object({
     queueOption: z.string().min(1, "Campo obligatorio"),
@@ -26,7 +32,7 @@ type ScriptResult = {
     text: string;
 };
 
-const FormumarioMikrotikPcqGenerator = () => {
+const FormumarioMikrotikPcqGenerator = ({ session, subscription }: Props) => {
     const [scriptResult, setScriptResult] = useState<ScriptResult | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 

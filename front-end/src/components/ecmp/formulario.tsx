@@ -1,6 +1,12 @@
 import { useState, useEffect } from "react";
 import { keyIPAddress } from "../../utils/keyEvent";
+import type { Session } from "@auth/core/types";
+import type { Subscription } from "../../types/subscription/subscription";
 
+interface Props {
+  session: Session | null;
+  subscription: Subscription | null;
+}
 type LineInterfacesType = {
   id: number;
   wan: string;
@@ -14,7 +20,7 @@ interface ScriptResult {
   text: string;
 }
 
-const FormularioEcmp = () => {
+const FormularioEcmp = ({ session, subscription }: Props) => {
   // Estados para los campos del formulario
   const [idYourLineWanIsp, setIdYourLineWanIsp] = useState<string>("2");
   const [idRouterOsVersion, setIdRouterOsVersion] = useState<string>("ros6");

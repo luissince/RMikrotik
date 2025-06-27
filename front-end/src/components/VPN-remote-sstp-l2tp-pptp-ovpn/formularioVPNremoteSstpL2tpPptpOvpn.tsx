@@ -1,5 +1,12 @@
 import { useState } from "react";
 import type React from "react";
+import type { Session } from "@auth/core/types";
+import type { Subscription } from "../../types/subscription/subscription";
+
+interface Props {
+  session: Session | null;
+  subscription: Subscription | null;
+}
 
 // Definimos los tipos para los juegos y las categorías
 interface Game {
@@ -36,7 +43,7 @@ const gamesData: GamesData = {
     ]
 };
 
-const FormularioVPNremoteSstpL2tpPptpOvpn = () => {
+const FormularioVPNremoteSstpL2tpPptpOvpn = ({ session, subscription }: Props) => {
     // const [version, setVersion] = useState<string>("");
     // const [gateway, setGateway] = useState<string>("");
     const [searchQuery, setSearchQuery] = useState<string>(""); // Estado para la búsqueda de juegos

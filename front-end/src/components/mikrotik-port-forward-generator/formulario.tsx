@@ -1,7 +1,14 @@
 import SocialTooltipButton from "../SocialTooltipButton";
 import { useEffect, useState } from "react";
-import { z } from "zod";
 import { keyIPAddress, keyNumberInteger } from "../../utils/keyEvent";
+import type { Session } from "@auth/core/types";
+import type { Subscription } from "../../types/subscription/subscription";
+import { useApiCall, useAuthValidation, useScriptOperations } from "../forms/BaseForm";
+
+interface Props {
+  session: Session | null;
+  subscription: Subscription | null;
+}
 
 type LineInterfacesType = {
   id: number;
@@ -13,32 +20,15 @@ type LineInterfacesType = {
   description: string;
 };
 
-interface ScriptResult {
-  html: string;
-  text: string;
-}
 
-const lineInterfaceSchema = z.object({
-  idProtocol: z.string().nonempty({ message: "Protocol is required" }),
-  remoteIp: z.string().nonempty({ message: "Remote IP is required" }).refine((val) => /^(\d{1,3}\.){3}\d{1,3}$/.test(val), {
-    message: "Invalid IP format",
-  }),
-  remotePort: z.string().nonempty({ message: "Remote Port is required" }).refine((val) => !isNaN(Number(val)), {
-    message: "Remote Port must be a number",
-  }),
-  targetIp: z.string().nonempty({ message: "Target IP is required" }).refine((val) => /^(\d{1,3}\.){3}\d{1,3}$/.test(val), {
-    message: "Invalid IP format",
-  }),
-  targetPort: z.string().nonempty({ message: "Target Port is required" }).refine((val) => !isNaN(Number(val)), {
-    message: "Target Port must be a number",
-  }),
-  description: z.string().optional(),
-});
-
-const FormularioMikrotikPortForwardGenerator = () => {
+const FormularioMikrotikPortForwardGenerator = ({ session, subscription }: Props) => {
   const [lineInterfaces, setLineInterfaces] = useState<LineInterfacesType[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<ScriptResult | null>(null);
+
+  // Usar hooks personalizados
+  const { validateAuth } = useAuthValidation(session, subscription);
+  const { makeApiCall, isLoading } = useApiCall(session);
+  const { scriptResult, setScriptResult, handleCopyScript } = useScriptOperations(session, subscription);
+
 
   useEffect(() => {
     generateLines(1);
@@ -85,50 +75,23 @@ const FormularioMikrotikPortForwardGenerator = () => {
     );
   };
 
-  const handleGenerate = async () => {
-    try {
-      // Validate the data using zod
-      lineInterfaces.forEach(line => {
-        lineInterfaceSchema.parse(line);
-      });
+  const handleSubmit = async () => {
+    if (!validateAuth()) return;
 
-      setError(null);
-
-      const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/mikrotik-port-forward-generator`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'accept': 'application/hal+json',
-        },
-        body: JSON.stringify({ forwards: lineInterfaces }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      const resultData: ScriptResult = await response.json();
-      setResult(resultData);
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        setError(error.errors[0].message);
-      } else {
-        setError('Error generating script: ' + (error as Error).message);
-      }
+    const result = await makeApiCall("/mikrotik-port-forward-generator", { forwards: lineInterfaces });
+    if (result) {
+      setScriptResult(result);
     }
   };
 
   const handleClear = () => {
+    if (!validateAuth()) return;
+
     setLineInterfaces([]);
     generateLines(1);
-    setResult(null);
+    setScriptResult(null);
   };
 
-  const handleCopy = () => {
-    if (result) {
-      navigator.clipboard.writeText(result.text);
-    }
-  };
 
   return (
     <div className="text-gray-950 shadow-2xl rounded-lg p-6 w-full ring-2 ring-blue-500">
@@ -220,27 +183,28 @@ const FormularioMikrotikPortForwardGenerator = () => {
             ))}
           </tbody>
         </table>
-          <SocialTooltipButton />
+        <SocialTooltipButton />
       </div>
-
-      {error && <p className="text-red-500">{error}</p>}
 
       <div className="flex flex-wrap justify-center gap-4 mb-6 mt-7">
         <button
           className="text-white px-4 py-2 rounded-md transition ease-in-out delay-150 bg-gray-600 hover:-translate-y-1 hover:scale-110 hover:bg-slate-700 duration-300"
           onClick={handleClear}
+          disabled={isLoading || !session}
         >
           Borrar Todo
         </button>
         <button
           className="text-white px-4 py-2 rounded-md transition ease-in-out delay-150 bg-orange-500 hover:-translate-y-1 hover:scale-110 hover:bg-orange-600 duration-300"
-          onClick={handleGenerate}
+          onClick={handleSubmit}
+          disabled={!session}
         >
           Generar Script
         </button>
         <button
           className="text-white px-4 py-2 rounded-md transition ease-in-out delay-150 bg-green-500 hover:-translate-y-1 hover:scale-110 hover:bg-teal-600 duration-300"
-          onClick={handleCopy}
+          onClick={handleCopyScript}
+          disabled={!scriptResult?.html || !session}
         >
           Copiar Todo
         </button>
@@ -256,9 +220,9 @@ const FormularioMikrotikPortForwardGenerator = () => {
         <label className="block text-sm font-semibold mb-2 text-gray-300">
           Script Generator Result
         </label>
-        <div className="flex-grow overflow-y-auto bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400">
-          {result && (
-            <div dangerouslySetInnerHTML={{ __html: result.html }} />
+        <div className="flex-grow overflow-y-auto bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400 h-60">
+          {scriptResult && (
+            <div dangerouslySetInnerHTML={{ __html: scriptResult.html }} />
           )}
         </div>
       </div>

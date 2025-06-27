@@ -1,5 +1,12 @@
 import React, { useState } from "react";
 import SocialTooltipButton from "../SocialTooltipButton";
+import type { Session } from "@auth/core/types";
+import type { Subscription } from "../../types/subscription/subscription";
+
+interface Props {
+  session: Session | null;
+  subscription: Subscription | null;
+}
 type ScriptResult = {
     html: string;
     text: string;
@@ -18,7 +25,7 @@ interface FormData {
     upLimitAt: string;
     downLimitAt: string;
 }
-const FormularioSimpleQueueGeneratorShared = () => {
+const FormularioSimpleQueueGeneratorShared = ({ session, subscription }: Props) => {
     const [parentNameQueue, setParentNameQueue] = useState("Global-Connection");
     const [targetLocalIP, setTargetLocalIP] = useState("192.168.88.0/24");
     const [upTotal, setUpTotal] = useState("5M");

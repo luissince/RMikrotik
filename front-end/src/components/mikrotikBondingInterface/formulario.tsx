@@ -1,5 +1,12 @@
 import React, { useState } from "react";
 import SocialTooltipButton from "../SocialTooltipButton";
+import type { Session } from "@auth/core/types";
+import type { Subscription } from "../../types/subscription/subscription";
+
+interface Props {
+  session: Session | null;
+  subscription: Subscription | null;
+}
 
 type ScriptResult = {
   html: string;
@@ -13,7 +20,7 @@ interface FormData {
   arpMonitoring: boolean;
 }
 
-const FormularioMikrotikBondingInterface = () => {
+const FormularioMikrotikBondingInterface = ({ session, subscription }: Props) => {
   const [formData, setFormData] = useState<FormData>({
     bondingName_a: "",
     bondingIPAddress: "192.168.50.2/24",

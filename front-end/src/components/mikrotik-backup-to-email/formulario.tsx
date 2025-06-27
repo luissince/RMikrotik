@@ -5,6 +5,11 @@ import { z } from "zod";
 import { useApiCall, useAuthValidation, useScriptOperations } from "../forms/BaseForm";
 import type { Session } from "@auth/core/types";
 import type { Subscription } from "../../types/subscription/subscription";
+interface Props {
+  session: Session | null;
+  subscription: Subscription | null;
+}
+
 
 // Esquema de validación con Zod
 const backupFormSchema = z.object({

@@ -1,6 +1,13 @@
+import type { Session } from "@auth/core/types";
 import SocialTooltipButton from "../SocialTooltipButton";
 
 import React, { useState } from "react";
+import type { Subscription } from "../../types/subscription/subscription";
+
+interface Props {
+  session: Session | null;
+  subscription: Subscription | null;
+}
 
 interface FormData {
     ipGatewayIsp: string;
@@ -20,7 +27,7 @@ interface Domain {
     name: string
 }
 
-const FormularioPolicyBasedRoutingWebsite = () => {
+const FormularioPolicyBasedRoutingWebsite = ({ session, subscription }: Props) => {
     const [formData, setFormData] = useState<FormData>({
         ipGatewayIsp: '',
         routingMark: '',

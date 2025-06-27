@@ -1,5 +1,12 @@
 import SocialTooltipButton from "../SocialTooltipButton";
 import React, { useState } from "react";
+import type { Session } from "@auth/core/types";
+import type { Subscription } from "../../types/subscription/subscription";
+
+interface Props {
+  session: Session | null;
+  subscription: Subscription | null;
+}
 
 interface FormData {
     idRoutingOption: string;
@@ -15,7 +22,7 @@ interface ScriptResult {
     text: string;
 }
 
-const FormularioMikrotikLocalIpPbr = () => {
+const FormularioMikrotikLocalIpPbr = ({ session, subscription }: Props) => {
     const [formData, setFormData] = useState<FormData>({
         idRoutingOption: 'R1',
         idIpOption: 'global-IPP',

@@ -1,9 +1,19 @@
 ---
 import FormulariobypassSpeedyTest from "../components/BypassSpeedyTest/formulariobypassSpeedyTest";
 import MainLayout from "../layout/MainLayout.astro";
----
+import { getAuthData } from "../utils/auth";
+import { nameApp } from "../utils/constants";
+// Obtener los datos de la sesión y suscripción
+const { session, subscription, shouldSignOut } = await getAuthData(
+  Astro.request,
+);
 
-<MainLayout title="RMicrotik">
+// Si necesita cerrar sesión, redirigir a logout
+if (shouldSignOut) {
+  return Astro.redirect("/logout?reason=expired");
+}
+---
+<MainLayout title={nameApp}>
     <body
         class="bg-gray-900 text-white font-sans min-h-screen flex items-center justify-center"
     >
