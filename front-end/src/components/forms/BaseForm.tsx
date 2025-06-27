@@ -32,6 +32,7 @@ export interface BaseFormProps {
 
 export interface ScriptResult {
     html: string;
+    pdf?: string;
     text: string;
 }
 
