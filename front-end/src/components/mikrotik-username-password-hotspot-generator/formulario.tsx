@@ -1,9 +1,13 @@
 import React, { useState } from "react";
+import { useApiCall, useAuthValidation, useScriptOperations } from "../forms/BaseForm";
+import type { Session } from "@auth/core/types";
+import type { Subscription } from "../../types/subscription/subscription";
+import { alertKit } from "alert-kit";
 
-type ScriptResult = {
-  html: string;
-  text: string;
-};
+interface Props {
+  session: Session | null;
+  subscription: Subscription | null;
+}
 
 interface FormData {
   qtyUserHotspot: number;
@@ -15,7 +19,7 @@ interface FormData {
   typePassword: string;
 }
 
-const FormulariomikrotikUsernamePasswordHotspotGenerator = () => {
+const FormulariomikrotikUsernamePasswordHotspotGenerator = ({ session, subscription }: Props) => {
   const [formData, setFormData] = useState<FormData>({
     qtyUserHotspot: 10,
     profileHotspot: "default",
@@ -26,9 +30,11 @@ const FormulariomikrotikUsernamePasswordHotspotGenerator = () => {
     typePassword: "01",
   });
 
-  const [error, setError] = useState<string | null>(null);
-  const [scriptResult, setScriptResult] = useState<ScriptResult | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  // Usar hooks personalizados
+  const { validateAuth } = useAuthValidation(session, subscription);
+  const { makeApiCall, isLoading } = useApiCall(session);
+  const { scriptResult, setScriptResult, handleCopyScript } = useScriptOperations(session, subscription);
+
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -40,42 +46,76 @@ const FormulariomikrotikUsernamePasswordHotspotGenerator = () => {
     }));
   };
 
-  const handleGenerate = async () => {
-    setIsLoading(true);
-    try {
-      // Simulate API call
-      const response = await fetch(
-        `${import.meta.env.PUBLIC_BASE_URL_API}/mikrotik-username-password-hotspot-generator`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            accept: "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
+  const handleSubmit = async () => {
+    if (!validateAuth()) return;
 
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      const resultData: ScriptResult = await response.json();
-      setScriptResult(resultData);
-    } catch (error) {
-      setError("Error generating script: " + (error as Error).message);
-    } finally {
-      setIsLoading(false);
+    const result = await makeApiCall("/mikrotik-username-password-hotspot-generator", formData);
+    if (result) {
+      setScriptResult(result);
     }
   };
 
   const handleClear = () => {
+    if (!validateAuth()) return;
+
     setScriptResult(null);
   };
 
-  const handleCopyScript = () => {
-    if (scriptResult) {
-      navigator.clipboard.writeText(scriptResult.text);
+  const handleDownload = async () => {
+    if (!validateAuth()) return;
+
+    try {
+
+      alertKit.loading({ message: 'Generando...' });
+
+      // Opciones de la solicitud fetch
+      const options = {
+        method: 'POST', // Especifica el método POST
+        headers: {
+          'Content-Type': 'application/json', // Especifica el tipo de contenido como JSON
+          // Puedes agregar otros encabezados aquí, como autorización, si es necesario
+        },
+        body: JSON.stringify({
+          content: scriptResult?.pdf,
+          css: "\n@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');\n\n/* @page {\n    margin: 0;\n    padding: 0;\n} */\n\n* {\n    -webkit-box-sizing: border-box;\n    box-sizing: border-box;\n    margin: 0;\n    padding: 0;\n}\n\nhtml {\n    -webkit-text-size-adjust: 100%;\n    font-size: 100%;\n}\n\nbody {\n    font-family: \"Roboto\", serif;\n    font-weight: normal;\n    background-color: white;\n    color: #000;\n    padding: 0mm;\n}\n\nh1 {\n    color: #2c3e50;\n    font-size: 22pt;\n    padding: 5mm 0mm;\n    border-bottom: 0.5mm solid #eee;\n    font-weight: bold;\n}\n\nh2 {\n    color: #34495e;\n    font-size: 18pt;\n     padding: 3mm 0mm;\n    font-weight: bold;\n}\n\nh3 {\n    color: #445566;\n    font-size: 14pt;\n    padding: 3mm 0mm;\n    font-weight: bold;\n}\n\nh4 {\n    color: #445566;\n    font-size: 10pt;\n    padding: 3mm 0mm;\n    font-weight: bold;\n}\n\np {\n    padding: 3mm 0mm;\n    color: #333;\n    font-size: 10pt;\n    font-weight: normal;\n}\n\nul, ol {\n    padding: 3mm 0mm;\n    padding-left: 10mm;\n}\n\nli {\n    padding: 2mm 0mm;\n}\n\ncode {\n    background-color: #f7f9fa;\n    padding: 1mm 2mm;\n    border-radius: 1mm;\n    font-family: monospace;\n}\n\npre {\n    background-color: #f7f9fa;\n    padding: 5mm;\n    border-radius: 2mm;\n    overflow-x: auto;\n    font-size: 10pt;\n}\n\nblockquote {\n    border-left: 1mm solid #ccc;\n    margin: 5mm 0;\n    padding-left: 5mm;\n    font-style: italic;\n    color: #666;\n}\n\ntable {\n    border-collapse: collapse;\n    width: 100%;\n    margin-bottom: 5mm;\n}\n\nth, td {\n    border: 0.5mm solid #ddd;\n    padding: 2mm 0mm;\n    text-align: left;\n    font-size: 10pt;\n}\n\nth {\n    background-color: #f5f5f5;\n}\n\nstrong, b {\n    font-weight: bold;\n}\n\nem, i {\n    font-style: italic;\n}\n\na {\n    color: #2980b9;\n    text-decoration: underline;\n    word-break: break-word;\n}\n\nimg {\n    max-width: 100%;\n    height: auto;\n    display: block;\n    margin: 5mm auto;\n}\n\n.product {\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    margin-bottom: 10mm;\n    border: 0.5mm solid #ccc;\n    padding: 5mm;\n    border-radius: 2mm;\n}\n\n.product img {\n    width: 50mm;\n    height: 50mm;\n    object-fit: cover;\n    border-radius: 2mm;\n}",
+          height: "297",
+          margin: { top: 10, right: 10, bottom: 10, left: 10 },
+          size: "A4",
+          title: "document",
+          url: scriptResult?.pdf,
+          width: "210"
+        }), // Convierte los datos a una cadena JSON
+        next: { revalidate: 0 }
+      };
+
+      // Realizar la solicitud HTTP
+      const response = await fetch(`https://mdhtmltopdf-fastapi.xanderls.dev/html/pdf`, options);
+
+      // Verificar si la respuesta es correcta
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      // Obtiene la respuesta en formato blob
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+
+      // retorna la URL del PDF
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `document.pdf`;
+      document.body.appendChild(link);
+      link.click();
+
+      // Limpia el objeto URL después de la descarga
+      window.URL.revokeObjectURL(url);
+      link.remove();
+      alertKit.close();
+    } catch (error) {
+      alertKit.error({
+        title: 'Error',
+        message: (error as Error).message,
+      });
     }
   };
 
@@ -174,28 +214,18 @@ const FormulariomikrotikUsernamePasswordHotspotGenerator = () => {
             >
               <option value="01">Password = Username</option>
               <option value="02">Username = Password</option>
-               <option value="03">Type Username = Password</option>
-                <option value="04">Random 3 Character</option>
-                 <option value="05">Random 4 Character</option>
-                  <option value="06">Random 5 Character</option>
+              <option value="03">Type Username = Password</option>
+              <option value="04">Random 3 Character</option>
+              <option value="05">Random 4 Character</option>
+              <option value="06">Random 5 Character</option>
             </select>
           </div>
-
-          <button
-            type="button"
-            onClick={handleGenerate}
-            className="w-full bg-orange-500 text-white py-2 rounded hover:bg-orange-600 transition"
-          >
-            Generate
-          </button>
         </div>
 
 
-
-          {/* Tienes dudas */}
-
-   <div className="mt-4">
-           <div className="relative flex justify-end group">
+        {/* Tienes dudas */}
+        <div className="mt-4">
+          <div className="relative flex justify-end group">
             <button
               className="shadow-xl/30 text-white text-sm font-medium py-1.5 px-4 rounded-md transition duration-200"
             >
@@ -212,13 +242,13 @@ const FormulariomikrotikUsernamePasswordHotspotGenerator = () => {
 
               {/* Botones de redes */}
               <div className="flex justify-around">
-                   <a
+                <a
                   href="https://x.com/RMikrotik"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="bg-sky-400 hover:bg-blue-500 text-white px-3 py-1 rounded-full text-xs"
                 >
-                Twitter
+                  Twitter
                 </a>
                 <a
                   href="https://www.youtube.com/channel/UCq3nYbC1ceUwoZqYiESFb7g"
@@ -244,7 +274,7 @@ const FormulariomikrotikUsernamePasswordHotspotGenerator = () => {
                 >
                   Facebook
                 </a>
-                    <a
+                <a
                   href="https://www.instagram.com/rmikrotik/"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -258,9 +288,9 @@ const FormulariomikrotikUsernamePasswordHotspotGenerator = () => {
               <div className="absolute -bottom-1.5 right-3 w-3 h-3 rotate-45 bg-gray-900 bg-opacity-90"></div>
             </div>
           </div>
-          </div>
+        </div>
 
-  {/* Tienes dudas Fin*/}
+        {/* Tienes dudas Fin*/}
       </div>
 
       {/* Panel derecho - Resultado */}
@@ -283,17 +313,38 @@ const FormulariomikrotikUsernamePasswordHotspotGenerator = () => {
         <div className="flex mt-4 space-x-4">
           <button
             type="button"
-            className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition"
-            onClick={handleClear}
+            onClick={handleSubmit}
+            className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-600 transition disabled:bg-orange-300 disabled:cursor-not-allowed"
+            disabled={isLoading || !session}
           >
-            Clear All
+            {isLoading ? "Generando..." : " Generar"}
           </button>
+
           <button
             type="button"
-            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
-            onClick={handleCopyScript}
+            className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition"
+            onClick={handleClear}
+            disabled={!session}
           >
-            Copy Script
+            Borrar Todo
+          </button>
+
+          <button
+            type="button"
+            className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition disabled:bg-indigo-500 disabled:cursor-not-allowed"
+            onClick={handleCopyScript}
+            disabled={!scriptResult?.html || !session}
+          >
+            Copiar Script
+          </button>
+
+          <button
+            type="button"
+            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition disabled:bg-green-500 disabled:cursor-not-allowed"
+            onClick={handleDownload}
+            disabled={!scriptResult?.html || !session}
+          >
+            Descarga
           </button>
         </div>
       </div>
