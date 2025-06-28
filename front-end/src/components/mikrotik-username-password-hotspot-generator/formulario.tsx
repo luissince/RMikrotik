@@ -61,61 +61,53 @@ const FormulariomikrotikUsernamePasswordHotspotGenerator = ({ session, subscript
     setScriptResult(null);
   };
 
-  const handleDownload = async () => {
-    if (!validateAuth()) return;
+  const handlePrint = () => {
+    if (!validateAuth() || !scriptResult?.pdf) return;
 
-    try {
-
-      alertKit.loading({ message: 'Generando...' });
-
-      // Opciones de la solicitud fetch
-      const options = {
-        method: 'POST', // Especifica el método POST
-        headers: {
-          'Content-Type': 'application/json', // Especifica el tipo de contenido como JSON
-          // Puedes agregar otros encabezados aquí, como autorización, si es necesario
-        },
-        body: JSON.stringify({
-          content: scriptResult?.pdf,
-          css: "\n@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');\n\n/* @page {\n    margin: 0;\n    padding: 0;\n} */\n\n* {\n    -webkit-box-sizing: border-box;\n    box-sizing: border-box;\n    margin: 0;\n    padding: 0;\n}\n\nhtml {\n    -webkit-text-size-adjust: 100%;\n    font-size: 100%;\n}\n\nbody {\n    font-family: \"Roboto\", serif;\n    font-weight: normal;\n    background-color: white;\n    color: #000;\n    padding: 0mm;\n}\n\nh1 {\n    color: #2c3e50;\n    font-size: 22pt;\n    padding: 5mm 0mm;\n    border-bottom: 0.5mm solid #eee;\n    font-weight: bold;\n}\n\nh2 {\n    color: #34495e;\n    font-size: 18pt;\n     padding: 3mm 0mm;\n    font-weight: bold;\n}\n\nh3 {\n    color: #445566;\n    font-size: 14pt;\n    padding: 3mm 0mm;\n    font-weight: bold;\n}\n\nh4 {\n    color: #445566;\n    font-size: 10pt;\n    padding: 3mm 0mm;\n    font-weight: bold;\n}\n\np {\n    padding: 3mm 0mm;\n    color: #333;\n    font-size: 10pt;\n    font-weight: normal;\n}\n\nul, ol {\n    padding: 3mm 0mm;\n    padding-left: 10mm;\n}\n\nli {\n    padding: 2mm 0mm;\n}\n\ncode {\n    background-color: #f7f9fa;\n    padding: 1mm 2mm;\n    border-radius: 1mm;\n    font-family: monospace;\n}\n\npre {\n    background-color: #f7f9fa;\n    padding: 5mm;\n    border-radius: 2mm;\n    overflow-x: auto;\n    font-size: 10pt;\n}\n\nblockquote {\n    border-left: 1mm solid #ccc;\n    margin: 5mm 0;\n    padding-left: 5mm;\n    font-style: italic;\n    color: #666;\n}\n\ntable {\n    border-collapse: collapse;\n    width: 100%;\n    margin-bottom: 5mm;\n}\n\nth, td {\n    border: 0.5mm solid #ddd;\n    padding: 2mm 0mm;\n    text-align: left;\n    font-size: 10pt;\n}\n\nth {\n    background-color: #f5f5f5;\n}\n\nstrong, b {\n    font-weight: bold;\n}\n\nem, i {\n    font-style: italic;\n}\n\na {\n    color: #2980b9;\n    text-decoration: underline;\n    word-break: break-word;\n}\n\nimg {\n    max-width: 100%;\n    height: auto;\n    display: block;\n    margin: 5mm auto;\n}\n\n.product {\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    margin-bottom: 10mm;\n    border: 0.5mm solid #ccc;\n    padding: 5mm;\n    border-radius: 2mm;\n}\n\n.product img {\n    width: 50mm;\n    height: 50mm;\n    object-fit: cover;\n    border-radius: 2mm;\n}",
-          height: "297",
-          margin: { top: 10, right: 10, bottom: 10, left: 10 },
-          size: "A4",
-          title: "document",
-          url: scriptResult?.pdf,
-          width: "210"
-        }), // Convierte los datos a una cadena JSON
-        next: { revalidate: 0 }
-      };
-
-      // Realizar la solicitud HTTP
-      const response = await fetch(`https://mdhtmltopdf-fastapi.xanderls.dev/html/pdf`, options);
-
-      // Verificar si la respuesta es correcta
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      // Obtiene la respuesta en formato blob
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-
-      // retorna la URL del PDF
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `document.pdf`;
-      document.body.appendChild(link);
-      link.click();
-
-      // Limpia el objeto URL después de la descarga
-      window.URL.revokeObjectURL(url);
-      link.remove();
-      alertKit.close();
-    } catch (error) {
-      alertKit.error({
-        title: 'Error',
-        message: (error as Error).message,
-      });
+    // Abre una nueva ventana con el contenido a imprimir
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>Print</title>
+            <style>
+              @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+              body {
+                font-family: "Roboto", serif;
+                font-weight: normal;
+                background-color: white;
+                color: #000;
+                padding: 0mm;
+              }
+              table {
+                border-collapse: collapse;
+                width: 100%;
+                margin-bottom: 5mm;
+              }
+              th, td {
+                border: 0.5mm solid #ddd;
+                padding: 2mm;
+                text-align: left;
+                font-size: 10pt;
+              }
+              th {
+                background-color: #f5f5f5;
+              }
+            </style>
+          </head>
+          <body>
+            <div>${scriptResult.pdf}</div>
+            <script>
+              window.onload = function() {
+                window.print();
+                window.close();
+              };
+            </script>
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
     }
   };
 
@@ -342,8 +334,8 @@ const FormulariomikrotikUsernamePasswordHotspotGenerator = ({ session, subscript
           <button
             type="button"
             className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition disabled:bg-green-500 disabled:cursor-not-allowed"
-            onClick={handleDownload}
-            disabled={!scriptResult?.html || !session}
+            onClick={handlePrint}
+            disabled={!scriptResult?.pdf || !session}
           >
             Descarga
           </button>
