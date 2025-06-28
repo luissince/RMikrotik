@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.okta.mongodb.GeneradoScripts.model.mikrotikUsernamePasswordHotspotGenerator.MikrotikUsernamePasswordHotspotGeneratorBody;
+import com.okta.mongodb.GeneradoScripts.utils.GeneradorPasswordNumeros;
 import com.okta.mongodb.GeneradoScripts.utils.GeneratePassword;
 
 @Service
@@ -38,7 +39,7 @@ public class MikrotikUsernamePasswordHotspotGeneratorService {
 
         html.append("/ip hotspot user profile add name=\"" + body.getProfileHotspot() + "\" <br>");
         html.append("/ip hotspot user profile {set [find name=\"" + body.getProfileHotspot() + "\"] rate-limit=\""
-                + body.getRateLimit() + "\" insert-queue-before=\"bottom\" <br>");
+                + body.getRateLimit() + "\" insert-queue-before=\"bottom\"} <br>");
         html.append("/ip hotspot user <br>");
 
         switch (body.getTypePassword().toLowerCase()) {
@@ -109,6 +110,21 @@ public class MikrotikUsernamePasswordHotspotGeneratorService {
 
                 }
                 break;
+               case "07":
+            for (int i = 0; i < body.getQtyUserHotspot(); i++) {
+                 // Generar la contraseña y almacenarla en una variable
+                   String generatedPassword = GeneradorPasswordNumeros.run(5, null, false);
+                    // Condición de ejemplo: si el índice es par, muestra un texto diferente
+                    html.append("add name=\"" + body.getTypeUsername() + "" + (i + 1) + "\" password=\""
+                            + GeneradorPasswordNumeros.run(5, null, false) + "\" profile=\"" + body.getProfileHotspot()
+                            + "\" limit-uptime=\"" + body.getLimitUptime()
+                            + "\" limit-bytes-total=\""
+                            + body.getLimitQuota() + "\"<br>");
+
+                        
+
+                }
+               break;
 
         }
 
@@ -116,7 +132,7 @@ public class MikrotikUsernamePasswordHotspotGeneratorService {
         return html.toString();
     }
 
-    private String generratePdfScript(MikrotikUsernamePasswordHotspotGeneratorBody body) {
+    private String generratePdfScript(MikrotikUsernamePasswordHotspotGeneratorBody body ) {
         StringBuilder html = new StringBuilder();
 
         html.append("<div>");
@@ -131,7 +147,7 @@ public class MikrotikUsernamePasswordHotspotGeneratorService {
                         html.append("<tr>");
                     }
                     html.append("<td style='border: 1px solid black; padding: 10px; text-align: center;'>");
-                    html.append("<strong>").append(body.getTypeUsername()).append(i + 1).append("</strong><br>");
+                    html.append("<strong>").append(body.getProfileHotspot()).append("</strong><br>");
                     html.append("Username: ").append(body.getTypeUsername()).append(i + 1).append("<br>");
                     html.append("Password: ").append(body.getTypeUsername()).append(i + 1);
                     html.append("</td>");
@@ -220,6 +236,22 @@ public class MikrotikUsernamePasswordHotspotGeneratorService {
                     }
                 }
                 break;
+                    case "07":
+                for (int i = 0; i < body.getQtyUserHotspot(); i++) {
+                    if (i % 4 == 0) {
+                        html.append("<tr>");
+                    }
+                    String randomPassword = GeneradorPasswordNumeros.run(5, null, false);
+                    html.append("<td style='border: 1px solid black; padding: 10px; text-align: center;'>");
+                    html.append("<strong>").append(body.getProfileHotspot()).append("</strong><br>");
+                    html.append("Username: ").append(randomPassword).append(i + 1).append("<br>");
+                    html.append("Password: ").append(randomPassword);
+                    html.append("</td>");
+                    if (i % 4 == 3 || i == body.getQtyUserHotspot() - 1) {
+                        html.append("</tr>");
+                    }
+                }
+                break;
             // Agrega los demás casos de manera similar
         }
 
@@ -235,7 +267,7 @@ public class MikrotikUsernamePasswordHotspotGeneratorService {
 
         text.append("FICHAS HOTSPOT MIKROTIK \n");
         text.append("/ip hotspot user profile {set [find name=\"" + body.getProfileHotspot() + "\"] rate-limit=\""
-                + body.getRateLimit() + "\" insert-queue-before=\"bottom\" \n");
+                + body.getRateLimit() + "\" insert-queue-before=\"bottom\"} \n");
         text.append("/ip hotspot user \n");
 
         return text.toString();
