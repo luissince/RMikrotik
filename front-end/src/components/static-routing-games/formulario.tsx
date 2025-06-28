@@ -1,7 +1,13 @@
 
 import SocialTooltipButton from "../SocialTooltipButton";
 import React, { useEffect, useState } from 'react';
+import type { Session } from "@auth/core/types";
+import type { Subscription } from "../../types/subscription/subscription";
 
+interface Props {
+  session: Session | null;
+  subscription: Subscription | null;
+}
 interface Game {
     name: string;
     id: string;
@@ -26,7 +32,7 @@ interface ScriptResult {
     text: string;
 }
 
-const FormularioStaticRoutingGames: React.FC = () => {
+const FormularioStaticRoutingGames: React.FC = ({ session, subscription }: Props) => {
     const [categories, setCategories] = useState<Category[]>([]);
     const [filter, setFilter] = useState<string>('');
     const [formData, setFormData] = useState<FormData>({

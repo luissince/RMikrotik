@@ -1,11 +1,17 @@
 import React, { useState } from "react";
+import type { Session } from "@auth/core/types";
+import type { Subscription } from "../../types/subscription/subscription";
 
+interface Props {
+  session: Session | null;
+  subscription: Subscription | null;
+}
 type ScriptResult = {
   html: string;
   text: string;
 }
 
-const FormularioWifidwmsSeamless = () => {
+const FormularioWifidwmsSeamless = ({ session, subscription }: Props) => {
   const [formData, setFormData] = useState({
     wifiIdMode: "SEAMLESS WIFI_ID",
     targetInterface: "wlan1",

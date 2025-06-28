@@ -218,6 +218,7 @@ const FormulariomikrotikUsernamePasswordHotspotGenerator = ({ session, subscript
               <option value="04">Random 3 Character</option>
               <option value="05">Random 4 Character</option>
               <option value="06">Random 5 Character</option>
+              <option value="07">Random  Numeros</option>
             </select>
           </div>
         </div>

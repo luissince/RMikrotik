@@ -1,6 +1,13 @@
 import SocialTooltipButton from "../SocialTooltipButton";
 import { useState } from "react";
 import { keyIPAddress, keyNumberInteger } from "../../utils/keyEvent";
+import type { Session } from "@auth/core/types";
+import type { Subscription } from "../../types/subscription/subscription";
+
+interface Props {
+  session: Session | null;
+  subscription: Subscription | null;
+}
 
 interface ScriptResult {
     html: string;
@@ -14,7 +21,7 @@ interface FirewallRule {
     description: string;
 }
 
-const FormularioMikrotikPortStaticRouting = () => {
+const FormularioMikrotikPortStaticRouting = ({ session, subscription }: Props) => {
     // Estados para la configuración general
     const [idRoutingOption, setIdRoutingOption] = useState<string>("01");
     const [idRouterOsVersion, setIdRouterOsVersion] = useState<string>("ros6");

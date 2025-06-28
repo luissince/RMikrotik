@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
 import SocialTooltipButton from "../SocialTooltipButton";
+import type { Session } from "@auth/core/types";
+import type { Subscription } from "../../types/subscription/subscription";
+
+interface Props {
+  session: Session | null;
+  subscription: Subscription | null;
+}
 interface FormData {
     uploadMaxLimit: string;
     uploadBurstLimit: string;
@@ -27,7 +34,7 @@ interface ApiResponse {
     "reate-limit": string;
 }
 
-const FormularioMikrotikBurstLimitCalculator: React.FC = () => {
+const FormularioMikrotikBurstLimitCalculator: React.FC = ({ session, subscription }: Props) => {
     const [formData, setFormData] = useState<FormData>({
         uploadMaxLimit: '512K',
         uploadBurstLimit: '1M',

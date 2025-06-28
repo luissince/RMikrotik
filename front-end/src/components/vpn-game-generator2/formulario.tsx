@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
 import SocialTooltipButton from "../SocialTooltipButton";
+import type { Session } from "@auth/core/types";
+import type { Subscription } from "../../types/subscription/subscription";
+
+interface Props {
+  session: Session | null;
+  subscription: Subscription | null;
+}
+
 interface Game {
     id: string;
     name: string;
@@ -34,7 +42,7 @@ interface ScriptResult {
     text: string;
 }
 
-const FormularioVpnGameGenerator2 = () => {
+const FormularioVpnGameGenerator2 = ({ session, subscription }: Props) => {
     const [categories, setCategories] = useState<Category[]>([]);
     const [filter, setFilter] = useState<string>('');
     const [formData, setFormData] = useState<FormData>({

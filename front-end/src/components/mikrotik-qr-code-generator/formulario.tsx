@@ -1,6 +1,13 @@
 import { useState } from "react";
 import SocialTooltipButton from "../SocialTooltipButton";
-const FormularioMikrotikQrCodeGenerator = () => {
+import type { Session } from "@auth/core/types";
+import type { Subscription } from "../../types/subscription/subscription";
+
+interface Props {
+  session: Session | null;
+  subscription: Subscription | null;
+}
+const FormularioMikrotikQrCodeGenerator = ({ session, subscription }: Props) => {
   const [routerOption, setRouterOption] = useState("MikroTik Hotspot");
   const [ssid, setSsid] = useState("MYCAFE-WIFI");
   const [dnsName, setDnsName] = useState("mycafe.net");

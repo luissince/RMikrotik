@@ -2,6 +2,7 @@
 import FormularioBackupToEmail from "../components/mikrotik-backup-to-email/formulario";
 import MainLayout from "../layout/MainLayout.astro";
 import { getAuthData } from "../utils/auth";
+import { nameApp } from "../utils/constants";
 
 // Obtener los datos de la sesión y suscripción
 const { session, subscription, shouldSignOut } = await getAuthData(
@@ -14,7 +15,7 @@ if (shouldSignOut) {
 }
 ---
 
-<MainLayout title="RMicrotik">
+<MainLayout title={nameApp}>
   <div class="flex flex-col py-10 space-y-5">
     <div class="bg-gray-800 rounded-lg">
       <!-- Header -->

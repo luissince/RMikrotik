@@ -1,6 +1,12 @@
 import SocialTooltipButton from "../SocialTooltipButton";
 import React, { useState } from "react";
+import type { Session } from "@auth/core/types";
+import type { Subscription } from "../../types/subscription/subscription";
 
+interface Props {
+  session: Session | null;
+  subscription: Subscription | null;
+}
 
 type ScriptResult = {
     html: string;
@@ -15,7 +21,7 @@ interface FormData {
     vpnPassword: string;
 }
 
-const FormularioVpnRemoteGenerator = () => {
+const FormularioVpnRemoteGenerator = ({ session, subscription }: Props) => {
     const [formData, setFormData] = useState<FormData>({
         idVpnConnection: 'sstpl',
         vpnNameOnInterface: 'VPN-REMOTE',

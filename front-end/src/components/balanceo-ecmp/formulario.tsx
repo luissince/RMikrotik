@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-
+import type { Session } from "@auth/core/types";
+import type { Subscription } from "../../types/subscription/subscription";
+interface Props {
+  session: Session | null;
+  subscription: Subscription | null;
+}
 type LineInterfacesType = {
     id: number;
     wan: string;
@@ -8,7 +13,7 @@ type LineInterfacesType = {
     gatewayInput: string;
 }
 
-const Formulario = () => {
+const Formulario = ({ session, subscription }: Props) => {
     const [linea, setLinea] = useState<number>(0);
     const [router, setRouter] = useState<string>('');
     const [local, setLocal] = useState<string>('');

@@ -1,5 +1,12 @@
 import React, { useState } from "react";
 import SocialTooltipButton from "../SocialTooltipButton";
+import type { Session } from "@auth/core/types";
+import type { Subscription } from "../../types/subscription/subscription";
+
+interface Props {
+  session: Session | null;
+  subscription: Subscription | null;
+}
 type ScriptResult = {
   html: string;
   text: string;
@@ -15,7 +22,7 @@ interface FormData {
   backgroundImage: string;
 }
 
-const FormularioMikrotikExpirediSolatePppoeHotspot = () => {
+const FormularioMikrotikExpirediSolatePppoeHotspot = ({ session, subscription }: Props) => {
   const [formData, setFormData] = useState<FormData>({
     routerOSVersion: "RouterOS v6.xx",
     wanIPAddress: "192.168.1.1",

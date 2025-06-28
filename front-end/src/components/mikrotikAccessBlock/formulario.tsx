@@ -1,5 +1,12 @@
 import React, { useState } from "react";
 import SocialTooltipButton from "../SocialTooltipButton";
+import type { Session } from "@auth/core/types";
+import type { Subscription } from "../../types/subscription/subscription";
+
+interface Props {
+  session: Session | null;
+  subscription: Subscription | null;
+}
 type ScriptResult = {
     html1: string;
     html2: string;
@@ -11,7 +18,7 @@ interface FormData {
     blockOption: string;
 }
 
-const FormulariomikrotikAccessBlock = () => {
+const FormulariomikrotikAccessBlock = ({ session, subscription }: Props) => {
     const [formData, setFormData] = useState<FormData>({
         blockOption: "",
 

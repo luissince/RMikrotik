@@ -1,5 +1,12 @@
 import React, { useState } from "react";
 import SocialTooltipButton from "../SocialTooltipButton";
+import type { Session } from "@auth/core/types";
+import type { Subscription } from "../../types/subscription/subscription";
+
+interface Props {
+  session: Session | null;
+  subscription: Subscription | null;
+}
 type ScriptResult = {
     html: string;
     text: string;
@@ -17,7 +24,7 @@ interface FormData {
     autoSetForBandwidthShared: boolean;
 }
 
-const FormularioMikrotikShareUserMultiLogin = () => {
+const FormularioMikrotikShareUserMultiLogin = ({ session, subscription }: Props) => {
     const [formData, setFormData] = useState<FormData>({
         parentNameQueue: "Jack Home",
         maxLimit: "2M/5M",

@@ -1,6 +1,13 @@
 import React, { useState } from "react";
+import type { Session } from "@auth/core/types";
+import type { Subscription } from "../../types/subscription/subscription";
 
-const FormularioMikrotik = () => {
+interface Props {
+  session: Session | null;
+  subscription: Subscription | null;
+}
+
+const FormularioMikrotik = ({ session, subscription }: Props) => {
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {

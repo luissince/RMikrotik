@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import SelectCustom from "../SelectCustom";
 import InputCustom from "../ImputCustom";
+import type { Session } from "@auth/core/types";
+import type { Subscription } from "../../types/subscription/subscription";
+
+interface Props {
+  session: Session | null;
+  subscription: Subscription | null;
+}
 
 type LineInterfacesType = {
     wan: string;
@@ -15,7 +22,7 @@ type LineInterfacesType = {
 const routingPlaceholder = ["To-ISP-Linea1", "To-ISP-Linea2", "To-ISP-Linea3", "To-ISP-Linea4", "To-ISP-Linea5"];
 
 
-const Formulario = () => {
+const Formulario = ({ session, subscription }: Props) => {
 
     const [lineInterfaces, setLineInterfaces] = useState<LineInterfacesType[]>([]);
 
