@@ -19,43 +19,59 @@ if (shouldSignOut) {
     <div class="bg-gray-800 rounded-lg">
       <!-- Header -->
       <div class="text-center mb-6">
-<h1 class="text-2xl lg:text-4xl   font-extrabold text-transparent bg-clip-text animated-gradient bg-gradient-to-r from-amber-400 via-orange-700 to-red-600">
-           BLOQUEO DE YOUTUBE, TIKTOK, FACEBOOK, WHATSAPP Y MÁS EN MIKROTIK
+        <h1
+          class="text-2xl lg:text-4xl font-extrabold text-transparent bg-clip-text animated-gradient bg-gradient-to-r from-amber-400 via-orange-700 to-red-600"
+        >
+          BLOQUEO DE YOUTUBE, TIKTOK, FACEBOOK, WHATSAPP Y MÁS EN MIKROTIK
         </h1>
 
-  <p class="text-gray-300">
-      Aprende a bloquear el acceso a plataformas como YouTube, TikTok, Facebook, WhatsApp y otras redes sociales desde tu router MikroTik. Implementa filtros avanzados por DNS, Layer 7 <br> o direcciones IP para controlar el tráfico en tu red ISP/WISP. Ideal para mejorar el rendimiento, aplicar políticas de uso o reforzar la seguridad en entornos corporativos o educativos.
+        <p class="text-gray-300">
+          Aprende a bloquear el acceso a plataformas como YouTube, TikTok,
+          Facebook, WhatsApp y otras redes sociales desde tu router MikroTik.
+          Implementa filtros avanzados por DNS, Layer 7 <br /> o direcciones IP para
+          controlar el tráfico en tu red ISP/WISP. Ideal para mejorar el rendimiento,
+          aplicar políticas de uso o reforzar la seguridad en entornos corporativos
+          o educativos.
         </p>
- <style>
-     /* Animación personalizada para mover el degradado */
-    @keyframes gradientMove {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
+        <style>
+          /* Animación personalizada para mover el degradado */
+          @keyframes gradientMove {
+            0% {
+              background-position: 0% 50%;
+            }
+            50% {
+              background-position: 100% 50%;
+            }
+            100% {
+              background-position: 0% 50%;
+            }
+          }
 
-    .animated-gradient {
-      background-size: 200% 200%;
-      animation: gradientMove 5s ease infinite;
-    }
-  </style>
-
+          .animated-gradient {
+            background-size: 200% 200%;
+            animation: gradientMove 5s ease infinite;
+          }
+        </style>
       </div>
     </div>
-   <!-- Diagrama -->
-          <div class="flex justify-center mb-8">
-            <img
-              src="/images/mikrotik-access-block.png"
-              alt="Routing Diagram"
-              class="rounded-lg"
-            />
-          </div>
+    <!-- Diagrama -->
+    <div class="flex justify-center mb-8">
+      <img
+        src="/images/mikrotik-access-block.png"
+        alt="Routing Diagram"
+        class="rounded-lg"
+      />
+    </div>
     <!-- Contenido inicio -->
     <div class="bg-gray-800 rounded-lg mx-4">
       <!-- Contenido Principal -->
       <div class="container mx-auto">
         <!-- Formulario Principal -->
-        <FormulariomikrotikAccessBlock client:load />
+        <FormulariomikrotikAccessBlock
+          client:load
+          session={session}
+          subscription={subscription}
+        />
       </div>
     </div>
   </div>

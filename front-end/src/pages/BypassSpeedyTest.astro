@@ -5,14 +5,15 @@ import { getAuthData } from "../utils/auth";
 import { nameApp } from "../utils/constants";
 // Obtener los datos de la sesión y suscripción
 const { session, subscription, shouldSignOut } = await getAuthData(
-  Astro.request,
+    Astro.request,
 );
 
 // Si necesita cerrar sesión, redirigir a logout
 if (shouldSignOut) {
-  return Astro.redirect("/logout?reason=expired");
+    return Astro.redirect("/logout?reason=expired");
 }
 ---
+
 <MainLayout title={nameApp}>
     <body
         class="bg-gray-900 text-white font-sans min-h-screen flex items-center justify-center"
@@ -34,9 +35,7 @@ if (shouldSignOut) {
             <div class="container mx-auto p-6 bg-gray-800 rounded-lg shadow-lg">
                 <!-- Título -->
 
-                <div
-                    class="container mx-auto p-6 bg-gray-800"
-                >
+                <div class="container mx-auto p-6 bg-gray-800">
                     <!-- Título -->
                     <div class="text-center mb-6"></div>
 
@@ -51,11 +50,13 @@ if (shouldSignOut) {
 
                     <!-- Gestión de Dominios -->
 
-                    <FormulariobypassSpeedyTest client:load />
+                    <FormulariobypassSpeedyTest
+                        client:load
+                        session={session}
+                        subscription={subscription}
+                    />
 
                     <!-- Gestión de Dominios -->
-
-           
 
                     <!-- Contenido Fin -->
                 </div>

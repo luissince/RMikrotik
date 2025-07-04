@@ -14,7 +14,6 @@ if (shouldSignOut) {
 }
 ---
 
-
 <MainLayout title={nameApp}>
   <body
     class="bg-gray-900 text-white font-sans min-h-screen flex items-center justify-center"
@@ -22,30 +21,43 @@ if (shouldSignOut) {
     <div class="bg-gray-800 rounded-lg shadow-lg p-6 mx-4 my-8">
       <!-- Contenido -->
       <!-- Header -->
- 
-<h1 class="text-2xl lg:text-4xl   font-extrabold text-transparent bg-clip-text animated-gradient bg-gradient-to-r from-amber-400 via-orange-700 to-red-600">
-               MikroTik PBR / Generador de scripts PBR de balanceo de carga para
+
+      <h1
+        class="text-2xl lg:text-4xl font-extrabold text-transparent bg-clip-text animated-gradient bg-gradient-to-r from-amber-400 via-orange-700 to-red-600"
+      >
+        MikroTik PBR / Generador de scripts PBR de balanceo de carga para
         RouterOS
-        </h1>
+      </h1>
 
-  <p class="text-gray-300">
-         Automatiza  con este generador de scripts ECMP para RouterOS. Rápido, eficiente y listo para usar.
-        </p>
- <style>
-     /* Animación personalizada para mover el degradado */
-    @keyframes gradientMove {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
+      <p class="text-gray-300">
+        Automatiza con este generador de scripts ECMP para RouterOS. Rápido,
+        eficiente y listo para usar.
+      </p>
+      <style>
+        /* Animación personalizada para mover el degradado */
+        @keyframes gradientMove {
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
+        }
 
-    .animated-gradient {
-      background-size: 200% 200%;
-      animation: gradientMove 5s ease infinite;
-    }
-  </style>
+        .animated-gradient {
+          background-size: 200% 200%;
+          animation: gradientMove 5s ease infinite;
+        }
+      </style>
 
-      <FormularioBalanceoPbr client:load />
+      <FormularioBalanceoPbr
+        client:load
+        session={session}
+        subscription={subscription}
+      />
 
       <p class="text-2sm text-orange-500 mx-6">
         MikroTik LB PBR / Load Balancing PBR Script Generator for RouterOS PBR

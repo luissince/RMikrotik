@@ -5,8 +5,8 @@ import type { Session } from "@auth/core/types";
 import type { Subscription } from "../../types/subscription/subscription";
 
 interface Props {
-  session: Session | null;
-  subscription: Subscription | null;
+    session: Session | null;
+    subscription: Subscription | null;
 }
 interface Game {
     name: string;
@@ -32,7 +32,7 @@ interface ScriptResult {
     text: string;
 }
 
-const FormularioStaticRoutingGames: React.FC = ({ session, subscription }: Props) => {
+const FormularioStaticRoutingGames = ({ session, subscription }: Props) => {
     const [categories, setCategories] = useState<Category[]>([]);
     const [filter, setFilter] = useState<string>('');
     const [formData, setFormData] = useState<FormData>({
@@ -181,8 +181,8 @@ const FormularioStaticRoutingGames: React.FC = ({ session, subscription }: Props
                             </div>
                         ))}
                     </div>
-                         {/* Tienes dudas */}
-  <SocialTooltipButton />
+                    {/* Tienes dudas */}
+                    <SocialTooltipButton />
 
                 </div>
             </div>

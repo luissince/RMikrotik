@@ -17,38 +17,52 @@ if (shouldSignOut) {
 <MainLayout title={nameApp}>
   <div class="flex flex-col py-10 space-y-5">
     <div class="bg-gray-800 rounded-lg">
-        <!-- Header -->
-        <div class="text-center mb-6">
-
-          <h1 class="text-2xl lg:text-4xl   font-extrabold text-transparent bg-clip-text animated-gradient bg-gradient-to-r from-amber-400 via-orange-700 to-red-600">
-    ACCESO REMOTO A MIKROTIK CON IP PÚBLICA ESTÁTICA (ISP)
+      <!-- Header -->
+      <div class="text-center mb-6">
+        <h1
+          class="text-2xl lg:text-4xl font-extrabold text-transparent bg-clip-text animated-gradient bg-gradient-to-r from-amber-400 via-orange-700 to-red-600"
+        >
+          ACCESO REMOTO A MIKROTIK CON IP PÚBLICA ESTÁTICA (ISP)
         </h1>
 
-  <p class="text-gray-300">
-        Habilita el acceso remoto seguro a tu router MikroTik desde cualquier lugar del mundo usando una IP pública estática asignada por tu proveedor de Internet (ISP).<br> Ideal para monitoreo, soporte técnico, configuraciones o gestión a distancia.
+        <p class="text-gray-300">
+          Habilita el acceso remoto seguro a tu router MikroTik desde cualquier
+          lugar del mundo usando una IP pública estática asignada por tu
+          proveedor de Internet (ISP).<br /> Ideal para monitoreo, soporte técnico,
+          configuraciones o gestión a distancia.
         </p>
- <style>
-     /* Animación personalizada para mover el degradado */
-    @keyframes gradientMove {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
+        <style>
+          /* Animación personalizada para mover el degradado */
+          @keyframes gradientMove {
+            0% {
+              background-position: 0% 50%;
+            }
+            50% {
+              background-position: 100% 50%;
+            }
+            100% {
+              background-position: 0% 50%;
+            }
+          }
 
-    .animated-gradient {
-      background-size: 200% 200%;
-      animation: gradientMove 5s ease infinite;
-    }
-  </style>
-        </div>
+          .animated-gradient {
+            background-size: 200% 200%;
+            animation: gradientMove 5s ease infinite;
+          }
+        </style>
+      </div>
     </div>
 
     <div class="bg-gray-800 rounded-lg mx-4">
-        <!-- Contenido Principal -->
-        <div class="container mx-auto">
-            <!-- Formulario Principal -->
-            <Formularioremoteippublicstatic client:load />
-        </div>
+      <!-- Contenido Principal -->
+      <div class="container mx-auto">
+        <!-- Formulario Principal -->
+        <Formularioremoteippublicstatic
+          client:load
+          session={session}
+          subscription={subscription}
+        />
+      </div>
     </div>
-</div>
+  </div>
 </MainLayout>
