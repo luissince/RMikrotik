@@ -5,36 +5,16 @@ import { getSession } from "auth-astro/server";
 import type { Plan } from "../types/plan/plan";
 import type { Subscription } from "../types/subscription/subscription";
 import type { User } from "../types/user/user";
+import { getAuthData } from "../utils/auth";
 
-// Obtener la sesión del usuario
-const session = await getSession(Astro.request);
+// Obtener los datos de la sesión y suscripción
+const { session, subscription, user, shouldSignOut } = await getAuthData(
+  Astro.request,
+);
 
 // Verificar si la sesión está iniciada
 if (!session) {
   return Astro.redirect("/sign-in");
-}
-
-// ===========================================================================
-// Obtener si el usuario tiene una suscripción activa
-// ===========================================================================
-const resposePayment = await fetch(
-  `${import.meta.env.PUBLIC_BASE_URL_API}/payment`,
-  {
-    headers: {
-      "Content-Type": "application/json",
-      "accept": "application/json",
-      "Authorization": `${session?.user?.type} ${session.user?.token}`,
-    },
-  },
-);
-
-let subscription = null;
-let user = null;
-
-if (resposePayment.ok) {
-  const data = await resposePayment.json();
-  subscription = data.subscription;
-  user = data.user;
 }
 
 // ===========================================================================
@@ -57,7 +37,6 @@ if (responseSubscriptions.ok) {
   const data = await responseSubscriptions.json();
   subscriptions = data;
 }
-
 // ===========================================================================
 // Obtener los planes disponibles
 // ===========================================================================
@@ -99,12 +78,18 @@ if (responseUsers.ok) {
   const data = await responseUsers.json();
   users = data;
 }
+
+// Si necesita cerrar sesión, redirigir a logout
+if (shouldSignOut) {
+  return Astro.redirect("/logout?reason=expired");
+}
 // ===========================================================================
 ---
 
 <MainLayout title="RMicrotik">
   <AdminSubscriptions
     client:load
+    session={session}
     subscription={subscription}
     user={user}
     subscriptions={subscriptions}

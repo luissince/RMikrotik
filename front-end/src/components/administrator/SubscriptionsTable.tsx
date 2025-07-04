@@ -1,5 +1,5 @@
 import React from 'react';
-import { Eye, Check, Ban, RefreshCw } from 'lucide-react';
+import { Eye, Check, Ban, RefreshCw, UserCheck } from 'lucide-react';
 import type { Subscription } from '../../types/subscription/subscription';
 
 interface SubscriptionsTableProps {
@@ -38,46 +38,47 @@ const SubscriptionsTable: React.FC<SubscriptionsTableProps> = ({
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {filteredSubscriptions.map((subscription) => (
-                <tr key={subscription.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4">
-                    <div className='flex items-center space-x-4'>
-                      <img src={subscription.user.image} alt={subscription.user.name} className="w-10 h-10 rounded-full" />
-                      <div>
-                        <div className="text-sm font-medium text-gray-900">
-                          {subscription.user.name}
+              {filteredSubscriptions.map((subscription) => {
+                return (
+                  <tr key={subscription.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4">
+                      <div className='flex items-center space-x-4'>
+                        <img src={subscription.user.image} alt={subscription.user.name} className="w-10 h-10 rounded-full" />
+                        <div>
+                          <div className="text-sm font-medium text-gray-900">
+                            {subscription.user.name}
+                          </div>
+                          <div className="text-sm text-gray-500">{subscription.user.email}</div>
+                          <div className="text-xs text-gray-400">ID: {subscription.id}</div>
                         </div>
-                        <div className="text-sm text-gray-500">{subscription.user.email}</div>
-                        <div className="text-xs text-gray-400">ID: {subscription.id}</div>
                       </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="text-sm text-gray-900">{subscription.plan.name}</div>
-                    <div className="text-xs text-gray-500">{subscription.method}</div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(subscription.status)}`}>
-                      {getStatusText(subscription.status)}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">
-                    <div>Inicio: {subscription.startDate}</div>
-                    <div>Fin: {subscription.endDate}</div>
-                  </td>
-                  <td className="px-6 py-4 text-sm font-medium text-gray-900">
-                    ${subscription.price}
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex space-x-2">
-                      <button
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="text-sm text-gray-900">{subscription.plan.name}</div>
+                      <div className="text-xs text-gray-500">{subscription.method}</div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(subscription.status)}`}>
+                        {getStatusText(subscription.status)}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-900">
+                      <div>Inicio: {subscription.startDate}</div>
+                      <div>Fin: {subscription.endDate}</div>
+                    </td>
+                    <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                      ${subscription.price}
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex space-x-2 justify-center">
+                        {/* <button
                         onClick={() => openModalSubscription(subscription, 'view')}
                         className="text-blue-600 hover:text-blue-900 p-1"
                         title="Ver detalles"
                       >
                         <Eye className="w-4 h-4" />
-                      </button>
-                      {subscription.status !== 'active' && (
+                      </button> */}
+                        {/* {subscription.status !== 'active' && (
                         <button
                           onClick={() => openModalSubscription(subscription, 'activate')}
                           className="text-green-600 hover:text-green-900 p-1"
@@ -85,8 +86,8 @@ const SubscriptionsTable: React.FC<SubscriptionsTableProps> = ({
                         >
                           <Check className="w-4 h-4" />
                         </button>
-                      )}
-                      {subscription.status === 'active' && (
+                      )} */}
+                        {/* {subscription.status === 'active' && (
                         <button
                           onClick={() => openModalSubscription(subscription, 'cancel')}
                           className="text-red-600 hover:text-red-900 p-1"
@@ -94,18 +95,30 @@ const SubscriptionsTable: React.FC<SubscriptionsTableProps> = ({
                         >
                           <Ban className="w-4 h-4" />
                         </button>
-                      )}
-                      <button
+                      )} */}
+                        {/* <button
                         onClick={() => openModalSubscription(subscription, 'renew')}
                         className="text-purple-600 hover:text-purple-900 p-1"
                         title="Renovar"
                       >
                         <RefreshCw className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                      </button> */}
+                      {
+                        subscription.status === "pending" && (
+                          <button
+                            onClick={() => openModalSubscription(subscription, 'activate')}
+                            className="text-red-600 hover:text-red-900 p-1"
+                            title="Cancelar"
+                          >
+                            <UserCheck className="w-4 h-4" />
+                          </button>
+                        )
+                      }
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         )}
