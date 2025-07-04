@@ -21,6 +21,8 @@ interface FormErrors {
     password?: string;
 }
 
+const development = import.meta.env.ENV || import.meta.env.PUBLIC_ENV;
+
 export default function LoginForm() {
     const [formData, setFormData] = useState<LoginFormData>({
         email: '',
@@ -126,52 +128,58 @@ export default function LoginForm() {
 
             <div className="border-t-[1px] border-solid border-[#cccccc]"></div>
 
-            {/* Email Input */}
-            <div className="flex flex-col gap-y-1">
-                <label className="text-sm font-medium">Correo electrónico</label>
-                <input
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => handleInputChange('email', e.target.value)}
-                    placeholder="Tu correo"
-                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-400 ${errors.email ? 'border-red-500' : 'border-gray-300'
-                        }`}
-                />
-                {errors.email && (
-                    <span className="text-red-500 text-sm">{errors.email}</span>
-                )}
-            </div>
+            {
+                development === 'development' && (
+                    <>
+                        {/* Email Input */}
+                        <div className="flex flex-col gap-y-1">
+                            <label className="text-sm font-medium">Correo electrónico</label>
+                            <input
+                                type="email"
+                                value={formData.email}
+                                onChange={(e) => handleInputChange('email', e.target.value)}
+                                placeholder="Tu correo"
+                                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-400 ${errors.email ? 'border-red-500' : 'border-gray-300'
+                                    }`}
+                            />
+                            {errors.email && (
+                                <span className="text-red-500 text-sm">{errors.email}</span>
+                            )}
+                        </div>
 
-            {/* Password Input */}
-            <div className="flex flex-col gap-y-1">
-                <label className="text-sm font-medium">Contraseña</label>
-                <input
-                    type="password"
-                    value={formData.password}
-                    onChange={(e) => handleInputChange('password', e.target.value)}
-                    placeholder="Tu contraseña"
-                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-400 ${errors.password ? 'border-red-500' : 'border-gray-300'
-                        }`}
-                />
-                {errors.password && (
-                    <span className="text-red-500 text-sm">{errors.password}</span>
-                )}
-            </div>
+                        {/* Password Input */}
+                        <div className="flex flex-col gap-y-1">
+                            <label className="text-sm font-medium">Contraseña</label>
+                            <input
+                                type="password"
+                                value={formData.password}
+                                onChange={(e) => handleInputChange('password', e.target.value)}
+                                placeholder="Tu contraseña"
+                                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-400 ${errors.password ? 'border-red-500' : 'border-gray-300'
+                                    }`}
+                            />
+                            {errors.password && (
+                                <span className="text-red-500 text-sm">{errors.password}</span>
+                            )}
+                        </div>
 
-            {/* Submit Button */}
-            <button
-                type="submit"
-                disabled={isLoading}
-                className="flex items-center justify-center gap-x-2 w-full py-3 px-4 bg-sky-400 text-white rounded-lg hover:bg-sky-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-                {isLoading && (
-                    <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                    </svg>
-                )}
-                <span>{isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión'}</span>
-            </button>
+                        {/* Submit Button */}
+                        <button
+                            type="submit"
+                            disabled={isLoading}
+                            className="flex items-center justify-center gap-x-2 w-full py-3 px-4 bg-sky-400 text-white rounded-lg hover:bg-sky-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        >
+                            {isLoading && (
+                                <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                                </svg>
+                            )}
+                            <span>{isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión'}</span>
+                        </button>
+                    </>
+                )
+            }
 
             {/* <div className="text-center">
                 <span className="text-[#707070] text-sm">¿Eres nuevo? </span>

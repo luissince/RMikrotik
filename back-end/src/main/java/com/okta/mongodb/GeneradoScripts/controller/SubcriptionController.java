@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.okta.mongodb.GeneradoScripts.model.subscription.ActiveBody;
 import com.okta.mongodb.GeneradoScripts.model.subscription.PaymentBody;
 import com.okta.mongodb.GeneradoScripts.service.SubcriptionService;
 
@@ -29,6 +30,11 @@ public class SubcriptionController {
         return subcriptionService.create(body);
     }
 
+    @GetMapping("/{token}")
+    public ResponseEntity<?> captureOrden(@PathVariable String token) {
+        return subcriptionService.captureOrden(token);
+    }
+
     @GetMapping
     public ResponseEntity<?> getSubscription(HttpServletRequest request) {
         String providerId = (String) request.getAttribute("providerId");
@@ -40,8 +46,11 @@ public class SubcriptionController {
         return subcriptionService.getAllSubscriptions();
     }
 
-    @GetMapping("/{token}")
-    public ResponseEntity<?> captureOrden(@PathVariable String token) {
-        return subcriptionService.captureOrden(token);
+    @PostMapping("/active")
+    public ResponseEntity<?> active(@RequestBody ActiveBody body, HttpServletRequest request) {
+        String providerId = (String) request.getAttribute("providerId");
+        body.setProviderId(providerId);
+        return subcriptionService.active(body);
     }
+
 }
