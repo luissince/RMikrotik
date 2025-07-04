@@ -13,35 +13,45 @@ if (shouldSignOut) {
   return Astro.redirect("/logout?reason=expired");
 }
 ---
-   
+
 <MainLayout title={nameApp}>
   <div class="flex flex-col py-10 space-y-5">
     <div class="bg-gray-800 rounded-lg">
       <!-- Header -->
       <div class="text-center mb-6">
-<h1 class="text-2xl lg:text-4xl   font-extrabold text-transparent bg-clip-text animated-gradient bg-gradient-to-r from-amber-400 via-orange-700 to-red-600">
+        <h1
+          class="text-2xl lg:text-4xl font-extrabold text-transparent bg-clip-text animated-gradient bg-gradient-to-r from-amber-400 via-orange-700 to-red-600"
+        >
           CREADOR DE PLANTILLAS QR PARA HOTSPOT WI-FI GRATIS EN MIKROTIK
         </h1>
 
-  <p class="text-gray-300">
-        Genera automáticamente una plantilla con código QR para que tus clientes accedan fácilmente a tu Hotspot Wi-Fi gratuito en MikroTik. Ideal para negocios, cafés, plazas, hoteles o eventos<br> que  desean brindar Internet sin complicaciones.
+        <p class="text-gray-300">
+          Genera automáticamente una plantilla con código QR para que tus
+          clientes accedan fácilmente a tu Hotspot Wi-Fi gratuito en MikroTik.
+          Ideal para negocios, cafés, plazas, hoteles o eventos<br /> que desean
+          brindar Internet sin complicaciones.
         </p>
- <style>
-     /* Animación personalizada para mover el degradado */
-    @keyframes gradientMove {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
+        <style>
+          /* Animación personalizada para mover el degradado */
+          @keyframes gradientMove {
+            0% {
+              background-position: 0% 50%;
+            }
+            50% {
+              background-position: 100% 50%;
+            }
+            100% {
+              background-position: 0% 50%;
+            }
+          }
 
-    .animated-gradient {
-      background-size: 200% 200%;
-      animation: gradientMove 5s ease infinite;
-    }
-  </style>
+          .animated-gradient {
+            background-size: 200% 200%;
+            animation: gradientMove 5s ease infinite;
+          }
+        </style>
       </div>
       <!-- Diagrama -->
-   
     </div>
 
     <!-- Contenido inicio -->
@@ -49,194 +59,159 @@ if (shouldSignOut) {
       <!-- Contenido Principal -->
       <div class="container mx-auto">
         <!-- Formulario Principal -->
-        <FormularioMikrotikQrCodeGenerator client:load />
+        <FormularioMikrotikQrCodeGenerator
+          client:load
+          session={session}
+          subscription={subscription}
+        />
       </div>
     </div>
   </div>
 </MainLayout>
 
+<!-- Contenedor Principal -->
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <!-- Contenedor Principal -->
-
-        <div class="container mx-auto my-10 px-4 ">
-
-          
-          <div class="flex flex-col lg:flex-row bg-white rounded-lg shadow-lg overflow-hidden">
-          
-            <!-- Panel de Configuración -->
-            <div class="w-full lg:w-1/3 bg-gray-800 p-6">
-              <!-- Contenedor borde azul -->
-<div class="text-gray-950 shadow-2xl rounded-lg p-6 w-full ring-2 ring-blue-500">
-              <h2 class="text-lg font-bold mb-4 text-gray-200">Wireless Router Options</h2>
-              <!-- Selector de Opciones -->
-              <div>
-                <label
-                  for="routeros"
-                  class="block font-semibold text-gray-300 mb-2"
-                  >Wireless Router Options</label
-                >
-                <select
-                  id="routeros"
-                  class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-                >
-                  <option value="v6.xx">Mikrotik Hotspot</option>
-                  <option value="v7.xx">Mikrotik Router Only</option>
-                </select>
-              </div>
-              
-              <!-- Gateway del ISP -->
-              <div>
-                <label
-                  for="gateway"
-                  class="block font-semibold text-gray-300 mb-2 mt-4"
-                  >SSID / Network id
-                </label>
-                <input
-                  id="gateway"
-                  type="text"
-                  placeholder="Nombre del Wifi"
-                  class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-                />
-              </div>
-
-              <!-- Gateway del ISP -->
-              <div>
-                <label
-                  for="gateway"
-                  class="block font-semibold text-gray-300 mb-2 mt-4"
-                  >Hotspot DNS Name</label
-                >
-                <input
-                  id="gateway"
-                  type="text"
-                  placeholder="gees.com"
-                  class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-                />
-              </div>
-              <!-- Gateway del ISP -->
-              <div>
-                <label
-                  for="gateway"
-                  class="block font-semibold text-gray-300 mb-2 mt-4"
-                  >Username</label
-                >
-                <input
-                  id="gateway"
-                  type="text"
-                  placeholder="Mi Cafe"
-                  class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-                />
-              </div>
-              <!-- Gateway del ISP -->
-              <div>
-                <label
-                  for="gateway"
-                  class="block font-semibold text-gray-300 mb-2 mt-4"
-                  >Password / Wi-Fi Key</label
-                >
-                <input
-                  id="gateway"
-                  type="text"
-                  placeholder="12345678"
-                  class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-                />
-              </div>
-              <div class="flex flex-wrap justify-center gap-4 mb-6 mt-7">
-                <button
-                  class="text-white w-96 py-2 rounded-md transition ease-in-out delay-150 bg-green-500 hover:-translate-y-1 hover:scale-110 hover:bg-teal-600 duration-300"
-                >
-                  Generar QR Codigo
-                </button>
-              </div>
-              <div>
-                <label
-                  for="routeros"
-                  class="block font-semibold text-gray-300 mb-2"
-                  >Tamaño de Papel</label
-                >
-                <select
-                  id="routeros"
-                  class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-                >
-                  <option value="v6.xx">Carta</option>
-                  <option value="v7.xx">A4</option>
-                  <option value="v7.xx">A3</option>
-                </select>
-              </div>
-              <div class="flex flex-wrap justify-center gap-4 mb-6 mt-7">
-                <button
-                  class="text-white w-96 py-2 rounded-md transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-teal-600 duration-300"
-                >
-                  Imprimir
-                </button>
-              </div>
-    </div>
-              <!-- Campos de Entrada -->
-         
-            </div>
-    
-            <!-- Vista Previa del QR -->
-            <div class="w-full lg:w-2/3  flex items-center justify-center">
-              <div
-                class="w-full h-full bg-gradient-to-r from-indigo-800 via-purple-500 to-red-700 text-white rounded-r-lg  relative"
-              >
-                <div class="absolute top-4 right-4 bg-white rounded-full p-2 shadow-md">
-                  <span class="text-orange-600 font-bold text-sm">SCAN ME</span>
-                </div>
-    
-                <div class="text-center">
-                  <!-- Título del SSID -->
-                  <h1 class="text-3xl font-bold mb-4 text-orange-400">
-                    MYCAFE-WIFI
-                  </h1>
-                  <p class="text-lg mb-6">FREE Wi-Fi</p>
-    
-                  <!-- Icono de Redes -->
-                  <div
-                    class="w-24 h-24 mx-auto flex items-center justify-center bg-gray-200 rounded-full text-black"
-                  >
-                    📶
-                  </div>
-                  <p class="mt-4 text-sm">WIFI QR CODE GENERATED</p>
-                </div>
-              </div>
-            </div>
-          </div>
+<div class="container mx-auto my-10 px-4">
+  <div
+    class="flex flex-col lg:flex-row bg-white rounded-lg shadow-lg overflow-hidden"
+  >
+    <!-- Panel de Configuración -->
+    <div class="w-full lg:w-1/3 bg-gray-800 p-6">
+      <!-- Contenedor borde azul -->
+      <div
+        class="text-gray-950 shadow-2xl rounded-lg p-6 w-full ring-2 ring-blue-500"
+      >
+        <h2 class="text-lg font-bold mb-4 text-gray-200">
+          Wireless Router Options
+        </h2>
+        <!-- Selector de Opciones -->
+        <div>
+          <label for="routeros" class="block font-semibold text-gray-300 mb-2"
+            >Wireless Router Options</label
+          >
+          <select
+            id="routeros"
+            class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+          >
+            <option value="v6.xx">Mikrotik Hotspot</option>
+            <option value="v7.xx">Mikrotik Router Only</option>
+          </select>
         </div>
 
-    
+        <!-- Gateway del ISP -->
+        <div>
+          <label
+            for="gateway"
+            class="block font-semibold text-gray-300 mb-2 mt-4"
+            >SSID / Network id
+          </label>
+          <input
+            id="gateway"
+            type="text"
+            placeholder="Nombre del Wifi"
+            class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+          />
+        </div>
 
+        <!-- Gateway del ISP -->
+        <div>
+          <label
+            for="gateway"
+            class="block font-semibold text-gray-300 mb-2 mt-4"
+            >Hotspot DNS Name</label
+          >
+          <input
+            id="gateway"
+            type="text"
+            placeholder="gees.com"
+            class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+          />
+        </div>
+        <!-- Gateway del ISP -->
+        <div>
+          <label
+            for="gateway"
+            class="block font-semibold text-gray-300 mb-2 mt-4">Username</label
+          >
+          <input
+            id="gateway"
+            type="text"
+            placeholder="Mi Cafe"
+            class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+          />
+        </div>
+        <!-- Gateway del ISP -->
+        <div>
+          <label
+            for="gateway"
+            class="block font-semibold text-gray-300 mb-2 mt-4"
+            >Password / Wi-Fi Key</label
+          >
+          <input
+            id="gateway"
+            type="text"
+            placeholder="12345678"
+            class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+          />
+        </div>
+        <div class="flex flex-wrap justify-center gap-4 mb-6 mt-7">
+          <button
+            class="text-white w-96 py-2 rounded-md transition ease-in-out delay-150 bg-green-500 hover:-translate-y-1 hover:scale-110 hover:bg-teal-600 duration-300"
+          >
+            Generar QR Codigo
+          </button>
+        </div>
+        <div>
+          <label for="routeros" class="block font-semibold text-gray-300 mb-2"
+            >Tamaño de Papel</label
+          >
+          <select
+            id="routeros"
+            class="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+          >
+            <option value="v6.xx">Carta</option>
+            <option value="v7.xx">A4</option>
+            <option value="v7.xx">A3</option>
+          </select>
+        </div>
+        <div class="flex flex-wrap justify-center gap-4 mb-6 mt-7">
+          <button
+            class="text-white w-96 py-2 rounded-md transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-teal-600 duration-300"
+          >
+            Imprimir
+          </button>
+        </div>
+      </div>
+      <!-- Campos de Entrada -->
+    </div>
 
+    <!-- Vista Previa del QR -->
+    <div class="w-full lg:w-2/3 flex items-center justify-center">
+      <div
+        class="w-full h-full bg-gradient-to-r from-indigo-800 via-purple-500 to-red-700 text-white rounded-r-lg relative"
+      >
+        <div class="absolute top-4 right-4 bg-white rounded-full p-2 shadow-md">
+          <span class="text-orange-600 font-bold text-sm">SCAN ME</span>
+        </div>
 
-    <!-- Contenido Fin -->
-  </body>
+        <div class="text-center">
+          <!-- Título del SSID -->
+          <h1 class="text-3xl font-bold mb-4 text-orange-400">MYCAFE-WIFI</h1>
+          <p class="text-lg mb-6">FREE Wi-Fi</p>
 
-  <!-- Contenido Fin Aqui para abajo es otro codigo q u se borrara -->
-</MainLayout>
+          <!-- Icono de Redes -->
+          <div
+            class="w-24 h-24 mx-auto flex items-center justify-center bg-gray-200 rounded-full text-black"
+          >
+            📶
+          </div>
+          <p class="mt-4 text-sm">WIFI QR CODE GENERATED</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Contenido Fin -->
+
+<!-- Contenido Fin Aqui para abajo es otro codigo q u se borrara -->

@@ -4,8 +4,8 @@ import type { Session } from "@auth/core/types";
 import type { Subscription } from "../../types/subscription/subscription";
 
 interface Props {
-  session: Session | null;
-  subscription: Subscription | null;
+    session: Session | null;
+    subscription: Subscription | null;
 }
 interface FormData {
     uploadMaxLimit: string;
@@ -34,7 +34,7 @@ interface ApiResponse {
     "reate-limit": string;
 }
 
-const FormularioMikrotikBurstLimitCalculator: React.FC = ({ session, subscription }: Props) => {
+const FormularioMikrotikBurstLimitCalculator = ({ session, subscription }: Props) => {
     const [formData, setFormData] = useState<FormData>({
         uploadMaxLimit: '512K',
         uploadBurstLimit: '1M',
@@ -178,13 +178,13 @@ const FormularioMikrotikBurstLimitCalculator: React.FC = ({ session, subscriptio
                             </tr>
                         </tbody>
                     </table>
-                  
-                     <SocialTooltipButton />
+
+                    <SocialTooltipButton />
                     <div className="flex justify-center mb-8 mt-8">
                         <img src="/images/NAT.png" alt="Routing Diagram" className="rounded-lg" />
-                        
+
                     </div>
-                   
+
                 </div>
             </div>
 
