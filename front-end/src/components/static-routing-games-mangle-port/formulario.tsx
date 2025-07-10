@@ -4,6 +4,7 @@ import SocialTooltipButton from "../SocialTooltipButton";
 import React, { useState, useEffect } from "react";
 import type { Session } from "@auth/core/types";
 import type { Subscription } from "../../types/subscription/subscription";
+import { useApiCall, useAuthValidation, useScriptOperations } from "../forms/BaseForm";
 
 interface Props {
   session: Session | null;
@@ -21,18 +22,9 @@ interface Category {
   games: Game[];
 }
 
-interface ApiResponse {
-  categories: Category[];
-}
-
 interface FormData {
   idRouterOsVersion: string;
   gatewayToWanOrIspGame: string;
-}
-
-interface ScriptResult {
-  html: string;
-  text: string;
 }
 
 const FormularioStaticRoutingGamesManglePort = ({ session, subscription }: Props) => {
@@ -42,28 +34,18 @@ const FormularioStaticRoutingGamesManglePort = ({ session, subscription }: Props
     idRouterOsVersion: 'ros6',
     gatewayToWanOrIspGame: '',
   });
-  const [error, setError] = useState<string | null>(null);
-  const [scriptResult, setScriptResult] = useState<ScriptResult | null>(null);
   const [selectedGames, setSelectedGames] = useState<Game[]>([]);
+
+  // Usar hooks personalizados
+  const { validateAuth } = useAuthValidation(session, subscription);
+  const { makeApiCall, isLoading } = useApiCall(session);
+  const { scriptResult, setScriptResult, handleCopyScript } = useScriptOperations(session, subscription);
 
   useEffect(() => {
     const fetchGames = async () => {
-      try {
-        const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/games`, {
-          method: 'GET',
-          headers: {
-            'accept': 'application/json',
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-
-        const result: ApiResponse = await response.json();
+      const result = await makeApiCall("/games", null, "GET");
+      if (result) {
         setCategories(result.categories);
-      } catch (error) {
-        setError('Error fetching games: ' + (error as Error).message);
       }
     };
 
@@ -79,25 +61,9 @@ const FormularioStaticRoutingGamesManglePort = ({ session, subscription }: Props
   };
 
   const handleGenerate = async () => {
-    try {
-      const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/static-routing-games-mangle-port`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'accept': 'application/json',
-        },
-        body: JSON.stringify({ ...formData, games: selectedGames }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      const resultData: ScriptResult = await response.json();
-      setScriptResult(resultData);
-    } catch (error) {
-      console.error('Error generating script: ' + (error as Error).message);
-      setError('Error generating script: ' + (error as Error).message);
+    const result = await makeApiCall("/static-routing-games-mangle-port", { ...formData, games: selectedGames });
+    if (result) {
+      setScriptResult(result);
     }
   };
 
@@ -189,7 +155,7 @@ const FormularioStaticRoutingGamesManglePort = ({ session, subscription }: Props
             </div>
           ))}
         </div>
-          <SocialTooltipButton />
+        <SocialTooltipButton />
       </div>
 
       {/* Columna Derecha */}

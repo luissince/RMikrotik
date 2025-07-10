@@ -2,6 +2,7 @@ import SocialTooltipButton from "../SocialTooltipButton";
 import React, { useState } from "react";
 import type { Session } from "@auth/core/types";
 import type { Subscription } from "../../types/subscription/subscription";
+import { useApiCall, useAuthValidation, useScriptOperations } from "../forms/BaseForm";
 
 interface Props {
   session: Session | null;
@@ -23,6 +24,7 @@ interface ScriptResult {
 }
 
 const FormularioMikrotikLocalIpPbr = ({ session, subscription }: Props) => {
+    
     const [formData, setFormData] = useState<FormData>({
         idRoutingOption: 'R1',
         idIpOption: 'global-IPP',
@@ -32,8 +34,11 @@ const FormularioMikrotikLocalIpPbr = ({ session, subscription }: Props) => {
         routingMark: 'To-ISP-1',
     });
     const [error, setError] = useState<string | null>(null);
-    const [scriptResult, setScriptResult] = useState<ScriptResult | null>(null);
 
+  // Usar hooks personalizados
+  const { validateAuth } = useAuthValidation(session, subscription);
+  const { makeApiCall, isLoading } = useApiCall(session);
+  const { scriptResult, setScriptResult, handleCopyScript } = useScriptOperations(session, subscription);
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { id, value } = e.target;
         setFormData(prevData => ({
@@ -42,46 +47,23 @@ const FormularioMikrotikLocalIpPbr = ({ session, subscription }: Props) => {
         }));
     };
 
-    const handleGenerate = async () => {
-        try {
-            // Simulate API call
-            const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/mikrotik-local-ip-pbr`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'accept': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
+  const handleSubmit = async () => {
+    if (!validateAuth()) return;
 
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
+    const result = await makeApiCall("/mikrotik-local-ip-pbr", formData);
+    if (result) {
+      setScriptResult(result);
+    }
+  };
 
-            const resultData: ScriptResult = await response.json();
-            setScriptResult(resultData);
-        } catch (error) {
-            setError('Error generating script: ' + (error as Error).message);
-        }
-    };
+ 
 
-    const handleClear = () => {
-        setFormData({
-            idRoutingOption: 'R1',
-            idIpOption: 'global-IP',
-            idRosVersion: 'ros6',
-            ispGateway: '0.0.0.0',
-            targetClientIp: '0.0.0.0/0',
-            routingMark: 'To-ISP-1',
-        });
-        setScriptResult(null);
-    };
+      const handleClear = () => {
+    if (!validateAuth()) return;
 
-    const handleCopyScript = () => {
-        if (scriptResult) {
-            navigator.clipboard.writeText(scriptResult.text);
-        }
-    };
+    setFormData(formData);
+    setScriptResult(null);
+  };
 
     return (
         <form className="bg-gray-900 p-6 rounded-lg shadow-lg min-h-[70vh]">
@@ -192,21 +174,24 @@ const FormularioMikrotikLocalIpPbr = ({ session, subscription }: Props) => {
                 >
                     Borrar Todo
                 </button>
-                <button
-                    type="button"
-                    className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-bold transition-all duration-300"
-                    onClick={handleGenerate}
-                >
-                    Generate
-                </button>
-                <button
-                    type="button"
-                    className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-bold transition-all duration-300"
-                    onClick={handleCopyScript}
-                    disabled={!scriptResult}
-                >
-                    Copy Script
-                </button>
+               <button
+            type="button"
+            className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-600 transition disabled:bg-orange-300 disabled:cursor-not-allowed"
+            onClick={handleSubmit}
+            disabled={isLoading || !session}
+          >
+            <i className="fa-solid fa-wand-magic-sparkles"></i>
+            {isLoading ? "Generando..." : " Generar"}
+          </button>
+               <button
+            type="button"
+            className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition disabled:bg-indigo-500 disabled:cursor-not-allowed"
+            onClick={handleCopyScript}
+            disabled={!scriptResult?.html || !session}
+          >
+            <i className="fa-solid fa-arrow-up-from-bracket mr-2"></i>
+            Copiar Script
+          </button>
             </div>
         </form>
     );

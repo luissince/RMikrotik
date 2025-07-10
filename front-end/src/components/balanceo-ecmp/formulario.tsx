@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import type { Session } from "@auth/core/types";
 import type { Subscription } from "../../types/subscription/subscription";
+import { useApiCall, useAuthValidation, useScriptOperations } from "../forms/BaseForm";
 interface Props {
   session: Session | null;
   subscription: Subscription | null;
@@ -22,6 +23,11 @@ const Formulario = ({ session, subscription }: Props) => {
 
 
     const [result, setResult] = useState<string>('');
+
+ // Usar hooks personalizados
+  const { validateAuth } = useAuthValidation(session, subscription);
+  const { makeApiCall, isLoading } = useApiCall(session);
+  const { scriptResult, setScriptResult, handleCopyScript } = useScriptOperations(session, subscription);
 
     useEffect(() => {
         generateLines(2);

@@ -79,7 +79,7 @@ public class MikrotikBurstLimitCalculatorService {
                 // Crear respuesta con ambos formatos
                 Map<String, Object> response = new HashMap<>();
                 response.put("data", data);
-                response.put("reate-limit", rateLimit);
+                response.put("reateLimit", rateLimit);
 
                 return response;
         }

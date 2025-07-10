@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import SocialTooltipButton from "../SocialTooltipButton";
 import type { Session } from "@auth/core/types";
 import type { Subscription } from "../../types/subscription/subscription";
+import { useApiCall, useAuthValidation, useScriptOperations } from "../forms/BaseForm";
 
 interface Props {
   session: Session | null;
@@ -25,7 +26,28 @@ interface FormData {
     upLimitAt: string;
     downLimitAt: string;
 }
+const defaultData: FormData = {
+ parentNameQueue: "Global-Connection",
+    targetLocalIP: "192.168.88.0/24",
+    upTotal: "5M",
+    downTotal: "10M",
+    clientNameQueue: "Client-",
+    clientIdentity: "1",
+    startIPClient: "192.168.88.10",
+    endIPClient: "192.168.88.35",
+    upClient: "512K",
+    downClient: "1M",
+    upLimitAt: "0",
+    downLimitAt: "0",
+}
+
+
+
 const FormularioSimpleQueueGeneratorShared = ({ session, subscription }: Props) => {
+     // Datos del formulario
+      const [formData, setFormData] = useState<FormData>(defaultData);
+
+
     const [parentNameQueue, setParentNameQueue] = useState("Global-Connection");
     const [targetLocalIP, setTargetLocalIP] = useState("192.168.88.0/24");
     const [upTotal, setUpTotal] = useState("5M");
@@ -39,67 +61,29 @@ const FormularioSimpleQueueGeneratorShared = ({ session, subscription }: Props) 
     const [upLimitAt, setUpLimitAt] = useState("0");
     const [downLimitAt, setDownLimitAt] = useState("0");
     const [autoSetBandwidth, setAutoSetBandwidth] = useState(false);
-     const [scriptResult, setScriptResult] = useState<ScriptResult | null>(null);
-    const [isLoading, setIsLoading] = useState(false);
 
-    const handleClear = () => {
-        setParentNameQueue("");
-        setTargetLocalIP("");
-        setUpTotal("");
-        setDownTotal("");
-        setClientNameQueue("");
-        setClientIdentity("");
-        setStartIPClient("");
-        setEndIPClient("");
-        setUpClient("");
-        setDownClient("");
-        setUpLimitAt("0");
-        setDownLimitAt("0");
-        setAutoSetBandwidth(false);
-    };
-    const handleGenerate = async () => {
-        setIsLoading(true);
-        try {
-            const payload = {
-
-                parentNameQueue: parentNameQueue,
-                targetLocalIP: targetLocalIP,
-                upTotal: upTotal,
-                downTotal: downTotal,
-                clientNameQueue: clientNameQueue,
-                clientIdentity: clientIdentity,
-                startIPClient: startIPClient,
-                endIPClient: endIPClient,
-                upClient: upClient,
-                downClient: downClient,
-                upLimitAt: upLimitAt,
-                downLimitAt: downLimitAt,
+  // Usar hooks personalizados
+  const { validateAuth } = useAuthValidation(session, subscription);
+  const { makeApiCall, isLoading } = useApiCall(session);
+  const { scriptResult, setScriptResult, handleCopyScript } = useScriptOperations(session, subscription);
 
 
-            };
+     const handleSubmit = async () => {
+    if (!validateAuth()) return;
 
-            // Simulate API call
-            const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/simple-queue-generator-shared`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'accept': 'application/json',
-                },
-                body: JSON.stringify(payload),
-            });
+    const result = await makeApiCall("/simple-queue-generator-shared", formData);
+    if (result) {
+      setScriptResult(result);
+    }
+  };
 
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
+  const handleClear = () => {
+    if (!validateAuth()) return;
 
-            const resultData: ScriptResult = await response.json();
-            setScriptResult(resultData);
-        } catch (error) {
-            console.error('Error generating script:', error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    setFormData(defaultData);
+    setScriptResult(null);
+  };
+
 
     return (
         <div className="flex flex-col lg:flex-row gap-6 bg-gray-900 p-6 rounded-lg shadow-lg ">
@@ -298,7 +282,7 @@ const FormularioSimpleQueueGeneratorShared = ({ session, subscription }: Props) 
                         <button
                             type="button"
                             className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition"
-                            onClick={handleGenerate}
+                            onClick={handleSubmit}
                         >
                             Generar
                         </button>

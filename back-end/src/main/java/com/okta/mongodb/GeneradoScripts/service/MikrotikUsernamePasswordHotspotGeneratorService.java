@@ -119,13 +119,13 @@ private String generatePdfScript(MikrotikUsernamePasswordHotspotGeneratorBody bo
     pdfHtml.append("</style>");
     pdfHtml.append("</head>");
     pdfHtml.append("<body>");
-    pdfHtml.append("<h1 style='text-align: center;'>Hotspot User Credentials</h1>");
+    pdfHtml.append("<h1 style='text-align: center;'>Fichas Hotspot </h1>");
     pdfHtml.append("<div class='grid-container'>");
 
     for (int i = 0; i < userData.size(); i++) {
         Map<String, String> user = userData.get(i);
         pdfHtml.append("<div class='grid-item'>");
-        pdfHtml.append("<h3>").append(body.getProfileHotspot()).append(" ").append(i + 1).append("</h3>");
+        pdfHtml.append("<p style='color: blue; font-weight: bold; text-align: center; display: inline-block;'>").append(body.getProfileHotspot()).append(" ").append("</p>");
         pdfHtml.append("<p><strong>Username:</strong> ").append(user.get("username")).append("</p>");
         pdfHtml.append("<p><strong>Password:</strong> ").append(user.get("password")).append("</p>");
         pdfHtml.append("</div>");

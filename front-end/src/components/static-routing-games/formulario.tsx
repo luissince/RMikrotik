@@ -3,6 +3,7 @@ import SocialTooltipButton from "../SocialTooltipButton";
 import React, { useEffect, useState } from 'react';
 import type { Session } from "@auth/core/types";
 import type { Subscription } from "../../types/subscription/subscription";
+import { useApiCall, useAuthValidation, useScriptOperations } from "../forms/BaseForm";
 
 interface Props {
     session: Session | null;
@@ -27,11 +28,6 @@ interface FormData {
     gatewayToWanOrIspGame: string;
 }
 
-interface ScriptResult {
-    html: string;
-    text: string;
-}
-
 const FormularioStaticRoutingGames = ({ session, subscription }: Props) => {
     const [categories, setCategories] = useState<Category[]>([]);
     const [filter, setFilter] = useState<string>('');
@@ -39,34 +35,32 @@ const FormularioStaticRoutingGames = ({ session, subscription }: Props) => {
         idRouterOsVersion: 'ros6',
         gatewayToWanOrIspGame: ''
     });
-    const [error, setError] = useState<string | null>(null);
-    const [scriptResult, setScriptResult] = useState<ScriptResult | null>(null);
     const [selectedGames, setSelectedGames] = useState<Game[]>([]);
 
-    useEffect(() => {
+    // Usar hooks personalizados
+    const { validateAuth } = useAuthValidation(session, subscription);
+    const { makeApiCall, isLoading } = useApiCall(session);
+    const { scriptResult, setScriptResult, handleCopyScript } = useScriptOperations(session, subscription);
+
+      useEffect(() => {
         const fetchGames = async () => {
-            try {
-                const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/games`, {
-                    method: 'GET',
-                    headers: {
-                        'accept': 'application/hal+json',
-                    },
-                });
-
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-
-                const result: ApiResponse = await response.json();
-                setCategories(result.categories);
-            } catch (error) {
-                setError('Error fetching games: ' + (error as Error).message);
-            }
+          const result = await makeApiCall("/games", null, "GET");
+          if (result) {
+            setCategories(result.categories);
+          }
         };
-
+    
         fetchGames();
-    }, []);
+      }, []);
 
+    const handleSubmit = async () => {
+        if (!validateAuth()) return;
+
+        const result = await makeApiCall("/static-routing-games", formData);
+        if (result) {
+            setScriptResult(result);
+        }
+    };
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { id, value } = e.target;
         setFormData(prevData => ({
@@ -75,31 +69,9 @@ const FormularioStaticRoutingGames = ({ session, subscription }: Props) => {
         }));
     };
 
-    const handleGenerate = async () => {
-        try {
-            const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/static-routing-games`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'accept': 'application/hal+json',
-                },
-                body: JSON.stringify({ ...formData, games: selectedGames }),
-            });
-
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-
-            const resultData: ScriptResult = await response.json();
-            setScriptResult(resultData);
-        } catch (error) {
-            setError('Error generating script: ' + (error as Error).message);
-        }
-    };
-
     const handleClear = () => {
-        setFormData({ idRouterOsVersion: 'ros6', gatewayToWanOrIspGame: '' });
-        setSelectedGames([]);
+        if (!validateAuth()) return;
+
         setScriptResult(null);
     };
 
@@ -159,7 +131,7 @@ const FormularioStaticRoutingGames = ({ session, subscription }: Props) => {
                         value={filter}
                         onChange={(e) => setFilter(e.target.value)}
                     />
-                    {error && <p className="text-red-500">{error}</p>}
+
                     <div className="flex-grow overflow-y-auto bg-gray-700 p-4 rounded ">
                         {filteredGames.map(category => (
                             <div key={category.name} className="mb-4">
@@ -200,10 +172,12 @@ const FormularioStaticRoutingGames = ({ session, subscription }: Props) => {
                 <div className="flex mt-4 space-x-4">
                     <button
                         type="button"
-                        className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition"
-                        onClick={handleGenerate}
+                        className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-600 transition disabled:bg-orange-300 disabled:cursor-not-allowed"
+                        onClick={handleSubmit}
+                        disabled={isLoading || !session}
                     >
-                        Generar
+                        <i className="fa-solid fa-wand-magic-sparkles"></i>
+                        {isLoading ? "Generando..." : " Generar"}
                     </button>
                     <button
                         type="button"

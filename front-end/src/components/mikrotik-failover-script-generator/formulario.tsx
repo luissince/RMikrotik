@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import type { Session } from "@auth/core/types";
 import type { Subscription } from "../../types/subscription/subscription";
+import { useApiCall, useAuthValidation, useScriptOperations } from "../forms/BaseForm";
 
 interface Props {
   session: Session | null;
@@ -52,9 +53,13 @@ type ScriptResult = {
 };
 
 const FormularioMikrotikFailoverScriptGenerator = ({ session, subscription }: Props) => {
+    // Usar hooks personalizados
+    const { validateAuth } = useAuthValidation(session, subscription);
+    const { makeApiCall, isLoading } = useApiCall(session);
+    const { scriptResult, setScriptResult, handleCopyScript } = useScriptOperations(session, subscription);
   // Estado para controlar el número de líneas
-  const [scriptResult, setScriptResult] = useState<ScriptResult | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+
+
   // Configuración de React Hook Form con validación Zod
   const {
     control,
@@ -80,16 +85,10 @@ const FormularioMikrotikFailoverScriptGenerator = ({ session, subscription }: Pr
     control,
     name: "lineInterfaces",
   });
-  const handleCopyScript = () => {
-    if (scriptResult) {
-      navigator.clipboard
-        .writeText(scriptResult.text)
-        .then(() => alert("Script copiado al portapapeles!"))
-        .catch((err) => console.error("Error al copiar: ", err));
-    }
-  };
+
   // Actualiza el número de líneas cuando cambia la selección
   const onChangeSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
+     if (!validateAuth()) return;
     const newNumLines = Number(event.target.value) || 2;
 
     setValue("numeroLineas", event.target.value);
@@ -120,19 +119,11 @@ const FormularioMikrotikFailoverScriptGenerator = ({ session, subscription }: Pr
     replace(currentValues);
   };
 
-  const handleCopyToClipboard = () => {
-    if (scriptResult) {
-      navigator.clipboard
-        .writeText(scriptResult.text)
-        .then(() => {
-          alert("Script copiado al portapapeles!");
-        })
-        .catch((err) => console.error("Error al copiar: ", err));
-    }
-  };
+
 
   const onSubmit = async (data: FormValues) => {
-    try {
+      if (!validateAuth()) return;
+   
       // Transformar los datos
       const payload = {
         idSelectYourFailoverMethod: data.metodoConmutacion,
@@ -145,32 +136,11 @@ const FormularioMikrotikFailoverScriptGenerator = ({ session, subscription }: Pr
           ipPublicCheck: line.dnsInput,
         })),
       };
-
-      console.log("Payload listo para enviar:", payload);
-
-      // Hacer la petición POST
-      const response = await fetch(
-        `${import.meta.env.PUBLIC_BASE_URL_API}/mikrotik-failover-script-generator`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Error en la API");
-      }
-
-      const result: ScriptResult = await response.json();
-      console.log("Respuesta de la API:", result);
-
-      setScriptResult({ text: result.text, html: result.html });
-    } catch (error) {
-      console.error("Error enviando datos:", error);
+   const result = await makeApiCall("/mikrotik-failover-script-generator", payload);
+    if (result) {
+      setScriptResult(result);
     }
+        
   };
 
   return (

@@ -2,10 +2,11 @@ import SocialTooltipButton from "../SocialTooltipButton";
 import React, { useState } from "react";
 import type { Session } from "@auth/core/types";
 import type { Subscription } from "../../types/subscription/subscription";
+import { useApiCall, useAuthValidation, useScriptOperations } from "../forms/BaseForm";
 
 interface Props {
-  session: Session | null;
-  subscription: Subscription | null;
+    session: Session | null;
+    subscription: Subscription | null;
 }
 
 type ScriptResult = {
@@ -30,8 +31,11 @@ const FormularioVpnRemoteGenerator = ({ session, subscription }: Props) => {
         vpnPassword: 'password',
     });
 
-    const [scriptResult, setScriptResult] = useState<ScriptResult | null>(null);
-    const [isLoading, setIsLoading] = useState(false);
+
+    // Usar hooks personalizados
+    const { validateAuth } = useAuthValidation(session, subscription);
+    const { makeApiCall, isLoading } = useApiCall(session);
+    const { scriptResult, setScriptResult, handleCopyScript } = useScriptOperations(session, subscription);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { id, value } = e.target;
@@ -41,48 +45,25 @@ const FormularioVpnRemoteGenerator = ({ session, subscription }: Props) => {
         }));
     };
 
-    const handleGenerate = async () => {
-        setIsLoading(true);
-        try {
-            // Simulate API call
-            const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/vpn-remote-generator`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'accept': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
+    const handleSubmit = async () => {
+        if (!validateAuth()) return;
 
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-
-            const resultData: ScriptResult = await response.json();
-            setScriptResult(resultData);
-        } catch (error) {
-            console.error('Error generating script:', error);
-        } finally {
-            setIsLoading(false);
+        const result = await makeApiCall("/vpn-remote-generator", formData);
+        if (result) {
+            setScriptResult(result);
         }
     };
 
     const handleClear = () => {
-        setFormData({
-            idVpnConnection: 'sstp',
-            vpnNameOnInterface: 'VPN-REMOTE',
-            vpnIpAddress: '137.129.63.112',
-            vpnUsername: 'username',
-            vpnPassword: 'password',
-        });
+        if (!validateAuth()) return;
+
+        setFormData(formData);
         setScriptResult(null);
     };
 
-    const handleCopyScript = () => {
-        if (scriptResult) {
-            navigator.clipboard.writeText(scriptResult.text);
-        }
-    };
+
+
+
 
     return (
         <div className="flex flex-col lg:flex-row gap-6 bg-gray-900 p-6 rounded-lg shadow-lg h-[70vh]">
@@ -118,7 +99,7 @@ const FormularioVpnRemoteGenerator = ({ session, subscription }: Props) => {
                             VPN Name on Interface
                         </label>
                         <input
-                            id="vpnNameOnInterface" 
+                            id="vpnNameOnInterface"
                             type="text"
                             placeholder="VPN-REMOTE"
                             className="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400"
@@ -177,11 +158,11 @@ const FormularioVpnRemoteGenerator = ({ session, subscription }: Props) => {
                             onChange={handleChange}
                         />
                     </div>
-                      <SocialTooltipButton />
+                    <SocialTooltipButton />
                 </form>
-             
+
             </div>
-   
+
             {/* Result Section */}
             <div className="flex flex-col lg:w-1/2 min-h-0">
                 <div className="flex-grow bg-gray-700 p-4 rounded-lg flex flex-col min-h-0">
@@ -205,7 +186,7 @@ const FormularioVpnRemoteGenerator = ({ session, subscription }: Props) => {
                     <button
                         type="button"
                         className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition disabled:bg-orange-300 disabled:cursor-not-allowed"
-                        onClick={handleGenerate}
+                        onClick={handleSubmit}
                         disabled={isLoading}
                     >
                         Generar

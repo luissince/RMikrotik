@@ -2,6 +2,7 @@ import { useState } from "react";
 import SocialTooltipButton from "../SocialTooltipButton";
 import type { Session } from "@auth/core/types";
 import type { Subscription } from "../../types/subscription/subscription";
+import { useApiCall, useAuthValidation, useScriptOperations } from "../forms/BaseForm";
 
 interface Props {
   session: Session | null;
@@ -11,7 +12,44 @@ type ScriptResult = {
   html: string;
   text: string;
 };
+
+interface FormDataType {
+ parentNameQueue: "", 
+ subQueueUpload: "",
+ subQueueDownload: "",
+ uploadMaxLimit: "", 
+ downloadMaxLimit: "", 
+ clientNameQueue: "", 
+ clientIdentity: "", 
+ startIPClient: "", 
+ endIPClient: "", 
+ subUploadMaxLimit: "", 
+ clientDownloadMaxLimit: "", 
+ uploadLimitAt: "", 
+ downloadLimitAt: "", 
+ autoSetBandwidth: "", 
+}
+
+const defaultData: FormDataType = {
+ parentNameQueue: "", 
+ subQueueUpload: "",
+ subQueueDownload: "",
+ uploadMaxLimit: "", 
+ downloadMaxLimit: "", 
+ clientNameQueue: "", 
+ clientIdentity: "", 
+ startIPClient: "", 
+ endIPClient: "", 
+ subUploadMaxLimit: "", 
+ clientDownloadMaxLimit: "", 
+ uploadLimitAt: "", 
+ downloadLimitAt: "", 
+ autoSetBandwidth: "", 
+}
 const FormularioQueueThreeGeneratorShared = ({ session, subscription }: Props) => {
+  // Datos del formulario
+  const [formData, setFormData] = useState<FormDataType>(defaultData);
+
   const [parentNameQueue, setParentNameQueue] = useState("Global-Connection");
   const [subQueueUpload, setSubQueueUpload] = useState("");
   const [subQueueDownload, setSubQueueDownload] = useState("");
@@ -26,70 +64,27 @@ const FormularioQueueThreeGeneratorShared = ({ session, subscription }: Props) =
   const [uploadLimitAt, setUploadLimitAt] = useState("0");
   const [downloadLimitAt, setDownloadLimitAt] = useState("0");
   const [autoSetBandwidth, setAutoSetBandwidth] = useState(false);
-  const [scriptResult, setScriptResult] = useState<ScriptResult | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
 
-  const handleClear = () => {
-    setParentNameQueue("");
-    setSubQueueUpload("");
-    setSubQueueDownload("");
-    setUploadMaxLimit("");
-    setDownloadMaxLimit("");
-    setClientNameQueue("");
-    setClientIdentity("");
-    setStartIPClient("");
-    setEndIPClient("");
-    setSubUploadMaxLimit("");
-    setClientDownloadMaxLimit("");
-    setUploadLimitAt("0");
-    setDownloadLimitAt("0");
-    setAutoSetBandwidth(false);
-  };
-  const handleGenerate = async () => {
-    setIsLoading(true);
-    try {
-      const payload = {
+  // Usar hooks personalizados
+  const { validateAuth } = useAuthValidation(session, subscription);
+  const { makeApiCall, isLoading } = useApiCall(session);
+  const { scriptResult, setScriptResult, handleCopyScript } = useScriptOperations(session, subscription);
 
-        parentNameQueue: parentNameQueue,
-        subQueueUpload: subQueueUpload,
-        subQueueDownload: subQueueDownload,
-        uploadMaxLimit: uploadMaxLimit,
-        downloadMaxLimit: downloadMaxLimit,
-        clientNameQueue: clientNameQueue,
-        clientIdentity: clientIdentity,
-        startIPClient: startIPClient,
-        endIPClient: endIPClient,
-        clientDownloadMaxLimit: clientDownloadMaxLimit,
-        uploadLimitAt: uploadLimitAt,
-        downloadLimitAt: downloadLimitAt,
-        subUploadMaxLimit: subUploadMaxLimit,
+  const handleSubmit = async () => {
+    if (!validateAuth()) return;
 
-      };
-
-      // Simulate API call
-      const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/queue-tree-generator-shared`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'accept': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      const resultData: ScriptResult = await response.json();
-      setScriptResult(resultData);
-    } catch (error) {
-      console.error('Error generating script:', error);
-    } finally {
-      setIsLoading(false);
+    const result = await makeApiCall("/queue-tree-generator-shared", formData);
+    if (result) {
+      setScriptResult(result);
     }
   };
 
+  const handleClear = () => {
+    if (!validateAuth()) return;
 
+    setFormData(defaultData);
+    setScriptResult(null);
+  };
 
 
 
@@ -306,7 +301,7 @@ const FormularioQueueThreeGeneratorShared = ({ session, subscription }: Props) =
             <button
               type="button"
               className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition"
-              onClick={handleGenerate}
+              onClick={handleSubmit}
             >
               Generar
             </button>
@@ -324,9 +319,9 @@ const FormularioQueueThreeGeneratorShared = ({ session, subscription }: Props) =
               Copiar Script
             </button>
           </div>
-           <SocialTooltipButton />
+          <SocialTooltipButton />
         </form>
-         
+
       </div>
 
       {/* Result Section */}

@@ -1,7 +1,13 @@
 
 import { useState } from "react";
 import SocialTooltipButton from "../SocialTooltipButton";
-
+import type { Session } from "@auth/core/types";
+import type { Subscription } from "../../types/subscription/subscription";
+import { useApiCall, useAuthValidation, useScriptOperations } from "../forms/BaseForm";
+interface Props {
+  session: Session | null;
+  subscription: Subscription | null;
+}
 type ScriptResult = {
     html: string;
     text: string;
@@ -21,8 +27,24 @@ interface FormData {
     bucketSizeUp: string;
     bucketSizeDown: string;
 }
+const defaultData: FormData = {
+    parentNameQueue: "Global-Connection",
+    targetLocalIP: "192.168.88.0/24",
+    upTotal: "5M",
+    downTotal: "10M",
+    clientNameQueue: "Client-",
+    clientIdentity: "1",
+    startIPClient: "192.168.88.10",
+    endIPClient: "192.168.88.35",
+    upClient: "512K",
+    downClient: "1M",
+    bucketSizeUp: "0.1",
+    bucketSizeDown: "0.1",
+}
 
-export default function FormularioScriptGenerator() {
+const  FormularioScriptGenerator = ({ session, subscription }: Props) => {
+  // Datos del formulario
+  const [formData, setFormData] = useState<FormData>(defaultData);
     const [parentNameQueue, setParentNameQueue] = useState("Global-Connection");
     const [targetLocalIP, setTargetLocalIP] = useState("192.168.88.0/24");
     const [upTotal, setUpTotal] = useState("5M");
@@ -35,66 +57,30 @@ export default function FormularioScriptGenerator() {
     const [downClient, setDownClient] = useState("1M");
     const [bucketSizeUp, setBucketSizeUp] = useState("0.1");
     const [bucketSizeDown, setBucketSizeDown] = useState("0.1");
-    const [scriptResult, setScriptResult] = useState<ScriptResult | null>(null);
-    const [isLoading, setIsLoading] = useState(false);
+ 
+  // Usar hooks personalizados
+  const { validateAuth } = useAuthValidation(session, subscription);
+  const { makeApiCall, isLoading } = useApiCall(session);
+  const { scriptResult, setScriptResult, handleCopyScript } = useScriptOperations(session, subscription);
 
-    const handleClear = () => {
-        setParentNameQueue("");
-        setTargetLocalIP("");
-        setUpTotal("");
-        setDownTotal("");
-        setClientNameQueue("");
-        setClientIdentity("");
-        setStartIPClient("");
-        setEndIPClient("");
-        setUpClient("");
-        setDownClient("");
-        setBucketSizeUp("0.1");
-        setBucketSizeDown("0.1");
-        setScriptResult(null);
-    };
 
-    const handleGenerate = async () => {
-        setIsLoading(true);
-        try {
-            const payload = {
-                parentNameQueue: parentNameQueue,
-                targetLocalIP: targetLocalIP,
-                upTotal: upTotal,
-                downTotal: downTotal,
-                clientNameQueue: clientNameQueue,
-                clientIdentity: clientIdentity,
-                startIPClient: startIPClient,
-                endIPClient: endIPClient,
-                upClient: upClient,
-                downClient: downClient,
-                bucketSizeUp: bucketSizeUp,
-                bucketSizeDown: bucketSizeDown,
-            };
 
-            // Simulate API call
-            const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/simple-queue-generator`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'accept': 'application/json',
-                },
-                body: JSON.stringify(payload),
-            });
 
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
+  const handleSubmit = async () => {
+    if (!validateAuth()) return;
 
-            const resultData: ScriptResult = await response.json();
-            setScriptResult(resultData);
-        } catch (error) {
-            console.error('Error generating script:', error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    const result = await makeApiCall("/simple-queue-generator", formData);
+    if (result) {
+      setScriptResult(result);
+    }
+  };
 
+  const handleClear = () => {
+    if (!validateAuth()) return;
+
+    setFormData(defaultData);
+    setScriptResult(null);
+  };
     return (
         <div className="flex flex-col lg:flex-row gap-6 bg-gray-900 p-6 rounded-lg shadow-lg">
             {/* Form Section */}
@@ -337,7 +323,7 @@ export default function FormularioScriptGenerator() {
                         <button
                             type="button"
                             className="bg-orange-500 text-white w-full px-4 py-2 rounded hover:bg-orange-600 transition"
-                            onClick={handleGenerate}
+                            onClick={handleSubmit}
                         >
                             Generate
                         </button>
@@ -382,3 +368,4 @@ export default function FormularioScriptGenerator() {
     );
 };
 
+export default FormularioScriptGenerator;

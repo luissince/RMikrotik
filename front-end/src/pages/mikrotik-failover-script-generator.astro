@@ -30,25 +30,6 @@ if (shouldSignOut) {
           navegando sin interrupciones, cambiando automáticamente a un enlace de
           respaldo
         </p>
-        <style>
-          /* Animación personalizada para mover el degradado */
-          @keyframes gradientMove {
-            0% {
-              background-position: 0% 50%;
-            }
-            50% {
-              background-position: 100% 50%;
-            }
-            100% {
-              background-position: 0% 50%;
-            }
-          }
-
-          .animated-gradient {
-            background-size: 200% 200%;
-            animation: gradientMove 5s ease infinite;
-          }
-        </style>
       </div>
     </div>
 
@@ -57,8 +38,8 @@ if (shouldSignOut) {
       <!-- Contenido Principal -->
       <div class="container mx-auto">
         <!-- Formulario Principal -->
-        <FormularioMikrotikFailoverScriptGenerator
-          client:load
+        <FormularioMikrotikFailoverScriptGenerator client:load
+            client:load
           session={session}
           subscription={subscription}
         />
@@ -66,3 +47,16 @@ if (shouldSignOut) {
     </div>
   </div>
 </MainLayout>
+ <style>
+     /* Animación personalizada para mover el degradado */
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .animated-gradient {
+      background-size: 200% 200%;
+      animation: gradientMove 5s ease infinite;
+    }
+  </style>

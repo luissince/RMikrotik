@@ -32,25 +32,6 @@ if (shouldSignOut) {
           entre los usuarios activos, mejorando el rendimiento general sin desperdiciar
           capacidad.
         </p>
-        <style>
-          /* Animación personalizada para mover el degradado */
-          @keyframes gradientMove {
-            0% {
-              background-position: 0% 50%;
-            }
-            50% {
-              background-position: 100% 50%;
-            }
-            100% {
-              background-position: 0% 50%;
-            }
-          }
-
-          .animated-gradient {
-            background-size: 200% 200%;
-            animation: gradientMove 5s ease infinite;
-          }
-        </style>
       </div>
     </div>
 
@@ -61,6 +42,7 @@ if (shouldSignOut) {
         <!-- Formulario Principal -->
         <FormularioSimpleQueueGeneratorShared
           client:load
+          client:load
           session={session}
           subscription={subscription}
         />
@@ -68,3 +50,22 @@ if (shouldSignOut) {
     </div>
   </div>
 </MainLayout>
+<style>
+  /* Animación personalizada para mover el degradado */
+  @keyframes gradientMove {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  .animated-gradient {
+    background-size: 200% 200%;
+    animation: gradientMove 5s ease infinite;
+  }
+</style>
