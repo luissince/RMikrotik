@@ -6,6 +6,7 @@ import type { Plan } from "../types/plan/plan";
 import type { Subscription } from "../types/subscription/subscription";
 import type { User } from "../types/user/user";
 import { getAuthData } from "../utils/auth";
+import type { Coupon } from "../types/coupon/coupon";
 
 // Obtener los datos de la sesión y suscripción
 const { session, subscription, user, shouldSignOut } = await getAuthData(
@@ -76,6 +77,27 @@ let users: User[] = [];
 
 if (responseUsers.ok) {
   const data = await responseUsers.json();
+  users = data;
+}
+
+// ===========================================================================
+// Obtener lista de cupones
+// ===========================================================================
+const responseCoupons = await fetch(
+  `${import.meta.env.PUBLIC_BASE_URL_API}/user`,
+  {
+    headers: {
+      "Content-Type": "application/json",
+      "accept": "application/json",
+      "Authorization": `${session?.user?.type} ${session.user?.token}`,
+    },
+  },
+);
+
+let coupons: Coupon[] = [];
+
+if (responseCoupons.ok) {
+  const data = await responseCoupons.json();
   users = data;
 }
 

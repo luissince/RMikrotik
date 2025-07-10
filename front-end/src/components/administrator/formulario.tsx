@@ -69,6 +69,7 @@ const AdminSubscriptions: React.FC<Props> = (initialProps) => {
     isActive: true,
     createdAt: new Date().toISOString(),
   });
+  console.log(new Date().toISOString());
 
   useEffect(() => {
     let filtered = initialProps.subscriptions;
@@ -280,9 +281,34 @@ const AdminSubscriptions: React.FC<Props> = (initialProps) => {
 
   const handleCouponAction = async () => {
     setIsProcessing(true);
-    // Lógica para manejar la acción del cupón
-    setIsProcessing(false);
-    closeModalCoupon();
+    alertKit.loading({ message: 'Procesando...' });
+
+    try {
+      const method = couponModalAction === 'create' ? 'POST' : couponModalAction === 'edit' ? 'PUT' : 'DELETE';
+      const url = `${import.meta.env.PUBLIC_BASE_URL_API}/coupons${couponModalAction !== 'create' ? `/${couponForm.id}` : ''}`;
+
+      const response = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `${initialProps.session?.user?.type} ${initialProps.session?.user?.token}`
+        },
+        body: couponModalAction === 'delete' ? null : JSON.stringify(couponForm)
+      });
+
+      if (!response.ok) throw new Error('Error en la operación');
+
+      alertKit.success({
+        title: 'Éxito',
+        message: `Cupón ${couponModalAction} exitosamente.`
+      });
+
+    } catch (error) {
+      alertKit.error({ title: 'Error', message: (error as Error).message });
+    } finally {
+      setIsProcessing(false);
+      closeModalCoupon();
+    }
   };
 
   const couponStats = {

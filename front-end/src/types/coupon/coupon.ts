@@ -5,5 +5,5 @@ export interface Coupon {
     validUntil: string;
     isActive: boolean;
     createdAt: string;
-  }
+}
   
