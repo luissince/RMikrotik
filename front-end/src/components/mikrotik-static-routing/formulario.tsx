@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import SocialTooltipButton from "../SocialTooltipButton";
 import type { Session } from "@auth/core/types";
 import type { Subscription } from "../../types/subscription/subscription";
+import { useApiCall, useAuthValidation, useScriptOperations } from "../forms/BaseForm";
 
 interface Props {
   session: Session | null;
@@ -29,7 +30,11 @@ const FormularioMikrotikStaticRouting = ({ session, subscription }: Props) => {
         routingMark: 'To-ISP-1',
     });
     const [error, setError] = useState<string | null>(null);
-    const [scriptResult, setScriptResult] = useState<ScriptResult | null>(null);
+   
+ // Usar hooks personalizados
+  const { validateAuth } = useAuthValidation(session, subscription);
+  const { makeApiCall, isLoading } = useApiCall(session);
+  const { scriptResult, setScriptResult, handleCopyScript } = useScriptOperations(session, subscription);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { id, value } = e.target;
@@ -39,42 +44,28 @@ const FormularioMikrotikStaticRouting = ({ session, subscription }: Props) => {
         }));
     };
 
-    const handleGenerate = async () => {
-        try {
-            // Simulate API call
-            const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/mikrotik-static-routing`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'accept': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
 
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
+  const handleSubmit = async () => {
+    if (!validateAuth()) return;
 
-            const resultData: ScriptResult = await response.json();
-            setScriptResult(resultData);
-        } catch (error) {
-            setError('Error generating script: ' + (error as Error).message);
-        }
-    };
+    const result = await makeApiCall("/mikrotik-static-routing", formData);
+    if (result) {
+      setScriptResult(result);
+    }
+  };
 
-    const handleClear = () => {
-        setFormData({
-            idRoutingOptions: 'Youtube',
-            idRosVersion: 'ros6',
-            ispGateway: '0.0.0.0',
-            routingMark: 'To-ISP-1',
-        });
-        setScriptResult(null);
-    };
+  const handleClear = () => {
+    if (!validateAuth()) return;
 
-    const handleCopyScript = (text: string) => {
-        navigator.clipboard.writeText(text);
-    };
+    setFormData(formData);
+    setScriptResult(null);
+  };
+
+
+
+ 
+
+  
 
     return (
         <form className="bg-gray-900 p-6 rounded-lg shadow-lg min-h-[70vh]">
@@ -224,7 +215,7 @@ const FormularioMikrotikStaticRouting = ({ session, subscription }: Props) => {
                 <button
                     type="button"
                     className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-bold transition-all duration-300"
-                    onClick={handleGenerate}
+                    onClick={handleSubmit}
                 >
                     Generate Script
                 </button>

@@ -3,6 +3,7 @@ import { useState, useRef } from "react";
 import { keyIPAddress } from "../../utils/keyEvent";
 import type { Session } from "@auth/core/types";
 import type { Subscription } from "../../types/subscription/subscription";
+import { useApiCall, useAuthValidation, useScriptOperations } from "../forms/BaseForm";
 
 interface Props {
   session: Session | null;
@@ -28,9 +29,14 @@ const FormularioRemoteIpPublicStatic = ({ session, subscription }: Props) => {
     idRosVersion: "ros6"
   });
 
-  const [scriptResult, setScriptResult] = useState<ScriptResult | null>(null);
+
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+    // Usar hooks personalizados
+    const { validateAuth } = useAuthValidation(session, subscription);
+    const { makeApiCall, isLoading } = useApiCall(session);
+    const { scriptResult, setScriptResult, handleCopyScript } = useScriptOperations(session, subscription);
+  
 
   const refInterfaceIsp = useRef<HTMLInputElement>(null);
 
@@ -43,86 +49,24 @@ const FormularioRemoteIpPublicStatic = ({ session, subscription }: Props) => {
     }));
   };
 
-  // Envío del formulario
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setError(null);
+ 
+  const handleSubmit = async () => {
+    if (!validateAuth()) return;
 
-    try {
-      // Validación básica
-      if (!formData.interfaceIsp) {
-        setError("Interface ISP is required");
-        return;
-      }
-
-      if (!formData.ipGatewayIsp) {
-        setError("IP Gateway ISP is required");
-        return;
-      }
-
-      if (!formData.idRosVersion) {
-        setError("RouterOS Version is required");
-        return;
-      }
-
-      // Validación de formato de IP
-      const ipRegex = /^(\d{1,3}\.){3}\d{1,3}$/;
-      if (!ipRegex.test(formData.ipGatewayIsp)) {
-        setError("Invalid IP format for Gateway ISP");
-        return;
-      }
-
-      const response = await fetch(
-        `${import.meta.env.PUBLIC_BASE_URL_API}/remote-ip-public-static`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "accept": "*/*",
-          },
-          body: JSON.stringify({
-            interfaceIsp: formData.interfaceIsp,
-            ipGatewayIsp: formData.ipGatewayIsp,
-            idRosVersion: formData.idRosVersion
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result: ScriptResult = await response.json();
+    const result = await makeApiCall("/remote-ip-public-static", formData);
+    if (result) {
       setScriptResult(result);
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      setError("Error generating script. Please try again.");
-    } finally {
-      setIsSubmitting(false);
     }
   };
-
   // Limpieza del formulario
   const handleClear = () => {
-    setFormData({
-      interfaceIsp: "ether1-ISP",
-      ipGatewayIsp: "192.168.10.1",
-      idRosVersion: "ros7"
-    });
+    if (!validateAuth()) return;
+
+    setFormData(formData);
     setScriptResult(null);
-    setError(null);
-    refInterfaceIsp.current?.focus();
   };
 
-  // Copiar script al portapapeles
-  const handleCopy = () => {
-    if (scriptResult) {
-      navigator.clipboard.writeText(scriptResult.text)
-        .then(() => alert("Script copied to clipboard!"))
-        .catch(err => console.error("Failed to copy: ", err));
-    }
-  };
+
 
   return (
     <div className="bg-gray-900 p-6 rounded-lg shadow-lg ">
@@ -204,6 +148,7 @@ const FormularioRemoteIpPublicStatic = ({ session, subscription }: Props) => {
           type="button"
           className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition"
           onClick={handleClear}
+            disabled={!session}
         >
           Borrar Todo
         </button>
@@ -211,15 +156,16 @@ const FormularioRemoteIpPublicStatic = ({ session, subscription }: Props) => {
           type="button"
           className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-bold transition-all duration-300"
           onClick={handleSubmit}
-          disabled={isSubmitting}
+          disabled={isLoading || !session}
         >
           {isSubmitting ? "Generating..." : "Generate"}
         </button>
         <button
           type="button"
           className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-bold transition-all duration-300"
-          onClick={handleCopy}
-          disabled={!scriptResult}
+          onClick={handleCopyScript}
+           disabled={!scriptResult?.html || !session}
+        
         >
           Copy Script
         </button>

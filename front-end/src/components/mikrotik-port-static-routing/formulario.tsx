@@ -3,10 +3,11 @@ import { useState } from "react";
 import { keyIPAddress, keyNumberInteger } from "../../utils/keyEvent";
 import type { Session } from "@auth/core/types";
 import type { Subscription } from "../../types/subscription/subscription";
+import { useApiCall, useAuthValidation, useScriptOperations } from "../forms/BaseForm";
 
 interface Props {
-  session: Session | null;
-  subscription: Subscription | null;
+    session: Session | null;
+    subscription: Subscription | null;
 }
 
 interface ScriptResult {
@@ -38,9 +39,10 @@ const FormularioMikrotikPortStaticRouting = ({ session, subscription }: Props) =
         }
     ]);
 
-    // Estado para el resultado
-    const [result, setResult] = useState<ScriptResult | null>(null);
-    const [error, setError] = useState<string | null>(null);
+    // Usar hooks personalizados
+    const { validateAuth } = useAuthValidation(session, subscription);
+    const { makeApiCall, isLoading } = useApiCall(session);
+    const { scriptResult, setScriptResult, handleCopyScript } = useScriptOperations(session, subscription);
 
     // Función para manejar cambios en los campos de entrada
     const handleInputChange = (field: string, value: string) => {
@@ -64,6 +66,7 @@ const FormularioMikrotikPortStaticRouting = ({ session, subscription }: Props) =
 
     // Función para manejar cambios en las reglas de firewall
     const handleFirewallChange = (id: number, field: string, value: string) => {
+        if (!validateAuth()) return;
         setFirewalls(prevFirewalls =>
             prevFirewalls.map(firewall =>
                 firewall.id === id ? { ...firewall, [field]: value } : firewall
@@ -73,6 +76,8 @@ const FormularioMikrotikPortStaticRouting = ({ session, subscription }: Props) =
 
     // Función para agregar una nueva regla de firewall
     const addFirewallRule = () => {
+        if (!validateAuth()) return;
+
         const newId = firewalls.length > 0 ? Math.max(...firewalls.map(f => f.id)) + 1 : 1;
         setFirewalls([
             ...firewalls,
@@ -90,74 +95,45 @@ const FormularioMikrotikPortStaticRouting = ({ session, subscription }: Props) =
         setFirewalls(firewalls.filter(firewall => firewall.id !== id));
     };
 
-    // Función para generar el script
-    const handleGenerate = async () => {
-        try {
-            // Validar que todos los campos requeridos estén completos
-            if (!ipGatewayIspVpn) {
-                setError("IP Gateway ISP/VPN is required");
-                return;
-            }
 
-            if (firewalls.some(f => !f.targetPort)) {
-                setError("All firewall rules must have a target port");
-                return;
-            }
 
-            const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/mikrotik-port-static-routing`, {
-                method: 'POST',
-                headers: {
-                    'accept': 'application/hal+json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    idRoutingOption,
-                    idRouterOsVersion,
-                    ipGatewayIspVpn,
-                    routingMarkTable,
-                    firewalls: firewalls.map(f => ({
-                        idProtocol: f.idProtocol,
-                        targetPort: f.targetPort,
-                        description: f.description
-                    }))
-                }),
-            });
+    const handleSubmit = async () => {
+        if (!validateAuth()) return;
 
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
+        // if (!ipGatewayIspVpn) {
+        //     setError("IP Gateway ISP/VPN is required");
+        //     return;
+        // }
 
-            const resultData: ScriptResult = await response.json();
-            setResult(resultData);
-            setError(null);
-        } catch (error) {
-            setError('Error generating script: ' + (error as Error).message);
-        }
-    };
+        // if (firewalls.some(f => !f.targetPort)) {
+        //     setError("All firewall rules must have a target port");
+        //     return;
+        // }
 
-    // Función para limpiar el formulario
-    const handleClear = () => {
-        setIdRoutingOption("01");
-        setIdRouterOsVersion("ros6");
-        setIpGatewayIspVpn("");
-        setRoutingMarkTable("");
-        setFirewalls([
-            {
-                id: 1,
-                idProtocol: "TCP",
-                targetPort: "",
-                description: ""
-            }
-        ]);
-        setResult(null);
-        setError(null);
-    };
+        const payload = {
+            idRoutingOption,
+            idRouterOsVersion,
+            ipGatewayIspVpn,
+            routingMarkTable,
+            firewalls: firewalls.map(f => ({
+                idProtocol: f.idProtocol,
+                targetPort: f.targetPort,
+                description: f.description
+            }))
+        };
 
-    // Función para copiar el script
-    const handleCopy = () => {
+        const result = await makeApiCall("/mikrotik-port-static-routing", payload);
         if (result) {
-            navigator.clipboard.writeText(result.text);
+            setScriptResult(result);
         }
+    };
+
+
+    const handleClear = () => {
+        if (!validateAuth()) return;
+
+        setFirewalls(firewalls);
+        setScriptResult(null);
     };
 
     return (
@@ -266,7 +242,7 @@ const FormularioMikrotikPortStaticRouting = ({ session, subscription }: Props) =
                             </thead>
                             <tbody>
                                 {firewalls.map((firewall) => (
-                                    <tr key={firewall.id} className="text-gray-800">                                        
+                                    <tr key={firewall.id} className="text-gray-800">
                                         <td className="border-slate-700 p-2 border">
                                             <select
                                                 className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
@@ -319,11 +295,10 @@ const FormularioMikrotikPortStaticRouting = ({ session, subscription }: Props) =
                             Add Firewall Rule
                         </button>
                     </div>
-                    
+
 
                 </div>
-  <SocialTooltipButton />
-                {error && <p className="text-red-500 text-center mt-4">{error}</p>}
+                <SocialTooltipButton />
 
                 <div className="flex flex-wrap justify-center gap-4 mb-6 mt-7">
                     <button
@@ -333,15 +308,18 @@ const FormularioMikrotikPortStaticRouting = ({ session, subscription }: Props) =
                         Clear All
                     </button>
                     <button
-                        className="text-white px-4 py-2 rounded-md transition ease-in-out delay-150 bg-orange-500 hover:-translate-y-1 hover:scale-110 hover:bg-orange-600 duration-300"
-                        onClick={handleGenerate}
+                        type="button"
+                        className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-600 transition disabled:bg-orange-300 disabled:cursor-not-allowed"
+                        onClick={handleSubmit}
+                        disabled={isLoading || !session}
                     >
-                        Generate Script
+                        <i className="fa-solid fa-wand-magic-sparkles"></i>
+                        {isLoading ? "Generando..." : " Generar"}
                     </button>
 
                     <button
                         className="text-white px-4 py-2 rounded-md transition ease-in-out delay-150 bg-green-500 hover:-translate-y-1 hover:scale-110 hover:bg-teal-600 duration-300"
-                        onClick={handleCopy}
+                        onClick={handleCopyScript}
                     >
                         Copy Script
                     </button>
@@ -352,8 +330,8 @@ const FormularioMikrotikPortStaticRouting = ({ session, subscription }: Props) =
                         Script Generator Result
                     </label>
                     <div className="flex-grow overflow-y-auto bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400">
-                        {result && (
-                            <div dangerouslySetInnerHTML={{ __html: result.html }} />
+                        {scriptResult && (
+                            <div dangerouslySetInnerHTML={{ __html: scriptResult.html }} />
                         )}
                     </div>
                 </div>

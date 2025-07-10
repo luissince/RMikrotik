@@ -39,7 +39,12 @@ if (shouldSignOut) {
       <!-- Contenido Principal -->
       <div class="container mx-auto">
         <!-- Formulario Principal -->
-        <FormularioScriptGenerator client:load />
+        <FormularioScriptGenerator
+          client:load
+          client:load
+          session={session}
+          subscription={subscription}
+        />
       </div>
     </div>
   </div>

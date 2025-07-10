@@ -26,6 +26,26 @@ if (shouldSignOut) {
   <p class="text-gray-300">
         Redirige el tráfico de juegos online a través de un túnel VPN utilizando rutas estáticas basadas en las IP públicas de los servidores de juego. <br>Esta técnica garantiza menor latencia, evita bloqueos geográficos y mejora la estabilidad de la conexión para tus usuarios.
         </p>
+
+            </div>
+        </div>
+
+        <div class="bg-gray-800 rounded-lg mx-4">
+            <!-- Contenido Principal -->
+            <div class="container mx-auto">
+                <!-- Formulario Principal -->
+                <FormularioVpnGameGenerator2 client:load 
+                
+                       client:load
+          session={session}
+          subscription={subscription}
+                
+                />
+            </div>
+        </div>
+    </div>
+
+</MainLayout>
  <style>
      /* Animación personalizada para mover el degradado */
     @keyframes gradientMove {
@@ -39,16 +59,3 @@ if (shouldSignOut) {
       animation: gradientMove 5s ease infinite;
     }
   </style>
-            </div>
-        </div>
-
-        <div class="bg-gray-800 rounded-lg mx-4">
-            <!-- Contenido Principal -->
-            <div class="container mx-auto">
-                <!-- Formulario Principal -->
-                <FormularioVpnGameGenerator2 client:load />
-            </div>
-        </div>
-    </div>
-
-</MainLayout>

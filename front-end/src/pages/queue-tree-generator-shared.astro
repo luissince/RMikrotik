@@ -15,40 +15,56 @@ if (shouldSignOut) {
 ---
 
 <MainLayout title={nameApp}>
-   <div class="flex flex-col py-10 space-y-5">
-        <div class="bg-gray-800 rounded-lg">
-            <!-- Header -->
-            <div class="text-center mb-6">
-             <h1 class="text-2xl lg:text-4xl   font-extrabold text-transparent bg-clip-text animated-gradient bg-gradient-to-r from-amber-400 via-orange-700 to-red-600">
-            SIMPLE QUEUE PARA MIKROTIK + ANCHO DE BANDA COMPARTIDO ("UPTO")
+  <div class="flex flex-col py-10 space-y-5">
+    <div class="bg-gray-800 rounded-lg">
+      <!-- Header -->
+      <div class="text-center mb-6">
+        <h1
+          class="text-2xl lg:text-4xl font-extrabold text-transparent bg-clip-text animated-gradient bg-gradient-to-r from-amber-400 via-orange-700 to-red-600"
+        >
+          SIMPLE QUEUE PARA MIKROTIK + ANCHO DE BANDA COMPARTIDO ("UPTO")
         </h1>
 
-  <p class="text-gray-300">
-        Genera scripts automáticos de Simple Queue en MikroTik para configurar planes de ancho de banda compartido ("Upto"), donde varios usuarios pueden acceder a una velocidad <br>máxima según disponibilidad, sin afectar el rendimiento general de la red.
+        <p class="text-gray-300">
+          Genera scripts automáticos de Simple Queue en MikroTik para configurar
+          planes de ancho de banda compartido ("Upto"), donde varios usuarios
+          pueden acceder a una velocidad <br />máxima según disponibilidad, sin
+          afectar el rendimiento general de la red.
         </p>
- <style>
-     /* Animación personalizada para mover el degradado */
-    @keyframes gradientMove {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    .animated-gradient {
-      background-size: 200% 200%;
-      animation: gradientMove 5s ease infinite;
-    }
-  </style>
-            </div>
-        </div>
-
-        <div class="bg-gray-800 rounded-lg mx-4">
-            <!-- Contenido Principal -->
-            <div class="container mx-auto">
-                <!-- Formulario Principal -->
-                <FormularioQueueThreeGeneratorShared client:load />
-            </div>
-        </div>
+      </div>
     </div>
+
+    <div class="bg-gray-800 rounded-lg mx-4">
+      <!-- Contenido Principal -->
+      <div class="container mx-auto">
+        <!-- Formulario Principal -->
+        <FormularioQueueThreeGeneratorShared
+          client:load
+          client:load
+          session={session}
+          subscription={subscription}
+        />
+      </div>
+    </div>
+  </div>
   <!-- Contenido Fin Aqui para abajo es otro codigo q u se borrara -->
 </MainLayout>
+<style>
+  /* Animación personalizada para mover el degradado */
+  @keyframes gradientMove {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  .animated-gradient {
+    background-size: 200% 200%;
+    animation: gradientMove 5s ease infinite;
+  }
+</style>

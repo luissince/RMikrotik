@@ -26,19 +26,7 @@ if (shouldSignOut) {
   <p class="text-gray-300">
        Dirige el tráfico de cada cliente local según su IP a través de diferentes salidas de Internet usando Policy-Based Routing en MikroTik. Ideal para dividir la red, aplicar balanceo <br> inteligente o separar
         </p>
- <style>
-     /* Animación personalizada para mover el degradado */
-    @keyframes gradientMove {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    .animated-gradient {
-      background-size: 200% 200%;
-      animation: gradientMove 5s ease infinite;
-    }
-  </style>
+ 
             </div>
         </div>
 
@@ -55,8 +43,27 @@ if (shouldSignOut) {
                 </div>
 
                 <!-- Formulario Principal -->
-                <FormularioMikrotikLocalIpPbr client:load />
+                <FormularioMikrotikLocalIpPbr client:load 
+                      client:load
+          session={session}
+          subscription={subscription}
+                
+                
+                />
             </div>
         </div>
     </div>
 </MainLayout>
+<style>
+     /* Animación personalizada para mover el degradado */
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .animated-gradient {
+      background-size: 200% 200%;
+      animation: gradientMove 5s ease infinite;
+    }
+  </style>

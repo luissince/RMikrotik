@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { keyIPAddress } from "../../utils/keyEvent";
 import type { Session } from "@auth/core/types";
 import type { Subscription } from "../../types/subscription/subscription";
+import { useApiCall, useAuthValidation, useScriptOperations } from "../forms/BaseForm";
+import { alertKit } from "alert-kit";
 
 interface Props {
   session: Session | null;
@@ -25,8 +27,11 @@ const FormularioEcmp = ({ session, subscription }: Props) => {
   const [idYourLineWanIsp, setIdYourLineWanIsp] = useState<string>("2");
   const [idRouterOsVersion, setIdRouterOsVersion] = useState<string>("ros6");
   const [lineInterfaces, setLineInterfaces] = useState<LineInterfacesType[]>([]);
-  const [scriptResult, setScriptResult] = useState<ScriptResult | null>(null);
-  const [error, setError] = useState<string | null>(null);
+
+  // Usar hooks personalizados
+  const { validateAuth } = useAuthValidation(session, subscription);
+  const { makeApiCall, isLoading } = useApiCall(session);
+  const { scriptResult, setScriptResult, handleCopyScript } = useScriptOperations(session, subscription);
 
   // Generar líneas iniciales al montar el componente
   useEffect(() => {
@@ -70,68 +75,95 @@ const FormularioEcmp = ({ session, subscription }: Props) => {
   };
 
   // Función para generar el script
-  const handleGenerate = async () => {
-    try {
-      // Validar que todos los campos requeridos estén completos
-      if (!idRouterOsVersion) {
-        setError("RouterOS version is required");
-        return;
-      }
+  const handleSubmit = async () => {
+    if (!validateAuth()) return;
 
-      if (lineInterfaces.some(line => !line.wanInput || !line.gatewayInput)) {
-        setError("All WAN interfaces and gateways must be filled");
-        return;
-      }
-
-      const payload = {
-        idYourLineWanIsp,
-        idRouterOsVersion,
-        interfaces: lineInterfaces.map(line => ({
-          id: line.id,
-          wanIsp: line.wanInput,
-          gatewayIsp: line.gatewayInput
-        }))
-      };
-
-      const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/ecmp`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'accept': 'application/hal+json',
-        },
-        body: JSON.stringify(payload),
+    // Validar que todos los campos requeridos estén completos
+    if (!idRouterOsVersion) {
+      alertKit.warning({
+        title: 'ECMP',
+        message: "RouterOS version is required"
       });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      const resultData: ScriptResult = await response.json();
-      setScriptResult(resultData);
-      setError(null);
-    } catch (error) {
-      setError('Error generating script: ' + (error as Error).message);
+      return;
     }
+
+    if (lineInterfaces.some(line => !line.wanInput || !line.gatewayInput)) {
+      alertKit.warning({
+        title: 'ECMP',
+        message: "All WAN interfaces and gateways must be filled"
+      });
+      return;
+    }
+
+    const payload = {
+      idYourLineWanIsp,
+      idRouterOsVersion,
+      interfaces: lineInterfaces.map(line => ({
+        id: line.id,
+        wanIsp: line.wanInput,
+        gatewayIsp: line.gatewayInput
+      }))
+    };
+
+    const result = await makeApiCall("/ecmp", payload);
+    if (result) {
+      setScriptResult(result);
+    }
+
+    // try {
+    //   // Validar que todos los campos requeridos estén completos
+    //   if (!idRouterOsVersion) {
+    //     setError("RouterOS version is required");
+    //     return;
+    //   }
+
+    //   if (lineInterfaces.some(line => !line.wanInput || !line.gatewayInput)) {
+    //     setError("All WAN interfaces and gateways must be filled");
+    //     return;
+    //   }
+
+    //   const payload = {
+    //     idYourLineWanIsp,
+    //     idRouterOsVersion,
+    //     interfaces: lineInterfaces.map(line => ({
+    //       id: line.id,
+    //       wanIsp: line.wanInput,
+    //       gatewayIsp: line.gatewayInput
+    //     }))
+    //   };
+
+    //   const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/ecmp`, {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       'accept': 'application/hal+json',
+    //     },
+    //     body: JSON.stringify(payload),
+    //   });
+
+    //   if (!response.ok) {
+    //     throw new Error('Network response was not ok');
+    //   }
+
+    //   const resultData: ScriptResult = await response.json();
+    //   setScriptResult(resultData);
+    //   setError(null);
+    // } catch (error) {
+    //   setError('Error generating script: ' + (error as Error).message);
+    // }
   };
 
   // Función para limpiar el formulario
   const handleClear = () => {
+    if (!validateAuth()) return;
+
     setIdYourLineWanIsp("2");
     setIdRouterOsVersion("");
     setLineInterfaces([]);
     setScriptResult(null);
-    setError(null);
     generateLines(2);
   };
 
-  // Función para copiar el script
-  const handleCopy = () => {
-    if (scriptResult) {
-      navigator.clipboard.writeText(scriptResult.text)
-        .then(() => alert("Script copied to clipboard!"))
-        .catch((err) => console.error("Failed to copy: ", err));
-    }
-  };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 bg-gray-900 p-6 rounded-lg shadow-lg">
@@ -172,18 +204,13 @@ const FormularioEcmp = ({ session, subscription }: Props) => {
               </label>
               <select
                 id="routeros-version"
-                className={`w-full bg-gray-800 border ${error && !idRouterOsVersion ? "border-red-500" : "border-gray-600"} rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400`}
+                className={`w-full bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400`}
                 value={idRouterOsVersion}
                 onChange={handleRouterOsVersionChange}
               >
                 <option value="ros6">RouterOS v6.xx</option>
                 <option value="ros7">RouterOS v7.xx</option>
               </select>
-              {error && !idRouterOsVersion && (
-                <p className="mt-1 text-sm text-red-500">
-                  RouterOS version is required
-                </p>
-              )}
             </div>
           </div>
 
@@ -200,15 +227,10 @@ const FormularioEcmp = ({ session, subscription }: Props) => {
                   id={`wan-${index}`}
                   type="text"
                   placeholder={`Ex: ether${index + 1}`}
-                  className={`text-sky-400 font-semibold w-full bg-gray-800 border ${error && !line.wanInput ? "border-red-500" : "border-gray-600"} rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500`}
+                  className={`text-sky-400 font-semibold w-full bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500`}
                   value={line.wanInput}
                   onChange={(e) => handleInterfaceChange(line.id, 'wanInput', e.target.value)}
                 />
-                {error && !line.wanInput && (
-                  <p className="mt-1 text-sm text-red-500">
-                    WAN interface is required
-                  </p>
-                )}
               </div>
               <div className="space-y-2">
                 <label
@@ -221,93 +243,88 @@ const FormularioEcmp = ({ session, subscription }: Props) => {
                   id={`gateway-${index}`}
                   type="text"
                   placeholder={`Ex: 192.168.${index + 1}.1`}
-                  className={`w-full bg-gray-800 text-amber-600 border font-semibold ${error && !line.gatewayInput ? "border-red-500" : "border-gray-600"} rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500`}
+                  className={`w-full bg-gray-800 text-amber-600 border font-semibold border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500`}
                   value={line.gatewayInput}
                   onChange={(e) => handleInterfaceChange(line.id, 'gatewayInput', e.target.value)}
                   onKeyDown={(e) => keyIPAddress(e)}
                 />
-                {error && !line.gatewayInput && (
-                  <p className="mt-1 text-sm text-red-500">
-                    Gateway is required
-                  </p>
-                )}
               </div>
             </div>
           ))}
 
-     
-                 {/* Tienes dudas */}
 
-   <div className="mt-4">
-           <div className="relative flex justify-end group">
-            <button
-              className="shadow-xl/30 text-white text-sm font-medium py-1.5 px-4 rounded-md transition duration-200"
-            >
-              ¿Tienes dudas?
-            </button>
+          {/* Tienes dudas */}
 
-            {/* Tooltip flotante con redes sociales */}
-            <div
-              className="absolute bottom-full right-0 mb-2 w-100 bg-gray-900 bg-opacity-90 text-white
+          <div className="mt-4">
+            <div className="relative flex justify-end group">
+              <button
+                className="shadow-xl/30 text-white text-sm font-medium py-1.5 px-4 rounded-md transition duration-200"
+              >
+                ¿Tienes dudas?
+              </button>
+
+              {/* Tooltip flotante con redes sociales */}
+              <div
+                className="absolute bottom-full right-0 mb-2 w-100 bg-gray-900 bg-opacity-90 text-white
                text-sm rounded-lg p-4 shadow-lg opacity-0 scale-0 transition-all duration-200
                group-hover:opacity-100 group-hover:scale-100 z-10 pointer-events-auto"
-            >
-              <p className="mb-3">Aprende cómo usar la herramienta con nuestro video explicativo</p>
+              >
+                <p className="mb-3">Aprende cómo usar la herramienta con nuestro video explicativo</p>
 
-              {/* Botones de redes */}
-              <div className="flex justify-around">
-                   <a
-                  href="https://x.com/RMikrotik"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-sky-400 hover:bg-blue-500 text-white px-3 py-1 rounded-full text-xs"
-                >
-                Twitter
-                </a>
-                <a
-                  href="https://www.youtube.com/channel/UCq3nYbC1ceUwoZqYiESFb7g"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-full text-xs"
-                >
-                  YouTube
-                </a>
-                <a
-                  href="https://www.tiktok.com/@rmikrotik"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-black hover:bg-gray-800 text-white px-3 py-1 rounded-full text-xs"
-                >
-                  TikTok
-                </a>
-                <a
-                  href="https://www.facebook.com/profile.php?id=61577406418771"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-full text-xs"
-                >
-                  Facebook
-                </a>
-                    <a
-                  href="https://www.instagram.com/rmikrotik/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-pink-600 hover:bg-pink-700 text-white px-3 py-1 rounded-full text-xs"
-                >
-                  Instagram
-                </a>
+                {/* Botones de redes */}
+                <div className="flex justify-around">
+                  <a
+                    href="https://x.com/RMikrotik"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-sky-400 hover:bg-blue-500 text-white px-3 py-1 rounded-full text-xs"
+                  >
+                    Twitter
+                  </a>
+                  <a
+                    href="https://www.youtube.com/channel/UCq3nYbC1ceUwoZqYiESFb7g"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-full text-xs"
+                  >
+                    YouTube
+                  </a>
+                  <a
+                    href="https://www.tiktok.com/@rmikrotik"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-black hover:bg-gray-800 text-white px-3 py-1 rounded-full text-xs"
+                  >
+                    TikTok
+                  </a>
+                  <a
+                    href="https://www.facebook.com/profile.php?id=61577406418771"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-full text-xs"
+                  >
+                    Facebook
+                  </a>
+                  <a
+                    href="https://www.instagram.com/rmikrotik/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-pink-600 hover:bg-pink-700 text-white px-3 py-1 rounded-full text-xs"
+                  >
+                    Instagram
+                  </a>
+                </div>
+
+                {/* Triángulo */}
+                <div className="absolute -bottom-1.5 right-3 w-3 h-3 rotate-45 bg-gray-900 bg-opacity-90"></div>
               </div>
-
-              {/* Triángulo */}
-              <div className="absolute -bottom-1.5 right-3 w-3 h-3 rotate-45 bg-gray-900 bg-opacity-90"></div>
             </div>
           </div>
-          </div>
 
-  {/* Tienes dudas Fin*/}
-    
+          {/* Tienes dudas Fin*/}
+
         </form>
-        
+
       </div>
 
       {/* Result Section */}
@@ -327,7 +344,8 @@ const FormularioEcmp = ({ session, subscription }: Props) => {
           <button
             type="button"
             className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition"
-            onClick={handleGenerate}
+            onClick={handleSubmit}
+            disabled={isLoading || !session}
           >
             Generar
           </button>
@@ -343,8 +361,8 @@ const FormularioEcmp = ({ session, subscription }: Props) => {
           <button
             type="button"
             className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
-            onClick={handleCopy}
-            disabled={!scriptResult}
+            onClick={handleCopyScript}
+            disabled={!scriptResult?.html || !session}
           >
             Copiar Script
           </button>

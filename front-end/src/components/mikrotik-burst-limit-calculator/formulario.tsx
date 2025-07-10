@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import SocialTooltipButton from "../SocialTooltipButton";
 import type { Session } from "@auth/core/types";
 import type { Subscription } from "../../types/subscription/subscription";
+import { useApiCall, useAuthValidation, useScriptOperations } from '../forms/BaseForm';
 
 interface Props {
-  session: Session | null;
-  subscription: Subscription | null;
+    session: Session | null;
+    subscription: Subscription | null;
 }
+
 interface FormData {
     uploadMaxLimit: string;
     uploadBurstLimit: string;
@@ -16,25 +18,7 @@ interface FormData {
     downloadBurstTime: string;
 }
 
-interface ApiResponse {
-    data: {
-        "upload-max-limit": string;
-        "download-actual-burst-duration": string;
-        "upload-threshold": string;
-        "upload-actual-burst-duration": string;
-        "upload-limit-at": string;
-        "download-limit-at": string;
-        "upload-burst-time-value": string;
-        "upload-burst-limit": string;
-        "download-max-limit": string;
-        "download-burst-limit": string;
-        "download-threshold": string;
-        "download-burst-time-value": string;
-    };
-    "reate-limit": string;
-}
-
-const FormularioMikrotikBurstLimitCalculator: React.FC = ({ session, subscription }: Props) => {
+const FormularioMikrotikBurstLimitCalculator = ({ session, subscription }: Props) => {
     const [formData, setFormData] = useState<FormData>({
         uploadMaxLimit: '512K',
         uploadBurstLimit: '1M',
@@ -44,8 +28,11 @@ const FormularioMikrotikBurstLimitCalculator: React.FC = ({ session, subscriptio
         downloadBurstTime: '6',
     });
 
-    const [apiData, setApiData] = useState<ApiResponse | null>(null);
-    const [error, setError] = useState<string | null>(null);
+    // Usar hooks personalizados
+    const { validateAuth } = useAuthValidation(session, subscription);
+    const { makeApiCall, isLoading } = useApiCall(session);
+    const { scriptResult, setScriptResult, handleCopyScript } = useScriptOperations(session, subscription);
+
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target;
@@ -56,25 +43,11 @@ const FormularioMikrotikBurstLimitCalculator: React.FC = ({ session, subscriptio
     };
 
     const handleGenerate = async () => {
-        setError(null); // Reset error state
-        try {
-            const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/mikrotik-burst-limit-calculator`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'accept': 'application/hal+json',
-                },
-                body: JSON.stringify(formData),
-            });
+        if (!validateAuth()) return;
 
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-
-            const result: ApiResponse = await response.json();
-            setApiData(result);
-        } catch (error) {
-            setError('Error calling API: ' + (error as Error).message);
+        const result = await makeApiCall("/mikrotik-burst-limit-calculator", formData);
+        if (result) {
+            setScriptResult(result);
         }
     };
 
@@ -178,20 +151,19 @@ const FormularioMikrotikBurstLimitCalculator: React.FC = ({ session, subscriptio
                             </tr>
                         </tbody>
                     </table>
-                  
-                     <SocialTooltipButton />
+
+                    <SocialTooltipButton />
                     <div className="flex justify-center mb-8 mt-8">
                         <img src="/images/NAT.png" alt="Routing Diagram" className="rounded-lg" />
-                        
+
                     </div>
-                   
+
                 </div>
             </div>
 
             <div className="flex flex-col lg:w-1/2 min-h-0">
                 <div className="space-y-4">
                     <h3 className="text-xl font-bold text-gray-100 mb-4">BURST LIMIT FOR QUEUE</h3>
-                    {error && <p className="text-red-500">{error}</p>}
 
                     <div className="overflow-x-auto rounded-t-lg">
                         <table className="table-auto w-full border-spacing-2 mb-6">
@@ -205,28 +177,28 @@ const FormularioMikrotikBurstLimitCalculator: React.FC = ({ session, subscriptio
                             <tbody>
                                 <tr>
                                     <td className="p-2 border text-slate-300">Max Limit</td>
-                                    <td className="p-2 border text-green-500 font-bold">{apiData && apiData.data["upload-max-limit"]}</td>
-                                    <td className="p-2 border text-green-500 font-bold">{apiData && apiData.data["download-max-limit"]}</td>
+                                    <td className="p-2 border text-green-500 font-bold">{scriptResult?.data && scriptResult.data["upload-max-limit"]}</td>
+                                    <td className="p-2 border text-green-500 font-bold">{scriptResult?.data && scriptResult.data["download-max-limit"]}</td>
                                 </tr>
                                 <tr>
                                     <td className="p-2 border text-slate-300">Burst Limit</td>
-                                    <td className="p-2 border text-blue-500 font-bold">{apiData && apiData.data["upload-burst-limit"]}</td>
-                                    <td className="p-2 border text-blue-500 font-bold">{apiData && apiData.data["download-burst-limit"]}</td>
+                                    <td className="p-2 border text-blue-500 font-bold">{scriptResult?.data && scriptResult?.data["upload-burst-limit"]}</td>
+                                    <td className="p-2 border text-blue-500 font-bold">{scriptResult?.data && scriptResult?.data["download-burst-limit"]}</td>
                                 </tr>
                                 <tr>
                                     <td className="p-2 border text-slate-300">Burst Threshold</td>
-                                    <td className="p-2 border text-purple-500 font-bold">{apiData && apiData.data["upload-threshold"]}</td>
-                                    <td className="p-2 border text-purple-500 font-bold">{apiData && apiData.data["download-threshold"]}</td>
+                                    <td className="p-2 border text-purple-500 font-bold">{scriptResult?.data && scriptResult?.data["upload-threshold"]}</td>
+                                    <td className="p-2 border text-purple-500 font-bold">{scriptResult?.data && scriptResult?.data["download-threshold"]}</td>
                                 </tr>
                                 <tr>
                                     <td className="p-2 border text-slate-300">Burst Time</td>
-                                    <td className="p-2 border text-red-500 font-bold">{apiData && apiData.data["upload-burst-time-value"]}</td>
-                                    <td className="p-2 border text-red-500 font-bold">{apiData && apiData.data["download-burst-time-value"]}</td>
+                                    <td className="p-2 border text-red-500 font-bold">{scriptResult?.data && scriptResult?.data["upload-burst-time-value"]}</td>
+                                    <td className="p-2 border text-red-500 font-bold">{scriptResult?.data && scriptResult?.data["download-burst-time-value"]}</td>
                                 </tr>
                                 <tr>
                                     <td className="p-2 border text-slate-300">Limit At</td>
-                                    <td className="p-2 border text-orange-500 font-bold">{apiData && apiData.data["upload-limit-at"]}</td>
-                                    <td className="p-2 border text-orange-500 font-bold">{apiData && apiData.data["download-limit-at"]}</td>
+                                    <td className="p-2 border text-orange-500 font-bold">{scriptResult?.data && scriptResult?.data["upload-limit-at"]}</td>
+                                    <td className="p-2 border text-orange-500 font-bold">{scriptResult?.data && scriptResult?.data["download-limit-at"]}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -242,13 +214,13 @@ const FormularioMikrotikBurstLimitCalculator: React.FC = ({ session, subscriptio
                             <tbody>
                                 <tr>
                                     <td className="p-2 border text-slate-300">Limit At</td>
-                                    <td className="p-2 border text-violet-400 font-bold">{apiData && apiData.data["upload-limit-at"]}</td>
-                                    <td className="p-2 border text-violet-400 font-bold">{apiData && apiData.data["download-limit-at"]}</td>
+                                    <td className="p-2 border text-violet-400 font-bold">{scriptResult?.data && scriptResult?.data["upload-limit-at"]}</td>
+                                    <td className="p-2 border text-violet-400 font-bold">{scriptResult?.data && scriptResult?.data["download-limit-at"]}</td>
                                 </tr>
                                 <tr>
                                     <td className="p-2 border text-slate-300">Priority</td>
-                                    <td className="p-2 border text-sky-400 font-bold">{apiData && apiData.data["upload-actual-burst-duration"]}</td>
-                                    <td className="p-2 border text-sky-400 font-bold">{apiData && apiData.data["download-actual-burst-duration"]}</td>
+                                    <td className="p-2 border text-sky-400 font-bold">{scriptResult?.data && scriptResult?.data["upload-actual-burst-duration"]}</td>
+                                    <td className="p-2 border text-sky-400 font-bold">{scriptResult?.data && scriptResult?.data["download-actual-burst-duration"]}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -262,7 +234,7 @@ const FormularioMikrotikBurstLimitCalculator: React.FC = ({ session, subscriptio
                             <tbody>
                                 <tr className="bg-gray-100 text-gray-200">
                                     <td className="bg-red-600 text-gray-200 p-2 border-separate text-center">
-                                        {apiData && apiData["reate-limit"] || "0K/0M 0M/0M 0K/0K 0/0 0 0K/0K"}
+                                        {scriptResult && scriptResult.reateLimit || "0K/0M 0M/0M 0K/0K 0/0 0 0K/0K"}
                                     </td>
                                 </tr>
                             </tbody>
@@ -274,12 +246,15 @@ const FormularioMikrotikBurstLimitCalculator: React.FC = ({ session, subscriptio
                             type="button"
                             onClick={handleGenerate}
                             className="text-white px-4 py-2 rounded-md transition ease-in-out delay-150 bg-orange-500 hover:-translate-y-1 hover:scale-110 hover:bg-orange-600 duration-300"
+                              disabled={isLoading || !session}
                         >
                             Generar
                         </button>
                         <button
                             type="button"
                             className="text-white px-4 py-2 rounded-md transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-blue-600 duration-300"
+                            onClick={handleCopyScript}
+                            
                         >
                             Copiar Script Generado
                         </button>

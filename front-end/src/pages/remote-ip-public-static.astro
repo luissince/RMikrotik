@@ -27,6 +27,23 @@ if (shouldSignOut) {
   <p class="text-gray-300">
         Habilita el acceso remoto seguro a tu router MikroTik desde cualquier lugar del mundo usando una IP pública estática asignada por tu proveedor de Internet (ISP).<br> Ideal para monitoreo, soporte técnico, configuraciones o gestión a distancia.
         </p>
+
+        </div>
+    </div>
+
+    <div class="bg-gray-800 rounded-lg mx-4">
+        <!-- Contenido Principal -->
+        <div class="container mx-auto">
+            <!-- Formulario Principal -->
+            <Formularioremoteippublicstatic client:load 
+            client:load
+          session={session}
+          subscription={subscription}
+          />
+        </div>
+    </div>
+</div>
+</MainLayout>
  <style>
      /* Animación personalizada para mover el degradado */
     @keyframes gradientMove {
@@ -40,15 +57,3 @@ if (shouldSignOut) {
       animation: gradientMove 5s ease infinite;
     }
   </style>
-        </div>
-    </div>
-
-    <div class="bg-gray-800 rounded-lg mx-4">
-        <!-- Contenido Principal -->
-        <div class="container mx-auto">
-            <!-- Formulario Principal -->
-            <Formularioremoteippublicstatic client:load />
-        </div>
-    </div>
-</div>
-</MainLayout>

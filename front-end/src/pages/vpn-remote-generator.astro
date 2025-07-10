@@ -26,6 +26,24 @@ if (shouldSignOut) {
   <p class="text-gray-300">
         Crea en segundos tu configuración VPN remota en MikroTik con nuestro generador automático. Compatible con los principales protocolos:<br> SSTP, L2TP, PPTP y OpenVPN. Conéctate de forma segura a tu red desde cualquier lugar, sin complicaciones técnicas.
         </p>
+          
+            </div>
+        </div>
+
+        <div class="bg-gray-800 rounded-lg mx-4">
+            <!-- Contenido Principal -->
+            <div class="container mx-auto">
+                <!-- Formulario Principal -->
+                <FormularioVpnRemoteGenerator client:load 
+                
+                       client:load
+          session={session}
+          subscription={subscription}
+                />
+            </div>
+        </div>
+    </div>
+</MainLayout>
  <style>
      /* Animación personalizada para mover el degradado */
     @keyframes gradientMove {
@@ -38,16 +56,4 @@ if (shouldSignOut) {
       background-size: 200% 200%;
       animation: gradientMove 5s ease infinite;
     }
-  </style>            
-            </div>
-        </div>
-
-        <div class="bg-gray-800 rounded-lg mx-4">
-            <!-- Contenido Principal -->
-            <div class="container mx-auto">
-                <!-- Formulario Principal -->
-                <FormularioVpnRemoteGenerator client:load />
-            </div>
-        </div>
-    </div>
-</MainLayout>
+  </style>  

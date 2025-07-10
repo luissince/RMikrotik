@@ -4,7 +4,7 @@ import AlertKit, { alertKit } from "alert-kit";
 import { buttonPresets } from "../../styles/buttonStyles";
 import type { Subscription } from "../../types/subscription/subscription";
 
-// Configuración global de AlertKit (mover a un archivo separado si se usa en múltiples lugares)
+// Configuración global de AlertKit
 AlertKit.setGlobalDefaults({
     headerClassName: 'bg-white p-4 border-b border-gray-200 rounded-t-2xl cursor-move',
     headerTitle: 'RMikrotik',
@@ -34,6 +34,22 @@ export interface ScriptResult {
     html: string;
     pdf?: string;
     text: string;
+    data?: {
+        "upload-max-limit": string;
+        "download-actual-burst-duration": string;
+        "upload-threshold": string;
+        "upload-actual-burst-duration": string;
+        "upload-limit-at": string;
+        "download-limit-at": string;
+        "upload-burst-time-value": string;
+        "upload-burst-limit": string;
+        "download-max-limit": string;
+        "download-burst-limit": string;
+        "download-threshold": string;
+        "download-burst-time-value": string;
+    };
+    reateLimit?: string;
+    categories?: any;
 }
 
 /**
@@ -57,7 +73,6 @@ export const useAuthValidation = (session: Session | null, subscription: Subscri
             });
             return false;
         }
-
         if (!subscription) {
             alertKit.warning({
                 title: 'Suscripción',
@@ -65,7 +80,6 @@ export const useAuthValidation = (session: Session | null, subscription: Subscri
             });
             return false;
         }
-
         if (subscription?.status !== "active") {
             alertKit.warning({
                 title: 'Suscripción',
@@ -73,7 +87,6 @@ export const useAuthValidation = (session: Session | null, subscription: Subscri
             });
             return false;
         }
-
         return true;
     };
 
@@ -86,23 +99,27 @@ export const useAuthValidation = (session: Session | null, subscription: Subscri
 export const useApiCall = (session: Session | null) => {
     const [isLoading, setIsLoading] = useState(false);
 
-    const makeApiCall = async (endpoint: string, payload: any): Promise<ScriptResult | null> => {
+    const makeApiCall = async (endpoint: string, payload?: any, method: string = "POST",): Promise<ScriptResult | null> => {
         setIsLoading(true);
         try {
-
             alertKit.loading({ message: 'Generando...' });
+
+            const config: RequestInit = {
+                method: method,
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "Authorization": `${session?.user?.type} ${session?.user?.token}`,
+                },
+            };
+
+            if (method !== "GET" && payload) {
+                config.body = JSON.stringify(payload);
+            }
 
             const response = await fetch(
                 `${import.meta.env.PUBLIC_BASE_URL_API}${endpoint}`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Accept": "application/json",
-                        "Authorization": `${session?.user?.type} ${session?.user?.token}`,
-                    },
-                    body: JSON.stringify(payload),
-                }
+                config
             );
 
             const result = await response.json();
@@ -116,7 +133,6 @@ export const useApiCall = (session: Session | null) => {
             }
 
             alertKit.close();
-
             return result as ScriptResult;
         } catch (error) {
             alertKit.error({
@@ -141,10 +157,9 @@ export const useScriptOperations = (session: Session | null, subscription: Subsc
 
     const handleCopyScript = () => {
         if (!validateAuth()) return;
-
         if (scriptResult) {
             navigator.clipboard
-                .writeText(scriptResult.text)
+                .writeText(scriptResult.text || scriptResult.reateLimit!)
                 .then(() => {
                     alertKit.success({
                         title: "Script",

@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import SocialTooltipButton from "../SocialTooltipButton";
 import type { Session } from "@auth/core/types";
 import type { Subscription } from "../../types/subscription/subscription";
+import { useApiCall, useAuthValidation, useScriptOperations } from "../forms/BaseForm";
 
 interface Props {
-  session: Session | null;
-  subscription: Subscription | null;
+    session: Session | null;
+    subscription: Subscription | null;
 }
 
 interface Game {
@@ -55,33 +56,32 @@ const FormularioVpnGameGenerator2 = ({ session, subscription }: Props) => {
         ipGatewayIspGameValue: '',
     });
     const [error, setError] = useState<string | null>(null);
-    const [scriptResult, setScriptResult] = useState<ScriptResult | null>(null);
+
     const [selectedGames, setSelectedGames] = useState<Game[]>([]);
+    // Usar hooks personalizados
+    const { validateAuth } = useAuthValidation(session, subscription);
+    const { makeApiCall, isLoading } = useApiCall(session);
+    const { scriptResult, setScriptResult, handleCopyScript } = useScriptOperations(session, subscription);
 
-    useEffect(() => {
-        const fetchGames = async () => {
-            try {
-                const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/games`, {
-                    method: 'GET',
-                    headers: {
-                        'accept': 'application/json',
-                    },
-                });
 
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
 
-                const result: ApiResponse = await response.json();
-                setCategories(result.categories);
-            } catch (error) {
-                setError('Error fetching games: ' + (error as Error).message);
-            }
-        };
 
-        fetchGames();
-    }, []);
 
+    const handleSubmit = async () => {
+        if (!validateAuth()) return;
+
+        const result = await makeApiCall("/vpn-game-generator2", formData);
+        if (result) {
+            setScriptResult(result);
+        }
+    };
+
+    const handleClear = () => {
+        if (!validateAuth()) return;
+
+        setFormData(formData);
+        setScriptResult(null);
+    };
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { id, value, type } = e.target;
 
@@ -100,41 +100,8 @@ const FormularioVpnGameGenerator2 = ({ session, subscription }: Props) => {
         }
     };
 
-    const handleGenerate = async () => {
-        try {
-            const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/vpn-game-generator-2`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'accept': 'application/json',
-                },
-                body: JSON.stringify({ ...formData, games: selectedGames }),
-            });
 
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
 
-            const resultData: ScriptResult = await response.json();
-            setScriptResult(resultData);
-        } catch (error) {
-            setError('Error generating script: ' + (error as Error).message);
-        }
-    };
-
-    const handleClear = () => {
-        setFormData({
-            idVpnConnection: 'pptp',
-            vpnNameOnInterface: '',
-            vpnIpAddress: '',
-            vpnUsername: '',
-            vpnPassword: '',
-            ipGatewayIspGame: false,
-            ipGatewayIspGameValue: '',
-        });
-        setSelectedGames([]);
-        setScriptResult(null);
-    };
 
     const handleGameSelect = (game: Game) => {
         const newSelectedGames = [...selectedGames];
@@ -274,7 +241,7 @@ const FormularioVpnGameGenerator2 = ({ session, subscription }: Props) => {
                         ))}
                     </div>
                 </div>
-                  <SocialTooltipButton />
+                <SocialTooltipButton />
             </div>
 
             {/* Columna Derecha */}
@@ -290,24 +257,30 @@ const FormularioVpnGameGenerator2 = ({ session, subscription }: Props) => {
                 <div className="flex mt-4 space-x-4">
                     <button
                         type="button"
-                        className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition"
-                        onClick={handleGenerate}
+                        className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-600 transition disabled:bg-orange-300 disabled:cursor-not-allowed"
+                        onClick={handleSubmit}
+                        disabled={isLoading || !session}
                     >
-                        Generate
+                        <i className="fa-solid fa-wand-magic-sparkles"></i>
+                        {isLoading ? "Generando..." : " Generar"}
                     </button>
                     <button
                         type="button"
                         className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition"
                         onClick={handleClear}
+                        disabled={!session}
                     >
-                        Clear All
+                        <i className="fa-solid fa-trash mr-2"></i>
+                        Borrar Todo
                     </button>
                     <button
                         type="button"
-                        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
-                        onClick={() => scriptResult && navigator.clipboard.writeText(scriptResult.text)}
+                        className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition disabled:bg-indigo-500 disabled:cursor-not-allowed"
+                        onClick={handleCopyScript}
+                        disabled={!scriptResult?.html || !session}
                     >
-                        Copy Script
+                        <i className="fa-solid fa-arrow-up-from-bracket mr-2"></i>
+                        Copiar Script
                     </button>
                 </div>
             </div>

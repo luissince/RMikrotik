@@ -26,6 +26,24 @@ RUTEO ESTÁTICO POR PUERTOS TCP/UDP
   <p class="text-gray-300">
         Dirige el tráfico de puertos específicos (TCP/UDP) a través de diferentes salidas de Internet con Policy-Based Routing en MikroTik. <br>Ideal para separar tráfico de juegos, videollamadas, descargas o servicios críticos, y garantizar mayor estabilidad y rendimiento
         </p>
+
+        </div>
+    </div>
+
+    <div class="bg-gray-800 rounded-lg mx-4">
+        <!-- Contenido Principal -->
+        <div class="container mx-auto">
+            <!-- Formulario Principal -->
+            <FormularioMikrotikPortStaticRouting client:load 
+                   client:load
+          session={session}
+          subscription={subscription}
+            
+            />
+        </div>
+    </div>
+</div>
+</MainLayout>
  <style>
      /* Animación personalizada para mover el degradado */
     @keyframes gradientMove {
@@ -39,15 +57,3 @@ RUTEO ESTÁTICO POR PUERTOS TCP/UDP
       animation: gradientMove 5s ease infinite;
     }
   </style>
-        </div>
-    </div>
-
-    <div class="bg-gray-800 rounded-lg mx-4">
-        <!-- Contenido Principal -->
-        <div class="container mx-auto">
-            <!-- Formulario Principal -->
-            <FormularioMikrotikPortStaticRouting client:load />
-        </div>
-    </div>
-</div>
-</MainLayout>

@@ -4,10 +4,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import type { Session } from "@auth/core/types";
 import type { Subscription } from "../../types/subscription/subscription";
+import { useApiCall, useAuthValidation, useScriptOperations } from "../forms/BaseForm";
+
 interface Props {
   session: Session | null;
   subscription: Subscription | null;
 }
+
 const lineInterfaceSchema = z.object({
   id: z.number(),
   wan: z.string(),
@@ -27,15 +30,10 @@ const formSchema = z.object({
   lineInterfaces: z.array(lineInterfaceSchema),
 });
 
-
 type FormValues = z.infer<typeof formSchema>;
 
 type LineInterfacesType = z.infer<typeof lineInterfaceSchema>;
 
-type ScriptResult = {
-  html: string;
-  text: string;
-};
 const Formulario = ({ session, subscription }: Props) => {
   const {
     control,
@@ -59,8 +57,15 @@ const Formulario = ({ session, subscription }: Props) => {
     name: "lineInterfaces",
   });
   const localValue = watch("local");
-  const [scriptResult, setScriptResult] = useState<ScriptResult | null>(null);
 
+  // Usar hooks personalizados
+  const { validateAuth } = useAuthValidation(session, subscription);
+  const { makeApiCall, isLoading } = useApiCall(session);
+  const { scriptResult, setScriptResult, handleCopyScript } = useScriptOperations(session, subscription);
+
+  useEffect(() => {
+    generateLines(2);
+  }, []);
 
   const generateLines = (numbers: number) => {
     const list: LineInterfacesType[] = Array.from({ length: numbers }).map(
@@ -78,11 +83,10 @@ const Formulario = ({ session, subscription }: Props) => {
     replace(list);
     setValue("linea", numbers);
   };
-  useEffect(() => {
-    generateLines(2);
-  }, []);
 
   const onSubmit = async (data: FormValues) => {
+    if (!validateAuth()) return;
+
     const payload = {
       idLineWan: String(data.linea),
       idRouterVersion: data.router,
@@ -95,28 +99,15 @@ const Formulario = ({ session, subscription }: Props) => {
       })),
     };
 
-    try {
-      const response = await fetch(
-        `${import.meta.env.PUBLIC_BASE_URL_API}/Balanceo_NTH`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
-        }
-      );
-      const responseData: ScriptResult = await response.json();
-      setScriptResult({
-        html: responseData.html,
-        text: responseData.text,
-      });
-    } catch (error) {
-      console.error("Error submitting form:", error);
+    const result = await makeApiCall("/Balanceo_NTH", payload);
+    if (result) {
+      setScriptResult(result);
     }
   };
 
   const handleClearAll = () => {
+    if (!validateAuth()) return;
+
     reset({
       linea: 2,
       router: "",
@@ -131,15 +122,7 @@ const Formulario = ({ session, subscription }: Props) => {
     setScriptResult(null);
   };
 
-  const handleCopyScript = () => {
-    if (scriptResult) {
-      const result = scriptResult.text;
-      navigator.clipboard
-        .writeText(result)
-        .then(() => alert("Script copied to clipboard!"))
-        .catch((err) => console.error("Failed to copy: ", err));
-    }
-  };
+
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -326,10 +309,21 @@ const Formulario = ({ session, subscription }: Props) => {
                   </p>
                 )}
               </div>
+
             </div>
           ))}
 
-       
+ <button
+  type="button"
+  className="outline-2 outline-offset-2 outline-solid font-sans  bg-orange-600 text-white px-4 py-3 w-full rounded hover:bg-orange-600 transition disabled:bg-orange-300 disabled:cursor-not-allowed flex items-center justify-center"
+  onClick={handleSubmit(onSubmit)}
+  disabled={isLoading || !session}
+>
+  
+  {isSubmitting ? "Generando..." : "Generar"}
+
+</button>
+
 
         </form>
 
@@ -348,100 +342,100 @@ const Formulario = ({ session, subscription }: Props) => {
         <div className="flex mt-4 space-x-4">
           <button
             type="button"
-            className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition disabled:bg-orange-300 disabled:cursor-not-allowed"
-            onClick={handleSubmit(onSubmit)}
-            disabled={isSubmitting}
-          ><i className="fa-solid fa-wand-magic-sparkles"></i>
-            {isSubmitting ? "Generando..." : "Generar"}
-          </button>
-
-          <button
-            type="button"
-            className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition"
+            className="flex items-center bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition disabled:bg-gray-500 disabled:cursor-not-allowed"
             onClick={handleClearAll}
-          ><i className="fa-solid fa-trash mr-2"></i>
+            disabled={!session}
+          >
+            {/* Icono de Heroicons para borrar */}
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
             Borrar Todo
           </button>
 
           <button
             type="button"
-            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition disabled:bg-green-300 disabled:cursor-not-allowed"
+            className="flex items-center bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition disabled:bg-indigo-500 disabled:cursor-not-allowed"
             onClick={handleCopyScript}
-            disabled={!scriptResult?.html}
-          ><i className="fa-solid fa-arrow-up-from-bracket mr-2"></i>
+            disabled={!scriptResult?.html || !session}
+          >
+            {/* Icono de Heroicons para copiar */}
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
             Copiar Script
           </button>
         </div>
       </div>
-          {/* Tienes dudas */}
+      {/* Tienes dudas */}
 
-   <div className="mt-4">
-           <div className="relative flex justify-end group">
-            <button
-              className="shadow-xl/30 text-white text-sm font-medium py-1.5 px-4 rounded-md transition duration-200"
-            >
-              ¿Tienes dudas?
-            </button>
+      <div className="mt-4">
+        <div className="relative flex justify-end group">
+          <button
+            className="shadow-xl/30 text-white text-sm font-medium py-1.5 px-4 rounded-md transition duration-200"
+          >
+            ¿Tienes dudas?
+          </button>
 
-            {/* Tooltip flotante con redes sociales */}
-            <div
-              className="absolute bottom-full right-0 mb-2 w-100 bg-gray-900 bg-opacity-90 text-white
+          {/* Tooltip flotante con redes sociales */}
+          <div
+            className="absolute bottom-full right-0 mb-2 w-100 bg-gray-900 bg-opacity-90 text-white
                text-sm rounded-lg p-4 shadow-lg opacity-0 scale-0 transition-all duration-200
                group-hover:opacity-100 group-hover:scale-100 z-10 pointer-events-auto"
-            >
-              <p className="mb-3">Aprende cómo usar la herramienta con nuestro video explicativo</p>
+          >
+            <p className="mb-3">Aprende cómo usar la herramienta con nuestro video explicativo</p>
 
-              {/* Botones de redes */}
-              <div className="flex justify-around">
-                   <a
-                  href="https://x.com/RMikrotik"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-sky-400 hover:bg-blue-500 text-white px-3 py-1 rounded-full text-xs"
-                >
+            {/* Botones de redes */}
+            <div className="flex justify-around">
+              <a
+                href="https://x.com/RMikrotik"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-sky-400 hover:bg-blue-500 text-white px-3 py-1 rounded-full text-xs"
+              >
                 Twitter
-                </a>
-                <a
-                  href="https://www.youtube.com/channel/UCq3nYbC1ceUwoZqYiESFb7g"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-full text-xs"
-                >
-                  YouTube
-                </a>
-                <a
-                  href="https://www.tiktok.com/@rmikrotik"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-black hover:bg-gray-800 text-white px-3 py-1 rounded-full text-xs"
-                >
-                  TikTok
-                </a>
-                <a
-                  href="https://www.facebook.com/profile.php?id=61577406418771"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-full text-xs"
-                >
-                  Facebook
-                </a>
-                    <a
-                  href="https://www.instagram.com/rmikrotik/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-pink-600 hover:bg-pink-700 text-white px-3 py-1 rounded-full text-xs"
-                >
-                  Instagram
-                </a>
-              </div>
-
-              {/* Triángulo */}
-              <div className="absolute -bottom-1.5 right-3 w-3 h-3 rotate-45 bg-gray-900 bg-opacity-90"></div>
+              </a>
+              <a
+                href="https://www.youtube.com/channel/UCq3nYbC1ceUwoZqYiESFb7g"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-full text-xs"
+              >
+                YouTube
+              </a>
+              <a
+                href="https://www.tiktok.com/@rmikrotik"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-black hover:bg-gray-800 text-white px-3 py-1 rounded-full text-xs"
+              >
+                TikTok
+              </a>
+              <a
+                href="https://www.facebook.com/profile.php?id=61577406418771"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-full text-xs"
+              >
+                Facebook
+              </a>
+              <a
+                href="https://www.instagram.com/rmikrotik/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-pink-600 hover:bg-pink-700 text-white px-3 py-1 rounded-full text-xs"
+              >
+                Instagram
+              </a>
             </div>
-          </div>
-          </div>
 
-  {/* Tienes dudas Fin*/}
+            {/* Triángulo */}
+            <div className="absolute -bottom-1.5 right-3 w-3 h-3 rotate-45 bg-gray-900 bg-opacity-90"></div>
+          </div>
+        </div>
+      </div>
+
+      {/* Tienes dudas Fin*/}
 
     </div>
 
