@@ -26,9 +26,7 @@ if (shouldSignOut) {
         RouterOS
       </h1>
 
-      <Formulario client:load />
-
-      
+      <Formulario client:load session={session} subscription={subscription} />
     </div>
   </body>
 </MainLayout>

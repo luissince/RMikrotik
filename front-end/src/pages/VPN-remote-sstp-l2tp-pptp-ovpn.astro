@@ -5,12 +5,12 @@ import { getAuthData } from "../utils/auth";
 import { nameApp } from "../utils/constants";
 // Obtener los datos de la sesión y suscripción
 const { session, subscription, shouldSignOut } = await getAuthData(
-  Astro.request,
+    Astro.request,
 );
 
 // Si necesita cerrar sesión, redirigir a logout
 if (shouldSignOut) {
-  return Astro.redirect("/logout?reason=expired");
+    return Astro.redirect("/logout?reason=expired");
 }
 ---
 
@@ -37,10 +37,12 @@ if (shouldSignOut) {
             <div class="container mx-auto p-6 bg-gray-800 rounded-lg shadow-lg">
                 <!-- Título -->
 
-             
-                    <!-- Columna Izquierda -->
-                    <FormularioVPNremoteSstpL2tpPptpOvpn client:load />
-                
+                <!-- Columna Izquierda -->
+                <FormularioVPNremoteSstpL2tpPptpOvpn
+                    client:load
+                    session={session}
+                    subscription={subscription}
+                />
             </div>
         </div>
 

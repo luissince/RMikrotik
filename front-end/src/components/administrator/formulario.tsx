@@ -18,8 +18,11 @@ import CouponStats from './CouponStats';
 import CouponsTable from './CouponsTable';
 import CouponModal from './CouponModal';
 import type { Coupon } from '../../types/coupon/coupon';
+import { alertKit } from 'alert-kit';
+import type { Session } from '@auth/core/types';
 
 interface Props {
+  session: Session | null;
   subscription: Subscription | null;
   user: User | null;
   subscriptions: Subscription[];
@@ -137,10 +140,42 @@ const AdminSubscriptions: React.FC<Props> = (initialProps) => {
 
   const handleAction = async () => {
     if (!selectedSubscription) return;
-    setIsProcessing(true);
-    // Lógica para manejar la acción
-    setIsProcessing(false);
-    closeModalSubscription();
+
+    try {
+      setIsProcessing(true);
+
+      alertKit.loading({ message: 'Activando cuenta...', });
+
+      const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/payment/active`, {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "Authorization": `${initialProps.session?.user?.type} ${initialProps.session?.user?.token}`,
+        },
+        body: JSON.stringify(selectedSubscription),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Error al activar la cuenta');
+      }
+
+      alertKit.success({
+        title: 'Cuenta activada',
+        message: 'La cuenta ha sido activada',
+      });
+
+    } catch (error) {
+      alertKit.error({
+        title: 'Error',
+        message: (error as Error).message,
+      });
+    } finally {
+      setIsProcessing(false);
+      closeModalSubscription();
+    }
   };
 
   // Functions for managing plans

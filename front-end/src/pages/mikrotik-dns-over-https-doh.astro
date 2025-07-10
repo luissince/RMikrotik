@@ -1,7 +1,13 @@
 ---
 import FormulariomikrotikDnsOverHttpsDoh from "../components/mikrotikDnsDverHttpsDoh/formulario";
 import MainLayout from "../layout/MainLayout.astro";
+import { getAuthData } from "../utils/auth";
 import { nameApp } from "../utils/constants";
+
+// Obtener los datos de la sesión y suscripción
+const { session, subscription, shouldSignOut } = await getAuthData(
+  Astro.request,
+);
 
 const response = await fetch(
   `${import.meta.env.PUBLIC_BASE_URL_API}/mikrotik-dns-over-https-doh`,
@@ -14,7 +20,10 @@ if (response.ok) {
   dnsOptions = data;
 }
 
-console.log(dnsOptions)
+// Si necesita cerrar sesión, redirigir a logout
+if (shouldSignOut) {
+  return Astro.redirect("/logout?reason=expired");
+}
 ---
 
 <MainLayout title={nameApp}>
@@ -22,26 +31,38 @@ console.log(dnsOptions)
     <div class="bg-gray-800 rounded-lg">
       <!-- Header -->
       <div class="text-center mb-6">
-  <h1 class="text-2xl lg:text-4xl   font-extrabold text-transparent bg-clip-text animated-gradient bg-gradient-to-r from-amber-400 via-orange-700 to-red-600">
-           GENERADOR DE SCRIPT PARA SERVIDOR DNS OVER HTTPS (DOH) EN MIKROTIK
+        <h1
+          class="text-2xl lg:text-4xl font-extrabold text-transparent bg-clip-text animated-gradient bg-gradient-to-r from-amber-400 via-orange-700 to-red-600"
+        >
+          GENERADOR DE SCRIPT PARA SERVIDOR DNS OVER HTTPS (DOH) EN MIKROTIK
         </h1>
 
-  <p class="text-gray-300">
-         Configura fácilmente DNS over HTTPS (DoH) en tu MikroTik para mejorar la seguridad, privacidad y rendimiento del sistema de resolución de nombres de dominio. Esta herramienta <br> genera automáticamente el script necesario para activar DoH en RouterOS, protegiendo tus consultas DNS contra espionaje y manipulación.
+        <p class="text-gray-300">
+          Configura fácilmente DNS over HTTPS (DoH) en tu MikroTik para mejorar
+          la seguridad, privacidad y rendimiento del sistema de resolución de
+          nombres de dominio. Esta herramienta <br /> genera automáticamente el script
+          necesario para activar DoH en RouterOS, protegiendo tus consultas DNS contra
+          espionaje y manipulación.
         </p>
- <style>
-     /* Animación personalizada para mover el degradado */
-    @keyframes gradientMove {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
+        <style>
+          /* Animación personalizada para mover el degradado */
+          @keyframes gradientMove {
+            0% {
+              background-position: 0% 50%;
+            }
+            50% {
+              background-position: 100% 50%;
+            }
+            100% {
+              background-position: 0% 50%;
+            }
+          }
 
-    .animated-gradient {
-      background-size: 200% 200%;
-      animation: gradientMove 5s ease infinite;
-    }
-  </style>
+          .animated-gradient {
+            background-size: 200% 200%;
+            animation: gradientMove 5s ease infinite;
+          }
+        </style>
       </div>
     </div>
 
@@ -50,7 +71,12 @@ console.log(dnsOptions)
       <!-- Contenido Principal -->
       <div class="container mx-auto">
         <!-- Formulario Principal -->
-        <FormulariomikrotikDnsOverHttpsDoh client:load dnsOptions={dnsOptions} />
+        <FormulariomikrotikDnsOverHttpsDoh
+          client:load
+          session={session}
+          subscription={subscription}
+          dnsOptions={dnsOptions}
+        />
       </div>
     </div>
   </div>

@@ -19,27 +19,38 @@ if (shouldSignOut) {
     <div class="bg-gray-800 rounded-lg">
       <!-- Header -->
       <div class="text-center mb-6">
-  <h1 class="text-2xl lg:text-4xl   font-extrabold text-transparent bg-clip-text animated-gradient bg-gradient-to-r from-amber-400 via-orange-700 to-red-600">
-      INTERFAZ BONDING EN MIKROTIK: AGREGACIÓN DE ENLACES CON BALANCE-RR
+        <h1
+          class="text-2xl lg:text-4xl font-extrabold text-transparent bg-clip-text animated-gradient bg-gradient-to-r from-amber-400 via-orange-700 to-red-600"
+        >
+          INTERFAZ BONDING EN MIKROTIK: AGREGACIÓN DE ENLACES CON BALANCE-RR
+        </h1>
 
-       </h1>
-
-  <p class="text-gray-300">
-        Configura interfaces bonding en MikroTik con el modo balance-rr para lograr una agregación de enlaces eficiente y mayor ancho de banda. Aprende paso a paso cómo implementar esta solución <br> profesional para redes ISP/WISP, mejorando la redundancia, el rendimiento y la estabilidad de tu infraestructura de red.
+        <p class="text-gray-300">
+          Configura interfaces bonding en MikroTik con el modo balance-rr para
+          lograr una agregación de enlaces eficiente y mayor ancho de banda.
+          Aprende paso a paso cómo implementar esta solución <br /> profesional para
+          redes ISP/WISP, mejorando la redundancia, el rendimiento y la estabilidad
+          de tu infraestructura de red.
         </p>
- <style>
-     /* Animación personalizada para mover el degradado */
-    @keyframes gradientMove {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
+        <style>
+          /* Animación personalizada para mover el degradado */
+          @keyframes gradientMove {
+            0% {
+              background-position: 0% 50%;
+            }
+            50% {
+              background-position: 100% 50%;
+            }
+            100% {
+              background-position: 0% 50%;
+            }
+          }
 
-    .animated-gradient {
-      background-size: 200% 200%;
-      animation: gradientMove 5s ease infinite;
-    }
-  </style>
+          .animated-gradient {
+            background-size: 200% 200%;
+            animation: gradientMove 5s ease infinite;
+          }
+        </style>
       </div>
     </div>
 
@@ -48,7 +59,11 @@ if (shouldSignOut) {
       <!-- Contenido Principal -->
       <div class="container mx-auto">
         <!-- Formulario Principal -->
-        <FormularioMikrotikBondingInterface client:load />
+        <FormularioMikrotikBondingInterface
+          client:load
+          session={session}
+          subscription={subscription}
+        />
       </div>
     </div>
   </div>

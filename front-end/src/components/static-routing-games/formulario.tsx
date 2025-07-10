@@ -29,8 +29,6 @@ interface FormData {
 }
 
 const FormularioStaticRoutingGames = ({ session, subscription }: Props) => {
-
-
     const [categories, setCategories] = useState<Category[]>([]);
     const [filter, setFilter] = useState<string>('');
     const [formData, setFormData] = useState<FormData>({

@@ -1,6 +1,7 @@
-import type { Session, User } from "@auth/core/types";
+import type { Session } from "@auth/core/types";
 import type { Subscription } from "../types/subscription/subscription";
 import { getSession } from "auth-astro/server";
+import type { User } from "../types/user/user";
 
 export interface AuthData {
     session: Session | null;

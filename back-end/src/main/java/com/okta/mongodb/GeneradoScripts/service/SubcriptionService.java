@@ -3,7 +3,9 @@ package com.okta.mongodb.GeneradoScripts.service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +26,7 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.okta.mongodb.GeneradoScripts.model.plan.Plan;
+import com.okta.mongodb.GeneradoScripts.model.subscription.ActiveBody;
 import com.okta.mongodb.GeneradoScripts.model.subscription.Card;
 import com.okta.mongodb.GeneradoScripts.model.subscription.Transaction;
 import com.okta.mongodb.GeneradoScripts.model.subscription.PaymentBody;
@@ -156,7 +159,7 @@ public class SubcriptionService {
                 newSub.setStartDate(today);
                 newSub.setEndDate(today.plusDays(plan.getDurationInDays()));
                 newSub.setStatus("active");
-
+                newSub.setTransaction(transaction);
                 subscriptionRepository.save(newSub);
 
                 return ResponseEntity.ok(Map.of(
@@ -199,6 +202,29 @@ public class SubcriptionService {
                         "approveUrl", approveUrl));
             }
 
+            if (body.getMethod().equals("qr")) {
+                Transaction transaction = new Transaction();
+                transaction.setProviderId(body.getProviderId());
+                transaction.setPlanId(body.getPlanId());
+                transaction.setOrderId("-");
+                transaction.setStatus("pending");
+                transactionRepository.save(transaction);
+
+                Subscription newSub = new Subscription();
+                newSub.setUser(user);
+                newSub.setPlan(plan);
+                newSub.setPrice(plan.getPrice());
+                newSub.setMethod(body.getMethod());
+                newSub.setStartDate(today);
+                newSub.setEndDate(today.plusDays(plan.getDurationInDays()));
+                newSub.setStatus("pending");
+                newSub.setTransaction(transaction);
+                subscriptionRepository.save(newSub);
+
+                return ResponseEntity.ok(Map.of(
+                        "message", "Transacción generada correctamente, espere unos minutos para activar."));
+            }
+
             return ResponseEntity.badRequest().body(Map.of(
                     "message", "No se ha seleccionado un método de pago"));
         } catch (Exception ex) {
@@ -207,32 +233,64 @@ public class SubcriptionService {
         }
     }
 
+    public ResponseEntity<?> active(ActiveBody body) {
+        Subscription subscription = subscriptionRepository.findById(body.getId()).orElse(null);
+        if (subscription == null) {
+            return ResponseEntity.badRequest().body("No se encontró la suscripción");
+        }
+
+        subscription.setStatus("active");
+        subscriptionRepository.save(subscription);
+
+        Transaction transaction = transactionRepository.findById(subscription.getTransaction().getId()).orElse(null);
+        if (transaction == null) {
+            return ResponseEntity.badRequest().body("No se encontró la transacción");
+        }
+
+        transaction.setStatus("completed");
+        transactionRepository.save(transaction);
+
+        return ResponseEntity.ok(Map.of(
+                "message", "Cuenta activada."));
+    }
+
     public ResponseEntity<?> getAllSubscriptions() {
+        // Paso 1: Cargar todas las suscripciones completas desde la base de datos
         List<Subscription> subscriptions = subscriptionRepository.findAll();
 
-        List<Map<String, Object>> responseList = subscriptions.stream().map(sub -> {
+        // Paso 2: Iterar y construir la respuesta manualmente
+        List<Map<String, Object>> responseList = new ArrayList<>();
 
-            Map<String, Object> plan = Map.of(
-                    "id", sub.getPlan().getId(),
-                    "name", sub.getPlan().getName());
+        for (Subscription sub : subscriptions) {
 
-            Map<String, Object> user = Map.of(
-                    "name", sub.getUser().getName(),
-                    "email", sub.getUser().getEmail(),
-                    "image", sub.getUser().getImage());
+            Map<String, Object> response = new HashMap<>();
 
-            Map<String, Object> response = Map.of(
-                    "id", sub.getId(),
-                    "plan", plan,
-                    "price", sub.getPrice(),
-                    "method", sub.getMethod(),
-                    "startDate", sub.getStartDate(),
-                    "endDate", sub.getEndDate(),
-                    "status", sub.getStatus(),
-                    "user", user);
+            response.put("id", sub.getId());
+            response.put("price", sub.getPrice());
+            response.put("method", sub.getMethod());
+            response.put("startDate", sub.getStartDate());
+            response.put("endDate", sub.getEndDate());
+            response.put("status", sub.getStatus());
 
-            return response;
-        }).toList();
+            // Plan
+            if (sub.getPlan() != null) {
+                Map<String, Object> plan = new HashMap<>();
+                plan.put("id", sub.getPlan().getId());
+                plan.put("name", sub.getPlan().getName());
+                response.put("plan", plan);
+            }
+
+            // User
+            if (sub.getUser() != null) {
+                Map<String, Object> user = new HashMap<>();
+                user.put("name", sub.getUser().getName());
+                user.put("email", sub.getUser().getEmail());
+                user.put("image", sub.getUser().getImage());
+                response.put("user", user);
+            }
+
+            responseList.add(response);
+        }
 
         return ResponseEntity.ok(responseList);
     }
@@ -262,8 +320,7 @@ public class SubcriptionService {
         // Devolver la información de la suscripción
         return ResponseEntity.ok(Map.of(
                 "subscription", subscription,
-                "user", user
-        ));
+                "user", user));
     }
 
     private String generateTokenCulqi(Map<String, Object> cardData) throws Exception {
@@ -427,6 +484,7 @@ public class SubcriptionService {
                 newSub.setStartDate(today);
                 newSub.setEndDate(today.plusDays(plan.getDurationInDays()));
                 newSub.setStatus("active");
+                newSub.setTransaction(transaction);
 
                 subscriptionRepository.save(newSub);
 
@@ -436,12 +494,12 @@ public class SubcriptionService {
                 transactionRepository.save(transaction);
 
                 return ResponseEntity.ok(Map.of(
-                        "mesage", "Suscripción registrada exitosamente",
+                        "message", "Suscripción registrada exitosamente",
                         "body", response.getBody()));
             }
 
             return ResponseEntity.badRequest().body(Map.of(
-                    "mesage", "Error al capturar la orden"));
+                    "message", "Error al capturar la orden"));
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body("Error al procesar pago");
         }

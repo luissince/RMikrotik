@@ -29,4 +29,8 @@ public class Subscription {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "transaccion_id")
+    private Transaction transaction;
 }

@@ -205,6 +205,15 @@ const PaymentModal = ({ session, plans }: Props) => {
           alertKit.loading({ message: result.message });
           window.location.href = result.approveUrl;
         }
+
+        if (method === 'qr'){
+           alertKit.success({
+            title: title,
+            message: result.message,
+          }, () => {
+            closeModal();
+          });
+        }
       } catch (error: any) {
         alertKit.error({
           title: 'Plan',
