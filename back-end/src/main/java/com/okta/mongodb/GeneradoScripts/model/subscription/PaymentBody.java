@@ -14,4 +14,5 @@ public class PaymentBody {
     private Long planId;
     private String method;
     private Card card;
+    private String couponCode;
 }

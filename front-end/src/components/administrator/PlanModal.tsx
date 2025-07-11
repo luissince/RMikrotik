@@ -11,7 +11,7 @@ interface PlanModalProps {
   planForm: Plan;
   setPlanForm: React.Dispatch<React.SetStateAction<Plan>>;
   isProcessing: boolean;
-  handlePlanAction: () => void;
+  handleAction: () => void;
   addFeature: () => void;
   removeFeature: (index: number) => void;
   updateFeature: (index: number, value: string) => void;
@@ -24,7 +24,7 @@ const PlanModal: React.FC<PlanModalProps> = ({
   planForm,
   setPlanForm,
   isProcessing,
-  handlePlanAction,
+  handleAction,
   addFeature,
   removeFeature,
   updateFeature
@@ -44,7 +44,7 @@ const PlanModal: React.FC<PlanModalProps> = ({
       footer={
         <>
           <Button
-            onClick={handlePlanAction}
+            onClick={handleAction}
             disabled={isProcessing || !planForm.name.trim()}
             variant={planModalAction === 'create' ? 'success' : 'warning'}
             fullWidth

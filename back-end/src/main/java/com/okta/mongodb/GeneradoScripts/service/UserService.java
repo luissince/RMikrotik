@@ -6,12 +6,12 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.okta.mongodb.GeneradoScripts.model.subscription.Subscription;
 import com.okta.mongodb.GeneradoScripts.model.user.User;
 import com.okta.mongodb.GeneradoScripts.model.user.UserBody;
-import com.okta.mongodb.GeneradoScripts.repository.SubscriptionRepository;
+import com.okta.mongodb.GeneradoScripts.model.user.UserRol;
 import com.okta.mongodb.GeneradoScripts.repository.UserRepository;
 import com.okta.mongodb.GeneradoScripts.utils.JwtUtil;
 
@@ -24,48 +24,38 @@ public class UserService {
         private UserRepository userRepository;
 
         @Autowired
-        private SubscriptionRepository subscriptionRepository;
-
-        @Autowired
         private JwtUtil jwtUtil;
 
         public Map<String, Object> create(UserBody body) {
-                logger.info("Body recibido: {}", body);
-
-                User user = userRepository.findByProviderId(body.getProviderId())
+                User user = userRepository
+                                .findByProviderId(body.getProviderId())
                                 .orElseGet(() -> {
                                         User newUser = new User();
                                         newUser.setProviderId(body.getProviderId());
                                         newUser.setName(body.getName());
                                         newUser.setEmail(body.getEmail());
                                         newUser.setImage(body.getImage());
+                                        newUser.setRol(UserRol.CLIENT);
                                         return userRepository.save(newUser);
                                 });
 
                 // Obtener la última suscripción
-                // Subscription subscription = subscriptionRepository.findTopByUserOrderByEndDateDesc(user);
-
                 Map<String, Object> response = new java.util.HashMap<>();
-                // response.put("user", user);
 
-                // if (subscription != null) {
-                //         Map<String, Object> subData = new java.util.HashMap<>();
-                //         subData.put("planId", subscription.getPlan().getId());
-                //         subData.put("startDate", subscription.getStartDate());
-                //         subData.put("endDate", subscription.getEndDate());
-                //         subData.put("status", subscription.getStatus());
-                //         subData.put("price", subscription.getPrice());
-                //         subData.put("method", subscription.getMethod());
-                //         response.put("subscription", subData);
-                // } else {
-                //         response.put("subscription", null);
-                // }
-
-                String token =jwtUtil.generateToken(user);
+                String token = jwtUtil.generateToken(user);
                 response.put("token", token);
                 response.put("type", "Bearer");
 
                 return response;
+        }
+
+        public ResponseEntity<?> getUser(String providerId) {
+                User user = userRepository.findByProviderId(providerId).orElse(null);
+                if (user == null) {
+                        return ResponseEntity.badRequest().body(Map.of("message", "Usuario no encontrado"));
+                }
+
+                return ResponseEntity.ok().body(Map.of("user", user));
         }
 
         public List<User> getAllUsers() {

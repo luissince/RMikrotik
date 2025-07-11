@@ -1,6 +1,6 @@
 package com.okta.mongodb.GeneradoScripts.model.coupon;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,11 +26,9 @@ public class Coupon {
 
     private String code;
 
-    private double discount;
+    private LocalDate createdAt;
 
-    private LocalDateTime validUntil;
+    private boolean isUsed; 
 
-    private boolean isActive;
-
-    private LocalDateTime createdAt;
+     private Long planId;
 }

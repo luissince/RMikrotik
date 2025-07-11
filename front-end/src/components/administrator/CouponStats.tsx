@@ -40,7 +40,7 @@ const CouponStats: React.FC<CouponStatsProps> = ({ couponStats }) => {
             <X className="w-6 h-6 text-gray-600" />
           </div>
           <div className="ml-4">
-            <p className="text-sm font-medium text-gray-600">Inactivos</p>
+            <p className="text-sm font-medium text-gray-600">Usados</p>
             <p className="text-2xl font-bold text-gray-900">{couponStats.inactive}</p>
           </div>
         </div>

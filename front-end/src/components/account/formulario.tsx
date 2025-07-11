@@ -1,27 +1,60 @@
-import React from "react";
+import React, { useState } from "react";
 import person from "../../assets/icons/person.svg";
 import { formatDate } from "../../utils/helper";
 import type { User } from "../../types/user/user";
 import type { Subscription } from "../../types/subscription/subscription";
+import type { Session } from "@auth/core/types";
+import { useApiCall, useAuthValidation } from "../forms/BaseForm";
+import { alertKit } from "alert-kit";
 
 interface Props {
+  session: Session | null;
   user: User;
   subscription: Subscription;
 }
 
+const FormularioAccount: React.FC<Props> = ({ session, user, subscription }) => {
+  const [couponCode, setCouponCode] = useState("");
 
-const FormularioAccount: React.FC<Props> = ({ user, subscription }) => {
-  // Función para manejar valores nulos en la suscripción
+  const { validateAuth } = useAuthValidation(session, subscription);
+
+  const { makeApiCall, isLoading } = useApiCall(session);
+
   const getSubscriptionStatus = () => {
     if (!subscription) {
       return <td className="px-4 py-2 text-yellow-600 font-semibold">NO SUSCRITO</td>;
     }
-
     if (subscription.status === "active") {
       return <td className="px-4 py-2 text-green-600 font-semibold">ACTIVADO</td>;
     }
-
     return <td className="px-4 py-2 text-red-600 font-semibold">EXPIRADO</td>;
+  };
+
+  const handleActivateCoupon = async () => {
+    if (!couponCode) {
+      alertKit.warning({
+        title: 'Código de Cupón',
+        message: 'Ingrese el código de cupón',
+      });
+      return;
+    }
+
+    const payload = {
+      planId: 0,
+      method: "coupon",
+      card: null,
+      couponCode: couponCode,
+    };
+
+    const result = await makeApiCall(`/payment/with-coupon`, payload);
+    if (result) {
+      alertKit.success({
+        title: 'Cupón',
+        message: result.message,
+      }, () => {
+        window.location.reload();
+      });
+    }
   };
 
   return (
@@ -38,10 +71,9 @@ const FormularioAccount: React.FC<Props> = ({ user, subscription }) => {
             <h2 className="text-xl font-bold text-gray-800">{user?.name || "Nombre no disponible"}</h2>
             <p className="text-gray-600">{user?.email || "Email no disponible"}</p>
           </div>
-
           {/* Botones de acción */}
           <div className="mt-6 flex flex-col gap-3">
-            <a href="#" className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg inline-flex items-center justify-center">
+            <a href="/" className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg inline-flex items-center justify-center">
               <i className="fas fa-home mr-2"></i> Inicio
             </a>
             <button onClick={() => document.getElementById("modal")?.classList.remove("hidden")} className="bg-teal-500 hover:bg-teal-600 text-white px-4 py-2 rounded-lg">
@@ -52,7 +84,6 @@ const FormularioAccount: React.FC<Props> = ({ user, subscription }) => {
             </button>
           </div>
         </div>
-
         {/* Sección de detalles de la cuenta */}
         <div className="lg:w-2/3 bg-white rounded-xl shadow-lg p-6">
           <h2 className="text-xl font-bold mb-4">Detalles de la Cuenta</h2>
@@ -68,7 +99,6 @@ const FormularioAccount: React.FC<Props> = ({ user, subscription }) => {
               </tr>
             </tbody>
           </table>
-
           <h2 className="text-xl font-bold mb-4">Estado de Membresía</h2>
           <table className="w-full table-auto text-sm mb-6">
             <tbody>
@@ -94,15 +124,32 @@ const FormularioAccount: React.FC<Props> = ({ user, subscription }) => {
               </tr>
             </tbody>
           </table>
-
-          <div className="mt-6 flex flex-col sm:flex-row gap-3">
+          <div className="mt-6 flex flex-col gap-3">
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Código de Cupón
+              </label>
+              <input
+                type="text"
+                value={couponCode}
+                onChange={(e) => setCouponCode(e.target.value)}
+                placeholder="Ingrese su código de cupón"
+                className="w-full px-4 py-2 border rounded-lg"
+              />
+            </div>
+            <button
+              onClick={handleActivateCoupon}
+              className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg"
+              disabled={isLoading}
+            >
+              Activar Cupón
+            </button>
             <a href="/pricing" className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex-1 text-center">
               <i className="fas fa-credit-card mr-2"></i> Comprar Membresía
             </a>
           </div>
         </div>
       </div>
-
       {/* Modal para cambiar contraseña */}
       <div id="modal" className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
         <div className="relative bg-white rounded-xl p-6 w-full max-w-md shadow-lg">
@@ -135,4 +182,3 @@ const FormularioAccount: React.FC<Props> = ({ user, subscription }) => {
 };
 
 export default FormularioAccount;
-

@@ -50,6 +50,7 @@ export interface ScriptResult {
     };
     reateLimit?: string;
     categories?: any;
+    message?: string;
 }
 
 /**
