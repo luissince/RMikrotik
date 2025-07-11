@@ -13,8 +13,8 @@ const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/payment`, {
   method: "GET",
   headers: {
     "Content-Type": "application/json",
-    "Accept": "application/json",
-    "Authorization": `${session?.user?.type} ${session.user?.token}`,
+    Accept: "application/json",
+    Authorization: `${session?.user?.type} ${session.user?.token}`,
   },
 });
 
@@ -43,6 +43,11 @@ if (response.ok) {
     </div>
 
     <!-- Body -->
-    <FormularioAccount client:load user={user} subscription={subscription} />
+    <FormularioAccount
+      client:load
+      user={user}
+      session={session}
+      subscription={subscription}
+    />
   </div>
 </MainLayout>

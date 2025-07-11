@@ -9,10 +9,7 @@ import lombok.ToString;
 @Setter
 @AllArgsConstructor
 @ToString
-public class PaymentBody {
+public class ActiveBody {
+    private Long id;
     private String providerId;
-    private Long planId;
-    private String method;
-    private Card card;
-    private String couponCode;
 }

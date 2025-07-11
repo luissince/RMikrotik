@@ -37,13 +37,13 @@ if (shouldSignOut) {
 
       <!-- Diagrama -->
       <div class="flex justify-center mb-8 mt-8">
-        <img
-          src="/images/NAT.png"
-          alt="Routing Diagram"
-          class="rounded-lg"
-        />
+        <img src="/images/NAT.png" alt="Routing Diagram" class="rounded-lg" />
       </div>
-      <FormularioPortForwardingWithNat client:load />
+      <FormularioPortForwardingWithNat
+        client:load
+        session={session}
+        subscription={subscription}
+      />
 
       <div class="flex flex-wrap justify-center gap-4 mb-6 mt-7">
         <button

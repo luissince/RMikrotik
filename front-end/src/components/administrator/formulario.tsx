@@ -18,9 +18,12 @@ import CouponStats from './CouponStats';
 import CouponsTable from './CouponsTable';
 import CouponModal from './CouponModal';
 import type { Coupon } from '../../types/coupon/coupon';
+import { alertKit } from 'alert-kit';
+import type { Session } from '@auth/core/types';
+import { useApiCall, useAuthValidation } from '../forms/BaseForm';
 
 interface Props {
-  subscription: Subscription | null;
+  session: Session | null;
   user: User | null;
   subscriptions: Subscription[];
   plans: Plan[];
@@ -39,7 +42,9 @@ const AdminSubscriptions: React.FC<Props> = (initialProps) => {
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const [selectedSubscription, setSelectedSubscription] = useState<Subscription | null>(null);
   const [modalAction, setModalAction] = useState<'activate' | 'cancel' | 'renew' | 'view'>('view');
-  const [isProcessing, setIsProcessing] = useState(false);
+
+  // Usar hooks personalizados
+  const { makeApiCall, isLoading } = useApiCall(initialProps.session);
 
   // Estados para gestión de planes
   const [showPlanModal, setShowPlanModal] = useState(false);
@@ -61,10 +66,8 @@ const AdminSubscriptions: React.FC<Props> = (initialProps) => {
   const [couponForm, setCouponForm] = useState<Coupon>({
     id: '',
     code: '',
-    discount: 0,
-    validUntil: '',
-    isActive: true,
-    createdAt: new Date().toISOString(),
+    used: false,
+    planId: null,
   });
 
   useEffect(() => {
@@ -132,15 +135,28 @@ const AdminSubscriptions: React.FC<Props> = (initialProps) => {
   const closeModalSubscription = () => {
     setShowSubscriptionModal(false);
     setSelectedSubscription(null);
-    setIsProcessing(false);
   };
 
-  const handleAction = async () => {
+  const handleSubscriptionAction = async () => {
     if (!selectedSubscription) return;
-    setIsProcessing(true);
-    // Lógica para manejar la acción
-    setIsProcessing(false);
-    closeModalSubscription();
+
+    const confirmation = await new Promise((resolve) => {
+      alertKit.question({
+        title: 'Subscription',
+        message: '¿Está seguro de que desea activar la cuenta?',
+      }, resolve);
+    });
+    if (confirmation) {
+      const result = await makeApiCall(`/payment/active`, selectedSubscription);
+      if (result) {
+        alertKit.success({
+          title: 'Cuenta activada',
+          message: result.message,
+        }, () => {
+          window.location.reload();
+        });
+      }
+    }
   };
 
   // Functions for managing plans
@@ -176,13 +192,10 @@ const AdminSubscriptions: React.FC<Props> = (initialProps) => {
 
   const closeModalPlan = () => {
     setShowPlanModal(false);
-    setIsProcessing(false);
   };
 
   const handlePlanAction = async () => {
-    setIsProcessing(true);
-    // Lógica para manejar la acción del plan
-    setIsProcessing(false);
+
     closeModalPlan();
   };
 
@@ -216,22 +229,42 @@ const AdminSubscriptions: React.FC<Props> = (initialProps) => {
     setCouponModalAction(action);
 
     if (coupon && action === 'edit') {
+      if (coupon.used) {
+        alertKit.warning({
+          title: 'Cupón',
+          message: 'No se puede editar un cupón que ya ha sido usado',
+        });
+        return;
+      }
       setCouponForm({
         id: coupon.id,
         code: coupon.code,
-        discount: coupon.discount,
-        validUntil: coupon.validUntil,
-        isActive: coupon.isActive,
         createdAt: coupon.createdAt,
+        used: coupon.used,
+        planId: coupon.planId,
       });
     } else if (action === 'create') {
       setCouponForm({
         id: '',
         code: '',
-        discount: 0,
-        validUntil: '',
-        isActive: true,
         createdAt: new Date().toISOString(),
+        used: false,
+        planId: null,
+      });
+    } else if (coupon && action === 'delete') {
+      if (coupon.used) {
+        alertKit.warning({
+          title: 'Cupón',
+          message: 'No se puede eliminar un cupón que ya ha sido usado',
+        });
+        return;
+      }
+      setCouponForm({
+        id: coupon.id,
+        code: coupon.code,
+        createdAt: coupon.createdAt,
+        used: coupon.used,
+        planId: coupon.planId,
       });
     }
 
@@ -240,20 +273,47 @@ const AdminSubscriptions: React.FC<Props> = (initialProps) => {
 
   const closeModalCoupon = () => {
     setShowCouponModal(false);
-    setIsProcessing(false);
   };
 
   const handleCouponAction = async () => {
-    setIsProcessing(true);
-    // Lógica para manejar la acción del cupón
-    setIsProcessing(false);
-    closeModalCoupon();
+    if (!couponForm.planId) {
+      alertKit.warning({
+        title: 'Cupón',
+        message: 'Seleccione un plan',
+      });
+      return;
+    }
+
+    const confirmation = await new Promise((resolve) => {
+      alertKit.question({
+        title: 'Cupón',
+        message: couponModalAction === 'create' ? '¿Está seguro de que desea crear un cupón?' :
+          couponModalAction === 'edit' ? '¿Está seguro de que desea editar un cupón?' :
+            '¿Está seguro de que desea eliminar este cupón?',
+      }, resolve);
+    });
+
+    if (confirmation) {
+      const method = couponModalAction === 'create' ? 'POST' : couponModalAction === 'edit' ? 'PUT' : 'DELETE';
+      const url = `/coupon${couponModalAction === 'create' ? '' : `/${couponForm.id}`}`;
+
+      const result = await makeApiCall(url, couponModalAction === 'delete' ? null : couponForm, method);
+
+      if (result) {
+        alertKit.success({
+          title: 'Cupón',
+          message: result.message
+        }, () => {
+          window.location.reload();
+        });
+      }
+    }
   };
 
   const couponStats = {
     total: initialProps.coupons.length,
-    active: initialProps.coupons.filter(c => c.isActive).length,
-    inactive: initialProps.coupons.filter(c => !c.isActive).length,
+    active: initialProps.coupons.filter(c => !c.used).length,
+    inactive: initialProps.coupons.filter(c => c.used).length,
   };
 
   const stats = {
@@ -280,17 +340,6 @@ const AdminSubscriptions: React.FC<Props> = (initialProps) => {
       return currentCount > prevCount ? current : prev;
     }, initialProps.plans[0])
   };
-
-  if (!initialProps.subscription) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-900">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-white mb-4">Acceso Denegado</h2>
-          <p className="text-gray-300">Necesitas permisos de administrador para acceder a esta página.</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -388,8 +437,8 @@ const AdminSubscriptions: React.FC<Props> = (initialProps) => {
           closeModalSubscription={closeModalSubscription}
           selectedSubscription={selectedSubscription}
           modalAction={modalAction}
-          isProcessing={isProcessing}
-          handleAction={handleAction}
+          isProcessing={isLoading}
+          handleAction={handleSubscriptionAction}
           getStatusColor={getStatusColor}
           getStatusText={getStatusText}
         />
@@ -399,20 +448,21 @@ const AdminSubscriptions: React.FC<Props> = (initialProps) => {
           planModalAction={planModalAction}
           planForm={planForm}
           setPlanForm={setPlanForm}
-          isProcessing={isProcessing}
-          handlePlanAction={handlePlanAction}
+          isProcessing={isLoading}
+          handleAction={handlePlanAction}
           addFeature={addFeature}
           removeFeature={removeFeature}
           updateFeature={updateFeature}
         />
         <CouponModal
+          plans={initialProps.plans}
           showCouponModal={showCouponModal}
           closeModalCoupon={closeModalCoupon}
           couponModalAction={couponModalAction}
           couponForm={couponForm}
           setCouponForm={setCouponForm}
-          isProcessing={isProcessing}
-          handleCouponAction={handleCouponAction}
+          isProcessing={isLoading}
+          handleAction={handleCouponAction}
         />
       </div>
     </div>

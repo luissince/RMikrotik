@@ -1,7 +1,6 @@
 package com.okta.mongodb.GeneradoScripts.model.plan;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.okta.mongodb.GeneradoScripts.model.games.GamesGame;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

@@ -2,6 +2,7 @@
 import MainLayout from "../layout/MainLayout.astro";
 import { getAuthData } from "../utils/auth";
 import { nameApp } from "../utils/constants";
+
 // Obtener los datos de la sesión y suscripción
 const { session, subscription, shouldSignOut } = await getAuthData(
   Astro.request,

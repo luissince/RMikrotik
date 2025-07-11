@@ -30,9 +30,14 @@ public class FilterJwtMiddleware extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getServletPath();
+        logger.info(path);
         return Stream
                 .of("/swagger-ui/index.html",
+                        "/swagger-ui/swagger-ui-standalone-preset.js",
+                        "/swagger-ui/swagger-ui.css",
+                        "/swagger-ui/index.css",
                         "/swagger-ui/swagger-initializer.js",
+                        "/swagger-ui/swagger-ui-bundle.js",
                         "/v3/api-docs/swagger-config",
                         "/v3/api-docs",
                         "/plan",

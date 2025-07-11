@@ -1,9 +1,7 @@
 export interface Coupon {
     id: string;
     code: string;
-    discount: number;
-    validUntil: string;
-    isActive: boolean;
-    createdAt: string;
-  }
-  
+    createdAt?: string;
+    used: boolean;
+    planId: number | null;
+}

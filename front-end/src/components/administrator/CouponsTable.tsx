@@ -8,6 +8,16 @@ interface CouponsTableProps {
 }
 
 const CouponsTable: React.FC<CouponsTableProps> = ({ coupons, openModalCoupon }) => {
+    // Función para determinar si un cupón está activo
+    const isCouponActive = (validUntil: string): boolean => {
+        const validUntilDate = new Date(validUntil);
+        const currentDate = new Date();
+
+        const localValidUntilDate = new Date(validUntilDate.getTime() + validUntilDate.getTimezoneOffset() * 60000);
+
+        return localValidUntilDate > currentDate;
+    };
+
     return (
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
             <div className="overflow-x-auto">
@@ -15,9 +25,7 @@ const CouponsTable: React.FC<CouponsTableProps> = ({ coupons, openModalCoupon })
                     <thead className="bg-gray-50">
                         <tr>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Código</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descuento</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Válido Hasta</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usado</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
                         </tr>
                     </thead>
@@ -25,11 +33,9 @@ const CouponsTable: React.FC<CouponsTableProps> = ({ coupons, openModalCoupon })
                         {coupons.map((coupon) => (
                             <tr key={coupon.id} className="hover:bg-gray-50">
                                 <td className="px-6 py-4 text-sm text-gray-900">{coupon.code}</td>
-                                <td className="px-6 py-4 text-sm text-gray-900">{coupon.discount}%</td>
-                                <td className="px-6 py-4 text-sm text-gray-900">{coupon.validUntil}</td>
                                 <td className="px-6 py-4 text-sm text-gray-900">
-                                    <span className={`px-2 py-1 text-xs font-semibold rounded-full ${coupon.isActive ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-600'}`}>
-                                        {coupon.isActive ? 'ACTIVO' : 'INACTIVO'}
+                                    <span className={`px-2 py-1 text-xs font-semibold rounded-full ${coupon.used ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}`}>
+                                        {coupon.used ? 'USADO' : 'NO USADO'}
                                     </span>
                                 </td>
                                 <td className="px-6 py-4">

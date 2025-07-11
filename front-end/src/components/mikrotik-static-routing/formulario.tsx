@@ -160,11 +160,11 @@ const FormularioMikrotikStaticRouting = ({ session, subscription }: Props) => {
                     <div className="flex-grow overflow-y-auto bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400">
                         {scriptResult ? (
                             <div>
-                                <div dangerouslySetInnerHTML={{ __html: scriptResult.html1 }} />
+                                <div dangerouslySetInnerHTML={{ __html: scriptResult.html1! }} />
                                 <button
                                     type="button"
                                     className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-bold transition-all duration-300 mt-2"
-                                    onClick={() => handleCopyScript(scriptResult.text1)}
+                                    onClick={handleCopyScript}
                                 >
                                     Copy STEP 1
                                 </button>
@@ -185,11 +185,11 @@ const FormularioMikrotikStaticRouting = ({ session, subscription }: Props) => {
                     <div className="flex-grow overflow-y-auto bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400">
                         {scriptResult ? (
                             <div>
-                                <div dangerouslySetInnerHTML={{ __html: scriptResult.html2 }} />
+                                <div dangerouslySetInnerHTML={{ __html: scriptResult.html2! }} />
                                 <button
                                     type="button"
                                     className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-bold transition-all duration-300 mt-2"
-                                    onClick={() => handleCopyScript(scriptResult.text2)}
+                                    onClick={handleCopyScript}
                                 >
                                     Copy STEP 2
                                 </button>

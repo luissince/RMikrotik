@@ -12,7 +12,7 @@ import lombok.ToString;
 @Entity
 @Getter
 @Setter
-@ToString
+@ToString(exclude = "requestBody")
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

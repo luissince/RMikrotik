@@ -34,6 +34,10 @@ export interface ScriptResult {
     html: string;
     pdf?: string;
     text: string;
+    html1?: string;
+    html2?: string;
+    text1?: string;
+    text2?: string;
     data?: {
         "upload-max-limit": string;
         "download-actual-burst-duration": string;
@@ -50,6 +54,7 @@ export interface ScriptResult {
     };
     reateLimit?: string;
     categories?: any;
+    message?: string;
 }
 
 /**
@@ -159,7 +164,7 @@ export const useScriptOperations = (session: Session | null, subscription: Subsc
         if (!validateAuth()) return;
         if (scriptResult) {
             navigator.clipboard
-                .writeText(scriptResult.text || scriptResult.reateLimit!)
+                .writeText(scriptResult.text || scriptResult.text1 || scriptResult.text2 || scriptResult.reateLimit!)
                 .then(() => {
                     alertKit.success({
                         title: "Script",
