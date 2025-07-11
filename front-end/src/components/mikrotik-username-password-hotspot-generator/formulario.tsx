@@ -13,8 +13,10 @@ interface FormData {
   qtyUserHotspot: number;
   profileHotspot: string;
   rateLimit: string;
+  rateLimitUnit: string;
   limitUptime: string;
   limitQuota: string;
+  limitQuotaUnit: string;
   typeUsername: string;
   typePassword: string;
 }
@@ -24,17 +26,17 @@ const FormulariomikrotikUsernamePasswordHotspotGenerator = ({ session, subscript
     qtyUserHotspot: 10,
     profileHotspot: "default",
     rateLimit: "1M/2M",
+    rateLimitUnit: "mb",
     limitUptime: "0h",
     limitQuota: "0G",
+    limitQuotaUnit: "GB",
     typeUsername: "user-",
     typePassword: "01",
   });
 
-  // Usar hooks personalizados
   const { validateAuth } = useAuthValidation(session, subscription);
   const { makeApiCall, isLoading } = useApiCall(session);
   const { scriptResult, setScriptResult, handleCopyScript } = useScriptOperations(session, subscription);
-
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -48,7 +50,6 @@ const FormulariomikrotikUsernamePasswordHotspotGenerator = ({ session, subscript
 
   const handleSubmit = async () => {
     if (!validateAuth()) return;
-
     const result = await makeApiCall("/mikrotik-username-password-hotspot-generator", formData);
     if (result) {
       setScriptResult(result);
@@ -57,14 +58,11 @@ const FormulariomikrotikUsernamePasswordHotspotGenerator = ({ session, subscript
 
   const handleClear = () => {
     if (!validateAuth()) return;
-
     setScriptResult(null);
   };
 
   const handlePrint = () => {
     if (!validateAuth() || !scriptResult?.pdf) return;
-
-    // Abre una nueva ventana con el contenido a imprimir
     const printWindow = window.open('', '_blank');
     if (printWindow) {
       printWindow.document.write(`
@@ -128,37 +126,84 @@ const FormulariomikrotikUsernamePasswordHotspotGenerator = ({ session, subscript
               className="w-full p-2 border border-gray-600 rounded bg-gray-700"
             />
           </div>
-
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-1">
-              Profile Hotspot
+              Profile Hotspot <span className="text-gray-500">(Nombre perfil)</span>
             </label>
             <input
               id="profileHotspot"
               type="text"
               value={formData.profileHotspot}
               onChange={handleChange}
-               maxLength={15}
+              maxLength={15}
               className="w-full p-2 border border-gray-600 rounded bg-gray-700"
             />
           </div>
+          <div className="flex justify-between  items-center space-x-4 ">
 
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">
-              Rate Limit [up/down]
-            </label>
-            <input
-              id="rateLimit"
-              type="text"
-              value={formData.rateLimit}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-600 rounded bg-gray-700"
-            />
+            <div className="w-full">
+              <label className="block text-sm font-medium text-gray-300 mb-1">
+                Límite de velocidad [Subida]
+              </label>
+              <div className="flex space-x-4">
+                <div className="flex space-x-2 flex-1">
+                  <input
+                    id="rateLimit"
+                    type="text"
+                    value={formData.rateLimit}
+                    onChange={handleChange}
+                    className="w-3/4 p-2 border border-gray-600 rounded bg-gray-700"
+                  />
+                  <select
+                    id="rateLimitUnitSubida"
+                    value={formData.rateLimitUnit}
+                    onChange={handleChange}
+                    className="w-1/4 p-2 border border-gray-600 rounded bg-gray-700"
+                  >
+                    <option value="kb">KB</option>
+                    <option value="mb">MB</option>
+                  </select>
+
+                </div>
+
+
+              </div>
+            </div>
+
+            <div className="w-full">
+              <label className="block text-sm font-medium text-gray-300 mb-1">
+               Límite de velocidad [Descarga]
+              </label>
+              <div className="flex space-x-4">
+                <div className="flex space-x-2 flex-1">
+                  <input
+                    id="rateLimit"
+                    type="text"
+                    value={formData.rateLimit}
+                    onChange={handleChange}
+                    className="w-3/4 p-2 border border-gray-600 rounded bg-gray-700"
+                  />
+                  <select
+                    id="rateLimitDescarga"
+                    value={formData.rateLimitUnit}
+                    onChange={handleChange}
+                    className="w-1/4 p-2 border border-gray-600 rounded bg-gray-700"
+                  >
+                    <option value="kb">KB</option>
+                    <option value="mb">MB</option>
+                  </select>
+
+                </div>
+
+
+              </div>
+            </div>
+
+
           </div>
-
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-1">
-              Limit Uptime [duration]
+              Limit Uptime [Duración]  Formato  : [1d12h15m30s]  d=Dia | h=Hora | m=Minutos | s=Segundos
             </label>
             <input
               id="limitUptime"
@@ -169,19 +214,31 @@ const FormulariomikrotikUsernamePasswordHotspotGenerator = ({ session, subscript
             />
           </div>
 
+          
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-1">
               Limit Quota [total Bytes]
             </label>
-            <input
-              id="limitQuota"
-              type="text"
-              value={formData.limitQuota}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-600 rounded bg-gray-700"
-            />
+            <div className="flex space-x-2">
+              <input
+                id="limitQuota"
+                type="text"
+                value={formData.limitQuota}
+                onChange={handleChange}
+                className="w-3/4 p-2 border border-gray-600 rounded bg-gray-700"
+              />
+              <select
+                id="limitQuotaUnit"
+                value={formData.limitQuotaUnit}
+                onChange={handleChange}
+                className="w-1/4 p-2 border border-gray-600 rounded bg-gray-700"
+              >
+                <option value="KB">KB</option>
+                <option value="MB">MB</option>
+                <option value="GB">GB</option>
+              </select>
+            </div>
           </div>
-
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-1">
               Type Username
@@ -194,7 +251,6 @@ const FormulariomikrotikUsernamePasswordHotspotGenerator = ({ session, subscript
               className="w-full p-2 border border-gray-600 rounded bg-gray-700"
             />
           </div>
-
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-1">
               Type Password
@@ -211,22 +267,28 @@ const FormulariomikrotikUsernamePasswordHotspotGenerator = ({ session, subscript
               <option value="04">Random 3 Character</option>
               <option value="05">Random 4 Character</option>
               <option value="06">Random 5 Character</option>
-              <option value="07">Random  Numeros</option>
+              <option value="07">Random Numeros</option>
             </select>
           </div>
-
-                   <button
+          <div>
+            <input
+              type="checkbox"
+              id="ipGatewayIspGame"
+              className="mr-2"
+              checked={formData.ipGatewayIspGame}
+              onChange={handleChange}
+            />
+            <label htmlFor="ipGatewayIspGame" className="text-white">Activar impresión solo con QR</label>
+          </div>
+          <button
             type="button"
             onClick={handleSubmit}
             className="bg-orange-600 text-white px-4 py-4 w-full rounded hover:bg-orange-600 transition disabled:bg-orange-300 disabled:cursor-not-allowed"
             disabled={isLoading || !session}
           >
-            
-            {isLoading ? "Generando..." : " Generar Ficha"}
+            {isLoading ? "Generando..." : "Generar Ficha"}
           </button>
         </div>
-
-
         {/* Tienes dudas */}
         <div className="mt-4">
           <div className="relative flex justify-end group">
@@ -235,16 +297,8 @@ const FormulariomikrotikUsernamePasswordHotspotGenerator = ({ session, subscript
             >
               ¿Tienes dudas?
             </button>
-
-            {/* Tooltip flotante con redes sociales */}
-            <div
-              className="absolute bottom-full right-0 mb-2 w-100 bg-gray-900 bg-opacity-90 text-white
-               text-sm rounded-lg p-4 shadow-lg opacity-0 scale-0 transition-all duration-200
-               group-hover:opacity-100 group-hover:scale-100 z-10 pointer-events-auto"
-            >
+            <div className="absolute bottom-full right-0 mb-2 w-100 bg-gray-900 bg-opacity-90 text-white text-sm rounded-lg p-4 shadow-lg opacity-0 scale-0 transition-all duration-200 group-hover:opacity-100 group-hover:scale-100 z-10 pointer-events-auto">
               <p className="mb-3">Aprende cómo usar la herramienta con nuestro video explicativo</p>
-
-              {/* Botones de redes */}
               <div className="flex justify-around">
                 <a
                   href="https://x.com/RMikrotik"
@@ -287,16 +341,11 @@ const FormulariomikrotikUsernamePasswordHotspotGenerator = ({ session, subscript
                   Instagram
                 </a>
               </div>
-
-              {/* Triángulo */}
               <div className="absolute -bottom-1.5 right-3 w-3 h-3 rotate-45 bg-gray-900 bg-opacity-90"></div>
             </div>
           </div>
         </div>
-
-        {/* Tienes dudas Fin*/}
       </div>
-
       {/* Panel derecho - Resultado */}
       <div className="flex flex-col lg:w-1/2 min-h-0">
         <div className="flex-grow bg-gray-700 p-4 rounded-lg flex flex-col min-h-0">
@@ -313,48 +362,40 @@ const FormulariomikrotikUsernamePasswordHotspotGenerator = ({ session, subscript
             )}
           </div>
         </div>
-
         <div className="flex mt-4 space-x-4">
- 
-
-       <button
-      type="button"
-      className="flex items-center bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition disabled:bg-gray-500 disabled:cursor-not-allowed"
-      onClick={handleClear}
-      disabled={!session}
-    >
-      {/* Icono de Heroicons para borrar */}
-      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-      </svg>
-      Borrar Todo
-    </button>
-
-   <button
-      type="button"
-      className="flex items-center bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition disabled:bg-indigo-500 disabled:cursor-not-allowed"
-      onClick={handleCopyScript}
-      disabled={!scriptResult?.html || !session}
-    >
-      {/* Icono de Heroicons para copiar */}
-      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-      </svg>
-      Copiar Script
-    </button>
-
-    <button
-      type="button"
-      className="flex items-center bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition disabled:bg-green-500 disabled:cursor-not-allowed"
-      onClick={handlePrint}
-      disabled={!scriptResult?.pdf || !session}
-    >
-      {/* Icono de Heroicons para imprimir */}
-      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-      </svg>
-      Imprimir
-    </button>
+          <button
+            type="button"
+            className="flex items-center bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition disabled:bg-gray-500 disabled:cursor-not-allowed"
+            onClick={handleClear}
+            disabled={!session}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+            Borrar Todo
+          </button>
+          <button
+            type="button"
+            className="flex items-center bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition disabled:bg-indigo-500 disabled:cursor-not-allowed"
+            onClick={handleCopyScript}
+            disabled={!scriptResult?.html || !session}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+            Copiar Script
+          </button>
+          <button
+            type="button"
+            className="flex items-center bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition disabled:bg-green-500 disabled:cursor-not-allowed"
+            onClick={handlePrint}
+            disabled={!scriptResult?.pdf || !session}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+            </svg>
+            Imprimir
+          </button>
         </div>
       </div>
     </div>

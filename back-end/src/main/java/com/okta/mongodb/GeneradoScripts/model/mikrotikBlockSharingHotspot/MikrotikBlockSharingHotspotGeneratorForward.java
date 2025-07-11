@@ -1,6 +1,4 @@
 package com.okta.mongodb.GeneradoScripts.model.mikrotikBlockSharingHotspot;
-import com.okta.mongodb.GeneradoScripts.model.mikrotikPortForwardGenerator.MikrotikPortForwardGeneratorForward;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,10 +10,11 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-
-
-public class MikrotikBlockSharingHotspotBody {
-    
- private MikrotikBlockSharingHotspotGeneratorForward[] forwards;
- 
+public class MikrotikBlockSharingHotspotGeneratorForward {
+      private String   id;
+   private String   mangleChain;
+   private String   localInterface;
+   private String   localIPAddress;
+   private String   changeTTL;
+   private String   description;
 }

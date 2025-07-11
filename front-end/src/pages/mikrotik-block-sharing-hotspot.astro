@@ -26,6 +26,24 @@ if (shouldSignOut) {
   <p class="text-gray-300">
         Evita que los usuarios compartan su conexión del Hotspot o red local (por cable o Wi-Fi) hacia otros dispositivos usando la técnica de Change TTL (Time To Live) en MikroTik. <br>Este método impide que se hagan "puentes" o repartan Internet sin autorización.
         </p>
+
+
+    <!-- Contenido inicio -->
+    <div class="bg-gray-800 rounded-lg mx-4">
+      <!-- Contenido Principal -->
+      <div class="container mx-auto">
+        <!-- Formulario Principal -->
+        <FormulariomikrotikBlockSharingHotspot  client:load
+              client:load
+          session={session}
+          subscription={subscription}
+        
+        
+        />
+      </div>
+    </div>
+  </div>
+</MainLayout>
  <style>
      /* Animación personalizada para mover el degradado */
     @keyframes gradientMove {
@@ -43,14 +61,3 @@ if (shouldSignOut) {
       <!-- Diagrama -->
    
     </div>
-
-    <!-- Contenido inicio -->
-    <div class="bg-gray-800 rounded-lg mx-4">
-      <!-- Contenido Principal -->
-      <div class="container mx-auto">
-        <!-- Formulario Principal -->
-        <FormulariomikrotikBlockSharingHotspot  client:load />
-      </div>
-    </div>
-  </div>
-</MainLayout>
