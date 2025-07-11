@@ -19,6 +19,7 @@ interface FormData {
   limitQuotaUnit: string;
   typeUsername: string;
   typePassword: string;
+  ipGatewayIspGame: boolean;
 }
 
 const FormulariomikrotikUsernamePasswordHotspotGenerator = ({ session, subscription }: Props) => {
@@ -32,6 +33,7 @@ const FormulariomikrotikUsernamePasswordHotspotGenerator = ({ session, subscript
     limitQuotaUnit: "GB",
     typeUsername: "user-",
     typePassword: "01",
+    ipGatewayIspGame: false,
   });
 
   const { validateAuth } = useAuthValidation(session, subscription);
