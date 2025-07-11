@@ -1,20 +1,26 @@
 ---
 import AdminSubscriptions from "../components/administrator/formulario";
 import MainLayout from "../layout/MainLayout.astro";
-import { getSession } from "auth-astro/server";
 import type { Plan } from "../types/plan/plan";
 import type { Subscription } from "../types/subscription/subscription";
 import type { User } from "../types/user/user";
+import { Rol } from "../types/user/rol";
 import { getAuthData } from "../utils/auth";
+import type { Coupon } from "../types/coupon/coupon";
 
 // Obtener los datos de la sesión y suscripción
-const { session, subscription, user, shouldSignOut } = await getAuthData(
+const { session, user, shouldSignOut } = await getAuthData(
   Astro.request,
 );
 
 // Verificar si la sesión está iniciada
 if (!session) {
   return Astro.redirect("/sign-in");
+}
+
+// Verificar si el usuario no es un cliente
+if(user?.rol === Rol.CLIENT){
+   return Astro.redirect("/");
 }
 
 // ===========================================================================
@@ -25,7 +31,7 @@ const responseSubscriptions = await fetch(
   {
     headers: {
       "Content-Type": "application/json",
-      "accept": "application/json",
+      "Accept": "application/json",
       "Authorization": `${session?.user?.type} ${session.user?.token}`,
     },
   },
@@ -45,7 +51,7 @@ const responsePlan = await fetch(
   {
     headers: {
       "Content-Type": "application/json",
-      "accept": "application/json",
+      "Accept": "application/json",
       "Authorization": `${session?.user?.type} ${session.user?.token}`,
     },
   },
@@ -66,7 +72,7 @@ const responseUsers = await fetch(
   {
     headers: {
       "Content-Type": "application/json",
-      "accept": "application/json",
+      "Accept": "application/json",
       "Authorization": `${session?.user?.type} ${session.user?.token}`,
     },
   },
@@ -79,22 +85,41 @@ if (responseUsers.ok) {
   users = data;
 }
 
+// ===========================================================================
+// Obtener lista de cupones
+// ===========================================================================
+const responseCoupons = await fetch(
+  `${import.meta.env.PUBLIC_BASE_URL_API}/coupon`,
+  {
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+      "Authorization": `${session?.user?.type} ${session.user?.token}`,
+    },
+  },
+);
+
+let coupons: Coupon[] = [];
+
+if (responseCoupons.ok) {
+  const data = await responseCoupons.json();
+  coupons = data;
+}
+
 // Si necesita cerrar sesión, redirigir a logout
 if (shouldSignOut) {
   return Astro.redirect("/logout?reason=expired");
 }
-// ===========================================================================
 ---
 
 <MainLayout title="RMicrotik">
   <AdminSubscriptions
     client:load
     session={session}
-    subscription={subscription}
     user={user}
     subscriptions={subscriptions}
     plans={plans}
     users={users}
-    coupons={[]}
+    coupons={coupons}
   />
 </MainLayout>

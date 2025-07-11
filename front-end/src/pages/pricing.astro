@@ -6,8 +6,6 @@ import type { Plan } from "../types/plan/plan";
 
 const session = await getSession(Astro.request);
 
-console.log(session);
-
 const response = await fetch(`${import.meta.env.PUBLIC_BASE_URL_API}/plan`);
 
 let plans: Plan[] = [];

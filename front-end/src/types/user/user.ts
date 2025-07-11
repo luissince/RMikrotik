@@ -1,3 +1,5 @@
+import type { Rol } from "./rol";
+
 export interface User {
     id: string;
     email: string;
@@ -5,4 +7,5 @@ export interface User {
     name: string;
     providerId: string;
     status: string;
+    rol: Rol;
 }

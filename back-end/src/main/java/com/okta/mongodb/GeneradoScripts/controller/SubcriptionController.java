@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.okta.mongodb.GeneradoScripts.model.subscription.ActiveBody;
@@ -28,6 +27,13 @@ public class SubcriptionController {
         String providerId = (String) request.getAttribute("providerId");
         body.setProviderId(providerId);
         return subcriptionService.create(body);
+    }
+
+    @PostMapping("/with-coupon")
+    public ResponseEntity<?> createWithCoupon(@RequestBody PaymentBody body, HttpServletRequest request) {
+        String providerId = (String) request.getAttribute("providerId");
+        body.setProviderId(providerId);
+        return subcriptionService.createWithCoupon(body);
     }
 
     @GetMapping("/{token}")

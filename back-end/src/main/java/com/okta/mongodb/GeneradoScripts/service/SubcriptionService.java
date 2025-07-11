@@ -25,6 +25,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.okta.mongodb.GeneradoScripts.model.coupon.Coupon;
 import com.okta.mongodb.GeneradoScripts.model.plan.Plan;
 import com.okta.mongodb.GeneradoScripts.model.subscription.ActiveBody;
 import com.okta.mongodb.GeneradoScripts.model.subscription.Card;
@@ -33,6 +34,7 @@ import com.okta.mongodb.GeneradoScripts.model.subscription.PaymentBody;
 import com.okta.mongodb.GeneradoScripts.model.subscription.Subscription;
 import com.okta.mongodb.GeneradoScripts.model.user.User;
 import com.okta.mongodb.GeneradoScripts.repository.TransactionRepository;
+import com.okta.mongodb.GeneradoScripts.repository.CouponRepository;
 import com.okta.mongodb.GeneradoScripts.repository.PlanRepository;
 import com.okta.mongodb.GeneradoScripts.repository.SubscriptionRepository;
 import com.okta.mongodb.GeneradoScripts.repository.UserRepository;
@@ -53,6 +55,9 @@ public class SubcriptionService {
 
     @Autowired
     private TransactionRepository transactionRepository;
+
+    @Autowired
+    private CouponRepository couponRepository;
 
     @Value("${paypal.url}")
     private String paypalUrl;
@@ -121,6 +126,7 @@ public class SubcriptionService {
                         Map.of("message", "Plan no encontrado"));
             }
 
+            // Crear nueva suscripción con tarjeta
             if (body.getMethod().equals("card")) {
                 Card card = body.getCard();
 
@@ -167,6 +173,7 @@ public class SubcriptionService {
 
             }
 
+            // Crear nueva suscripción con PayPal
             if (body.getMethod().equals("paypal")) {
                 String token = generateTokenPayPal();
 
@@ -202,6 +209,7 @@ public class SubcriptionService {
                         "approveUrl", approveUrl));
             }
 
+            // Crear nueva suscripción con QR
             if (body.getMethod().equals("qr")) {
                 Transaction transaction = new Transaction();
                 transaction.setProviderId(body.getProviderId());
@@ -251,7 +259,7 @@ public class SubcriptionService {
         transactionRepository.save(transaction);
 
         return ResponseEntity.ok(Map.of(
-                "message", "Cuenta activada."));
+                "message", "La cuenta ha sido activada"));
     }
 
     public ResponseEntity<?> getAllSubscriptions() {
@@ -317,10 +325,10 @@ public class SubcriptionService {
             return ResponseEntity.status(400).body("No hay suscripción activa");
         }
 
+        logger.info("Subscription: {}", subscription.getStatus());
+
         // Devolver la información de la suscripción
-        return ResponseEntity.ok(Map.of(
-                "subscription", subscription,
-                "user", user));
+        return ResponseEntity.ok().body(Map.of("subscription", subscription));
     }
 
     private String generateTokenCulqi(Map<String, Object> cardData) throws Exception {
@@ -502,6 +510,74 @@ public class SubcriptionService {
                     "message", "Error al capturar la orden"));
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body("Error al procesar pago");
+        }
+    }
+
+    public ResponseEntity<?> createWithCoupon(PaymentBody body) {
+        try {
+            logger.info("Body recibido: {}", body);
+            if (body.getProviderId() == null || body.getCouponCode() == null) {
+                return ResponseEntity.badRequest().body(
+                        Map.of("message", "Faltan datos requeridos"));
+            }
+
+            User user = userRepository.findByProviderId(body.getProviderId()).orElse(null);
+            if (user == null) {
+                return ResponseEntity.badRequest().body(
+                        Map.of("message", "Usuario no encontrado"));
+            }
+
+            LocalDate today = LocalDate.now();
+            Subscription activeSub = subscriptionRepository
+                    .findTopByUserAndStatusAndEndDateGreaterThanEqualOrderByEndDateDesc(user,
+                            "active", today);
+            if (activeSub != null) {
+                return ResponseEntity.badRequest().body(
+                        Map.of("message", "Ya tienes una suscripción activa"));
+            }
+
+            Subscription lastSub = subscriptionRepository.findTopByUserOrderByEndDateDesc(user);
+            if (lastSub != null && lastSub.getEndDate().isBefore(today) &&
+                    "active".equalsIgnoreCase(lastSub.getStatus())) {
+                lastSub.setStatus("expired");
+                subscriptionRepository.save(lastSub);
+            }
+
+            Coupon coupon = couponRepository.findByCode(body.getCouponCode()).orElse(null);
+            if (coupon == null) {
+                return ResponseEntity.badRequest().body(
+                        Map.of("message", "Cupón no encontrado"));
+            }
+
+            if (coupon.isUsed()) {
+                return ResponseEntity.badRequest().body(
+                        Map.of("message", "El cupón ya ha sido usado"));
+            }
+
+            Plan plan = planRepository.findById(coupon.getPlanId()).orElse(null);
+            if (plan == null) {
+                return ResponseEntity.badRequest().body(
+                        Map.of("message", "Plan no encontrado"));
+            }
+
+            Subscription newSub = new Subscription();
+            newSub.setUser(user);
+            newSub.setPlan(plan);
+            newSub.setPrice(plan.getPrice());
+            newSub.setMethod("coupon");
+            newSub.setStartDate(today);
+            newSub.setEndDate(today.plusDays(plan.getDurationInDays()));
+            newSub.setStatus("active");
+            subscriptionRepository.save(newSub);
+
+            coupon.setUsed(true);
+            couponRepository.save(coupon);
+
+            return ResponseEntity.ok(Map.of(
+                    "message", "Suscripción registrada exitosamente con cupón"));
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "message", ex.getMessage()));
         }
     }
 

@@ -16,8 +16,6 @@ export interface AuthData {
  * @returns Promise con session, subscription y shouldSignOut
  */
 export async function getAuthData(request: Request): Promise<AuthData> {
-    // Importación dinámica para evitar problemas de SSR
-
     const session = await getSession(request);
     let subscription: Subscription | null = null;
     let user: User | null = null;
@@ -25,7 +23,27 @@ export async function getAuthData(request: Request): Promise<AuthData> {
 
     if (session) {
         try {
-            const response = await fetch(
+            const responseUser = await fetch(
+                `${import.meta.env.PUBLIC_BASE_URL_API}/user/id`,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                        "Authorization": `${session?.user?.type} ${session.user?.token}`,
+                    },
+                }
+            );
+
+            if (responseUser.status === 401) {
+                shouldSignOut = true;
+            }
+
+            if (responseUser.ok) {
+                const result = await responseUser.json();
+                user = result.user;
+            }
+
+            const responseSubscription = await fetch(
                 `${import.meta.env.PUBLIC_BASE_URL_API}/payment`,
                 {
                     headers: {
@@ -36,17 +54,16 @@ export async function getAuthData(request: Request): Promise<AuthData> {
                 }
             );
 
-            const data = await response.json();
-
-            if (response.ok) {
-                subscription = data.subscription;
-                user = data.user;
-            } else if (response.status === 401) {
+            if (responseSubscription.status === 401) {
                 shouldSignOut = true;
+            }
+
+            if (responseSubscription.ok) {
+                const result = await responseSubscription.json();
+                subscription = result.subscription;
             }
         } catch (error) {
             console.error("Error fetching subscription:", error);
-            // Opcional: manejar errores de red
         }
     }
 

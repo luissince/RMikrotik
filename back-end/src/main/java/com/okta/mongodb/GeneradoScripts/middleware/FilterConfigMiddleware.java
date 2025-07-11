@@ -28,7 +28,7 @@ public class FilterConfigMiddleware {
         // config.addAllowedHeader("*");
         config.setAllowedHeaders(Arrays.asList("*"));
         // config.addAllowedMethod("*");
-        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH" ,"DELETE", "OPTIONS"));
 
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
