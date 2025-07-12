@@ -3,6 +3,7 @@ import { useApiCall, useAuthValidation, useScriptOperations } from "../forms/Bas
 import type { Session } from "@auth/core/types";
 import type { Subscription } from "../../types/subscription/subscription";
 import { alertKit } from "alert-kit";
+import { keyNumberInteger } from "../../utils/keyEvent";
 
 interface Props {
   session: Session | null;
@@ -12,28 +13,32 @@ interface Props {
 interface FormData {
   qtyUserHotspot: number;
   profileHotspot: string;
-  rateLimit: string;
-  rateLimitUnit: string;
+  rateLimitUp: string;
+  rateLimitUnitUp: string;
+  rateLimitDown: string;
+  rateLimitUnitDown: string;
   limitUptime: string;
   limitQuota: string;
   limitQuotaUnit: string;
   typeUsername: string;
   typePassword: string;
-  ipGatewayIspGame: boolean;
+  isUsingQr: boolean;
 }
 
 const FormulariomikrotikUsernamePasswordHotspotGenerator = ({ session, subscription }: Props) => {
   const [formData, setFormData] = useState<FormData>({
     qtyUserHotspot: 10,
     profileHotspot: "default",
-    rateLimit: "1M/2M",
-    rateLimitUnit: "mb",
+    rateLimitUp: "1",
+    rateLimitUnitUp: "mb",
+    rateLimitDown: "1",
+    rateLimitUnitDown: "mb",
     limitUptime: "0h",
-    limitQuota: "0G",
+    limitQuota: "0",
     limitQuotaUnit: "GB",
     typeUsername: "user-",
     typePassword: "01",
-    ipGatewayIspGame: false,
+    isUsingQr: false,
   });
 
   const { validateAuth } = useAuthValidation(session, subscription);
@@ -43,11 +48,30 @@ const FormulariomikrotikUsernamePasswordHotspotGenerator = ({ session, subscript
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    const { id, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [id]: value,
-    }));
+    const { id, value, type } = e.target;
+
+    if (type === "checkbox") {
+      const { checked } = e.target;
+      if (id === "isUsingQr" && checked) {
+        setFormData((prevData) => ({
+          ...prevData,
+          [id]: checked,
+          typePassword: "01", // Reiniciar a un valor predeterminado
+        }));
+      } else {
+        setFormData((prevData) => ({
+          ...prevData,
+          [id]: checked,
+        }));
+      }
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [id]: value,
+      }));
+    }
+    // Limpiar el resultado del script cuando se cambie algún valor en el formulario
+    setScriptResult(null);
   };
 
   const handleSubmit = async () => {
@@ -141,8 +165,7 @@ const FormulariomikrotikUsernamePasswordHotspotGenerator = ({ session, subscript
               className="w-full p-2 border border-gray-600 rounded bg-gray-700"
             />
           </div>
-          <div className="flex justify-between  items-center space-x-4 ">
-
+          <div className="flex justify-between items-center space-x-4">
             <div className="w-full">
               <label className="block text-sm font-medium text-gray-300 mb-1">
                 Límite de velocidad [Subida]
@@ -150,62 +173,55 @@ const FormulariomikrotikUsernamePasswordHotspotGenerator = ({ session, subscript
               <div className="flex space-x-4">
                 <div className="flex space-x-2 flex-1">
                   <input
-                    id="rateLimit"
+                    id="rateLimitUp"
                     type="text"
-                    value={formData.rateLimit}
+                    value={formData.rateLimitUp}
                     onChange={handleChange}
                     className="w-3/4 p-2 border border-gray-600 rounded bg-gray-700"
+                    onKeyDown={(e) => keyNumberInteger(e)}
                   />
                   <select
-                    id="rateLimitUnitSubida"
-                    value={formData.rateLimitUnit}
+                    id="rateLimitUnitUp"
+                    value={formData.rateLimitUnitUp}
                     onChange={handleChange}
                     className="w-1/4 p-2 border border-gray-600 rounded bg-gray-700"
                   >
                     <option value="kb">KB</option>
                     <option value="mb">MB</option>
                   </select>
-
                 </div>
-
-
               </div>
             </div>
-
             <div className="w-full">
               <label className="block text-sm font-medium text-gray-300 mb-1">
-               Límite de velocidad [Descarga]
+                Límite de velocidad [Descarga]
               </label>
               <div className="flex space-x-4">
                 <div className="flex space-x-2 flex-1">
                   <input
-                    id="rateLimit"
+                    id="rateLimitDown"
                     type="text"
-                    value={formData.rateLimit}
+                    value={formData.rateLimitDown}
                     onChange={handleChange}
                     className="w-3/4 p-2 border border-gray-600 rounded bg-gray-700"
+                    onKeyDown={(e) => keyNumberInteger(e)}
                   />
                   <select
-                    id="rateLimitDescarga"
-                    value={formData.rateLimitUnit}
+                    id="rateLimitUnitDown"
+                    value={formData.rateLimitUnitDown}
                     onChange={handleChange}
                     className="w-1/4 p-2 border border-gray-600 rounded bg-gray-700"
                   >
                     <option value="kb">KB</option>
                     <option value="mb">MB</option>
                   </select>
-
                 </div>
-
-
               </div>
             </div>
-
-
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-1">
-              Limit Uptime [Duración]  Formato  : [1d12h15m30s]  d=Dia | h=Hora | m=Minutos | s=Segundos
+              Limit Uptime [Duración] Formato: [1d12h15m30s] d=Dia | h=Hora | m=Minutos | s=Segundos
             </label>
             <input
               id="limitUptime"
@@ -215,8 +231,6 @@ const FormulariomikrotikUsernamePasswordHotspotGenerator = ({ session, subscript
               className="w-full p-2 border border-gray-600 rounded bg-gray-700"
             />
           </div>
-
-          
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-1">
               Limit Quota [total Bytes]
@@ -228,6 +242,7 @@ const FormulariomikrotikUsernamePasswordHotspotGenerator = ({ session, subscript
                 value={formData.limitQuota}
                 onChange={handleChange}
                 className="w-3/4 p-2 border border-gray-600 rounded bg-gray-700"
+                 onKeyDown={(e) => keyNumberInteger(e)}
               />
               <select
                 id="limitQuotaUnit"
@@ -262,25 +277,26 @@ const FormulariomikrotikUsernamePasswordHotspotGenerator = ({ session, subscript
               value={formData.typePassword}
               onChange={handleChange}
               className="w-full p-2 border border-gray-600 rounded bg-gray-700"
+              disabled={formData.isUsingQr && !["01", "02"].includes(formData.typePassword)}
             >
               <option value="01">Password = Username</option>
               <option value="02">Username = Password</option>
-              <option value="03">Type Username = Password</option>
-              <option value="04">Random 3 Character</option>
-              <option value="05">Random 4 Character</option>
-              <option value="06">Random 5 Character</option>
-              <option value="07">Random Numeros</option>
+              <option value="03" disabled={formData.isUsingQr}>Type Username = Password</option>
+              <option value="04" disabled={formData.isUsingQr}>Random 3 Character</option>
+              <option value="05" disabled={formData.isUsingQr}>Random 4 Character</option>
+              <option value="06" disabled={formData.isUsingQr}>Random 5 Character</option>
+              <option value="07" disabled={formData.isUsingQr}>Random Numeros</option>
             </select>
           </div>
           <div>
             <input
               type="checkbox"
-              id="ipGatewayIspGame"
+              id="isUsingQr"
               className="mr-2"
-              checked={formData.ipGatewayIspGame}
+              checked={formData.isUsingQr}
               onChange={handleChange}
             />
-            <label htmlFor="ipGatewayIspGame" className="text-white">Activar impresión solo con QR</label>
+            <label htmlFor="isUsingQr" className="text-white">Activar impresión solo con QR</label>
           </div>
           <button
             type="button"
@@ -378,7 +394,7 @@ const FormulariomikrotikUsernamePasswordHotspotGenerator = ({ session, subscript
           </button>
           <button
             type="button"
-            className="flex items-center bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition disabled:bg-indigo-500 disabled:cursor-not-allowed"
+            className="flex items-center bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition disabled:bg-red-500 disabled:cursor-not-allowed"
             onClick={handleCopyScript}
             disabled={!scriptResult?.html || !session}
           >

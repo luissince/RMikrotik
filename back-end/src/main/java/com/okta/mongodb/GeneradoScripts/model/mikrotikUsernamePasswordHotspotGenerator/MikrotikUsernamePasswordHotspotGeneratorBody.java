@@ -15,11 +15,13 @@ public class MikrotikUsernamePasswordHotspotGeneratorBody {
   private String pppServiceOptions;
   private int qtyUserHotspot;
   private String profileHotspot;
-  private String rateLimit;
+  private String rateLimitUp;
+  private String rateLimitUnitUp;
+  private String rateLimitDown;
+  private String rateLimitUnitDown;
   private String limitUptime;
   private String limitQuota;
   private String typeUsername;
   private String typePassword;
-private String rateLimitDescarga;
-private String rateLimitUnitSubida;
+  private String isUsingQr;
 }
