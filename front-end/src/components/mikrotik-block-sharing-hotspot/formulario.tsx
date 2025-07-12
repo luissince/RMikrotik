@@ -2,12 +2,19 @@ import React, { useState } from "react";
 import SocialTooltipButton from "../SocialTooltipButton";
 import type { Session } from "@auth/core/types";
 import type { Subscription } from "../../types/subscription/subscription";
+import { useApiCall, useAuthValidation, useScriptOperations } from "../forms/BaseForm";
 
 interface Props {
   session: Session | null;
   subscription: Subscription | null;
 }
 const FormulariomikrotikBlockSharingHotspot = ({ session, subscription }: Props) => {
+
+  // Usar hooks personalizados
+  const { validateAuth } = useAuthValidation(session, subscription);
+  const { makeApiCall, isLoading } = useApiCall(session);
+  const { scriptResult, setScriptResult, handleCopyScript } = useScriptOperations(session, subscription);
+
   const [chains, setChains] = useState([
     {
       id: 1,
@@ -31,14 +38,36 @@ const FormulariomikrotikBlockSharingHotspot = ({ session, subscription }: Props)
     setChains([...chains, newChain]);
   };
 
- // const removeChain = (id) => {
-   // setChains(chains.filter((chain) => chain.id !== id));
- // };
 
-  const generateScript = () => {
-    // Aquí simplemente registrarás la acción, ya que la generación del script se manejará en otro lugar.
-    console.log("Generate Script button clicked. Chains data:", chains);
-    // Enviar datos a tu servicio para manejar la generación del script.
+
+  // const removeChain = (id) => {
+  // setChains(chains.filter((chain) => chain.id !== id));
+  // };
+
+  const handleSubmit = async () => {
+    if (!validateAuth()) return;
+
+    const result = await makeApiCall("/mikrotik-block-sharing-hotspot", chains);
+    if (result) {
+      setScriptResult(result);
+    }
+  };
+  const handleClear = () => {
+    if (!validateAuth()) return;
+
+    setChains([
+      {
+        id: 1,
+        mangleChain: "postrouting",
+        localInterface: "ether5",
+        localIPAddress: "10.5.50.0/24",
+        changeTTL: "1",
+        description: "Hotspot Protect",
+      },
+
+    ]
+    );
+    setScriptResult(null);
   };
 
   return (
@@ -68,7 +97,7 @@ const FormulariomikrotikBlockSharingHotspot = ({ session, subscription }: Props)
               <tr key={chain.id} className="text-gray-700">
                 <td className="py-2 px-4 border">
                   <button
-                 //   onClick={() => removeChain(chain.id)}
+                    //   onClick={() => removeChain(chain.id)}
                     className="bg-gray-500 text-white px-3 py-1 rounded"
                   >
                     Remove
@@ -147,13 +176,23 @@ const FormulariomikrotikBlockSharingHotspot = ({ session, subscription }: Props)
         </table>
         <div className="mt-4">
           <button
-            onClick={generateScript}
+            onClick={handleSubmit}
             className="bg-orange-500 text-white px-4 py-2 rounded mr-2"
           >
             Generate Script
           </button>
+          
+          <button
+            type="button"
+            className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition"
+            onClick={handleClear}
+            disabled={!session}
+          >
+            <i className="fa-solid fa-trash mr-2"></i>
+            Borrar Todo
+          </button>
         </div>
-          <SocialTooltipButton />
+        <SocialTooltipButton />
 
       </div>
 

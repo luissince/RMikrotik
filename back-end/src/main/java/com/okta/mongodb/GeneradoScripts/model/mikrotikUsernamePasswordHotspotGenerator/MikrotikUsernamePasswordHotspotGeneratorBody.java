@@ -20,4 +20,6 @@ public class MikrotikUsernamePasswordHotspotGeneratorBody {
   private String limitQuota;
   private String typeUsername;
   private String typePassword;
+private String rateLimitDescarga;
+private String rateLimitUnitSubida;
 }
