@@ -2,15 +2,12 @@ import React, { useState } from "react";
 import SocialTooltipButton from "../SocialTooltipButton";
 import type { Session } from "@auth/core/types";
 import type { Subscription } from "../../types/subscription/subscription";
+import { useApiCall, useAuthValidation, useScriptOperations } from "../forms/BaseForm";
 
 interface Props {
   session: Session | null;
   subscription: Subscription | null;
 }
-type ScriptResult = {
-  html: string;
-  text: string;
-};
 
 interface FormData {
   dhcpInterface: string;
@@ -31,8 +28,10 @@ const FormularioMikrotikDhcpRogue = ({ session, subscription }: Props) => {
     chatIdTelegram: "5537582xxx",
   });
 
-  const [scriptResult, setScriptResult] = useState<ScriptResult | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  // Usar hooks personalizados
+  const { validateAuth } = useAuthValidation(session, subscription);
+  const { makeApiCall, isLoading } = useApiCall(session);
+  const { scriptResult, setScriptResult, handleCopyScript } = useScriptOperations(session, subscription);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -44,38 +43,12 @@ const FormularioMikrotikDhcpRogue = ({ session, subscription }: Props) => {
     }));
   };
 
-  const handleGenerate = async () => {
-    setIsLoading(true);
-    try {
-      // Simulate API call
-      const response = await fetch(
-        `${import.meta.env.PUBLIC_BASE_URL_API}/mikrotik-dhcp-rogue`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
+  const handleSubmit = async () => {
+    if (!validateAuth()) return;
 
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      const resultData: ScriptResult = await response.json();
-      setScriptResult(resultData);
-    } catch (error) {
-      console.error("Error generating script:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleCopyScript = () => {
-    if (scriptResult) {
-      navigator.clipboard.writeText(scriptResult.text);
+    const result = await makeApiCall("/mikrotik-dhcp-rogue", formData);
+    if (result) {
+      setScriptResult(result);
     }
   };
 
@@ -135,9 +108,9 @@ const FormularioMikrotikDhcpRogue = ({ session, subscription }: Props) => {
               className="w-full p-2 border border-gray-600 rounded bg-gray-700"
             >
               <option value="01">Telegram</option>
-               <option value="02">E-Mail</option>
-                <option value="03">SMS</option>
-                 <option value="04">Log Message Only</option>
+              <option value="02">E-Mail</option>
+              <option value="03">SMS</option>
+              <option value="04">Log Message Only</option>
             </select>
           </div>
 
@@ -167,18 +140,18 @@ const FormularioMikrotikDhcpRogue = ({ session, subscription }: Props) => {
             />
           </div>
         </div>
-  <SocialTooltipButton />
+        <SocialTooltipButton />
         <div className="flex justify-center gap-4 mt-6">
           <button
             type="button"
-            onClick={handleGenerate}
+            onClick={handleSubmit}
             className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded"
           >
             Generate
           </button>
           <button
             type="button"
-            onClick={handleCopyScript}
+            onClick={() => handleCopyScript()}
             className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded"
           >
             Copy Script
