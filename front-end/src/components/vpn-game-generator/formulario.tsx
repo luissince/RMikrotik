@@ -21,10 +21,6 @@ interface Category {
     games: Game[];
 }
 
-interface ApiResponse {
-    categories: Category[];
-}
-
 interface FormData {
     vpnConnection: string;
     vpnNameOrInterface: string;
@@ -54,7 +50,6 @@ const FormularioVpnGameGenerator = ({ session, subscription }: Props) => {
         ipGatewayIspGameValue: '',
         games: [],
     });
-    const [error, setError] = useState<string | null>(null);
 
     const [selectedGames, setSelectedGames] = useState<Game[]>([]);
     // Usar hooks personalizados
@@ -62,7 +57,16 @@ const FormularioVpnGameGenerator = ({ session, subscription }: Props) => {
     const { makeApiCall, isLoading } = useApiCall(session);
     const { scriptResult, setScriptResult, handleCopyScript } = useScriptOperations(session, subscription);
 
+    useEffect(() => {
+        const fetchGames = async () => {
+            const result = await makeApiCall("/games", null, "GET");
+            if (result) {
+                setCategories(result.categories);
+            }
+        };
 
+        fetchGames();
+    }, []);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { id, value, type } = e.target;
@@ -216,7 +220,6 @@ const FormularioVpnGameGenerator = ({ session, subscription }: Props) => {
                         value={filter}
                         onChange={(e) => setFilter(e.target.value)}
                     />
-                    {error && <p className="text-red-500">{error}</p>}
                     <div className="flex-grow overflow-y-auto bg-gray-700 p-4 rounded max-h-[50vh]">
                         {filteredGames.map(category => (
                             <div key={category.name} className="mb-4">

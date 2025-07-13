@@ -24,10 +24,6 @@ interface Category {
     games: Game[];
 }
 
-interface ApiResponse {
-    categories: Category[];
-}
-
 interface FormData {
     idVpnConnection: string;
     vpnNameOnInterface: string;
@@ -36,11 +32,6 @@ interface FormData {
     vpnPassword: string;
     ipGatewayIspGame: boolean;
     ipGatewayIspGameValue: string;
-}
-
-interface ScriptResult {
-    html: string;
-    text: string;
 }
 
 const FormularioVpnGameGenerator2 = ({ session, subscription }: Props) => {
@@ -55,7 +46,6 @@ const FormularioVpnGameGenerator2 = ({ session, subscription }: Props) => {
         ipGatewayIspGame: false,
         ipGatewayIspGameValue: '',
     });
-    const [error, setError] = useState<string | null>(null);
 
     const [selectedGames, setSelectedGames] = useState<Game[]>([]);
     // Usar hooks personalizados
@@ -64,8 +54,16 @@ const FormularioVpnGameGenerator2 = ({ session, subscription }: Props) => {
     const { scriptResult, setScriptResult, handleCopyScript } = useScriptOperations(session, subscription);
 
 
+    useEffect(() => {
+        const fetchGames = async () => {
+            const result = await makeApiCall("/games", null, "GET");
+            if (result) {
+                setCategories(result.categories);
+            }
+        };
 
-
+        fetchGames();
+    }, []);
 
     const handleSubmit = async () => {
         if (!validateAuth()) return;
@@ -99,9 +97,6 @@ const FormularioVpnGameGenerator2 = ({ session, subscription }: Props) => {
             }));
         }
     };
-
-
-
 
     const handleGameSelect = (game: Game) => {
         const newSelectedGames = [...selectedGames];
@@ -218,7 +213,6 @@ const FormularioVpnGameGenerator2 = ({ session, subscription }: Props) => {
                         value={filter}
                         onChange={(e) => setFilter(e.target.value)}
                     />
-                    {error && <p className="text-red-500">{error}</p>}
                     <div className="flex-grow overflow-y-auto bg-gray-700 p-4 rounded max-h-[50vh]">
                         {filteredGames.map(category => (
                             <div key={category.name} className="mb-4">
