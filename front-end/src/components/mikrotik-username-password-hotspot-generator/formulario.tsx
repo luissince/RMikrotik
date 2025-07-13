@@ -84,7 +84,21 @@ const FormulariomikrotikUsernamePasswordHotspotGenerator = ({ session, subscript
     if (!validateAuth()) return;
 
     // Construir el valor de limitUptime a partir de los campos separados
-    const limitUptime = `${formData.limitUptimeDays}d${formData.limitUptimeHours}h${formData.limitUptimeMinutes}m${formData.limitUptimeSeconds}s`;
+    const limitUptimeParts = [];
+    if (formData.limitUptimeDays && formData.limitUptimeDays !== "0") {
+      limitUptimeParts.push(`${formData.limitUptimeDays}d`);
+    }
+    if (formData.limitUptimeHours && formData.limitUptimeHours !== "0") {
+      limitUptimeParts.push(`${formData.limitUptimeHours}h`);
+    }
+    if (formData.limitUptimeMinutes && formData.limitUptimeMinutes !== "0") {
+      limitUptimeParts.push(`${formData.limitUptimeMinutes}m`);
+    }
+    if (formData.limitUptimeSeconds && formData.limitUptimeSeconds !== "0") {
+      limitUptimeParts.push(`${formData.limitUptimeSeconds}s`);
+    }
+
+    const limitUptime = limitUptimeParts.join('') || "";
 
     const result = await makeApiCall("/mikrotik-username-password-hotspot-generator", {
       ...formData,
@@ -95,6 +109,7 @@ const FormulariomikrotikUsernamePasswordHotspotGenerator = ({ session, subscript
       setScriptResult(result);
     }
   };
+
 
   const handleClear = () => {
     if (!validateAuth()) return;
