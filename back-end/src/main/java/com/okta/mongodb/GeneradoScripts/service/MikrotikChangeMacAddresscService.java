@@ -6,8 +6,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.okta.mongodb.GeneradoScripts.model.mikrotikchangemacaddress.MikrotikChangeMacAddressBody;
-import com.okta.mongodb.GeneradoScripts.utils.DateUtils;
-import com.okta.mongodb.GeneradoScripts.utils.GeneratePassword;
 
 @Service
 public class MikrotikChangeMacAddresscService {
@@ -32,7 +30,6 @@ public class MikrotikChangeMacAddresscService {
     private String generateHtmlScript(MikrotikChangeMacAddressBody body) {
         StringBuilder html = new StringBuilder();
       
-
         switch (body.getMacOption().toLowerCase()) {
             case "01":
                 html.append("/interface ethernet set \"" + body.getInterfaceName() + "\" mac-address=\""

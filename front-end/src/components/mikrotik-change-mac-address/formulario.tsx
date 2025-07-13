@@ -3,15 +3,12 @@ import SocialTooltipButton from "../SocialTooltipButton";
 
 import type { Session } from "@auth/core/types";
 import type { Subscription } from "../../types/subscription/subscription";
+import { useApiCall, useAuthValidation, useScriptOperations } from "../forms/BaseForm";
 
 interface Props {
   session: Session | null;
   subscription: Subscription | null;
 }
-type ScriptResult = {
-  html: string;
-  text: string;
-};
 
 interface FormData {
   interfaceName: string;
@@ -19,16 +16,17 @@ interface FormData {
   macAddress: string;
 }
 
-const  FormulariomikrotikChangeMacAddress = ({ session, subscription }: Props) => {
+const FormulariomikrotikChangeMacAddress = ({ session, subscription }: Props) => {
   const [formData, setFormData] = useState<FormData>({
     interfaceName: "ether1",
-    macOption: "Change MAC Address Only",
+    macOption: "01",
     macAddress: "52:E2:4F:28:8B:9F",
   });
 
-  const [error, setError] = useState<string | null>(null);
-  const [scriptResult, setScriptResult] = useState<ScriptResult | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  // Usar hooks personalizados
+  const { validateAuth } = useAuthValidation(session, subscription);
+  const { makeApiCall, isLoading } = useApiCall(session);
+  const { scriptResult, setScriptResult, handleCopyScript } = useScriptOperations(session, subscription);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { id, value } = e.target;
@@ -49,37 +47,11 @@ const  FormulariomikrotikChangeMacAddress = ({ session, subscription }: Props) =
   };
 
   const handleGenerate = async () => {
-    setIsLoading(true);
-    try {
-      // Simulate API call
-      const response = await fetch(
-        `${import.meta.env.PUBLIC_BASE_URL_API}/mikrotik-change-mac-address`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
+     if (!validateAuth()) return;
 
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      const resultData: ScriptResult = await response.json();
-      setScriptResult(resultData);
-    } catch (error) {
-      setError("Error generating script: " + (error as Error).message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleCopyScript = () => {
-    if (scriptResult) {
-      navigator.clipboard.writeText(scriptResult.text);
+    const result = await makeApiCall("/mikrotik-change-mac-address", formData);
+    if (result) {
+      setScriptResult(result);
     }
   };
 
@@ -136,7 +108,7 @@ const  FormulariomikrotikChangeMacAddress = ({ session, subscription }: Props) =
           </button>
         </div>
       </div>
-  <SocialTooltipButton />
+      <SocialTooltipButton />
       <div className="flex space-x-4 mt-4">
         <button
           type="button"
@@ -147,7 +119,7 @@ const  FormulariomikrotikChangeMacAddress = ({ session, subscription }: Props) =
         </button>
         <button
           type="button"
-          onClick={handleCopyScript}
+          onClick={()=>handleCopyScript()}
           className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition"
         >
           Copy Script

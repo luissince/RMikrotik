@@ -164,7 +164,7 @@ export const useScriptOperations = (session: Session | null, subscription: Subsc
         if (!validateAuth()) return;
         if (scriptResult) {
             navigator.clipboard
-                .writeText(scriptResult.text || scriptResult.reateLimit!)
+                .writeText(text || scriptResult.text || scriptResult.reateLimit!)
                 .then(() => {
                     alertKit.success({
                         title: "Script",
