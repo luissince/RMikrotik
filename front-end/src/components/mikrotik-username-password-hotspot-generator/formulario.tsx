@@ -17,7 +17,10 @@ interface FormData {
   rateLimitUnitUp: string;
   rateLimitDown: string;
   rateLimitUnitDown: string;
-  limitUptime: string;
+  limitUptimeDays: string;
+  limitUptimeHours: string;
+  limitUptimeMinutes: string;
+  limitUptimeSeconds: string;
   limitQuota: string;
   limitQuotaUnit: string;
   typeUsername: string;
@@ -33,7 +36,10 @@ const FormulariomikrotikUsernamePasswordHotspotGenerator = ({ session, subscript
     rateLimitUnitUp: "mb",
     rateLimitDown: "1",
     rateLimitUnitDown: "mb",
-    limitUptime: "0h",
+    limitUptimeDays: "0",
+    limitUptimeHours: "0",
+    limitUptimeMinutes: "0",
+    limitUptimeSeconds: "0",
     limitQuota: "0",
     limitQuotaUnit: "GB",
     typeUsername: "user-",
@@ -76,7 +82,15 @@ const FormulariomikrotikUsernamePasswordHotspotGenerator = ({ session, subscript
 
   const handleSubmit = async () => {
     if (!validateAuth()) return;
-    const result = await makeApiCall("/mikrotik-username-password-hotspot-generator", formData);
+
+    // Construir el valor de limitUptime a partir de los campos separados
+    const limitUptime = `${formData.limitUptimeDays}d${formData.limitUptimeHours}h${formData.limitUptimeMinutes}m${formData.limitUptimeSeconds}s`;
+
+    const result = await makeApiCall("/mikrotik-username-password-hotspot-generator", {
+      ...formData,
+      limitUptime
+    });
+
     if (result) {
       setScriptResult(result);
     }
@@ -221,15 +235,55 @@ const FormulariomikrotikUsernamePasswordHotspotGenerator = ({ session, subscript
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-1">
-              Limit Uptime [Duración] Formato: [1d12h15m30s] d=Dia | h=Hora | m=Minutos | s=Segundos
+              Limit Uptime [Duración]
             </label>
-            <input
-              id="limitUptime"
-              type="text"
-              value={formData.limitUptime}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-600 rounded bg-gray-700"
-            />
+            <div className="flex space-x-2">
+              <div className="flex-1">
+                <label className="block text-xs font-medium text-gray-400 mb-1">Días</label>
+                <input
+                  id="limitUptimeDays"
+                  type="text"
+                  value={formData.limitUptimeDays}
+                  onChange={handleChange}
+                  className="w-full p-2 border border-gray-600 rounded bg-gray-700"
+                  onKeyDown={(e) => keyNumberInteger(e)}
+                />
+              </div>
+              <div className="flex-1">
+                <label className="block text-xs font-medium text-gray-400 mb-1">Horas</label>
+                <input
+                  id="limitUptimeHours"
+                  type="text"
+                  value={formData.limitUptimeHours}
+                  onChange={handleChange}
+                  className="w-full p-2 border border-gray-600 rounded bg-gray-700"
+                  onKeyDown={(e) => keyNumberInteger(e)}
+                />
+              </div>
+              <div className="flex-1">
+                <label className="block text-xs font-medium text-gray-400 mb-1">Minutos</label>
+                <input
+                  id="limitUptimeMinutes"
+                  type="text"
+                  value={formData.limitUptimeMinutes}
+                  onChange={handleChange}
+                  className="w-full p-2 border border-gray-600 rounded bg-gray-700"
+                  onKeyDown={(e) => keyNumberInteger(e)}
+                />
+              </div>
+              <div className="flex-1">
+                <label className="block text-xs font-medium text-gray-400 mb-1">Segundos</label>
+                <input
+                  id="limitUptimeSeconds"
+                  type="text"
+                  value={formData.limitUptimeSeconds}
+                  onChange={handleChange}
+                  className="w-full p-2 border border-gray-600 rounded bg-gray-700"
+                  onKeyDown={(e) => keyNumberInteger(e)}
+                />
+              </div>
+            </div>
+            <p className="text-xs text-gray-500 mt-1">Formato: d=Día | h=Hora | m=Minutos | s=Segundos</p>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-1">
@@ -242,7 +296,7 @@ const FormulariomikrotikUsernamePasswordHotspotGenerator = ({ session, subscript
                 value={formData.limitQuota}
                 onChange={handleChange}
                 className="w-3/4 p-2 border border-gray-600 rounded bg-gray-700"
-                 onKeyDown={(e) => keyNumberInteger(e)}
+                onKeyDown={(e) => keyNumberInteger(e)}
               />
               <select
                 id="limitQuotaUnit"
