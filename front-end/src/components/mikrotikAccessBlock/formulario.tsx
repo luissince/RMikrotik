@@ -2,17 +2,12 @@ import React, { useState } from "react";
 import SocialTooltipButton from "../SocialTooltipButton";
 import type { Session } from "@auth/core/types";
 import type { Subscription } from "../../types/subscription/subscription";
+import { useApiCall, useAuthValidation, useScriptOperations } from "../forms/BaseForm";
 
 interface Props {
-  session: Session | null;
-  subscription: Subscription | null;
+    session: Session | null;
+    subscription: Subscription | null;
 }
-type ScriptResult = {
-    html1: string;
-    html2: string;
-    text1: string;
-    text2: string;
-};
 
 interface FormData {
     blockOption: string;
@@ -21,10 +16,13 @@ interface FormData {
 const FormulariomikrotikAccessBlock = ({ session, subscription }: Props) => {
     const [formData, setFormData] = useState<FormData>({
         blockOption: "",
-
     });
-    const [error, setError] = useState<string | null>(null);
-    const [scriptResult, setScriptResult] = useState<ScriptResult | null>(null);
+
+    // Usar hooks personalizados
+    const { validateAuth } = useAuthValidation(session, subscription);
+    const { makeApiCall, isLoading } = useApiCall(session);
+    const { scriptResult, setScriptResult, handleCopyScript } = useScriptOperations(session, subscription);
+
 
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -35,34 +33,13 @@ const FormulariomikrotikAccessBlock = ({ session, subscription }: Props) => {
             [id]: value,
         }));
     };
-    const handleGenerate = async () => {
-        try {
-            // Simulate API call
-            const response = await fetch(
-                `${import.meta.env.PUBLIC_BASE_URL_API}/mikrotik-access-block`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        accept: "application/json",
-                    },
-                    body: JSON.stringify(formData),
-                }
-            );
+    const handleSubmit = async () => {
+        if (!validateAuth()) return;
 
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-
-            const resultData: ScriptResult = await response.json();
-            setScriptResult(resultData);
-        } catch (error) {
-            setError("Error generating script: " + (error as Error).message);
+        const result = await makeApiCall("/mikrotik-access-block", formData);
+        if (result) {
+            setScriptResult(result);
         }
-    };
-
-    const handleCopyScript = (text: string) => {
-        navigator.clipboard.writeText(text);
     };
 
     return (
@@ -89,12 +66,12 @@ const FormulariomikrotikAccessBlock = ({ session, subscription }: Props) => {
 
                 <button
                     type="button"
-                    onClick={handleGenerate}
+                    onClick={handleSubmit}
                     className="w-full bg-orange-500 text-white py-2 rounded hover:bg-orange-600 transition"
                 >
                     Generate Script
                 </button>
-  <SocialTooltipButton />
+                <SocialTooltipButton />
 
                 {scriptResult && (
                     <div className="mt-6">
@@ -104,7 +81,7 @@ const FormulariomikrotikAccessBlock = ({ session, subscription }: Props) => {
                                     STEP 1 - Copy Paste to Terminal
                                 </h3>
                                 <div className="flex-grow overflow-y-auto bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400">
-                                    <div dangerouslySetInnerHTML={{ __html: scriptResult.html1 }} />
+                                    <div dangerouslySetInnerHTML={{ __html: scriptResult.html1! }} />
                                     <button
                                         type="button"
                                         className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-bold transition-all duration-300 mt-2"
@@ -122,7 +99,7 @@ const FormulariomikrotikAccessBlock = ({ session, subscription }: Props) => {
                                     STEP 2 - Copy Paste to Terminal
                                 </h3>
                                 <div className="flex-grow overflow-y-auto bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400">
-                                    <div dangerouslySetInnerHTML={{ __html: scriptResult.html2 }} />
+                                    <div dangerouslySetInnerHTML={{ __html: scriptResult.html2! }} />
                                     <button
                                         type="button"
                                         className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-bold transition-all duration-300 mt-2"
@@ -135,10 +112,6 @@ const FormulariomikrotikAccessBlock = ({ session, subscription }: Props) => {
                         </div>
                     </div>
                 )}
-
-                {error && <p className="text-red-500 mt-4">{error}</p>}
-
-
             </div>
         </div>
     );
