@@ -97,9 +97,14 @@ public class MikrotikUsernamePasswordHotspotGeneratorService {
     private String generateHtmlScript(MikrotikUsernamePasswordHotspotGeneratorBody body,
             List<Map<String, String>> userData) {
 
-        String rateLimit = body.getRateLimitUp() + "" + body.getRateLimitUnitUp().toUpperCase() + "/"
-                + body.getRateLimitDown() + ""
-                + body.getRateLimitUnitDown().toUpperCase();
+        String rateLimit = "";
+        if (!"".equals(body.getRateLimitUp()) && !"".equals(body.getRateLimitDown())) {
+            rateLimit = body.getRateLimitUp() + "" + body.getRateLimitUnitUp().toUpperCase() + "/"
+                    + body.getRateLimitDown() + ""
+                    + body.getRateLimitUnitDown().toUpperCase();
+        } else {
+            rateLimit = "";
+        }
 
         StringBuilder html = new StringBuilder();
         html.append("<div>");
@@ -181,9 +186,15 @@ public class MikrotikUsernamePasswordHotspotGeneratorService {
 
     private String generatePlainTextScript(MikrotikUsernamePasswordHotspotGeneratorBody body,
             List<Map<String, String>> userData) {
-        String rateLimit = body.getRateLimitUp() + "" + body.getRateLimitUnitUp().toUpperCase() + "/"
-                + body.getRateLimitDown() + ""
-                + body.getRateLimitUnitDown().toUpperCase();
+
+        String rateLimit = "";
+        if (body.getRateLimitUp() != null && body.getRateLimitDown() != null) {
+            rateLimit = body.getRateLimitUp() + "" + body.getRateLimitUnitUp().toUpperCase() + "/"
+                    + body.getRateLimitDown() + ""
+                    + body.getRateLimitUnitDown().toUpperCase();
+        } else {
+            rateLimit = "";
+        }
 
         StringBuilder text = new StringBuilder();
         text.append("/ip hotspot user profile {set [find name=\"").append(body.getProfileHotspot())
