@@ -42,16 +42,16 @@ const FormularioStaticRoutingGames = ({ session, subscription }: Props) => {
     const { makeApiCall, isLoading } = useApiCall(session);
     const { scriptResult, setScriptResult, handleCopyScript } = useScriptOperations(session, subscription);
 
-      useEffect(() => {
+    useEffect(() => {
         const fetchGames = async () => {
-          const result = await makeApiCall("/games", null, "GET");
-          if (result) {
-            setCategories(result.categories);
-          }
+            const result = await makeApiCall("/games", null, "GET");
+            if (result) {
+                setCategories(result.categories);
+            }
         };
-    
+
         fetchGames();
-      }, []);
+    }, []);
 
     const handleSubmit = async () => {
         if (!validateAuth()) return;

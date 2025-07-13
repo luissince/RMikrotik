@@ -160,11 +160,11 @@ export const useScriptOperations = (session: Session | null, subscription: Subsc
     const [scriptResult, setScriptResult] = useState<ScriptResult | null>(null);
     const { validateAuth } = useAuthValidation(session, subscription);
 
-    const handleCopyScript = () => {
+    const handleCopyScript = (text?: string) => {
         if (!validateAuth()) return;
         if (scriptResult) {
             navigator.clipboard
-                .writeText(scriptResult.text || scriptResult.text1 || scriptResult.text2 || scriptResult.reateLimit!)
+                .writeText(scriptResult.text || scriptResult.reateLimit!)
                 .then(() => {
                     alertKit.success({
                         title: "Script",
