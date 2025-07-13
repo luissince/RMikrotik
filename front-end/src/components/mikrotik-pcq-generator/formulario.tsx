@@ -300,7 +300,7 @@ const FormularioMikrotikPcqGenerator = ({ session, subscription }: Props) => {
           <button
             type="button"
             className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700 transition"
-            onClick={handleCopyScript}
+            onClick={()=>handleCopyScript()}
             disabled={!scriptResult?.text}
           >
             Copiar Script

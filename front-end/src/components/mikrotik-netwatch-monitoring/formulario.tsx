@@ -2,44 +2,77 @@ import { useState } from "react";
 import SocialTooltipButton from "../SocialTooltipButton";
 import type { Session } from "@auth/core/types";
 import type { Subscription } from "../../types/subscription/subscription";
+import { useApiCall, useAuthValidation, useScriptOperations } from "../forms/BaseForm";
 
 interface Props {
   session: Session | null;
   subscription: Subscription | null;
 }
+
 interface Host {
   ip: string;
   description: string;
 }
 
+interface FormData {
+  sendingOption: string;
+  botTelegram: string;
+  chatIdTelegram: string;
+  hosts: Host[];
+}
+
 const FormularioMkrotikNetwatchMonitoring = ({ session, subscription }: Props) => {
-  const [sendingOption, setSendingOption] = useState("Telegram");
-  const [botTelegram, setBotTelegram] = useState("5633162xxx:AAFU1dsXcARJIAH_jJmvF...");
-  const [chatIdTelegram, setChatIdTelegram] = useState("5537582xxx");
-  const [hosts, setHosts] = useState<Host[]>([{ ip: "10.10.10.2", description: "Access Point Office" }]);
+  const [formData, setFormData] = useState<FormData>({
+    sendingOption: "Telegram",
+    botTelegram: "5633162xxx:AAFU1dsXcARJIAH_jJmvF...",
+    chatIdTelegram: "5537582xxx",
+    hosts: [{ ip: "10.10.10.2", description: "Access Point Office" }]
+  });
+
+  // Usar hooks personalizados
+  const { validateAuth } = useAuthValidation(session, subscription);
+  const { makeApiCall, isLoading } = useApiCall(session);
+  const { scriptResult, setScriptResult, handleCopyScript } = useScriptOperations(session, subscription);
 
   const handleAddHost = () => {
-    setHosts([...hosts, { ip: "", description: "" }]);
+    setFormData({
+      ...formData,
+      hosts: [...formData.hosts, { ip: "", description: "" }]
+    });
   };
 
   const handleRemoveHost = (index: number) => {
-    const updatedHosts = [...hosts];
+    const updatedHosts = [...formData.hosts];
     updatedHosts.splice(index, 1);
-    setHosts(updatedHosts);
+    setFormData({
+      ...formData,
+      hosts: updatedHosts
+    });
   };
 
   const handleHostChange = (index: number, field: keyof Host, value: string) => {
-    const updatedHosts = [...hosts];
+    const updatedHosts = [...formData.hosts];
     updatedHosts[index][field] = value;
-    setHosts(updatedHosts);
+    setFormData({
+      ...formData,
+      hosts: updatedHosts
+    });
   };
 
-  const handleGenerateScript = () => {
-    console.log("Generating script...");
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { id, value } = e.target;
+    setFormData({
+      ...formData,
+      [id]: value
+    });
   };
 
-  const handleCopyAllScript = () => {
-    console.log("Copying script...");
+  const handleGenerateScript = async () => {
+    if (!validateAuth()) return;
+    const result = await makeApiCall("/mikrotik-netwatch-monitoring", formData);
+    if (result) {
+      setScriptResult(result);
+    }
   };
 
   return (
@@ -48,8 +81,9 @@ const FormularioMkrotikNetwatchMonitoring = ({ session, subscription }: Props) =
         <div className="w-1/3 pr-2">
           <label className="block text-sm font-medium text-gray-300 mb-1">Sending Options</label>
           <select
-            value={sendingOption}
-            onChange={(e) => setSendingOption(e.target.value)}
+            id="sendingOption"
+            value={formData.sendingOption}
+            onChange={handleChange}
             className="w-full p-2 bg-gray-800 border border-gray-600 rounded focus:outline-none focus:ring-orange-500 focus:border-orange-500"
           >
             <option value="Telegram">Telegram</option>
@@ -58,18 +92,20 @@ const FormularioMkrotikNetwatchMonitoring = ({ session, subscription }: Props) =
         <div className="w-1/3 px-2">
           <label className="block text-sm font-medium text-gray-300 mb-1">BOT Telegram</label>
           <input
+            id="botTelegram"
             type="text"
-            value={botTelegram}
-            onChange={(e) => setBotTelegram(e.target.value)}
+            value={formData.botTelegram}
+            onChange={handleChange}
             className="w-full p-2 bg-gray-800 border border-gray-600 rounded focus:outline-none focus:ring-orange-500 focus:border-orange-500"
           />
         </div>
         <div className="w-1/3 pl-2">
           <label className="block text-sm font-medium text-gray-300 mb-1">Chat ID Telegram</label>
           <input
+            id="chatIdTelegram"
             type="text"
-            value={chatIdTelegram}
-            onChange={(e) => setChatIdTelegram(e.target.value)}
+            value={formData.chatIdTelegram}
+            onChange={handleChange}
             className="w-full p-2 bg-gray-800 border border-gray-600 rounded focus:outline-none focus:ring-orange-500 focus:border-orange-500"
           />
         </div>
@@ -86,7 +122,7 @@ const FormularioMkrotikNetwatchMonitoring = ({ session, subscription }: Props) =
           <span className="block w-1/3 text-center font-medium text-gray-300">Host / IP Address Monitoring</span>
           <span className="block w-2/3 text-center font-medium text-gray-300">Host / IP Address Description</span>
         </div>
-        {hosts.map((host, index) => (
+        {formData.hosts.map((host, index) => (
           <div key={index} className="flex items-center mb-2">
             <button
               onClick={() => handleRemoveHost(index)}
@@ -111,26 +147,38 @@ const FormularioMkrotikNetwatchMonitoring = ({ session, subscription }: Props) =
           </div>
         ))}
       </div>
-  <SocialTooltipButton />
+
+      <SocialTooltipButton />
+
       <div className="flex justify-center space-x-4">
         <button
           onClick={handleGenerateScript}
           className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-bold transition-all duration-300"
+          disabled={isLoading || !session}
         >
-          Generate Script
+          {isLoading ? "Generating..." : "Generate Script"}
         </button>
         <button
-          onClick={handleCopyAllScript}
+          onClick={() => handleCopyScript()}
           className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-bold transition-all duration-300"
+          disabled={!scriptResult?.html || !session}
         >
           Copy All Script
         </button>
       </div>
+
+      <div className="bg-gray-700 p-4 rounded-lg flex flex-col">
+        <label className="block text-sm font-semibold mb-2 text-gray-300">
+          Script Generator Result
+        </label>
+        <div className="flex-grow overflow-y-auto bg-gray-800 border border-gray-600 rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400 h-60">
+          {scriptResult && (
+            <div dangerouslySetInnerHTML={{ __html: scriptResult.html }} />
+          )}
+        </div>
+      </div>
     </div>
   );
 };
-
-
-
 
 export default FormularioMkrotikNetwatchMonitoring;

@@ -1,6 +1,4 @@
 package com.okta.mongodb.GeneradoScripts.model.mikrotikNetwatchMonitoring;
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,9 +10,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class mikrotikNetwatchMonitoringBody {
-      private String sendingOption;
-      private String botTelegram;
-      private String chatIdTelegram;
-      private List<mikrotikNetwatchMonitoringHost> hosts;
+public class mikrotikNetwatchMonitoringHost {
+      private String ip;
+      private String description;
 }

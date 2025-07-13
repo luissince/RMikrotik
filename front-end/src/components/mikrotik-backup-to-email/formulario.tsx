@@ -460,7 +460,7 @@ export default function FormularioBackupToEmail({ session, subscription }: Props
                 <div className="flex mt-4 space-x-4">
                     <button
                         type="button"
-                        onClick={handleCopyScript}
+                        onClick={()=>handleCopyScript()}
                         className="bg-orange-500 text-white px-4 py-2 w-full justify-center  rounded hover:bg-orange-600 transition flex items-center"
                         disabled={!scriptResult?.html || !session}
                         >

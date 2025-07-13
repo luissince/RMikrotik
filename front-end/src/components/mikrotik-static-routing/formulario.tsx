@@ -164,7 +164,7 @@ const FormularioMikrotikStaticRouting = ({ session, subscription }: Props) => {
                                 <button
                                     type="button"
                                     className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-bold transition-all duration-300 mt-2"
-                                    onClick={handleCopyScript}
+                                    onClick={()=>handleCopyScript(scriptResult.text1)}
                                 >
                                     Copy STEP 1
                                 </button>
@@ -189,7 +189,7 @@ const FormularioMikrotikStaticRouting = ({ session, subscription }: Props) => {
                                 <button
                                     type="button"
                                     className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-bold transition-all duration-300 mt-2"
-                                    onClick={handleCopyScript}
+                                    onClick={()=>handleCopyScript(scriptResult.text2)}
                                 >
                                     Copy STEP 2
                                 </button>

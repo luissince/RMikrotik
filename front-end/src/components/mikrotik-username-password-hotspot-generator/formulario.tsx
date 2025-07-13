@@ -449,7 +449,7 @@ const FormulariomikrotikUsernamePasswordHotspotGenerator = ({ session, subscript
           <button
             type="button"
             className="flex items-center bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition disabled:bg-red-500 disabled:cursor-not-allowed"
-            onClick={handleCopyScript}
+            onClick={() => handleCopyScript()}
             disabled={!scriptResult?.html || !session}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">

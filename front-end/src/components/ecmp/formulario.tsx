@@ -361,7 +361,7 @@ const FormularioEcmp = ({ session, subscription }: Props) => {
           <button
             type="button"
             className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
-            onClick={handleCopyScript}
+            onClick={()=>handleCopyScript()}
             disabled={!scriptResult?.html || !session}
           >
             Copiar Script
