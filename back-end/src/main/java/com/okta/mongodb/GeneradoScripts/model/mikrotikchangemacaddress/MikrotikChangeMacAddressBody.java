@@ -13,6 +13,6 @@ import lombok.ToString;
 @ToString
 public class MikrotikChangeMacAddressBody {
     private String interfaceName;
-   private String macOption;
+    private String macOption;
     private String macAddress;
 }

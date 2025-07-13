@@ -203,7 +203,7 @@ const FormularioVpnRemoteGenerator = ({ session, subscription }: Props) => {
                     <button
                         type="button"
                         className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition disabled:bg-green-300 disabled:cursor-not-allowed"
-                        onClick={handleCopyScript}
+                        onClick={()=>handleCopyScript()}
                         disabled={!scriptResult}
                     >
                         Copiar Script

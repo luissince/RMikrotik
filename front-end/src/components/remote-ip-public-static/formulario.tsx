@@ -10,11 +10,6 @@ interface Props {
   subscription: Subscription | null;
 }
 
-interface ScriptResult {
-  html: string;
-  text: string;
-}
-
 interface FormData {
   interfaceIsp: string;
   ipGatewayIsp: string;
@@ -29,14 +24,10 @@ const FormularioRemoteIpPublicStatic = ({ session, subscription }: Props) => {
     idRosVersion: "ros6"
   });
 
-
-  const [error, setError] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-    // Usar hooks personalizados
-    const { validateAuth } = useAuthValidation(session, subscription);
-    const { makeApiCall, isLoading } = useApiCall(session);
-    const { scriptResult, setScriptResult, handleCopyScript } = useScriptOperations(session, subscription);
-  
+  // Usar hooks personalizados
+  const { validateAuth } = useAuthValidation(session, subscription);
+  const { makeApiCall, isLoading } = useApiCall(session);
+  const { scriptResult, setScriptResult, handleCopyScript } = useScriptOperations(session, subscription);
 
   const refInterfaceIsp = useRef<HTMLInputElement>(null);
 
@@ -49,7 +40,6 @@ const FormularioRemoteIpPublicStatic = ({ session, subscription }: Props) => {
     }));
   };
 
- 
   const handleSubmit = async () => {
     if (!validateAuth()) return;
 
@@ -67,7 +57,6 @@ const FormularioRemoteIpPublicStatic = ({ session, subscription }: Props) => {
   };
 
 
-
   return (
     <div className="bg-gray-900 p-6 rounded-lg shadow-lg ">
 
@@ -83,7 +72,7 @@ const FormularioRemoteIpPublicStatic = ({ session, subscription }: Props) => {
               id="interfaceIsp"
               type="text"
               placeholder="ether1-ISP"
-              className={`w-full bg-gray-700 text-gray-300 rounded-lg p-2 border ${error && !formData.interfaceIsp ? "border-red-500" : "border-gray-600"
+              className={`w-full bg-gray-700 text-gray-300 rounded-lg p-2 border border-gray-600"
                 } focus:outline-none focus:ring-2 focus:ring-orange-500`}
               value={formData.interfaceIsp}
               onChange={handleInputChange}
@@ -98,7 +87,7 @@ const FormularioRemoteIpPublicStatic = ({ session, subscription }: Props) => {
               id="ipGatewayIsp"
               type="text"
               placeholder="192.168.10.1"
-              className={`w-full bg-gray-700 text-gray-300 rounded-lg p-2 border ${error && !formData.ipGatewayIsp ? "border-red-500" : "border-gray-600"
+              className={`w-full bg-gray-700 text-gray-300 rounded-lg p-2 border border-gray-600"
                 } focus:outline-none focus:ring-2 focus:ring-orange-500`}
               value={formData.ipGatewayIsp}
               onChange={handleInputChange}
@@ -112,7 +101,7 @@ const FormularioRemoteIpPublicStatic = ({ session, subscription }: Props) => {
             </label>
             <select
               id="idRosVersion"
-              className={`w-full bg-gray-700 border ${error && !formData.idRosVersion ? "border-red-500" : "border-gray-600"
+              className={`w-full bg-gray-700 border border-gray-600"
                 } rounded p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-400`}
               value={formData.idRosVersion}
               onChange={handleInputChange}
@@ -121,9 +110,9 @@ const FormularioRemoteIpPublicStatic = ({ session, subscription }: Props) => {
               <option value="ros7">RouterOS v7.xx</option>
             </select>
           </div>
-          
+
         </div>
-          <SocialTooltipButton />
+        <SocialTooltipButton />
       </div>
 
       {/* Resultado */}
@@ -135,7 +124,7 @@ const FormularioRemoteIpPublicStatic = ({ session, subscription }: Props) => {
               <div dangerouslySetInnerHTML={{ __html: scriptResult.html }} />
             ) : (
               <p className="text-gray-500 text-sm">
-                {isSubmitting ? "Generando script..." : "El script generado aparecerá aquí"}
+                {isLoading ? "Generando script..." : "El script generado aparecerá aquí"}
               </p>
             )}
           </div>
@@ -148,7 +137,7 @@ const FormularioRemoteIpPublicStatic = ({ session, subscription }: Props) => {
           type="button"
           className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition"
           onClick={handleClear}
-            disabled={!session}
+          disabled={!session}
         >
           Borrar Todo
         </button>
@@ -158,14 +147,14 @@ const FormularioRemoteIpPublicStatic = ({ session, subscription }: Props) => {
           onClick={handleSubmit}
           disabled={isLoading || !session}
         >
-          {isSubmitting ? "Generating..." : "Generate"}
+          {isLoading ? "Generating..." : "Generate"}
         </button>
         <button
           type="button"
           className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-bold transition-all duration-300"
-          onClick={handleCopyScript}
-           disabled={!scriptResult?.html || !session}
-        
+          onClick={() => handleCopyScript()}
+          disabled={!scriptResult?.html || !session}
+
         >
           Copy Script
         </button>

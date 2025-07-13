@@ -1,4 +1,5 @@
 package com.okta.mongodb.GeneradoScripts.service;
+
 import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
@@ -6,11 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.okta.mongodb.GeneradoScripts.model.mikrotikNetwatchMonitoring.mikrotikNetwatchMonitoringBody;
-import com.okta.mongodb.GeneradoScripts.utils.DateUtils;
-import com.okta.mongodb.GeneradoScripts.utils.GeneratePassword;
+
 @Service
 public class MikrotikNetwatchMonitoringService {
-      private static final Logger logger = LoggerFactory.getLogger(MikrotikNetwatchMonitoringService.class);
+       private static final Logger logger = LoggerFactory.getLogger(MikrotikNetwatchMonitoringService.class);
 
        public Map<String, String> create(mikrotikNetwatchMonitoringBody body) {
               logger.info("Body recibido: {}", body);
@@ -26,16 +26,23 @@ public class MikrotikNetwatchMonitoringService {
 
               return response;
        }
-         private String generateHtmlScript(mikrotikNetwatchMonitoringBody body) {
+
+       private String generateHtmlScript(mikrotikNetwatchMonitoringBody body) {
               StringBuilder html = new StringBuilder();
-                 
-
+              html.append("<span>Sending Options: "+body.getSendingOption()+"</span>");
+              html.append("<span>BOT Telegram: "+body.getBotTelegram()+"</span>");
+              html.append("<span>Chat ID Telegram: "+body.getChatIdTelegram()+"</span>");
+              html.append("<span>Hosts: "+body.getHosts()+"</span>");
               return html.toString();
-              }
+       }
 
- private String generatePlainTextScript(mikrotikNetwatchMonitoringBody body) {
+       private String generatePlainTextScript(mikrotikNetwatchMonitoringBody body) {
               StringBuilder text = new StringBuilder();
-        return text.toString();
+              text.append("Sending Options: "+body.getSendingOption());
+              text.append("BOT Telegram: "+body.getBotTelegram());
+              text.append("Chat ID Telegram: "+body.getChatIdTelegram());
+              text.append("Hosts: "+body.getHosts());
+              return text.toString();
        }
 
 }

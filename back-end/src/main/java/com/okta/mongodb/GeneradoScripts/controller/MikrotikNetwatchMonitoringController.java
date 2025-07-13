@@ -16,6 +16,7 @@ import com.okta.mongodb.GeneradoScripts.service.MikrotikNetwatchMonitoringServic
 @RestController
 @RequestMapping("/mikrotik-netwatch-monitoring")
 public class MikrotikNetwatchMonitoringController {
+    
     @Autowired
     private MikrotikNetwatchMonitoringService mikrotikNetwatchMonitoringService;
 
