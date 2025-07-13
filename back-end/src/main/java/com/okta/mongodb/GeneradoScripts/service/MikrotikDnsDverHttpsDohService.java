@@ -28,10 +28,12 @@ public class MikrotikDnsDverHttpsDohService {
         // Crear respuesta con ambos formatos
         Map<String, Object> response = new HashMap<>();
 
-        if (body.getType().equalsIgnoreCase("1")) {
+        if (body.getType().equalsIgnoreCase("00")) {
             response.put("data", generateData1());
-        } else if (body.getType().equalsIgnoreCase("2")) {
+        } else if (body.getType().equalsIgnoreCase("07")) {
             response.put("data", generateData2());
+        } else if (body.getType().equalsIgnoreCase("06")) {
+            response.put("data", generateData3());
         }
 
         response.put("html1", htmlScript1);
@@ -63,7 +65,7 @@ public class MikrotikDnsDverHttpsDohService {
                 "dnsIPv6Server1", "2a10:50c0::ad1:ff",
                 "dnsIPv6Server2", "2a10:50c0::ad2:ff",
                 "dohServer", "https://dns.adguard.com/dns-query",
-                "dohHostname", "dns.adguard.com");
+                "dohHostname", "dns.Cloudflare.com");
 
         return map;
     }
@@ -75,7 +77,7 @@ public class MikrotikDnsDverHttpsDohService {
                 "dnsIPv6Server1", "2a10:50c0::ad1:ff",
                 "dnsIPv6Server2", "2a10:50c0::ad2:ff",
                 "dohServer", "https://dns.adguard.com/dns-query",
-                "dohHostname", "dns.adguard.com");
+                "dohHostname", "dns.Cisco.com");
 
         return map;
     }
@@ -84,14 +86,31 @@ public class MikrotikDnsDverHttpsDohService {
         StringBuilder html = new StringBuilder();
 
         // 1
-        html.append(
-                "/ip dns set allow-remote-requests=yes cache-max-ttl=1d servers=94.140.14.14,94.140.15.15 use-doh-server=https://dns.adguard.com/dns-query <br>");
-        html.append("/ip dns static\r\n" + //
-                "add address=94.140.14.14 name=dns.adguard.com\r\n" + //
-                "add address=94.140.15.15 name=dns.adguard.com");
-        html.append("</div>");
+        if (body.getType().equalsIgnoreCase("00")) {
+            html.append(
+                    "/ip dns set allow-remote-requests=yes cache-max-ttl=1d servers=94.140.14.14,94.140.15.15 use-doh-server=https://dns.adguard.com/dns-query <br>");
+            html.append("/ip dns static\r\n" + //
+                    "add address=94.140.14.14 name=dns.adguard.com\r\n" + //
+                    "add address=94.140.15.15 name=dns.adguard.com");
+            html.append("</div>");
 
-        // 2
+        } else if (body.getType().equalsIgnoreCase("07")) {
+            html.append(
+                    "/ip dns set allow-remote-requests=yes cache-max-ttl=1d servers=94.140.14.14,94.140.15.15 use-doh-server=https://dns.adguard.com/dns-query <br>");
+            html.append("/ip dns static\r\n" + //
+                    "add address=94.140.14.14 name=dns.Cloudflare.com\r\n" + //
+                    "add address=94.140.15.15 name=dns.Cloudflare.com");
+            html.append("</div>");
+        } else if (body.getType().equalsIgnoreCase("06")) {
+            html.append(
+                    "/ip dns set allow-remote-requests=yes cache-max-ttl=1d servers=94.140.14.14,94.140.15.15 use-doh-server=https://dns.adguard.com/dns-query <br>");
+            html.append("/ip dns static\r\n" + //
+                    "add address=94.140.14.14 name=dns.Cisco.com\r\n" + //
+                    "add address=94.140.15.15 name=dns.Cisco.com");
+            html.append("</div>");
+        } else {
+            html.append("libre");
+        }
 
         return html.toString();
     }
@@ -99,20 +118,21 @@ public class MikrotikDnsDverHttpsDohService {
     private String generateHtmlScript2(MikrotikDnsDverHttpsDohBody body) {
         StringBuilder html = new StringBuilder();
 
-        // 1|
-        html.append("<div>");
-        html.append("<span> hola2 </span>");
-        html.append("</div>");
-
-        // 2
-        html.append("<div>");
-        html.append("<span> hola2 </span>");
-        html.append("</div>");
-
-        // 3
-        html.append("<div>");
-        html.append("<span> hola2 </span>");
-        html.append("</div>");
+        if (body.getType().equalsIgnoreCase("00")) {
+            html.append("<div>");
+            html.append("<span> AdGuard </span>");
+            html.append("</div>");
+        } else if (body.getType().equalsIgnoreCase("07")) {
+            html.append("<div>");
+            html.append("<span> Cloudflare </span>");
+            html.append("</div>");
+        } else if (body.getType().equalsIgnoreCase("06")) {
+            html.append("<div>");
+            html.append("<span> Cisco </span>");
+            html.append("</div>");
+        } else {
+            html.append("libre");
+        }
 
         return html.toString();
     }
@@ -120,9 +140,21 @@ public class MikrotikDnsDverHttpsDohService {
     private String generateHtmlScript3(MikrotikDnsDverHttpsDohBody body) {
         StringBuilder html = new StringBuilder();
 
-        html.append("<div>");
-        html.append("<span> hola3 </span>");
-        html.append("</div>");
+        if (body.getType().equalsIgnoreCase("00")) {
+            html.append("<div>");
+            html.append("<span> AdGuard </span>");
+            html.append("</div>");
+        } else if (body.getType().equalsIgnoreCase("07")) {
+            html.append("<div>");
+            html.append("<span> Cloudflare </span>");
+            html.append("</div>");
+        } else if (body.getType().equalsIgnoreCase("06")) {
+            html.append("<div>");
+            html.append("<span> Cisco </span>");
+            html.append("</div>");
+        } else {
+            html.append("libre");
+        }
 
         return html.toString();
     }

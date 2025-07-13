@@ -9,6 +9,7 @@ interface Props {
     session: Session | null;
     subscription: Subscription | null;
 }
+
 interface Game {
     name: string;
     id: string;
@@ -17,10 +18,6 @@ interface Game {
 interface Category {
     name: string;
     games: Game[];
-}
-
-interface ApiResponse {
-    categories: Category[];
 }
 
 interface FormData {

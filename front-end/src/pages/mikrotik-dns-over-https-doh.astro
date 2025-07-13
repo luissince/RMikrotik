@@ -9,8 +9,20 @@ const { session, subscription, shouldSignOut } = await getAuthData(
   Astro.request,
 );
 
+// Verificar si la sesión está iniciada
+if (!session) {
+  return Astro.redirect("/sign-in");
+}
+
 const response = await fetch(
   `${import.meta.env.PUBLIC_BASE_URL_API}/mikrotik-dns-over-https-doh`,
+  {
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `${session?.user?.type} ${session.user?.token}`,
+    },
+  },
 );
 
 let dnsOptions = [];
@@ -44,25 +56,6 @@ if (shouldSignOut) {
           necesario para activar DoH en RouterOS, protegiendo tus consultas DNS contra
           espionaje y manipulación.
         </p>
-        <style>
-          /* Animación personalizada para mover el degradado */
-          @keyframes gradientMove {
-            0% {
-              background-position: 0% 50%;
-            }
-            50% {
-              background-position: 100% 50%;
-            }
-            100% {
-              background-position: 0% 50%;
-            }
-          }
-
-          .animated-gradient {
-            background-size: 200% 200%;
-            animation: gradientMove 5s ease infinite;
-          }
-        </style>
       </div>
     </div>
 
@@ -81,3 +74,23 @@ if (shouldSignOut) {
     </div>
   </div>
 </MainLayout>
+
+<style>
+  /* Animación personalizada para mover el degradado */
+  @keyframes gradientMove {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  .animated-gradient {
+    background-size: 200% 200%;
+    animation: gradientMove 5s ease infinite;
+  }
+</style>

@@ -1,35 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SocialTooltipButton from "../SocialTooltipButton";
 import type { Session } from "@auth/core/types";
 import type { Subscription } from "../../types/subscription/subscription";
-
-interface Props {
-  session: Session | null;
-  subscription: Subscription | null;
-}
-type FormData = {
-  dnsIPv4Server1: string;
-  dnsIPv4Server2: string;
-  dnsIPv6Server1: string;
-  dnsIPv6Server2: string;
-  dohServer: string;
-  dohHostname: string;
-};
-
-type ScriptResult = {
-  data: FormData;
-  html1: string;
-  html2: string;
-  html3: string;
-  text: string;
-};
+import { useApiCall, useAuthValidation, useScriptOperations } from "../forms/BaseForm";
 
 type DnsOptions = {
-  id: string;
+  code: string;
   name: string;
 };
 
 interface Props {
+  session: Session | null;
+  subscription: Subscription | null;
   dnsOptions: DnsOptions[];
 }
 
@@ -52,50 +34,26 @@ const ScriptTable = ({ title, htmlContent }: { title: string; htmlContent: strin
   </div>
 );
 
-const FormulariomikrotikDnsOverHttpsDoh = ({ dnsOptions: initialDnsOptions }: Props) => {
+const FormulariomikrotikDnsOverHttpsDoh = ({ session, subscription, dnsOptions }: Props) => {
   const [selectedDnsOption, setSelectedDnsOption] = useState<string>("");
-  const [scriptResult, setScriptResult] = useState<ScriptResult | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+
+  // Usar hooks personalizados
+  const { validateAuth } = useAuthValidation(session, subscription);
+  const { makeApiCall, isLoading } = useApiCall(session);
+  const { scriptResult, setScriptResult, handleCopyScript } = useScriptOperations(session, subscription);
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedOption = e.target.value;
     setSelectedDnsOption(selectedOption);
-    handleGenerate(selectedOption);
+    handleSubmit(selectedOption);
   };
 
-  const handleGenerate = async (type: string) => {
-    setIsLoading(true);
-    try {
-      const payload = { type };
+  const handleSubmit = async (type: string) => {
+    if (!validateAuth()) return;
 
-      const response = await fetch(
-        `${import.meta.env.PUBLIC_BASE_URL_API}/mikrotik-dns-over-https-doh`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify(payload),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      const resultData: ScriptResult = await response.json();
-      setScriptResult(resultData);
-    } catch (error) {
-      console.error("Error generating script:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleCopyScript = () => {
-    if (scriptResult) {
-      navigator.clipboard.writeText(scriptResult.text);
+    const result = await makeApiCall("/mikrotik-dns-over-https-doh", { type });
+    if (result) {
+      setScriptResult(result);
     }
   };
 
@@ -111,16 +69,16 @@ const FormulariomikrotikDnsOverHttpsDoh = ({ dnsOptions: initialDnsOptions }: Pr
               onChange={handleSelectChange}
             >
               <option value="">- Seleccionar -</option>
-              {initialDnsOptions.map((option) => (
-                <option key={option.id} value={option.id}>
+              {dnsOptions.map((option) => (
+                <option key={option.code} value={option.code}>
                   {option.name}
                 </option>
               ))}
             </select>
           </div>
-          
+
         </div>
-          <SocialTooltipButton />
+        <SocialTooltipButton />
 
         {scriptResult && (
           <>
@@ -141,10 +99,10 @@ const FormulariomikrotikDnsOverHttpsDoh = ({ dnsOptions: initialDnsOptions }: Pr
                       </label>
                     </td>
                     <td className="border-slate-700 p-2 border pl-4 text-white">
-                      {scriptResult.data.dnsIPv4Server1}
+                      {scriptResult.data?.dnsIPv4Server1 ?? "-"}
                     </td>
                     <td className="border-slate-700 p-2 border pl-4 text-white">
-                      {scriptResult.data.dnsIPv4Server2}
+                      {scriptResult.data?.dnsIPv4Server2 || "-"}
                     </td>
                   </tr>
                   <tr className="text-gray-800">
@@ -154,10 +112,10 @@ const FormulariomikrotikDnsOverHttpsDoh = ({ dnsOptions: initialDnsOptions }: Pr
                       </label>
                     </td>
                     <td className="border-slate-700 p-2 border pl-4 text-white">
-                      {scriptResult.data.dnsIPv6Server1}
+                      {scriptResult.data?.dnsIPv6Server1 ?? "-"}
                     </td>
                     <td className="border-slate-700 p-2 border pl-4 text-white">
-                      {scriptResult.data.dnsIPv6Server2}
+                      {scriptResult.data?.dnsIPv6Server2 ?? "-"}
                     </td>
                   </tr>
                   <tr className="text-gray-800">
@@ -167,7 +125,7 @@ const FormulariomikrotikDnsOverHttpsDoh = ({ dnsOptions: initialDnsOptions }: Pr
                       </label>
                     </td>
                     <td colSpan={2} className="border-slate-700 p-2 border pl-4 text-white">
-                      {scriptResult.data.dohServer}
+                      {scriptResult.data?.dohServer ?? "-"}
                     </td>
                   </tr>
                   <tr className="text-gray-800">
@@ -177,25 +135,26 @@ const FormulariomikrotikDnsOverHttpsDoh = ({ dnsOptions: initialDnsOptions }: Pr
                       </label>
                     </td>
                     <td colSpan={2} className="border-slate-700 p-2 border pl-4 text-white">
-                      {scriptResult.data.dohHostname}
+                      {scriptResult.data?.dohHostname ?? "-"}
                     </td>
                   </tr>
                 </tbody>
               </table>
             </div>
 
-            <ScriptTable title="DNS or DoH, IPv4 - Mikrotik Script" htmlContent={scriptResult.html1} />
-            <ScriptTable title="DNS or DoH, IPv6 - Mikrotik Script" htmlContent={scriptResult.html2} />
-            <ScriptTable title="Verify DoH Certificate - Mikrotik Script (Optional)" htmlContent={scriptResult.html3} />
+            <ScriptTable title="DNS or DoH, IPv4 - Mikrotik Script" htmlContent={scriptResult.html1!} />
+            <ScriptTable title="DNS or DoH, IPv6 - Mikrotik Script" htmlContent={scriptResult.html2!} />
+            <ScriptTable title="Verify DoH Certificate - Mikrotik Script (Optional)" htmlContent={scriptResult.html3!} />
 
             <button
               type="button"
               className="mt-4 bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition"
-              onClick={handleCopyScript}
+              onClick={() => handleCopyScript()}
+              disabled={isLoading}
             >
               Copy Script
             </button>
-            
+
           </>
         )}
       </div>
