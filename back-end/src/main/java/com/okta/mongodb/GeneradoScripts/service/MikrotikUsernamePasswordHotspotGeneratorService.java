@@ -211,6 +211,7 @@ public class MikrotikUsernamePasswordHotspotGeneratorService {
         }
 
         StringBuilder text = new StringBuilder();
+        text.append("/ip hotspot user profile add name=\"").append(body.getProfileHotspot()).append("\" \n");
         text.append("/ip hotspot user profile {set [find name=\"").append(body.getProfileHotspot())
                 .append("\"] rate-limit=\"").append(rateLimit)
                 .append("\" insert-queue-before=\"bottom\"} \n");
