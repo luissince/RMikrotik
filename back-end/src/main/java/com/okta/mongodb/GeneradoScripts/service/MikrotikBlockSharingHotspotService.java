@@ -1,16 +1,19 @@
 package com.okta.mongodb.GeneradoScripts.service;
+
 import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.okta.mongodb.GeneradoScripts.model.mikrotikBlockSharingHotspot.MikrotikBlockSharingHotspotBody;
-
+import com.okta.mongodb.GeneradoScripts.model.mikrotikBlockSharingHotspot.MikrotikBlockSharingHotspotGeneratorForward;
 import com.okta.mongodb.GeneradoScripts.utils.DateUtils;
+
 @Service
 public class MikrotikBlockSharingHotspotService {
-     private static final Logger logger = LoggerFactory.getLogger(MikrotikBlockSharingHotspotService.class);  
-     public Map<String, String> create(MikrotikBlockSharingHotspotBody body) {
+        private static final Logger logger = LoggerFactory.getLogger(MikrotikBlockSharingHotspotService.class);
+
+        public Map<String, String> create(MikrotikBlockSharingHotspotBody body) {
                 logger.info("Body recibido: {}", body);
 
                 // Generar ambas versiones del script
@@ -24,26 +27,36 @@ public class MikrotikBlockSharingHotspotService {
 
                 return response;
         }
+
         private String generateHtmlScript(MikrotikBlockSharingHotspotBody body) {
                 StringBuilder html = new StringBuilder();
-               html.append("<span class='text-orange-400'>###################################################################</span> <br>");
+                html.append("<span class='text-orange-400'>###################################################################</span> <br>");
                 html.append("<span class='text-orange-400'># Static Routing Games Using Mangle port Generator By buananet.com</span> <br>");
                 html.append("<span class='text-orange-400'># Date/Time: " + DateUtils.currentDate() + "</span> <br>");
                 html.append("<span class='text-orange-400'># Created By: buananet.com - fb.me/buananet.pbun</span> <br>");
                 html.append("<span class='text-orange-400'>###################################################################</span> <br>");
-          return html.toString();
+
+                for (MikrotikBlockSharingHotspotGeneratorForward forward : body.getForwards()) {
+                    html.append("/queue tree <br>");
+                    html.append("add mangle-chain=\"").append(forward.getMangleChain()).append("\" local-interface=\"").append(forward.getLocalInterface()).append("\" local-ip-address=\"").append(forward.getLocalIPAddress()).append("\" change-ttl=\"").append(forward.getChangeTTL()).append("\" description=\"").append(forward.getDescription()).append("\" <br>");
+                }
+
+                return html.toString();
         }
 
- private String generatePlainTextScript(MikrotikBlockSharingHotspotBody body) {
+        private String generatePlainTextScript(MikrotikBlockSharingHotspotBody body) {
                 StringBuilder text = new StringBuilder();
-text.append("<span class='text-orange-400'>###################################################################</span> <br>");
+                text.append("<span class='text-orange-400'>###################################################################</span> <br>");
                 text.append("<span class='text-orange-400'># Static Routing Games Using Mangle port Generator By buananet.com</span> <br>");
                 text.append("<span class='text-orange-400'># Date/Time: " + DateUtils.currentDate() + "</span> <br>");
                 text.append("<span class='text-orange-400'># Created By: buananet.com - fb.me/buananet.pbun</span> <br>");
                 text.append("<span class='text-orange-400'>###################################################################</span> <br>");
-          
-             text.append("<span class='font-black'>/queue tree</span> <br>");
-          return text.toString();
+
+                for (MikrotikBlockSharingHotspotGeneratorForward forward : body.getForwards()) {
+                    text.append("/queue tree <br>");
+                    text.append("add mangle-chain=\"").append(forward.getMangleChain()).append("\" local-interface=\"").append(forward.getLocalInterface()).append("\" local-ip-address=\"").append(forward.getLocalIPAddress()).append("\" change-ttl=\"").append(forward.getChangeTTL()).append("\" description=\"").append(forward.getDescription()).append("\" <br>");
+                }
+                return text.toString();
         }
 
 }

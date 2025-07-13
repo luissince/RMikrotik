@@ -12,7 +12,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class MikrotikBlockSharingHotspotBody {
-    
- private MikrotikBlockSharingHotspotGeneratorForward[] forwards;
- 
+
+    private MikrotikBlockSharingHotspotGeneratorForward[] forwards;
+
 }
