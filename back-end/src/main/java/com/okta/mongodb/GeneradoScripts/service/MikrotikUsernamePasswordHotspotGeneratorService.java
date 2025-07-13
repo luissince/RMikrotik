@@ -186,7 +186,6 @@ public class MikrotikUsernamePasswordHotspotGeneratorService {
                 + body.getRateLimitUnitDown().toUpperCase();
 
         StringBuilder text = new StringBuilder();
-        text.append("FICHAS HOTSPOT MIKROTIK \n");
         text.append("/ip hotspot user profile {set [find name=\"").append(body.getProfileHotspot())
                 .append("\"] rate-limit=\"").append(rateLimit)
                 .append("\" insert-queue-before=\"bottom\"} \n");
