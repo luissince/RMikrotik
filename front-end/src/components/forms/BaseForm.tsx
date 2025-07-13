@@ -36,8 +36,10 @@ export interface ScriptResult {
     text: string;
     html1?: string;
     html2?: string;
+    html3?: string;
     text1?: string;
     text2?: string;
+    text3?: string;
     data?: {
         "upload-max-limit": string;
         "download-actual-burst-duration": string;
@@ -51,6 +53,13 @@ export interface ScriptResult {
         "download-burst-limit": string;
         "download-threshold": string;
         "download-burst-time-value": string;
+
+        "dnsIPv4Server1": string;
+        "dnsIPv4Server2": string;
+        "dnsIPv6Server1": string;
+        "dnsIPv6Server2": string;
+        "dohServer": string;
+        "dohHostname": string;
     };
     reateLimit?: string;
     categories?: any;

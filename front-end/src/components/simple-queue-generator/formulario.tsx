@@ -5,13 +5,9 @@ import type { Session } from "@auth/core/types";
 import type { Subscription } from "../../types/subscription/subscription";
 import { useApiCall, useAuthValidation, useScriptOperations } from "../forms/BaseForm";
 interface Props {
-  session: Session | null;
-  subscription: Subscription | null;
+    session: Session | null;
+    subscription: Subscription | null;
 }
-type ScriptResult = {
-    html: string;
-    text: string;
-};
 
 interface FormData {
     parentNameQueue: string;
@@ -42,9 +38,9 @@ const defaultData: FormData = {
     bucketSizeDown: "0.1",
 }
 
-const  FormularioScriptGenerator = ({ session, subscription }: Props) => {
-  // Datos del formulario
-  const [formData, setFormData] = useState<FormData>(defaultData);
+const FormularioScriptGenerator = ({ session, subscription }: Props) => {
+    // Datos del formulario
+    const [formData, setFormData] = useState<FormData>(defaultData);
     const [parentNameQueue, setParentNameQueue] = useState("Global-Connection");
     const [targetLocalIP, setTargetLocalIP] = useState("192.168.88.0/24");
     const [upTotal, setUpTotal] = useState("5M");
@@ -57,30 +53,28 @@ const  FormularioScriptGenerator = ({ session, subscription }: Props) => {
     const [downClient, setDownClient] = useState("1M");
     const [bucketSizeUp, setBucketSizeUp] = useState("0.1");
     const [bucketSizeDown, setBucketSizeDown] = useState("0.1");
- 
-  // Usar hooks personalizados
-  const { validateAuth } = useAuthValidation(session, subscription);
-  const { makeApiCall, isLoading } = useApiCall(session);
-  const { scriptResult, setScriptResult, handleCopyScript } = useScriptOperations(session, subscription);
 
+    // Usar hooks personalizados
+    const { validateAuth } = useAuthValidation(session, subscription);
+    const { makeApiCall, isLoading } = useApiCall(session);
+    const { scriptResult, setScriptResult, handleCopyScript } = useScriptOperations(session, subscription);
 
+    const handleSubmit = async () => {
+        if (!validateAuth()) return;
 
+        const result = await makeApiCall("/simple-queue-generator", formData);
+        if (result) {
+            setScriptResult(result);
+        }
+    };
 
-  const handleSubmit = async () => {
-    if (!validateAuth()) return;
+    const handleClear = () => {
+        if (!validateAuth()) return;
 
-    const result = await makeApiCall("/simple-queue-generator", formData);
-    if (result) {
-      setScriptResult(result);
-    }
-  };
+        setFormData(defaultData);
+        setScriptResult(null);
+    };
 
-  const handleClear = () => {
-    if (!validateAuth()) return;
-
-    setFormData(defaultData);
-    setScriptResult(null);
-  };
     return (
         <div className="flex flex-col lg:flex-row gap-6 bg-gray-900 p-6 rounded-lg shadow-lg">
             {/* Form Section */}
@@ -317,19 +311,20 @@ const  FormularioScriptGenerator = ({ session, subscription }: Props) => {
                         </div>
                     </div>
 
-                 
+
 
                     <div className="flex justify-between mt-6">
                         <button
                             type="button"
                             className="bg-orange-500 text-white w-full px-4 py-2 rounded hover:bg-orange-600 transition"
                             onClick={handleSubmit}
+                            disabled={isLoading}
                         >
                             Generate
                         </button>
-                     
+
                     </div>
-                       <div className="mt-6">
+                    <div className="mt-6">
                         <SocialTooltipButton />
                     </div>
                 </form>
@@ -347,18 +342,20 @@ const  FormularioScriptGenerator = ({ session, subscription }: Props) => {
                 </div>
 
                 <div className="flex mt-4 space-x-4">
-                
+
                     <button
                         type="button"
                         className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition"
                         onClick={handleClear}
+                        disabled={isLoading}
                     >
                         Borrar Todo
                     </button>
                     <button
                         type="button"
                         className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
-                        onClick={() => scriptResult && navigator.clipboard.writeText(scriptResult.text)}
+                        onClick={() => handleCopyScript()}
+                        disabled={isLoading}
                     >
                         Copiar Script
                     </button>
