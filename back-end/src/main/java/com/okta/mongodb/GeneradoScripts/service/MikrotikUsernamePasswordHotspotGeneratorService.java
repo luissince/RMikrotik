@@ -106,6 +106,13 @@ public class MikrotikUsernamePasswordHotspotGeneratorService {
             rateLimit = "";
         }
 
+        String limitQuota = "";
+        if (body.getLimitQuota() != null && !body.getLimitQuota().isEmpty()) {
+            limitQuota = body.getLimitQuota() + "" + body.getLimitQuotaUnit().toUpperCase();
+        } else {
+            limitQuota = "0";
+        }
+
         StringBuilder html = new StringBuilder();
         html.append("<div>");
         html.append("/ip hotspot user profile add name=\"").append(body.getProfileHotspot()).append("\" <br>");
@@ -118,7 +125,7 @@ public class MikrotikUsernamePasswordHotspotGeneratorService {
             html.append("add name=\"").append(user.get("username")).append("\" password=\"")
                     .append(user.get("password")).append("\" profile=\"").append(body.getProfileHotspot())
                     .append("\" limit-uptime=\"").append(body.getLimitUptime())
-                    .append("\" limit-bytes-total=\"").append(body.getLimitQuota()).append("\"<br>");
+                    .append("\" limit-bytes-total=\"").append(limitQuota).append("\"<br>");
         }
 
         html.append("</div>");
@@ -196,6 +203,13 @@ public class MikrotikUsernamePasswordHotspotGeneratorService {
             rateLimit = "";
         }
 
+        String limitQuota = "";
+        if (body.getLimitQuota() != null && !body.getLimitQuota().isEmpty()) {
+            limitQuota = body.getLimitQuota() + "" + body.getLimitQuotaUnit().toUpperCase();
+        } else {
+            limitQuota = "0";
+        }
+
         StringBuilder text = new StringBuilder();
         text.append("/ip hotspot user profile {set [find name=\"").append(body.getProfileHotspot())
                 .append("\"] rate-limit=\"").append(rateLimit)
@@ -206,7 +220,7 @@ public class MikrotikUsernamePasswordHotspotGeneratorService {
             text.append("add name=\"").append(user.get("username")).append("\" password=\"")
                     .append(user.get("password")).append("\" profile=\"").append(body.getProfileHotspot())
                     .append("\" limit-uptime=\"").append(body.getLimitUptime())
-                    .append("\" limit-bytes-total=\"").append(body.getLimitQuota()).append("\"\n");
+                    .append("\" limit-bytes-total=\"").append(limitQuota).append("\"\n");
         }
 
         return text.toString();
