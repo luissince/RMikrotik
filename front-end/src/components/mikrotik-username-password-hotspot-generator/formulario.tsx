@@ -118,50 +118,55 @@ const FormulariomikrotikUsernamePasswordHotspotGenerator = ({ session, subscript
 
   const handlePrint = () => {
     if (!validateAuth() || !scriptResult?.pdf) return;
-    const printWindow = window.open('', '_blank');
-    if (printWindow) {
-      printWindow.document.write(`
-        <html>
-          <head>
-            <title>Print</title>
-            <style>
-              @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
-              body {
-                font-family: "Roboto", serif;
-                font-weight: normal;
-                background-color: white;
-                color: #000;
-                padding: 0mm;
-              }
-              table {
-                border-collapse: collapse;
-                width: 100%;
-                margin-bottom: 5mm;
-              }
-              th, td {
-                border: 0.5mm solid #ddd;
-                padding: 2mm;
-                text-align: left;
-                font-size: 10pt;
-              }
-              th {
-                background-color: #f5f5f5;
-              }
-            </style>
-          </head>
-          <body>
-            <div>${scriptResult.pdf}</div>
-            <script>
-              window.onload = function() {
-                window.print();
-                window.close();
-              };
-            </script>
-          </body>
-        </html>
-      `);
-      printWindow.document.close();
-    }
+
+    const htmlContent = `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>Print</title>
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+          body {
+            font-family: "Roboto", serif;
+            font-weight: normal;
+            background-color: white;
+            color: #000;
+            padding: 0mm;
+          }
+          table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 5mm;
+          }
+          th, td {
+            border: 0.5mm solid #ddd;
+            padding: 2mm;
+            text-align: left;
+            font-size: 10pt;
+          }
+          th {
+            background-color: #f5f5f5;
+          }
+        </style>
+      </head>
+      <body>
+        <div>${scriptResult.pdf}</div>
+        <script>
+          window.onload = function() {
+            window.print();
+            window.onafterprint = function() {
+              window.close();
+            };
+          };
+        </script>
+      </body>
+    </html>
+  `;
+
+    const blob = new Blob([htmlContent], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+
+    window.open(url, '_blank');
   };
 
   return (
